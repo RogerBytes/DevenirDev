@@ -12,9 +12,7 @@ RUN install-php-extensions \
   opcache iconv soap zip intl fileinfo pdo redis gd pdo_pgsql
 
 # Installation de Composer
-# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-# Installation de Composer (dernière version stable "--2 force Composer à installer la dernière version majeure 2 compatible avec PHP 8.5")
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer --2
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
@@ -56,10 +54,6 @@ RUN echo "source /root/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # --------------------------------------------------------- #
 # FIN------ Customization pour environnement DEV  ------INF #
-
-# -------------------------------------------------------------  Installation de node etc de brun
-
-
 
 # On copie l'entrypoint dans l'image
 COPY ./docker/dev/php/entrypoint.sh /usr/local/bin/entrypoint.sh
