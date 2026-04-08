@@ -1,0 +1,73 @@
+services:
+  php:
+    user: '${USER_ID}:${GROUP_ID}'
+    build: ./docker/php
+    environment:
+      HOME: /var/www
+    container_name: php_learn_symfony
+    volumes:
+      # donne accès au projet
+      - .:/var/www:delegated
+      # force la sauvegarde des logs en local dans le dossier var
+      - ./var:/var/www/var
+    depends_on:
+      - database
+    networks:
+      - app_network
+
+  nginx:
+    build: ./docker/nginx
+    container_name: nginx_learn_symfony
+    ports:
+      - "7851:80"
+    volumes:
+      - ./public:/var/www/public:delegated
+    depends_on:
+      - php
+    networks:
+      - app_network
+
+  database:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    container_name: postgres_learn_symfony
+    ports:
+      - "7853:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      # POSTGRES_DB: ${DB_NAME} -> CA CRÉÉ UNE BDD, DONC NON, ON VEUT UN CONTENEUR VIDE, DONC EN COMMENTAIRE
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+    networks:
+      - app_network
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver
+    depends_on:
+      - database
+    container_name: DBeaver_learn_symfony
+    restart: unless-stopped
+    ports:
+      - "7852:8978"
+    networks:
+      - app_network
+
+  mailer:
+    image: axllent/mailpit
+    container_name: mailer_learn_symfony
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - app_network
+
+
+
+networks:
+  app_network:
+
+volumes:
+  database_data:

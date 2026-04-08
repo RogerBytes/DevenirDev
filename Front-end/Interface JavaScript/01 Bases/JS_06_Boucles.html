@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>06 Les boucles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">06 Les boucles</h1>
+      <h2 id="2">La nécessité des structures répétitives</h2>
+      <p>
+        L'itération, ou structure répétitive ou encore boucle, permet
+        d'obtenir une action composée par la répétition d'une action
+        élémentaire ou composée, répétition qui continue tant qu'une condition
+        n'est pas remplie, ou cesse lorsqu'une condition donnée est remplie.
+      </p>
+      <p>
+        Il existe plusieurs types de structures répétitives, chacune répondant
+        à un usage distinct.
+      </p>
+      <p><strong>Exemple : table de multiplication par 5</strong></p>
+      <p>
+        Avec les instructions définies à ce stade, la seule possibilité
+        d'écrire la table en totalité est donnée par le programme ci-dessous :
+      </p>
+      <pre><code class="hljs language-javascript">console.<span class="hljs-built_in">log</span>("Table de multiplication par 5");
+console.<span class="hljs-built_in">log</span>("=============================");
+console.<span class="hljs-built_in">log</span>("5 * 0 = 0");
+console.<span class="hljs-built_in">log</span>("5 * 1 = 5");
+console.<span class="hljs-built_in">log</span>("5 * 2 = 10");
+console.<span class="hljs-built_in">log</span>("5 * 3 = 15");
+console.<span class="hljs-built_in">log</span>("5 * 4 = 20");
+console.<span class="hljs-built_in">log</span>("5 * 5 = 25") ;
+console.<span class="hljs-built_in">log</span>("5 * 6 = 30");
+console.<span class="hljs-built_in">log</span>("5 * 7 = 35");
+console.<span class="hljs-built_in">log</span>("5 * 8 = 40");
+console.<span class="hljs-built_in">log</span>("5 * 9 = 45");
+console.<span class="hljs-built_in">log</span>("5 * 10 = 50");</code></pre>
+      <ul>
+        <li>
+          A la lecture de ce programme, on s'aperçoit vite que la même action
+          élémentaire est répétée un certain nombre de fois.
+        </li>
+        <li>
+          On remplace le nombre 5 par une variable, nommée <code>i</code> (par
+          exemple).
+        </li>
+        <li>
+          <p>En généralisant, on peut écrire l'instruction suivante :</p>
+          <pre><code class="hljs language-javascript">  console.<span class="hljs-built_in">log</span>(i<span class="hljs-operator">+</span>" * 0 = 0");</code></pre>
+        </li>
+      </ul>
+      <p>
+        Se répète pour une valeur de <code>i</code>, variant de 1 à 10, la
+        condition d'arrêt pouvant s'énoncer :
+      </p>
+      <pre><code class="hljs"><span class="hljs-attribute">Pour</span> i variant de <span class="hljs-number">1</span> à <span class="hljs-number">10</span></code></pre>
+      <p>ou bien :</p>
+      <pre><code class="hljs"><span class="hljs-attribute">Tant</span> que i &lt;= <span class="hljs-number">10</span></code></pre>
+      <p>ou encore :</p>
+      <pre><code class="hljs language-javascript">Jusqu<span class="hljs-comment">'à i &gt; 10</span></code></pre>
+      <h2 id="15">Boucles avec <code>for</code></h2>
+      <p>
+        L'expression <code>for</code> permet d'exécuter un bloc d'instructions
+        un certain nombre de fois en fonction de la réalisation d'un certain
+        critère. Sa syntaxe est :
+      </p>
+      <pre><code class="hljs language-javascript">for (valeur initiale; condition; actualisation) 
+{
+    instructions;
+}</code></pre>
+      <ul>
+        <li>
+          <em>valeur initiale</em> représente l'initialisation des itérateurs;
+        </li>
+        <li><em>condition</em> représente la condition d’itération;</li>
+        <li>
+          <em>actualisation</em> représente l'actualisation des itérateurs;
+        </li>
+      </ul>
+      <p>Reprenons l'exemple de la table de multiplication :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Table de multiplication par 5"</span>);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"============================="</span>);
+
+<span class="hljs-keyword">let</span> resultat;
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">10</span>; i++)
+{
+    resultat = <span class="hljs-number">5</span> * i;
+
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"5 * "</span>+i+<span class="hljs-string">" = "</span>+resultat);
+}
+
+<span class="hljs-comment">// Instructions exécutées après la boucle for</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"fin de la boucle"</span>);</code></pre>
+      <p>Déroulement de l'exécution :</p>
+      <ul>
+        <li>
+          Lors de la première exécution de l'instruction <code>for</code>,
+          <code>i</code> est initialisée à 0,
+        </li>
+        <li>
+          A chaque exécution, la condition d'itération (<code>i &lt;= 10</code>) est évaluée ; si
+          <code>i &gt; 10</code>, la boucle s'arrête et
+          les instructions suivant l'accolade fermante sont exécutées (la
+          suite du code donc),
+        </li>
+        <li>
+          Lorsque la condition d'itération est vraie, les instructions entre
+          accolades sont exécutées,
+        </li>
+        <li>Sur l'accolade fermante, <code>i</code> est incrémenté de 1,</li>
+        <li>
+          Retour sur l'instruction <code>for</code> : un 2<sup>ème</sup>
+          passage est effectué, cette fois <code>i</code> vaut 1.
+        </li>
+      </ul>
+      <h2>Boucles avec <code>while</code></h2>
+      <p>
+        L'instruction <code>while</code> permet d'exécuter un bloc
+        d'instructions un certain nombre de fois.
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">while</span> (condition vraie) 
+{
+    <span class="hljs-comment">// instructions</span>
+}</code></pre>
+      <ul>
+        <li>
+          condition est une expression booléenne (type booléen). Les
+          instructions sont exécutées plusieurs fois tant que le résultat de
+          l'expression condition est vraie (valeur <code>true</code>).
+        </li>
+        <li>
+          La condition doit pouvoir être évaluée à la première exécution de
+          l'instruction <code>while</code>, ce qui nécessite toujours
+          l'initialisation de la (des) variable(s) intervenant dans la
+          condition.
+        </li>
+        <li>
+          Si à la première exécution du while, le résultat de l'expression
+          condition est faux (valeur <code>false</code>), les instructions ne
+          sont jamais exécutées.
+        </li>
+      </ul>
+      <p>Les instructions seront donc exécutées de 0 à n fois.</p>
+      <p>
+        Aussi longtemps que la condition entre parenthèses est vérifiée,
+        JavaScript continue à exécuter les instructions entre les accolades.
+        Une fois que la condition n'est plus vérifiée, la boucle est
+        interrompue et on continue le script (exécutions des instructions
+        situées après la fermeture du <code>while</code>).
+      </p>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">let</span> resultat;
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Table de multiplication par 5"</span>);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"============================="</span>);
+
+<span class="hljs-keyword">while</span> (i &lt;= <span class="hljs-number">10</span>) 
+{   
+    <span class="hljs-comment">// Exécute le calcul et stocke le résultat   </span>
+    <span class="hljs-comment">// dans une variable nommée ‘resultat’  </span>
+    resultat = <span class="hljs-number">5</span> * i;
+
+    <span class="hljs-comment">// A chaque tour, on affiche le résultat courant à l’utilisateur</span>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Le résultat de 5 x "</span>+i+<span class="hljs-string">" est : "</span>+resultat);
+
+    <span class="hljs-comment">// A chaque tour, on ajoute +1 à la variable i  </span>
+    i++; 
+}
+
+<span class="hljs-comment">// Instructions exécutées après la boucle while</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"fin de la boucle"</span>);</code></pre>
+      <p><em>Déroulement de l'exécution</em></p>
+      <ul>
+        <li>
+          A chaque exécution de l'instruction <code>while</code>, la condition
+          d'itération (<code>i &lt;= 10</code>) est évaluée,
+        </li>
+        <li>
+          si <code>i</code> est supérieur à 10 (noté <code>i &gt; 10</code>),
+          la boucle s'arrête, et les instructions suivant l'accolade fermante
+          sont exécutées,
+        </li>
+        <li>
+          Lorsque la condition d'itération est vraie, les instructions entre
+          accolades sont exécutées.
+        </li>
+        <li>
+          Sur l'accolade fermante, retour sur l’instruction <code>while</code>
+        </li>
+      </ul>
+      <p><em>Avertissements</em></p>
+      <p>
+        L'instruction <code>while</code> nécessite une attention soutenue : sa
+        syntaxe complète est :
+      </p>
+      <pre><code class="hljs language-javascript">initialisation
+
+<span class="hljs-title function_">while</span> <span class="hljs-params">( condition )</span>
+{
+    <span class="hljs-comment">// Instructions</span>
+
+    <span class="hljs-comment">// Actualisation </span>
+}</code></pre>
+      <p>Dans notre exemple,</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> i = <span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">while</span> (i &lt;= <span class="hljs-number">10</span>)
+{
+    <span class="hljs-comment">// Instructions :</span>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Le résultat de 5 x "</span>+i+<span class="hljs-string">" est : "</span>+resultat);
+
+    <span class="hljs-comment">// Actualisation :</span>
+    i++;
+}</code></pre>
+      <p>
+        Surtout, ne pas oublier les parties initialisation (ce qui produirait
+        une erreur de variable non initialisée de toute manière) et
+        actualisation.
+      </p>
+      <blockquote>
+        <p>
+          Attention : avec cette structure de boucle, le risque existe, si la
+          condition est toujours vérifiée, de boucler indéfiniment, ce qui
+          finit par un plantage du navigateur.
+        </p>
+      </blockquote>
+      <p><em>Intérêt du while</em></p>
+      <p>
+        L'instruction <code>while</code> par rapport à l'instruction
+        <code>for</code> présente l'intérêt de pouvoir évaluer une condition
+        d'itération complexe, par exemple :
+      </p>
+      <pre><code class=""><span class="hljs-attribute">while</span> (i &lt;= <span class="hljs-number">10</span> &amp;&amp; j!= <span class="hljs-number">2</span>){ … } </code></pre>
+      <p>ou bien :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">while</span> (!trouve) {…} <span class="hljs-comment">// bool trouve</span></code></pre>
+      <p> </p>
+      <h2 id="45">L'instruction break</h2>
+      <p>
+        L'instruction <code>break</code> permet d'interrompre prématurément
+        une boucle <code>for</code> ou <code>while</code>.
+      </p>
+      <p>Pour illustrer ceci, reprenons notre exemple :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> cpt = <span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">while</span> (cpt &lt; <span class="hljs-number">5</span>) 
+{
+    <span class="hljs-keyword">if</span> (cpt == <span class="hljs-number">4</span>) 
+    {
+        <span class="hljs-keyword">break</span>;
+    } 
+
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"ligne : "</span>+cpt);
+    cpt++;
+}
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"fin de la boucle"</span>);</code></pre>
+      <p>
+        Le fonctionnement est semblable à l'exemple précédent sauf lorsque le
+        compteur vaut 4. A ce moment, par le <code>break</code>, on sort de la
+        boucle et la chaîne "fin de boucle" est affichée. Ce qui donne à
+        l'écran :
+      </p>
+      <pre><code class=""><span class="hljs-attribute">ligne</span> : <span class="hljs-number">1</span>
+<span class="hljs-attribute">ligne</span> : <span class="hljs-number">2</span>
+<span class="hljs-attribute">ligne</span> : <span class="hljs-number">3</span>  
+<span class="hljs-attribute">fin</span> de la boucle</code></pre>
+      <h2 id="51">L'instruction <code>continue</code></h2>
+      <p>
+        L'instruction <code>continue</code> permet de sauter une instruction
+        dans une boucle <code>for</code> ou <code>while</code> et de passer à
+        l'itération suivante de la boucle (sans sortir de celle-ci comme le
+        fait <code>break</code>). Reprenons notre exemple :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> cpt = <span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">while</span> (cpt &lt; <span class="hljs-number">5</span>) 
+{
+    <span class="hljs-keyword">if</span> (cpt == <span class="hljs-number">3</span>)
+    {
+        cpt++;
+        <span class="hljs-keyword">continue</span>;
+    }
+
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"ligne : "</span>+cpt);
+    cpt++;
+}
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"fin de la boucle"</span>);</code></pre>
+      <p>
+        Ici, la boucle démarre. Lorsque le compteur vaut 3, par l'instruction
+        continue, on saute l'instruction <code>console.log()</code> (la chaîne
+        "ligne : 3" n'est pas affichée) et on continue la boucle. Notons qu'on
+        a dû ajouter <code>cpt++</code> avant <code>continue</code> pour
+        éviter un bouclage infini et un plantage du navigateur (<code>cpt</code>
+        restant à 3).
+      </p>
+      <p>Ce qui donne à l'écran :</p>
+      <pre><code class=""><span class="hljs-attribute">ligne</span> : <span class="hljs-number">1</span>
+<span class="hljs-attribute">ligne</span> : <span class="hljs-number">2</span>
+<span class="hljs-attribute">ligne</span> : <span class="hljs-number">4</span>  
+<span class="hljs-attribute">fin</span> de la boucle</code></pre>
+      <h2 id="57">Boucles avec do … while</h2>
+      <p>
+        L'instruction <code>do … while</code> crée une boucle qui exécute une
+        instruction jusqu'à ce qu'une condition de test ne soit plus vérifiée.
+        La condition est testée après que l'instruction soit exécutée,
+        l'instruction définie dans la boucle est donc exécutée au moins une
+        fois :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">do</span> 
+{
+    instructions;
+} <span class="hljs-keyword">while</span> (condition);</code></pre>
+      <ul>
+        <li>
+          condition est une expression booléenne (type bool). Les instructions
+          sont exécutées plusieurs fois tant que le résultat de l'expression
+          condition est vraie (valeur <code>true</code>).
+        </li>
+        <li>
+          L'instruction <code>do</code> est toujours accompagnée d’une
+          instruction <code>while</code>.
+        </li>
+        <li>
+          Elle est similaire à l'instruction <code>while</code>, sauf que
+          l'évaluation de la condition d'itération s'effectue en fin de
+          boucle, et non pas au début, ce qui signifie que, contrairement à
+          l'instruction <code>while</code> qui est exécutée de 0 à n fois, une
+          instruction <code>do</code> est exécutée au moins une fois.
+        </li>
+      </ul>
+      <blockquote>
+        <p>
+          Attention à la syntaxe : bloc <code>do</code> entre accolades,
+          <code>while</code> situé après l'accolade fermante et le tout se
+          termine par un point-virgule (après la parenthèse fermante de la
+          condition).
+        </p>
+      </blockquote>
+      <p>
+        Reprenons encore une fois l'exemple de la table de multiplication :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">let</span> resultat;
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Table de multiplication par 5"</span>);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"============================="</span>);
+
+<span class="hljs-keyword">do</span> 
+{   
+    resultat = <span class="hljs-number">5</span> * i;
+
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"5 * "</span>+i+<span class="hljs-string">" = "</span>+resultat);
+
+    i++;
+} <span class="hljs-keyword">while</span> (i &lt;= <span class="hljs-number">10</span>) ;
+
+<span class="hljs-comment">// Instructions exécutées après la boucle do...while</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"fin de la boucle"</span>);</code></pre>
+      <h2 id="64">Boucles avec <code>for ... in</code></h2>
+      <p>
+        Cette structure conditionnelle est spécifique au Javascript,
+        contrairement à <code>for</code>, <code>while</code> ou
+        <code>do… while</code> que l'on peut rencontrer dans d'autres
+        langages.
+      </p>
+      <p>
+        L'expression <code>for..in</code> permet de simplifier l'usage de la
+        boucle <code>for</code>, notamment pour récupérer les éléments d’un
+        tableau :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> tableau = [<span class="hljs-string">"Paul"</span>, <span class="hljs-string">"Pierre"</span>, <span class="hljs-string">"Anne"</span>, <span class="hljs-string">"Sophie"</span>];
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">in</span> tableau) 
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(tableau[i]);
+}</code></pre>
+      <h2 id="68">Exercices</h2>
+      <h3 id="69">Exercice 1 - Saisie</h3>
+      <ul>
+        <li>Créer une page HTML qui demande à l'utilisateur un prénom.</li>
+        <li>
+          La page doit continuer à demander des prénoms à l'utilisateur
+          jusqu'à ce qu'il laisse le champ vide.
+        </li>
+        <li>
+          Enfin, la page affiche sur la console le <strong>nombre</strong> de
+          prénoms et les prénoms saisis.
+        </li>
+      </ul>
+      <p>Résultat à obtenir :</p>
+      <p>
+        <img src="assets/img/js_07_exercice_1.jpg" alt="3 exemples de fenêtres modales à obtenir" />
+      </p>
+      <h3 id="73">Exercice 2 - Entiers inférieurs à N</h3>
+      <p>Ecrire un programme qui affiche les nombres inférieurs à N.</p>
+      <h3 id="75">Exercice 3 - Moyenne</h3>
+      <p>
+        Ecrire un programme qui demande à l'utilisateur de saisir des entiers
+        et en affiche la somme et la moyenne (on arrête la saisie avec la
+        valeur 0).
+      </p>
+      <h3 id="77">Exercice 4 - Multiples</h3>
+      <p>
+        Ecrire un programme qui calcule les N premiers multiples d'un nombre
+        entier X, N et X étant entrés au clavier.
+      </p>
+      <p>Exemple pour N=5 et X=7 :</p>
+      <pre><code class=""><span class="hljs-attribute">1</span> x <span class="hljs-number">7</span> = <span class="hljs-number">7</span>
+<span class="hljs-attribute">2</span> x <span class="hljs-number">7</span> = <span class="hljs-number">14</span>
+<span class="hljs-attribute">3</span> x <span class="hljs-number">7</span> = <span class="hljs-number">21</span>
+<span class="hljs-attribute">4</span> x <span class="hljs-number">7</span> = <span class="hljs-number">28</span>
+<span class="hljs-attribute">5</span> x <span class="hljs-number">7</span> = <span class="hljs-number">35</span></code></pre>
+      <p>
+        Il est demandé de choisir la structure répétitive (<code>for</code>,
+        <code>while</code>, <code>do...while</code>) la mieux appropriée au
+        problème.
+      </p>
+      <h3 id="82">Exercice 5 - Nombre de voyelles.</h3>
+      <p>
+        Ecrire le programme qui compte le nombre de voyelles d’un mot saisi au
+        clavier, en utilisant :
+      </p>
+      <ul>
+        <li>
+          <code>myVar.length</code> : retourne le nombre de lettres de la
+          chaîne <code>myVar</code>.
+        </li>
+        <li>
+          <code>myVar.substring(p,n)</code> : extrait d'une chaîne donnée une
+          sous-chaîne de n caractères à partir de la position p (attention, en
+          Javascript, le 1<sup>er</sup> caractère se trouve à la position 0)
+        </li>
+        <li>
+          <code>myVar.indexOf(chaine)</code> : retourne le rang de la première
+          occurrence de chaîne dans la variable <code>myVar</code> donnée (si
+          non trouvé : -1). <br /><br /><br /><br />
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    hljs.highlightAll();
+  </script>
+
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

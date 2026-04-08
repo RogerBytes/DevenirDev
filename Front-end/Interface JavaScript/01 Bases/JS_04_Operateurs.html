@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>04 Opérateurs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">04 Opérateurs</h1>
+      <blockquote>
+        <p>
+          Dans tous les exemples de ce cours, on considère que la valeur
+          initiale de <code>x</code> est égale à <em>11</em>.
+        </p>
+      </blockquote>
+      <h2 id="3">Les opérateurs de calcul</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Nom</th>
+            <th>Signification</th>
+            <th>Exemple</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>+</code></td>
+            <td>Plus</td>
+            <td>Addition</td>
+            <td><code>x + 3</code></td>
+            <td><code>14</code></td>
+          </tr>
+          <tr>
+            <td><code>-</code></td>
+            <td>Moins</td>
+            <td>Soustraction</td>
+            <td><code>x - 3</code></td>
+            <td><code>8</code></td>
+          </tr>
+          <tr>
+            <td><code>*</code></td>
+            <td>Multiplié par</td>
+            <td>Multiplication</td>
+            <td><code>x * 2</code></td>
+            <td><code>22</code></td>
+          </tr>
+          <tr>
+            <td><code>/</code></td>
+            <td>Divisé par</td>
+            <td>Division</td>
+            <td><code>x / 2</code></td>
+            <td><code>5.5</code></td>
+          </tr>
+          <tr>
+            <td><code>%</code></td>
+            <td>Modulo</td>
+            <td>Reste de la division</td>
+            <td><code>x % 5</code></td>
+            <td><code>1</code></td>
+          </tr>
+          <tr>
+            <td><code>=</code></td>
+            <td>Egal</td>
+            <td>Reçoit la valeur de droite</td>
+            <td><code>x = 5</code></td>
+            <td><code>5</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <blockquote>
+        <p>
+          L'opérateur <code>+</code> sert aussi à concaténer des chaînes de
+          caractères.
+        </p>
+      </blockquote>
+      <h2 id="6">Les opérateurs de comparaison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Nom</th>
+            <th>Exemple</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>==</code></td>
+            <td>Egal</td>
+            <td><code>x == 11</code></td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;</code></td>
+            <td>Inférieur</td>
+            <td><code>x &lt; 11</code></td>
+            <td><code>false</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;=</code></td>
+            <td>Inférieur ou égal</td>
+            <td><code>x &lt;= 11</code></td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>&gt;</code></td>
+            <td>Supérieur</td>
+            <td><code>x &gt;= 11</code></td>
+            <td><code>false</code></td>
+          </tr>
+          <tr>
+            <td><code>&gt;=</code></td>
+            <td>Supérieur ou égal</td>
+            <td><code>x &gt; 11</code></td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>!=</code></td>
+            <td>Différent</td>
+            <td><code>x != 11</code></td>
+            <td><code>false</code></td>
+          </tr>
+          <tr>
+            <td><code>===</code></td>
+            <td>Egal strict</td>
+            <td><code>x === 11</code></td>
+            <td><code>true</code></td>
+          </tr>
+          <tr>
+            <td><code>!==</code></td>
+            <td>Différent strict</td>
+            <td><code>x !== 11</code></td>
+            <td><code>false</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <blockquote>
+        <p>
+          <strong>On confond souvent <code>=</code>, <code>==</code> et
+            <code>===</code>.</strong>
+        </p>
+        <p>
+          Le <code>=</code> est un opérateur d'affectation : il sert à donner
+          une valeur à une variable.
+        </p>
+        <p>
+          Le <code>==</code> est un opérateur de comparaison <em>faible</em> :
+          il compare les valeurs après une conversion automatique de type, ce
+          qui peut provoquer des résultats inattendus.
+        </p>
+        <p>
+          Le <code>===</code> est un opérateur de comparaison
+          <strong>strict</strong> : il compare la valeur <em>et</em> le type,
+          sans conversion. C'est l'opérateur recommandé en JavaScript moderne.
+        </p>
+        <p>
+          Par exemple :
+          <code>"1" == 1</code> vaut <code>true</code>, tandis que
+          <code>"1" === 1</code> vaut <code>false</code>.
+        </p>
+        <p>
+          <strong>Retenir :</strong> utilisez presque toujours
+          <code>===</code> et <code>!==</code> pour éviter les erreurs.
+        </p>
+      </blockquote>
+      <h2 id="9">Les opérateurs d’affectation composés</h2>
+      <p>
+        On appelle ainsi les opérateurs qui réalisent un calcul dans lequel
+        une variable intervient des deux côtés du signe <code>=</code> (ce
+        sont donc en quelque sorte des opérateurs d'attribution).
+      </p>
+      <p>
+        Dans les exemples suivants <code>x</code> vaut toujours <em>11</em> et
+        <code>y</code> aura comme valeur <em>5</em>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Description</th>
+            <th>Exemple</th>
+            <th>Signification</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>+=</code></td>
+            <td>plus égal</td>
+            <td><code>x += y</code></td>
+            <td><code>x = x + y</code></td>
+            <td><code>16</code></td>
+          </tr>
+          <tr>
+            <td><code>-=</code></td>
+            <td>moins égal</td>
+            <td><code>x -= y</code></td>
+            <td><code>x = x - y</code></td>
+            <td><code>6</code></td>
+          </tr>
+          <tr>
+            <td><code>*=</code></td>
+            <td>multiplié égal</td>
+            <td><code>x *= y</code></td>
+            <td><code>x = x * y</code></td>
+            <td><code>55</code></td>
+          </tr>
+          <tr>
+            <td><code>/=</code></td>
+            <td>divisé égal</td>
+            <td><code>x /= y</code></td>
+            <td><code>x = x / y</code></td>
+            <td><code>2.2</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <h2 id="13">Les opérateurs logiques</h2>
+      <p>
+        Aussi appelés opérateurs booléens, ils servent à vérifier deux ou
+        plusieurs conditions.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Nom</th>
+            <th>Exemple</th>
+            <th>Signification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>&amp;&amp;</td>
+            <td>et</td>
+            <td>condition1 &amp;&amp; condition2</td>
+            <td>condition1 et condition2</td>
+          </tr>
+          <tr>
+            <td>||</td>
+            <td>ou</td>
+            <td>condition1 || condition2</td>
+            <td>condition1 ou condition2</td>
+          </tr>
+          <tr>
+            <td>!</td>
+            <td>non</td>
+            <td>!condition</td>
+            <td>inverse la valeur vraie/fausse de la condition</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2 id="16">Les opérateurs d'incrémentation</h2>
+      <p>
+        Ces opérateurs vont augmenter ou diminuer la valeur de la variable
+        d'une unité. Ce qui sera fort utile, par exemple, pour mettre en place
+        des boucles.
+      </p>
+      <blockquote>
+        <p>Dans les exemples ci-dessous, <code>x</code> vaut 3.</p>
+      </blockquote>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Description</th>
+            <th>Exemple</th>
+            <th>Signification</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>x++</td>
+            <td>incrémentation (postfixée)</td>
+            <td>y = x++</td>
+            <td>
+              équivaut à <code>y = x;</code> puis <code>x = x + 1;</code>
+            </td>
+            <td>y vaut 3 et x vaut 4</td>
+          </tr>
+          <tr>
+            <td>x--</td>
+            <td>décrémentation (postfixée)</td>
+            <td>y = x--</td>
+            <td>
+              équivaut à <code>y = x;</code> puis <code>x = x - 1;</code>
+            </td>
+            <td>y vaut 3 et x vaut 2</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2 id="20">La priorité des opérateurs JavaScript</h2>
+      <p>
+        Les opérations s'effectuent dans l'ordre suivant de priorité (du degré
+        de priorité le plus faible au degré de priorité le plus élevé).
+      </p>
+      <p>Dans le cas d'opérateurs de priorité égale, de gauche à droite.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Opération</th>
+            <th>Opérateur</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>,</td>
+            <td>virgule ou séparateur de liste</td>
+          </tr>
+          <tr>
+            <td>= += -= *= /= %=</td>
+            <td>affectation</td>
+          </tr>
+          <tr>
+            <td>? :</td>
+            <td>opérateur conditionnel</td>
+          </tr>
+          <tr>
+            <td>||</td>
+            <td>ou logique</td>
+          </tr>
+          <tr>
+            <td>&amp;&amp;</td>
+            <td>et logique</td>
+          </tr>
+          <tr>
+            <td>== !=</td>
+            <td>égalité, différence</td>
+          </tr>
+          <tr>
+            <td>=== !==</td>
+            <td>égalité stricte, différence stricte</td>
+          </tr>
+          <tr>
+            <td>&lt; &lt;= &gt;= &gt;</td>
+            <td>relationnel</td>
+          </tr>
+          <tr>
+            <td>* / %</td>
+            <td>multiplication, division, modulo</td>
+          </tr>
+          <tr>
+            <td>! - ++ --</td>
+            <td>
+              opérateurs unaires (négation logique, signe, incrémentation,
+              décrémentation)
+            </td>
+          </tr>
+          <tr>
+            <td>()</td>
+            <td>parenthèses (forcent la priorité)</td>
+          </tr>
+          <tr>
+            <td>!- ++ --</td>
+            <td>parenthèses</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2 id="24">Exercice</h2>
+      <p>Soit les variables suivantes :</p>
+      <ul>
+        <li><code>a</code> qui contient la chaîne de caractères 100</li>
+        <li><code>b</code> = 100</li>
+        <li><code>c</code> qui contient la valeur 1,00</li>
+        <li><code>d</code> booléen qui vaut vrai</li>
+      </ul>
+      <p>A réaliser :</p>
+      <ul>
+        <li>
+          Affichez "Ceci est une chaîne de caractères :" et concaténez cette
+          chaîne avec la variable <code>a</code> pour afficher "Ceci est une
+          chaîne de caractères : <em>100</em>".
+        </li>
+        <li>Appliquez à <code>b</code> l'opérateur de décrémentation</li>
+        <li>Ajoutez à <code>c</code> la valeur de <code>a</code></li>
+        <li>Inversez la valeur de <code>d</code></li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    hljs.highlightAll();
+  </script>
+
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

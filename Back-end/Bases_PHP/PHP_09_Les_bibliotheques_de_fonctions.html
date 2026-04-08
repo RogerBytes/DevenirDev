@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Les bibliothèques de fonctions</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+  
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - Les bibliothèques de fonctions</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Imaginons que nous voulions utiliser une fonction <code>writeMessage()</code>
+                dans toutes les pages d'un site : il faudrait mettre le code de cette
+                fonction dans chacune des pages. Imaginez alors pour un site de 1000
+                pages : ce n'est clairement pas possible en termes de maintenabilité du
+                code, car il faudrait reporter 1000 fois la moindre modification
+                effectuée dans le code de la fonction <code>writeMessage()</code>. </p>
+            <p>Pour résoudre ce problème, PHP offre un mécanisme : <strong>l'inclusion de fichiers</strong> ! On parle
+                alors de <em>fichier externe</em>. </p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="6">Inclusion de fichiers externes</h2>
+            <p>Créez le fichier suivant, que l'on appellera <code>hello.php</code> :</p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-comment">// Fichier 'hello.php'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">writeMessage</span>(<span class="hljs-params"><span class="hljs-variable">$text</span></span>) </span>{
+    <span class="hljs-variable">$html</span> = <span class="hljs-string">"&lt;h1&gt;"</span>.<span class="hljs-variable">$text</span>.<span class="hljs-string">"&lt;/h1&gt;"</span>;
+    <span class="hljs-keyword">echo</span> <span class="hljs-variable">$html</span>;
+    }  
+<span class="hljs-meta">?&gt;</span>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=<span class="hljs-string">"fr"</span>&gt;
+    &lt;head&gt;
+        &lt;title&gt;Inclusion de fichiers PHP&lt;/title&gt;
+        &lt;link rel=<span class="hljs-string">"stylesheet"</span> href=<span class="hljs-string">"css/style.css"</span>&gt;        
+    &lt;/head&gt;
+    &lt;body&gt;
+        <span class="hljs-meta">&lt;?php</span> 
+            <span class="hljs-variable">$message</span>= <span class="hljs-string">"Welcome to The Plouf Corporation !"</span>; 
+            <span class="hljs-title function_ invoke__">writeMessage</span>(<span class="hljs-variable">$message</span>); 
+        <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        <span class="hljs-meta">&lt;?php</span> 
+            <span class="hljs-title function_ invoke__">writeMessage</span>(<span class="hljs-string">"Bonjour tout le monde !"</span>); 
+        <span class="hljs-meta">?&gt;</span>
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Tout d'abord, nous allons déplacer la fonction <code>writeMessage()</code> dans un second fichier PHP
+                nommé <em>fonctions.php</em>.<br>
+                Ce fichier <em>fonctions.php</em> sera un fichier de <em>bibliothèque</em> (ou encore
+                <em>bibliothèque</em> (ou encore <em>librairie</em>) de code, avec pour seul contenu le code de la fonction <code>writeMessage()</code> :
+            </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-comment">// Fichier 'fonctions.php'</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">writeMessage</span>(<span class="hljs-params"><span class="hljs-variable">$text</span></span>) </span>{
+        <span class="hljs-variable">$html</span> = <span class="hljs-string">"&lt;h1&gt;"</span>.<span class="hljs-variable">$text</span>.<span class="hljs-string">"&lt;/h1&gt;"</span>;
+        <span class="hljs-keyword">echo</span> <span class="hljs-variable">$html</span>;
+    }
+<span class="hljs-meta">?&gt;</span></code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>L'objectif est donc de <strong>factoriser à un seul emplacement le code des fonctions utilisées dans
+                    plusieurs pages</strong>, cela rejoint la définition même d'une fonction qui est d'être
+                réutilisable. </p>
+            <blockquote>
+                <p>On pourra bien entendu par la suite, ajouter autant de fonctions que nécessaire dans notre fichier de
+                    bibliothèque <code>fonctions.php</code> ! </p>
+            </blockquote>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Dans le fichier d'origine <em>hello.php</em>, on peut maintenant supprimer le code de la fonction
+                <code>writeMessage()</code> et le remplacer par l'inclusion (chargement ou appel) du fichier
+                <em>fonctions.php</em>, via la fonction PHP native <code>include()</code> qui prend en argument le
+                chemin vers le fichier et son nom :
+            </p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">include</span>(<span class="hljs-string">"fonctions.php"</span>);  </code></pre>
+            <p>Cette fonction <code>include()</code> permet de recopier dans la page le contenu du fichier dont le chemin
+                est passée en paramètre. </p>
+            <p>Il suffit donc de recopier cette ligne dans toutes les pages où nous
+                voulons utiliser notre bibliothèque de fonctions personnelle. </p>
+            <p>Ce qui nous donne :</p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-comment">// Fichier 'hello.php'</span>
+
+    <span class="hljs-keyword">include</span>(<span class="hljs-string">"fonctions.php"</span>); 
+    <span class="hljs-variable">$message</span> = <span class="hljs-string">"Hello world !"</span>;
+<span class="hljs-meta">?&gt;</span>
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Inclusion de fichiers PHP&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt; 
+        <span class="hljs-meta">&lt;?php</span> 
+            <span class="hljs-title function_ invoke__">writeMessage</span>(<span class="hljs-variable">$message</span>); 
+        <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        <span class="hljs-meta">&lt;?php</span> 
+            <span class="hljs-title function_ invoke__">writeMessage</span>(<span class="hljs-string">"Bonjour tout le monde !"</span>); 
+        <span class="hljs-meta">?&gt;</span>
+    &lt;script src=<span class="hljs-string">"js/scripts.js"</span>&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="23">Découpage d'une page HTML</h2>
+            <p>Non seulement vous allez trouver sur le web des bibliothèques de
+                fonctions libres de droits à inclure dans vos programmes, mais vous
+                allez pouvoir les utiliser pour <strong>découper du simple code HTML en plusieurs fichiers</strong>.
+            </p>
+            <p>Par exemple, vous pourriez découper une page HTML de la façon suivante : en-tête, contenu principal et
+                pied de page : </p>
+            <p><strong>fichier <code>index.php</code></strong></p>
+            <pre><code class="language-html hljs language-xml"><span class="hljs-meta">&lt;?php 
+    include("header.php");
+?&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"row"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-lg-8 col-sm-12"</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-meta">&lt;?php 
+    include("footer.php");
+?&gt;</span></code></pre>
+            <p><strong>fichier <code>header.php</code></strong></p>
+            <pre><code class="language-html hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"fr"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"</span>
+        <span class="hljs-attr">integrity</span>=<span class="hljs-string">"sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"</span> <span class="hljs-attr">crossorigin</span>=<span class="hljs-string">"anonymous"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"assets/css/style.css"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Mein Zuper Website<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+            ...
+            <span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
+                ...
+            <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+</code></pre>
+            <p><strong>fichier <code>footer.php</code></strong></p>
+            <pre><code class="language-html hljs language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">footer</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"navbar navbar-expand-lg navbar-dark bg-dark rounded"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ul</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"navbar-nav mr-auto"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"nav-item"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"nav-link"</span>&gt;</span>mentions légales<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"nav-item"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"nav-link"</span>&gt;</span>horaires<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"nav-item"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"nav-link"</span>&gt;</span>plan du site<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">footer</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- fermerure de la div class="container" --&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://code.jquery.com/jquery-3.4.1.slim.min.js"</span>
+        <span class="hljs-attr">integrity</span>=<span class="hljs-string">"sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"</span> <span class="hljs-attr">crossorigin</span>=<span class="hljs-string">"anonymous"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"</span>
+        <span class="hljs-attr">integrity</span>=<span class="hljs-string">"sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"</span> <span class="hljs-attr">crossorigin</span>=<span class="hljs-string">"anonymous"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"</span>
+        <span class="hljs-attr">integrity</span>=<span class="hljs-string">"sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"</span> <span class="hljs-attr">crossorigin</span>=<span class="hljs-string">"anonymous"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"assets/js/scripts.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="33">Les différentes fonctions d'inclusion</h2>
+            <p>PHP fournit 4 fonctions d'inclusion de fichiers : </p>
+            <ul>
+                <li><code>include()</code> : lève une erreur de type avertissement (<em>warning</em>), c'est-à-dire qui
+                    ne bloque pas l'exécution du code suivant l'appel de la fonction <code>include()</code>. </li>
+                <li><code>require()</code> : lève une erreur dite <em>fatale</em>, le script PHP s'arrête là.</li>
+                <li><code>include_once()</code> : pareil que pour <code>include()</code> mais le fichier n'est chargé
+                    qu'une seule fois, lors du premier appel dans le site</li>
+                <li><code>require_once()</code> : pareil que pour <code>require()</code> mais le fichier n'est chargé
+                    qu'une seule fois, lors du premier appel dans le site</li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="37">Vérification de l'existence d'un fichier</h2>
+            <p>Dans le cadre d'une inclusion de fichier, il faut s'assurer que le
+                fichier à inclure existe bien. Ceci se fait avec la fonction PHP <a
+                    href="http://php.net/manual/fr/function.file-exists.php"
+                    target="_blank"><code>file_exists()</code></a>, à laquelle on passe le chemin du fichier dont on
+                veut vérifier l'existence :</p>
+      <div class="callout callout-warn" role="note" aria-label="À savoir">
+        <p><strong>À savoir :</strong> les variantes <code>*_once</code> font une vérification supplémentaire pour éviter une double inclusion. C'est très pratique pour éviter les redéclarations, mais cela a un petit coût. Dans une architecture bien structurée (point d'entrée unique), on limite naturellement les doubles inclusions.</p>
+      </div>
+
+      <div class="callout callout-info" role="note" aria-label="Nuance">
+        <p><strong>Nuance :</strong> <code>file_exists()</code> teste l'existence sur le système de fichiers. Selon les cas, <code>include</code>/<code>require</code> peuvent aussi s'appuyer sur la configuration (par ex. <code>include_path</code>). Retient surtout que <code>file_exists()</code> ne remplace pas une conception sécurisée des chemins.</p>
+      </div>
+
+      <div class="callout callout-info" role="note" aria-label="À retenir">
+        <p><strong>À retenir :</strong></p>
+        <ul>
+          <li><code>include</code> : en cas d'échec, PHP déclenche un <em>warning</em> et le script <strong>continue</strong>.</li>
+          <li><code>require</code> : en cas d'échec, PHP déclenche une <em>fatal error</em> et le script <strong>s'arrête</strong>.</li>
+          <li><code>include_once</code> / <code>require_once</code> : même comportement que ci-dessus, mais <strong>le fichier n'est inclus qu'une seule fois</strong>.</li>
+        </ul>
+        <p>En pratique, on utilise <code>require</code> pour les dépendances indispensables (config, bootstrap, fonctions critiques) et <code>include</code> pour du contenu optionnel.</p>
+      </div>
+
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">file_exists</span>(<span class="hljs-string">"chemin/entete.php"</span>) ) 
+    {
+        <span class="hljs-keyword">include</span>(<span class="hljs-string">"chemin/entete.php"</span>);
+    } 
+    <span class="hljs-keyword">else</span> 
+    {
+        <span class="hljs-comment">// Erreur (à gérer)</span>
+    }
+<span class="hljs-meta">?&gt;</span></code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <blockquote>
+                <p>Sur vos projets, découpez vos pages de la même manière !</p>
+            </blockquote>
+            <div class="spacer" aria-hidden="true"></div>
+    
+
+      <h2>Ouverture - Autoload et Composer (culture générale)</h2>
+      <p>Dans des projets modernes, les dépendances externes sont souvent gérées avec <strong>Composer</strong> et chargées automatiquement via un <strong>autoload</strong>. L'idée reste proche de ce chapitre : organiser son code, le réutiliser, et le charger au bon moment, mais de manière standardisée.</p>
+      <div class="callout callout-info" role="note" aria-label="Idée clé">
+        <p><strong>Idée clé :</strong> même quand tu passes ensuite à Composer, les bases vues ici restent utiles : organiser, factoriser, et contrôler ce qui est indispensable (fatal) vs optionnel (warning).</p>
+      </div>
+</article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

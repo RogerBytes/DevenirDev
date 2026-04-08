@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>PHP - Les fonctions</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+  <link rel="stylesheet" href="assets/css/menu-markdown.css" />
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+
+  <script src="assets/js/highlight.min.js" defer></script>
+
+  <style>
+    .note-pedago {
+      border-left: 4px solid rgba(255, 255, 255, 0.35);
+      padding: 0.85rem 1rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+    }
+
+    .note-pedago code {
+      white-space: normal;
+    }
+
+    .note-pedago p {
+      margin: 0.25rem 0;
+    }
+
+    .note-pedago ul {
+      margin: 0.4rem 0 0.4rem 1.1rem;
+    }
+  </style>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    });
+  </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main class="container">
+    <article class="markdown-body">
+      <h1 id="1">PHP - Les fonctions</h1>
+
+      <p><br /><br /></p>
+
+      <h2 id="3">Définition</h2>
+      <p>
+        Une fonction est une partie de code PHP qui peut remplir n'importe quelle tâche. Dans ce code, peut figurer
+        toute instruction PHP valide.
+        Une fonction est destinée à effectuer une tâche spécifique prédéfinie.
+      </p>
+      <p>On rencontre 2 types de fonctions :</p>
+      <ul>
+        <li>
+          Les fonctions <strong>natives</strong> - celles proposées par défaut par le langage ; en PHP il en existe
+          <a href="http://php.net/manual/fr/indexes.functions.php" target="_blank" rel="noopener noreferrer">des
+            centaines</a>.
+        </li>
+        <li>
+          Les fonctions <strong>utilisateurs</strong> - celles que le développeur écrit, et qui peuvent bien entendu
+          intégrer des fonctions natives.
+        </li>
+      </ul>
+
+      <p>
+        Dans l'exemple ci-dessous, nous utilisons la fonction <code>ucfirst()</code>. Cette fonction permettra de passer
+        le premier caractère de la chaîne en majuscule :
+      </p>
+
+      <!-- Correction : le code était coloré comme du Perl, on le remet en PHP (sans enlever l'exemple) -->
+      <pre><code class="language-php hljs">$texte = ucfirst("Bonjour le monde");</code></pre>
+
+      <p>
+        La variable <code>$texte</code> contiendra alors la valeur : <em>Bonjour le monde</em>.
+        Le premier caractère est passé en majuscule.
+        L'utilisation des fonctions présente de très nombreux avantage parmi lesquels se trouve la non-répétition d'une
+        séquence de code
+        car cette opération est souvent la cause d'importants dysfonctionnements.
+      </p>
+      <p>
+        Ces fonctions permettent également une meilleure lisibilité du code source, un gain de productivité ainsi qu'une
+        maintenance facilitée.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Note pédagogique</strong> : une fonction sert surtout à :</p>
+        <ul>
+          <li>réutiliser (DRY - “Don't Repeat Yourself”),</li>
+          <li>nommer une intention (“ce que fait le code”),</li>
+          <li>tester plus facilement (une fonction = une unité).</li>
+        </ul>
+      </div>
+
+      <h3 id="11">Définir une fonction</h3>
+      <p>
+        Pour déclarer (= définir) une fonction, on utilisera le mot clé <code>function</code> suivi du nom de la
+        fonction (à vous de lui donner un nom)
+        et enfin de parenthèses (obligatoires, mêmes vides) pour accueillir d'éventuels paramètres.
+        Exemple d'une fonction simple :
+      </p>
+
+      <pre><code class="language-php hljs">function bonjour()
+{
+    echo "Bonjour";
+}</code></pre>
+
+      <p>On appellera donc la fonction de la manière suivante :</p>
+      <pre><code class="language-php hljs">bonjour();</code></pre>
+
+      <p>
+        Cette fonction affichera Bonjour. On pourrait également ajouter un nom ou prénom comme ceci :
+      </p>
+
+      <pre><code class="language-php hljs">function bonjour($prenom)
+{
+    echo "Bonjour " . $prenom;
+}</code></pre>
+
+      <p>On appellera la fonction avec l'instruction suivante :</p>
+      <pre><code class="language-php hljs">&lt;?php
+bonjour("Dave");</code></pre>
+
+      <p>
+        Cette fonction affichera <em>Bonjour Dave</em>.
+        On peut également utiliser plusieurs paramètres entre les parenthèses. Exemple :
+      </p>
+
+      <pre><code class="language-php hljs">function bonjour($prenom, $nom)
+{
+    echo "Bonjour " . $prenom . " " . $nom;
+}</code></pre>
+
+      <p>On appellera la fonction avec l'instruction suivante :</p>
+      <pre><code class="language-php hljs">&lt;?php
+bonjour("Dave", "LOPER");</code></pre>
+
+      <p>
+        Cette fonction affichera donc <em>Bonjour Dave LOPER</em>.
+        En pratique, les valeurs indiquées entre les parenthèses sont les arguments de la fonction.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : en PHP moderne, on peut (et on doit progressivement) préciser les types et le
+          type de retour :</p>
+        <pre><code class="language-php hljs">function bonjour(string $prenom, string $nom): string
+{
+    return "Bonjour $prenom $nom";
+}</code></pre>
+        <p>Ensuite tu l'affiches avec <code>echo bonjour("Dave", "LOPER");</code>. Ça sépare “calcul” et “affichage”.
+        </p>
+      </div>
+
+      <h3 id="25">La portée d'une variable</h3>
+      <p>
+        Une variable définie au sein d'une fonction n'est pas accessible en dehors de celle-ci.
+        De même une variable définie en dehors d'une fonction n'est pas accessible par celle-ci.
+        On appelle cela la portée d'une variable.
+      </p>
+      <p>
+        Pour donner accès à une variable le PHP met à votre disposition deux déclarations : <code>global</code> et
+        <code>static</code>
+      </p>
+
+      <pre><code class="language-php hljs">$a = $b = 2;
+
+function somme()
+{
+    $c = $a + $b;
+    echo "$c";
+}
+
+somme();</code></pre>
+
+      <p>
+        Dans cet exemple, la valeur affichée sera 0 car les deux variables <code>$a</code> et <code>$b</code> ne sont
+        pas connues à l'intérieur de la fonction <code>somme()</code>.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Point technique</strong> : dans les versions récentes de PHP, accéder à des variables non définies
+          dans une fonction peut déclencher des notices/avertissements.
+          L'idée pédagogique reste : “une fonction ne voit pas les variables du dehors”.</p>
+        <p><strong>Best practice</strong> : au lieu d'utiliser <code>global</code>, on préfère passer les valeurs en
+          paramètres.</p>
+      </div>
+
+      <p>Pour les utiliser dans la fonction, il faut les déclarer comme variables globales</p>
+
+      <pre><code class="language-php hljs">$a = $b = 2;
+
+function somme()
+{
+    global $a, $b;
+    $b = $a + $b;
+}
+
+somme();
+
+echo $b . "&lt;br&gt;";</code></pre>
+
+      <p>L'instruction <code>static</code> sert dans le corps de la fonction à conserver la valeur d'une variable</p>
+
+      <pre><code class="language-php hljs">function Test()
+{
+    $a = 0;
+    echo $a . "&lt;br&gt;";
+    $a++;
+}
+
+// Appel de la fonction (2 fois)
+Test();
+Test();</code></pre>
+
+      <p>
+        Dans cet exemple nous faisons appel à une fonction qui initialise la variable <code>$a</code> à 0, puis
+        incrémente celle-ci après un affichage.
+        Le problème est qu'à chaque appel de la fonction celle-ci repasse à 0, car la variable n'est pas stockée et
+        s'initialise à chaque rappel de la fonction
+      </p>
+
+      <pre><code class="language-php hljs">function Test1()
+{
+    static $a = 0;
+    echo $a . "&lt;br /&gt;";
+    $a++;
+}
+
+// Appel de la fonction (3 fois)
+Test1();
+Test1();
+Test1();</code></pre>
+
+      <p>Cette fois la variable reste stockée et affiche 0 puis 1,2,3...</p>
+
+      <p>
+        --&gt; Voir ici la
+        <a href="http://php.net/manual/fr/language.variables.scope.php#language.variables.scope.static" target="_blank"
+          rel="noopener noreferrer">
+          documentation complète sur la portée des variables
+        </a>
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Conseil pédagogique</strong> : <code>static</code> est utile pour certains compteurs internes, caches
+          simples, etc.
+          Mais en projet, on préfère souvent stocker l'état dans :</p>
+        <ul>
+          <li>une variable extérieure (et on la passe),</li>
+          <li>un objet (propriété),</li>
+          <li>ou une base/session selon le besoin.</li>
+        </ul>
+      </div>
+
+      <h3 id="38">Les librairies de fonctions</h3>
+      <p>
+        Une librairie de fonctions est un ensemble de fonctions regroupées dans un seul fichier.
+        En fait, les fonctions que nous créons ne sont disponibles que dans le fichier dans lequel elles se trouvent.
+        Ainsi, pour les utiliser dans un autre programme, il faudrait les recopier.
+        Mais, il existe bien sûr un moyen de rendre les fonctions disponibles dans tous nos programmes.
+        Il suffit pour cela, de regrouper vos fonctions dans un fichier externe et de référencer ce fichier dans votre
+        script principal et ainsi rendre disponible toutes les fonctions pour ce programme.
+        En pratique, il faut créer un fichier contenant toutes les fonctions.
+      </p>
+
+      <p>Concrètement :</p>
+
+      <!-- On conserve l'idée, mais on corrige l'exemple (l'ancien contenait "function 1...") -->
+      <pre><code class="language-php hljs">&lt;?php
+// mesfonctions.php
+
+function fonction1()
+{
+    // ...
+}
+
+function fonction2()
+{
+    // ...
+}
+</code></pre>
+
+      <p>
+        Enregistrer le fichier sous un nom quelconque que vous choisirez. Par exemple : <code>mesfonctions.php</code>
+      </p>
+      <p>Vous pourrez ajouter dans ce fichier autant de fonctions que vous aurez besoin pour vos applications.</p>
+      <p>
+        Ensuite, nous ajouterons l'instruction <code>require</code> ou (<code>include</code>) dans chaque programme où
+        nous aurons besoin des fonctions :
+      </p>
+
+      <!-- Correction : "inlude" -> "include", et note require/require_once -->
+      <pre><code class="language-php hljs">&lt;?php
+require 'mesfonctions.php';
+
+// ...suite de l'application...
+?&gt;</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Point technique</strong> :</p>
+        <ul>
+          <li><code>require</code> : si le fichier manque, PHP stoppe (fatal error). Idéal quand c'est indispensable.
+          </li>
+          <li><code>include</code> : si le fichier manque, PHP continue (warning). Utile si c'est optionnel.</li>
+          <li><code>require_once</code> / <code>include_once</code> : empêche un chargement multiple du même fichier
+            (très courant en projet).</li>
+        </ul>
+      </div>
+
+      <h2 id="46">Les grands groupes de fonctions PHP</h2>
+
+      <h3 id="47">Les fonctions arithmétiques</h3>
+      <p>
+        Le langage PHP offre un jeu de fonctions mathématiques assez complet qui couvre largement les besoins que l'on
+        peut avoir pour réaliser une application.
+        Composition :
+      </p>
+      <ul>
+        <li>opérateurs mathématiques (addition, soustraction, multiplication, division, puissance...)</li>
+        <li>arrondis, valeur absolue, minimum, maximum, ...</li>
+        <li>cosinus, sinus, tangente, logarithmes...</li>
+        <li>génération de nombres aléatoires</li>
+        <li>conversions (binaire, décimal, hexadécimal...)</li>
+        <li>formatage de nombres (en chaîne de caractères, ...)</li>
+      </ul>
+
+      <h3 id="50">La gestion des chaînes de caractères</h3>
+      <p>PHP fournit un ensemble complet de fonctions pour gérer les chaînes de caractères :</p>
+      <ul>
+        <li>comparer des chaînes de caractères</li>
+        <li>définir la longueur d'une chaîne de caractères</li>
+        <li>découper une chaîne, extraire des parties</li>
+        <li>crypter des chaînes/données</li>
+        <li>remplacer des parties de chaînes</li>
+        <li>rechercher des composants d'une chaîne de caractères</li>
+        <li>convertir des caractères spécifiques en code HTML</li>
+      </ul>
+
+      <h3 id="53">La gestion des fichiers et répertoires</h3>
+      <p>Les fonctions de gestion de fichiers et de répertoires fournies par PHP vous permettront :</p>
+      <ul>
+        <li>de créer, modifier, supprimer, renommer et déplacer des fichiers de tout type (texte, csv, images, PDF...)
+        </li>
+        <li>de créer, modifier (nom), supprimer, renommer et déplacer des répertoires</li>
+        <li>de lire, ajouter, modifier et supprimer du contenu d'un fichier</li>
+        <li>
+          de lire et modifier les informations de métadonnées (dates de création/modification/accès, nom, type, poids,
+          droits d'exécution...) d'un fichier ou d'un répertoire
+        </li>
+      </ul>
+
+      <h3 id="56">Les fonctions de génération d'images dynamiques</h3>
+      <p>
+        Une librairie de fonctions de création et de manipulation d'images est fournie avec PHP. Cette librairie se
+        nomme GD (pour <em>Gif Draw</em>).
+      </p>
+      <p>GD permet de nombreuses possibilités :</p>
+      <ul>
+        <li>générer dynamiquement des images (formes géométriques, miniatures, graphiques...)</li>
+        <li>gestion des couleurs dans une image</li>
+        <li>transmettre des informations sur une image (largeur x hauteur),</li>
+        <li>découper et faire pivoter une image (rotation selon un angle précis)</li>
+        <li>
+          incrustation de texte, superposition/fusion d'images (par exemple, ajouter un logo dans une image pour montrer
+          qu'elle provient d'un site)
+        </li>
+        <li>manipuler les différents formats d'images (gif, png, jpeg, tiff, raw...)</li>
+      </ul>
+      <p>
+        <a href="https://www.php.net/manual/fr/ref.image.php"
+          target="_blank" rel="noopener noreferrer">La Documentation de GD</a>
+      </p>
+
+      <h3 id="61">Les fonctions spécifiques à Internet</h3>
+      <p>Le PHP, conçu pour Internet, propose bien sûr un groupe de fonctions spécifiques à celui-ci :</p>
+      <ul>
+        <li>fonctions de traitement d'URLs</li>
+        <li>fonctions de lecture d'une page HTML (avec la librairie <em>CURL</em> notamment)</li>
+        <li>la protection d'accès à une page web : sessions, cryptage de mots de passe que nous aborderons plus tard
+          dans le programme</li>
+        <li>envoi de mails (séquence complète)</li>
+        <li>fonctions de gestion de cookies</li>
+      </ul>
+
+      <h2 id="64">Quelques fonctions utiles</h2>
+
+      <div class="note-pedago">
+        <p><strong>Attention sécurité</strong> : <code>addslashes()</code> n'est pas une protection SQL (ni une
+          protection universelle).
+          Pour SQL, on utilisera des requêtes préparées (PDO) ; pour HTML, on utilisera <code>htmlspecialchars()</code>.
+        </p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Fonction</th>
+            <th>Description</th>
+            <th>Code PHP</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>substr()</code></td>
+            <td>Retourne un segment de chaîne</td>
+            <td><code>$s = substr("QOTSA", 2, 3);</code></td>
+            <td><code>TSA</code></td>
+          </tr>
+          <tr>
+            <td><code>addslashes()</code></td>
+            <td>Ajoute des anti-slashes devant les caractères spéciaux</td>
+            <td><code>$s = addslashes("L'a");</code></td>
+            <td><em>L\'a</em></td>
+          </tr>
+          <tr>
+            <td><code>stripslashes()</code></td>
+            <td>Retire les antislashes devant les caractères spéciaux</td>
+            <td><code>$s = stripslashes("L\'a");</code></td>
+            <td><em>L'a</em></td>
+          </tr>
+          <tr>
+            <td><code>ceil()</code></td>
+            <td>Retourne le nombre entier supérieur ici (12,1)</td>
+            <td><code>$s = ceil(12.1);</code></td>
+            <td>13</td>
+          </tr>
+          <tr>
+            <td><code>htmlentities()</code></td>
+            <td>Remplace les caractères par leur équivalent HTML (s'ils existent).</td>
+            <td><code>$s = htmlentities("&lt;");</code></td>
+            <td><em>&amp;lt;</em></td>
+          </tr>
+          <tr>
+            <td><code>strstr()</code></td>
+            <td>Recherche le premier caractère 'p' dans la chaîne et affiche le reste de la chaîne y compris le 'p'</td>
+            <td><code>$s = strstr("webmas-ter@php.cdsi.fr.st", "p");</code></td>
+            <td><em>php.cdsi.fr.st</em></td>
+          </tr>
+          <tr>
+            <td><code>strlen()</code></td>
+            <td>Retourne la longueur de la chaîne</td>
+            <td><code>$s = strlen("lachainedecaracteres");</code></td>
+            <td><em>20</em></td>
+          </tr>
+          <tr>
+            <td><code>strtolower()</code></td>
+            <td>Passe tous les caractères en minuscules</td>
+            <td><code>$s = strtolower("LA CHAINE dE caRActERes");</code></td>
+            <td><em>la chaine de caracteres</em></td>
+          </tr>
+          <tr>
+            <td><code>strtoupper()</code></td>
+            <td>Passe tous les caractères en majuscules</td>
+            <td><code>$s = strtoupper("LA CHAINE dE caRActERes");</code></td>
+            <td><em>LA CHAINE DE CARACTERES</em></td>
+          </tr>
+          <tr>
+            <td><code>str_replace()</code></td>
+            <td>Remplace un caractère par un autre dans une chaîne (tient compte de la casse)</td>
+            <td><code>$s = str_replace("a", "o", "Lalala");</code></td>
+            <td><em>Lololo</em></td>
+          </tr>
+          <tr>
+            <td><code>trim()</code></td>
+            <td>Efface les espaces dits blancs (espaces, sauts et retours de lignes au début et à la fin d'une chaîne)
+            </td>
+            <td><code>$s = trim("    Bonjour le monde     ");</code></td>
+            <td><em>Bonjour le monde</em></td>
+          </tr>
+          <tr>
+            <td><code>ucfirst()</code></td>
+            <td>Met la première lettre d'une chaîne en majuscule</td>
+            <td><code>$s = ucfirst("bonjour le monde");</code></td>
+            <td><em>Bonjour le monde</em></td>
+          </tr>
+          <tr>
+            <td><code>ucwords()</code></td>
+            <td>Met la première lettre de chaque mot d'une chaîne en majuscule</td>
+            <td><code>$s = ucwords("bonjour le monde");</code></td>
+            <td><em>Bonjour Le Monde</em></td>
+          </tr>
+          <tr>
+            <td><code>strpos()</code></td>
+            <td>Recherche la position du premier caractère trouvé. Retourne le nombre de caractères placés avant lui
+              (ici 4).</td>
+            <td><code>$s = strpos("abcdef", "e");</code></td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td><code>join()</code></td>
+            <td>Rassemble les éléments d'un tableau en une chaîne</td>
+            <td><code>$arr = array("john", "paul", "georges", "ringo"); echo join(",", $arr);</code></td>
+            <td><em>john,paul,georges,ringo</em></td>
+          </tr>
+          <tr>
+            <td><code>preg_match()</code></td>
+            <td>
+              Recherche si un motif est contenu dans une chaîne (peut utiliser des expressions régulières).
+            </td>
+            <td><code>preg_match("/BCD/", "ABCDEF");</code></td>
+            <td>Renvoie 1 (TRUE) si trouvé, 0 (FALSE) sinon</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note-pedago">
+        <p><strong>Point technique</strong> : les expressions régulières de <code>preg_match</code> doivent être
+          entourées par des délimiteurs (souvent <code>/.../</code>).
+          Sans ça, l'appel est incorrect.</p>
+      </div>
+
+      <h2 id="66">Exercices</h2>
+
+      <h4 id="67">Écrivez une fonction qui permette de générer un lien.</h4>
+      <p>La fonction doit prendre deux paramètres, le lien et le titre</p>
+
+      <pre><code class="language-php hljs">lien("https://www.reddit.com/", "Reddit Hug");</code></pre>
+
+      <p>Appelée de cette façon, la fonction doit générer</p>
+
+      <pre><code class="language-html hljs">&lt;a href="https://www.reddit.com/"&gt;Reddit Hug&lt;/a&gt;</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Point sécurité</strong> : dans une vraie appli, on échappe le titre pour éviter l'injection HTML :
+        </p>
+        <pre><code class="language-php hljs">function lien(string $url, string $titre): string
+{
+    return '&lt;a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"&gt;'
+        . htmlspecialchars($titre, ENT_QUOTES, 'UTF-8')
+        . '&lt;/a&gt;';
+}</code></pre>
+      </div>
+
+      <h4 id="72">Écrivez une fonction qui calcule la somme des valeurs d'un tableau</h4>
+      <p>La fonction doit prendre un paramètre de type tableau</p>
+
+      <pre><code class="language-php hljs">$tab = array(4, 3, 8, 2);
+$resultat = somme($tab);</code></pre>
+
+      <p><code>$resultat</code> doit contenir <code>17</code></p>
+
+      <div class="note-pedago">
+        <p><strong>Indice</strong> : tu peux faire une boucle <code>foreach</code>, ou utiliser
+          <code>array_sum($tab)</code> (fonction native).
+        </p>
+      </div>
+
+      <h4 id="76">Créer une fonction qui vérifie le niveau de complexité d'un mot de passe</h4>
+      <p>
+        Elle doit prendre un paramètre de type chaîne de caractères.
+        Elle retournera une valeur booléenne qui vaut true si le paramètre (le mot de passe) respecte les règles
+        suivantes :
+      </p>
+      <ul>
+        <li>Faire au moins 8 caractères de long</li>
+        <li>Avoir au moins 1 chiffre</li>
+        <li>Avoir au moins une majuscule et une minuscule</li>
+      </ul>
+
+      <pre><code class="language-php hljs">$resultat = complex_password("TopSecret42");</code></pre>
+
+      <p><code>$resultat</code> doit contenir <code>true</code>.</p>
+
+      <blockquote>
+        <p>Aidez-vous des expressions régulières !</p>
+      </blockquote>
+
+      <div class="note-pedago">
+        <p><strong>Important</strong> : vérifier la complexité est une chose, mais stocker un mot de passe en base en
+          est une autre.</p>
+        <ul>
+          <li>On ne stocke jamais le mot de passe en clair.</li>
+          <li>On utilise <code>password_hash()</code> pour le hash, et <code>password_verify()</code> pour la
+            vérification.</li>
+        </ul>
+      </div>
+
+      <p><br /><br /><br /></p>
+    </article>
+  </main>
+</body>
+
+</html>

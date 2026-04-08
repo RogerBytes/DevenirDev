@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Les bases</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/github-markdown.css">
+    <link rel="stylesheet" href="assets/css/menu-markdown.css">
+    <script src="assets/js/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+    <link rel="stylesheet" href="assets/css/navbar.css" />
+    <script src="assets/js/highlight.min.js"></script>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="markdown-body">
+            <h1 id="1">PHP - Les bases</h1>
+            <p><br>
+                <br>
+            </p>
+            <h2 id="3">Structure d'un programme</h2>
+            <p>Pour que le serveur qui vous héberge puisse comprendre qu'il va
+                devoir interpréter un script en PHP, il faut lui indiquer le début et la
+                fin du code, de même façon que vous le feriez pour du JavaScript par
+                exemple, avec les balises <code>&lt;script&gt;</code>).<br>
+                La syntaxe est la suivante :</p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span> 
+    <span class="hljs-comment">// ... </span>
+    <span class="hljs-comment">// Script à exécuter </span>
+    <span class="hljs-comment">// ... </span>
+<span class="hljs-meta">?&gt;</span></code></pre>
+            <p>Le fichier doit porter l'extension <code>.php</code>.</p>
+            <p>Un fichier <em>.php</em> est </p>
+            <ul>
+                <li>soit, un script destiné à un traitement serveur uniquement,</li>
+                <li>soit, un fichier de code HTML dans lequel certaines parties seront
+                    traitées par l'interpréteur PHP. Ces parties sont alors aussi
+                    identifiées par <code>&lt;?php</code> … <code>?&gt;</code>.</li>
+            </ul>
+            <p><br>
+                <br>
+            </p>
+            <h2 id="10">Les variables</h2>
+            <p>En PHP, toutes les variables sont précédées du signe <code>$</code> (sauf les constantes et
+                métaconstantes, on y reviendra). </p>
+            <p>Les variables peuvent être de <strong>5 types</strong> qui n'ont pas besoin d'être déclarés.
+            <blockquote>
+                <p><strong>Note pédagogique :</strong> PHP est un langage à <em>typage dynamique</em> (le type dépend de
+                    la valeur), mais il propose aussi du <em>typage strict</em> (dans les fonctions, classes, etc.). Une
+                    variable peut aussi valoir <code>null</code> : cela signifie "pas de valeur".</p>
+            </blockquote>
+
+            Nativement, PHP supporte les types suivants: </p>
+            <p>Types "simples" :</p>
+            <ul>
+                <li>le type <code>int</code> (ou <code>integer</code>) pour les entiers</li>
+                <li>le type <code>float</code>, <code>double</code> ou <code>real</code> pour les nombres décimaux</li>
+                <li>le type <code>string</code> pour les chaînes de caractères</li>
+                <li>le type <code>boolean</code>, pour une valeur valant vrai (<code>true</code>, ou 1) ou faux
+                    (<code>false</code>, ou 0)</li>
+            </ul>
+            <p>Types "complexes" :</p>
+            <ul>
+                <li>le type <code>Array</code> pour les tableaux</li>
+                <li>le type <code>Object</code> pour les objets</li>
+            </ul>
+            <p>En PHP, <strong>une variable doit toujours être initialisée avec une valeur</strong> ; le <em>type</em>
+                d'une variable est déterminé au moment de son <em>initialisation</em> :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$a</span> = <span class="hljs-number">12</span> ;       <span class="hljs-comment">// $a est un entier</span>
+<span class="hljs-variable">$b</span> = <span class="hljs-string">"Bonjour"</span>; <span class="hljs-comment">// $b est une chaîne de caractères</span>
+
+<span class="hljs-variable">$c</span>;             <span class="hljs-comment">// renverra une erreur de traitement en lecture</span></code></pre>
+            <blockquote>
+                <p><strong>Note technique :</strong> lire une variable non initialisée déclenche typiquement un
+                    <em>Notice/Warning</em> ("Undefined variable"). Bonne pratique : initialiser explicitement (ex:
+                    <code>$c = null;</code>) ou vérifier avec <code>isset($c)</code>.
+                </p>
+            </blockquote>
+
+            <p><br></p>
+            <h3 id="20">Chaînes de caractères (variables alphanumériques)</h3>
+            <p>Leur valeur peut contenir des chiffres, des lettres ou des symboles : </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$variable</span> = <span class="hljs-string">"Plouf"</span>;</code></pre>
+            <p>Le <code>;</code> (point-virgule) marque la fin d'une instruction et <strong>doit être utilisé à la fin
+                    de chacune d'entre elles</strong>. Si vous l'omettez, le serveur retournera une erreur !</p>
+            <p><br></p>
+            <h3 id="25">Numériques</h3>
+            <p>Une variable numérique peut contenir, soit un nombre entier, soit un nombre décimal : </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$var1</span> = <span class="hljs-number">123</span>;        <span class="hljs-comment">// sera de type Integer</span>
+<span class="hljs-variable">$var2</span> = <span class="hljs-number">14.35</span>;      <span class="hljs-comment">// sera de type Float</span></code></pre>
+            <p><br></p>
+            <h3 id="29">Booléens</h3>
+            <p>Une variable de type booléen constitue un binaire et ne peut prendre
+                que 2 valeurs : 1 ou 0, représentées dans le code par les constantes <code>true</code>, pour
+                <em>vrai</em>, ou <code>false</code>, pour <em>faux</em>.
+            </p>
+            <p>Pour déclarer une variable comme booléenne, il suffit de lui attribuer l'une de ces 2 valeurs : </p>
+            <pre><code class="language-php hljs">    <span class="hljs-variable">$valeurfausse</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable">$valeurvraie</span> = <span class="hljs-literal">true</span>;</code></pre>
+            <p><br></p>
+            <h3 id="34">Tableaux</h3>
+            <blockquote>
+                <p>NB: Le fonctionnement des tableaux en PHP est proche de celui des tableaux en Javascript</p>
+            </blockquote>
+            <p>Un tableau est l'équivalent d'un ensemble (liste) de valeurs, accessibles grâce à des <code>[]</code>
+                (crochets) appliqués sur la variable :</p>
+            <pre><code class="language-php hljs">    <span class="hljs-variable">$couleur</span>[<span class="hljs-number">0</span>] = <span class="hljs-string">"red"</span>;
+    <span class="hljs-variable">$couleur</span>[<span class="hljs-number">1</span>] = <span class="hljs-string">"blue"</span>;
+    <span class="hljs-variable">$couleur</span>[<span class="hljs-number">2</span>] = <span class="hljs-string">"white"</span>;
+    <span class="hljs-variable">$couleur</span>[<span class="hljs-number">3</span>] = <span class="hljs-string">"black"</span>;</code></pre>
+            <p>Ici, <code>$couleur</code> est un tableau de 4 "cases", contenant chacune une valeur texte. </p>
+            <blockquote>
+                <p>Important : en PHP (comme dans la plupart des langages
+                    informatiques), le premier élément d'un tableau est numéroté 0, et non 1
+                    !</p>
+            </blockquote>
+            <p><br></p>
+            <p>Lorsqu'on affecte une nouvelle valeur, on peut oublier l'indice. Par
+                contre, pour récupérer cette valeur, on sera obligé de le préciser. </p>
+            <p>Exemple :</p>
+            <pre><code class="language-php hljs">    <span class="hljs-variable">$couleur</span>[] = <span class="hljs-string">"red"</span>;
+    <span class="hljs-variable">$couleur</span>[] = <span class="hljs-string">"blue"</span>;
+    <span class="hljs-variable">$couleur</span>[] = <span class="hljs-string">"white"</span>;
+    <span class="hljs-variable">$couleur</span>[] = <span class="hljs-string">"black"</span>;
+
+    <span class="hljs-comment">// pour afficher la valeur "white", on écrira :</span>
+    <span class="hljs-keyword">echo</span> <span class="hljs-variable">$couleur</span>[<span class="hljs-number">2</span>];</code></pre>
+            <p><br></p>
+            <p>Les indices des tableaux peuvent être numériques (cf. ci-dessus) ou textuels, on parle alors de
+                <em>tableaux associatifs</em>. Auquel cas, le nom de la cellule doit <strong>toujours</strong> être
+                précisé lors de l'ajout de données ou de lecture d'une cellule :
+            </p>
+            <pre><code class="language-php hljs">    <span class="hljs-variable">$couleur</span>[<span class="hljs-string">"rouge"</span>] = <span class="hljs-string">"#ff0000"</span>;
+    <span class="hljs-variable">$couleur</span>[<span class="hljs-string">"bleu"</span>] = <span class="hljs-string">"#3366ff"</span>;
+    <span class="hljs-variable">$couleur</span>[<span class="hljs-string">"blanc"</span>] = <span class="hljs-string">"#ffffff"</span>;
+    <span class="hljs-variable">$couleur</span>[<span class="hljs-string">"noir"</span>] = <span class="hljs-string">"#000000"</span>;</code></pre>
+            <blockquote>
+                <p>Une ressource complète sera consacrée aux tableaux et aux fonctions PHP permettant de les manipuler.
+                </p>
+            </blockquote>
+            <p><br></p>
+            <h3 id="49">Objets</h3>
+            <p>Les objets sont un type de données complexe qui peut contenir </p>
+            <ul>
+                <li>des <em>propriétés</em> (= variables contenant des valeurs)</li>
+                <li>des <em>méthodes</em> (= fonctions)</li>
+            </ul>
+            <p>A l'instar des données d'un tableau, auxquelles on accède grâce aux <code>[]</code>, les éléments d'un
+                objet sont accessibles grâce au symbole <code>-&gt;</code>. </p>
+            <p>Un objet est créé grâce au mot-clé <code>new</code>, et représente 1 exemplaire d'une <em>classe</em> lui
+                servant de "moule" ; c'est cette classe qui définit les propriétés et les méthodes que contiendra chaque
+                objet. </p>
+            <p>Nous reviendrons plus tard sur le fonctionnement des classes et des objets.<br>
+                Pour le moment, retenez surtout la syntaxe de déclaration et de manipulation d'un objet : </p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// Exemple avec un objet issu de la classe `DateTime` :</span>
+<span class="hljs-variable">$madate</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DateTime</span>();
+
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$madate</span>-&gt;<span class="hljs-title function_ invoke__">format</span>(<span class="hljs-string">'d-m-Y'</span>);
+<span class="hljs-comment">// affichera la date du jour au format '01/01/2022'</span></code></pre>
+            <p><br></p>
+            <h3 id="57">Forcer le type d'une variable</h3>
+            <p>Il peut-être intéressant de forcer le type d'une variable dans certaines situations. Pour cela, on
+                utilise la fonction <code>settype()</code> :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$a</span> = <span class="hljs-number">15.125863</span>;
+<span class="hljs-title function_ invoke__">settype</span>(<span class="hljs-variable">$a</span>, <span class="hljs-string">"integer"</span>); 
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$a</span>; </code></pre>
+            <p><code>$a</code> vaut désormais 15, car la valeur décimale initiale a été convertie en un entier (perte
+                des décimales). </p>
+            <p>Vous pouvez aussi forcer le type en : </p>
+            <ul>
+                <li><code>integer</code> ou <code>int</code> : conversion en entier </li>
+                <li><code>string</code> : conversion en chaîne </li>
+                <li><code>real</code> : conversion en double </li>
+                <li><code>array</code> : conversion en tableau </li>
+                <li><code>object</code> : conversion en objet </li>
+            </ul>
+            <p>Il est aussi possible de convertir directement une valeur,</p>
+            <ul>
+                <li>en chaine, avec la fonction <code>strval()</code></li>
+                <li>en entier, avec la fonction <code>intval()</code></li>
+                <li>en décimal, avec la fonction <code>doubleval()</code> (alias de <code>floatval()</code>)</li>
+            </ul>
+            <p><strong><em>Exemples :</em></strong> </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$a</span> = <span class="hljs-number">6.32172</span>; 
+<span class="hljs-variable">$b</span> = <span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-variable">$a</span>); 
+<span class="hljs-variable">$c</span> = <span class="hljs-title function_ invoke__">doubleval</span>(<span class="hljs-variable">$a</span>); <span class="hljs-comment">// alias de floatval()</span>
+<span class="hljs-variable">$d</span> = <span class="hljs-title function_ invoke__">floatval</span>(<span class="hljs-variable">$a</span>); 
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$a</span> . <span class="hljs-string">" - "</span> . <span class="hljs-variable">$b</span> . <span class="hljs-string">" - "</span> . <span class="hljs-variable">$c</span> . <span class="hljs-string">" - "</span> . <span class="hljs-variable">$d</span>; 
+<span class="hljs-comment">// Ce qui donne : 6.32172 - 6 - 6.32172 = -6</span></code></pre>
+            <p><br>
+                <br>
+            </p>
+            <h2 id="68">Les opérateurs</h2>
+            <h3 id="69">Opérateurs arithmétiques</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opérateur</th>
+                        <th>Exemple</th>
+                        <th>Fonction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>+</code></td>
+                        <td><code>$a + $b</code></td>
+                        <td>addition</td>
+                    </tr>
+                    <tr>
+                        <td><code>-</code></td>
+                        <td><code>$a - $b</code></td>
+                        <td>soustraction</td>
+                    </tr>
+                    <tr>
+                        <td><code>*</code></td>
+                        <td><code>$a * $b</code></td>
+                        <td>multiplication</td>
+                    </tr>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td><code>$a / $b</code></td>
+                        <td>division</td>
+                    </tr>
+                    <tr>
+                        <td><code>%</code></td>
+                        <td><code>$a % $b</code></td>
+                        <td>modulo (= reste de la division de <code>$a</code> par <code>$b</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>++</code></td>
+                        <td><code>$a++</code></td>
+                        <td>incrément (Equivalent à <code>$a = $a + 1</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>--</code></td>
+                        <td><code>$a--</code></td>
+                        <td>décrément (Equivalent à <code>$a = $a - 1</code>)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><br></p>
+            <h3 id="72">Opérateurs de chaînes de caractères</h3>
+            <p>Le point <code>.</code> réalise une concaténation de deux chaînes de caractères :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$a</span> = <span class="hljs-string">"Winter"</span>; 
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$a</span> . <span class="hljs-string">" is coming !"</span>; </code></pre>
+            <p>Le résultat affiche à l'écran le message : </p>
+            <pre><code class="hljs language-text"><span class="hljs-type">Winter</span> <span class="hljs-keyword">is</span> coming <span class="hljs-operator">!</span></code></pre>
+            <p><br></p>
+            <h3 id="78">Opérateurs d'affectation</h3>
+            <p>L'opérateur d'affectation de base en PHP est le <code>=</code>, qui indique que l'on affecte la valeur
+                <em>à droite</em> de l'opérateur à la variable <em>de gauche</em>.
+            </p>
+            <p>Avec des données numériques, l'opérateur <code>=</code> peut-être combiné aux opérateurs arithmétiques :
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opérateur</th>
+                        <th>Exemple</th>
+                        <th>Fonction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>=</code></td>
+                        <td><code>$a = 0</code> <br> <code>$a = ($b=5) +7</code></td>
+                        <td><code>$a</code> vaut 0 <br> <code>$a</code> vaut 12 (5+7)</td>
+                    </tr>
+                    <tr>
+                        <td><code>+=</code></td>
+                        <td><code>$a += 4</code></td>
+                        <td><code>$a</code> vaut 16 (équivalent à <code>$a = $a+4</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-=</code></td>
+                        <td><code>$a -= 20</code></td>
+                        <td><code>$a</code> vaut -4 (équivalent à <code>$a = $a-20</code>)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <blockquote>
+                <p>NB: il est possible d'affecter plusieurs valeurs en une seule fois.<br>
+                    Par exemple, <code>$a = $b = 1</code> affecte <code>1</code> aux deux valeurs. </p>
+            </blockquote>
+            <p><br></p>
+            <p>Avec des données textuelles, l'opérateur <code>=</code> peut-être combiné à l'opérateur de concaténation.
+                Par exemple : </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$a</span> = <span class="hljs-string">"Winter"</span>;
+<span class="hljs-variable">$a</span> .= <span class="hljs-string">" is coming !"</span>;
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$a</span>;</code></pre>
+            <p>équivaut à :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$a</span> = <span class="hljs-string">"Winter"</span>;
+<span class="hljs-variable">$a</span> = <span class="hljs-variable">$a</span> . <span class="hljs-string">" is coming !"</span>;
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$a</span>;</code></pre>
+            <p>et donnera ici aussi :</p>
+            <pre><code class="hljs language-text"><span class="hljs-type">Winter</span> <span class="hljs-keyword">is</span> coming <span class="hljs-operator">!</span></code></pre>
+            <p><br></p>
+            <h3 id="91">Opérateurs de comparaison</h3>
+            <blockquote>
+                <p><strong>Conseil :</strong> privilégier <code>===</code> et <code>!==</code> pour éviter les
+                    conversions implicites surprenantes de PHP (ex: <code>"0" == false</code> est vrai).</p>
+            </blockquote>
+
+            <p>Les opérateurs de comparaison sont principalement utiles dans des <em>tests d'assertion</em>, par
+                exemple, lors de l'utilisation de conditions, boucles, etc.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opérateur</th>
+                        <th>Exemple</th>
+                        <th>Fonction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>==</code></td>
+                        <td><code>($a == $b)</code></td>
+                        <td><em>Vrai</em> si <code>$a</code> est égal à <code>$b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>===</code></td>
+                        <td><code>($a === $b)</code></td>
+                        <td><em>Vrai</em> si <code>$a</code> est égal à <code>$b</code> <strong>et</strong> que
+                            <code>$a</code> et <code>$b</code> sont de même type
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>!=</code></td>
+                        <td><code>($a != $b)</code></td>
+                        <td>v<em>Vrai</em> si <code>$a</code> différent de <code>$b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td><code>($a &lt; $b)</code></td>
+                        <td><em>Vrai</em> si <code>$a</code> est strictement inférieur à <code>$b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td><code>($a &gt; $b)</code></td>
+                        <td><em>Vrai</em> si <code>$a</code> est strictement supérieur à <code>$b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;=</code></td>
+                        <td><code>($a &lt;= $b)</code></td>
+                        <td><em>Vrai</em> si <code>$a</code> est inférieur ou égal à <code>$b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;=</code></td>
+                        <td><code>($a &gt;= $b)</code></td>
+                        <td><em>Vrai</em> si <code>$a</code> est supérieur ou égal à <code>$b</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><br></p>
+            <h3 id="95">Opérateurs logiques</h3>
+            <p>Les opérateurs logiques, eux aussi, sont surtout utilisés dans les tests d'assertion.</p>
+            <blockquote>
+                <p>NB: dans les exemples ci-dessous, on considère que <code>$resultat_test_a</code> et
+                    <code>$resultat_test_b</code> contiennent chacun le résultat d'un test fait avec un opérateur de
+                    comparaison, et valent chacun, soit <code>true</code>, soit <code>false</code>. Par exemple, soient
+                </p>
+                <pre><code class="language-php hljs"><span class="hljs-variable">$resultat_test_a</span> = (<span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-string">"12"</span>) === <span class="hljs-number">12</span>);
+<span class="hljs-comment">// $resultat_test_a vaut Vrai</span>
+
+<span class="hljs-variable">$resultat_test_b</span> = (<span class="hljs-number">765</span> &lt; <span class="hljs-number">123</span>);
+<span class="hljs-comment">// $resultat_test_b vaut Faux</span></code></pre>
+            </blockquote>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opérateur</th>
+                        <th>Exemple</th>
+                        <th>Fonction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>AND</code>, ou <code>&amp;&amp;</code></td>
+                        <td><code>($resultat_test_a &amp;&amp; $resultat_test_b)</code></td>
+                        <td>le test global sera <em>Vrai</em> si <code>$resultat_test_a</code> <strong>ET</strong>
+                            <code>$resultat_test_b</code> sont vrais
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>OR</code>, ou <code>\|\|</code></td>
+                        <td><code>($resultat_test_a \|\| $resultat_test_b)</code></td>
+                        <td>le test global sera <em>Vrai</em> si une des deux valeurs au moins,
+                            <code>$resultat_test_a</code> <strong>OU</strong> <code>$resultat_test_b</code>, est vraie
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>XOR</code></td>
+                        <td><code>($resultat_test_a XOR $resultat_test_b)</code></td>
+                        <td>le test global sera <em>Vrai</em> si l'une des deux valeurs, <code>$resultat_test_a</code>
+                            ou <code>$resultat_test_b</code> est vraie, <strong>mais que l'autre est fausse</strong>.
+                            <br>On parle de <em>OU Exclusif</em>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><br>
+                <br>
+            </p>
+            <p><br>
+                <br>
+            </p>
+            <h2 id="101">Les outils indispensables</h2>
+            <p>La première instruction que vous allez utiliser est sans aucun doute <code>echo</code>; celle-ci permet
+                d'afficher à l'écran (en fait de générer du flux HTML) les données indiquées entre guillemets. </p>
+            <p><br></p>
+            <h3 id="104">Les commentaires</h3>
+            <p>Tout simplement, les commentaires en PHP sont signalés de la même façon qu'en Javascript : </p>
+            <ul>
+                <li><code>//</code> pour commenter une ligne</li>
+                <li><code>/*</code> et <code>*/</code> pour commenter plusieurs lignes</li>
+            </ul>
+            <p><br></p>
+            <h3 id="108">L'instruction <code>echo</code></h3>
+            <p>Créez un fichier nommé <em>bonjour.php</em> et collez-y le code suivant : </p>
+            <pre><code class="language-php hljs">    &lt;!DOCTYPE html&gt;
+    &lt;html lang=<span class="hljs-string">"fr"</span>&gt;
+        &lt;head&gt;
+            &lt;meta charset=<span class="hljs-string">"UTF-8"</span>&gt;
+            &lt;meta http-equiv=<span class="hljs-string">"X-UA-Compatible"</span> content=<span class="hljs-string">"IE=edge"</span>&gt;
+            &lt;meta name=<span class="hljs-string">"viewport"</span> content=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;
+            &lt;title&gt;Document&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            <span class="hljs-meta">&lt;?php</span> 
+                <span class="hljs-keyword">echo</span> <span class="hljs-string">"Bonjour le monde"</span>; 
+                <span class="hljs-keyword">echo</span> <span class="hljs-string">'Bonjour le monde'</span>; 
+            <span class="hljs-meta">?&gt;</span> 
+        &lt;/body&gt;
+    &lt;/html&gt;</code></pre>
+            <blockquote>
+                <p><strong>IMPORTANT : ne jamais oublier qu'une instruction en PHP doit <em>toujours</em> (sauf cas très
+                        particuliers) être terminée par un point-virgule !</strong> </p>
+            </blockquote>
+            <p><br></p>
+            <p>Lancer le fichier : <code>http://127.0.0.1:8080/bonjour.php</code> (adapter le port de connexion si
+                nécessaire).</p>
+            <p>Pour rappel : </p>
+            <ul>
+                <li>pour être exécuté <strong>sur Linux</strong>, le répertoire
+                    contenant votre fichier doit être lié à un serveur local démarré sur le
+                    projet (Ouvrir un Terminal dans le projet et saisir <code>php -S 127.0.0.1:8080</code> ; laisser le
+                    terminal ouvert tant que le serveur doit tourner) </li>
+                <li>pour être exécuté <strong>sur Windows</strong>, ce fichier doit être placé dans le répertoire
+                    <code>www</code> de votre outil de développement locale, par ex: <code>C:/laragon/www</code>.
+                </li>
+            </ul>
+            <p><br></p>
+            <p>Deux lignes <code>Bonjour le monde</code> doivent s'afficher ; en PHP, les deux types de <em>quote</em>
+                (simples : <code>''</code>, et doubles : <code>""</code>) sont comprises pour encadrer du texte. </p>
+            <p>A l'intérieur des quotes, vous pouvez insérer </p>
+            <ul>
+                <li><strong>du texte brut</strong></li>
+                <li>et/ou <strong>du code HTML</strong> : le code HTML sera ré-interprété par le navigateur pour
+                    l'affichage à l'écran</li>
+                <li>et/ou <strong>des variables</strong> : lors de l'affichage à l'écran, la variable sera remplacée par
+                    sa valeur ; <strong><em>ATTENTION : cela ne fonctionne qu'avec des quotes doubles !</em></strong>
+                    <blockquote>
+                        <p><strong>Note pédagogique :</strong> avec <code>"..."</code>, PHP peut interpoler des
+                            variables (ex: <code>"Bonjour $nom"</code>). Avec <code>'...'</code>, la chaîne est
+                            littérale. En HTML, pense aussi à échapper les données utilisateur avec
+                            <code>htmlspecialchars()</code> (on verra ça avec les formulaires).
+                        </p>
+                    </blockquote>
+
+                </li>
+            </ul>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$bonjour</span> = <span class="hljs-string">"Bonjour le monde"</span>; 
+<span class="hljs-keyword">echo</span> <span class="hljs-string">"&lt;b&gt;<span class="hljs-subst">$bonjour</span>&lt;/b&gt;"</span>; </code></pre>
+            <blockquote>
+                <p>Vous pourrez parfois rencontrer l'instruction <code>print()</code>, ou <code>printr()</code>, qui
+                    permettent également d'afficher quelque chose.<br>
+                    Bien que proche de <code>echo</code>, ces fonctions connaissent quelques
+                    subtilités de fonctionnement, et sont en outre un peu plus lentes à
+                    l'exécution ; il est donc recommandé d'utiliser <code>echo</code> par défaut...</p>
+            </blockquote>
+            <p><br></p>
+            <h4 id="123">Echappement de caractères</h4>
+            <p>Si le texte qui doit s'afficher à l'écran contient un caractère ou symbole interprété de base par PHP,
+                comme les <code>'</code> ou <code>"</code> des quotes, il faudra <em>échapper</em> votre cractère à
+                l'intérieur de votre chaîne. </p>
+            <p><strong><em>Exemple : </em></strong></p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">echo</span> <span class="hljs-string">"Affichage d'un guillemet double : \" "</span>; </code></pre>
+            <p>De la même façon, vous pourrez parfois inclure les caractères
+                spéciaux suivants afin de gérer, notamment, une meilleure lisibilité de
+                votre code source (touches <code>CTRL</code>+<code>U</code> dans un navigateur) :</p>
+            <ul>
+                <li><code>\n</code> : saut de ligne </li>
+                <li><code>\r</code> : fin de ligne </li>
+                <li><code>\t</code> : tabulation </li>
+            </ul>
+            <p>Exemple : </p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">echo</span> <span class="hljs-string">"Bonjour le monde,\ncomment allez-vous ?"</span>; </code></pre>
+            <blockquote>
+                <p>ATTENTION : les caractères <code>\n</code>, <code>\r</code>, <code>\t</code>,
+                    etc. permettant historiquement de positionner le texte dans une page
+                    (avant l'existence du HTML, par exemple), sont interprêtés par le PHP,
+                    mais pas par le HTML ! Ainsi, l'instruction ci-dessus donnera bien le
+                    rendu suivant : </p>
+                <pre><code class="language-html hljs language-xml">Bonjour le monde,
+comment allez-vous ?</code></pre>
+                <p>Mais si l'on encadre la phrase par des balises HTML comme ceci :</p>
+                <pre><code class="language-php hljs"><span class="hljs-keyword">echo</span> <span class="hljs-string">"&lt;p&gt;Bonjour le monde,\ncomment allez-vous ?&lt;/p&gt;"</span>; </code></pre>
+                <p>On obtiendra :</p>
+                <pre><code class="language-html hljs language-xml">Bonjour le monde,\ncomment allez-vous ?</code></pre>
+                <p>Attention au rendu utilisateur, donc... !</p>
+                <blockquote>
+                    <p><strong>Rappel important :</strong> <code>\n</code> agit sur le <em>code source</em> (flux
+                        envoyé). Pour un retour à la ligne visible dans une page HTML, on utilise une balise comme
+                        <code>&lt;br&gt;</code> ou des blocs (<code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>) + du
+                        CSS.
+                    </p>
+                </blockquote>
+
+            </blockquote>
+            <p><br></p>
+            <h3 id="133">Les instructions <code>printf</code> et <code>sprintf</code></h3>
+            <p>Les fonctions <code>printf</code> et <code>sprintf</code> servent au formatage de chaînes. </p>
+            <p><strong><em>Exemple :</em></strong> </p>
+            <pre><code class="language-php hljs">&lt;html&gt;
+    &lt;body&gt;
+        <span class="hljs-meta">&lt;?php</span>
+            <span class="hljs-variable">$euro</span>=<span class="hljs-number">6.55957</span>;
+            <span class="hljs-title function_ invoke__">printf</span>(<span class="hljs-string">"%.2f FF&lt;br /&gt;"</span>,<span class="hljs-variable">$euro</span>);
+            <span class="hljs-variable">$money1</span> = <span class="hljs-number">68.75</span>;
+            <span class="hljs-variable">$money2</span> = <span class="hljs-number">54.35</span>;
+            <span class="hljs-variable">$money</span> = <span class="hljs-variable">$money1</span> + <span class="hljs-variable">$money2</span>;
+            <span class="hljs-comment">// echo $money affichera "123.1";</span>
+            <span class="hljs-keyword">echo</span> <span class="hljs-string">"affichage sans printf : "</span> . <span class="hljs-variable">$money</span> . <span class="hljs-string">"&lt;br /&gt;"</span>;
+            <span class="hljs-variable">$monformat</span> = <span class="hljs-title function_ invoke__">sprintf</span>(<span class="hljs-string">"%01.2f"</span>, <span class="hljs-variable">$money</span>);
+
+            <span class="hljs-comment">// echo $monformat affichera "123.10"</span>
+            <span class="hljs-keyword">echo</span> <span class="hljs-string">"affichage avec printf : "</span> . <span class="hljs-variable">$monformat</span> . <span class="hljs-string">"&lt;br /&gt;"</span>;
+
+            <span class="hljs-variable">$year</span>=<span class="hljs-string">"2002"</span>;
+            <span class="hljs-variable">$month</span>=<span class="hljs-string">"4"</span>;
+            <span class="hljs-variable">$day</span>=<span class="hljs-string">"5"</span>;
+            <span class="hljs-variable">$varDate</span> = <span class="hljs-title function_ invoke__">sprintf</span>(<span class="hljs-string">"%04d-%02d-%02d"</span>, <span class="hljs-variable">$year</span>, <span class="hljs-variable">$month</span>, <span class="hljs-variable">$day</span>) ;
+
+            <span class="hljs-comment">// echo $varDate affichera "2002-04-05"</span>
+            <span class="hljs-keyword">echo</span> <span class="hljs-string">"affichage avec sprintf : "</span> . <span class="hljs-variable">$varDate</span>;
+        <span class="hljs-meta">?&gt;</span>
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p><br> </p>
+            <h3 id="138">Les fonctions de débogage</h3>
+            <p>Les fonctions de débogage vont vous aider à corriger des bugs (= débugger) votre code ! </p>
+            <blockquote>
+                <p>ATTENTION: ces fonctions sont <strong>très utiles</strong> en mode développement, mais à rayer
+                    lorsque votre site est en ligne ! </p>
+            </blockquote>
+            <blockquote>
+                <p><strong>Bon réflexe :</strong> en production, on journalise (logs) plutôt que d'afficher. Les
+                    informations de debug peuvent fuiter des données sensibles.</p>
+            </blockquote>
+            <p><br></p>
+            <h4 id="142"><strong>La fonction <code>var_dump()</code></strong></h4>
+            <p>La fonction <code>var_dump()</code> permet d'afficher des
+                informations (nom, type, valeur, longueur/nombre d'éléments si tableau)
+                sur n'importe quelle variable, tous types compris (scalaire, tableau,
+                objet...) :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$myVar</span> = <span class="hljs-string">"bonjour"</span>;
+<span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-variable">$myVar</span>);</code></pre>
+            <p>affiche à l'écran : </p>
+            <pre><code class="language-html hljs language-xml">C:\<span class="hljs-tag">&lt;<span class="hljs-name">chemin_projet</span>&gt;</span>\bonjour.php:3:string 'bonjour' (length=7)</code></pre>
+            <p><br></p>
+            <h4 id="148"><strong>La fonction <code>error_log()</code></strong></h4>
+            <p>La fonction <code>error_log()</code> permet d'ajouter volontairement des informations (messages d'erreurs
+                personnalisés) au fichier <code>php_error.log</code> contenant les logs natifs de PHP :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$myVar</span> = <span class="hljs-string">"KO"</span>;
+
+<span class="hljs-keyword">if</span> (<span class="hljs-variable">$myVar</span> != <span class="hljs-string">"OK"</span>) 
+{
+    <span class="hljs-title function_ invoke__">error_log</span>(<span class="hljs-string">"Ouh là pas bien"</span>);
+    <span class="hljs-comment">// Message enregistré dans le fichier 'C:/&lt;repertoire_logs&gt;/php_error.log' </span>
+}</code></pre>
+            <blockquote>
+                <p>ATTENTION: la fonction <code>error_log()</code> ne doit pas contenir de code HTML ou autre.</p>
+            </blockquote>
+            <p>Pour visualiser le contenu du fichier de log, exécutez le code ci-dessus, puis </p>
+            <ul>
+                <li>rendez-vous dans le répertoire des logs (trouvez le chemin avec le <code>phpinfo()</code>)</li>
+                <li>descendez jusqu'au dernier message : vous devriez y trouver un "Ouh
+                    là pas bien" (qui ne nous renseigne cependant pas sur la localisation de
+                    l'erreur, mais nous y remédierons plus bas)</li>
+            </ul>
+            <p><br></p>
+            <h3 id="155">Les "variables variables"</h3>
+            <blockquote>
+                <p><strong>Attention (bonne pratique) :</strong> les "variables variables" (<code>$$var</code>)
+                    existent, mais sont rarement une bonne idée en code moderne : lisibilité faible, risques de bugs et
+                    de sécurité. Préférer un tableau associatif (<code>$data["bonjour"]</code>).</p>
+            </blockquote>
+
+            <p>Il est possible de créer une variable à partir d'une autre variable ; la variable ainsi créée prendra le
+                nom de la <em>valeur</em> d'une première variable.<br>
+                Ceci se fait en préfixant le nom de la 1<sup>ère</sup> variable par deux signes <code>$</code> : </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$var1</span> = <span class="hljs-string">"bonjour"</span>;
+<span class="hljs-variable">$$var1</span> = <span class="hljs-string">"le monde"</span>; </code></pre>
+            <p>La seconde ligne, avec <code>$$var1</code>, crée une variable du nom de la valeur de <code>$var1</code>,
+                c'est-à-dire qu'ici, on a désormais une variable <code>$bonjour</code>, à laquelle on a affecté la
+                valeur <code>le monde</code>. </p>
+            <p>Vérifions : </p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">echo</span> <span class="hljs-variable">$bonjour</span>;
+<span class="hljs-comment">// affichera "le monde"</span></code></pre>
+            <p><br>
+                <br>
+            </p>
+            <h2 id="162">Les constantes</h2>
+            <p>Une <em>constante</em> est une variable dont la valeur ne change <strong>jamais</strong> dans toute
+                l'application; elle n'est donc définie qu'une seule fois et à un seul endroit dans le code. </p>
+            <p>Une variable constante est déclarée via la fonction <code>define("NOM_DE_LA_VARIABLE", valeur)</code> qui
+                prend en argument le nom de la varibale et sa valeur.<br>
+                Par convention, le nom de la variable s'écrit <strong>en majuscules</strong>. </p>
+            <p>L'exemple classique est la valeur de l'euro, qui donc ne change jamais; ici <code>EURO</code> sera le nom
+                de la variable constante : </p>
+            <pre><code class="language-php hljs"><span class="hljs-title function_ invoke__">define</span>(<span class="hljs-string">"EURO"</span>, <span class="hljs-number">6.55957</span>);
+<span class="hljs-keyword">echo</span> EURO; <span class="hljs-comment">// affiche 6.55957</span></code></pre>
+            <p><br></p>
+            <h3 id="168">Les métaconstantes</h3>
+            <p>En PHP, il existe une autre catégorie de constantes, appelées <em>métaconstantes</em>, qui permettent
+                d'obtenir des informations, par exemple sur le fichier et la ligne courante : </p>
+            <ul>
+                <li><code>__FILE__</code> : indique dans quel fichier on se trouve (peut être utilisé hors des classes,
+                    dans n'importe quel fichier PHP)</li>
+                <li>Dans la même veine, <code>__LINE__</code> donne le numéro de ligne.</li>
+            </ul>
+            <p><br></p>
+            <p><strong><em>Exemple :</em></strong></p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">echo</span> <span class="hljs-string">"Fichier : "</span> . <span class="hljs-keyword">__FILE__</span> . <span class="hljs-string">", ligne : "</span> . <span class="hljs-keyword">__LINE__</span> ;</code></pre>
+            <p>Ces métaconstantes peuvent par exemple être utiles pour le débogage, combinées avec le
+                <code>error_log()</code> :
+            </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$message</span> = <span class="hljs-keyword">__FILE__</span>.<span class="hljs-string">" l."</span>.<span class="hljs-keyword">__LINE__</span><span class="hljs-string">" : Ouh là pas bien "</span>;
+<span class="hljs-title function_ invoke__">error_log</span>(<span class="hljs-variable">$message</span>); </code></pre>
+            <p>Cette fois, le message d'erreur enregistré dans php_error.log indique le chemin complet du fichier
+                <em>bonjour.php</em> et le numéro de ligne du code exécuté. On peut ainsi construire un système de
+                gestion / logs d'erreurs.
+            </p>
+            <p><br>
+                <br>
+            </p>
+            <h2 id="178">Les Superglobales</h2>
+            <blockquote>
+                <p><strong>Point sécurité :</strong> les valeurs venant de <code>$_GET</code>, <code>$_POST</code>, etc.
+                    proviennent de l'utilisateur. On ne leur fait jamais confiance : validation, conversion de type
+                    (<code>intval</code>…), et échappement à l'affichage (<code>htmlspecialchars</code>) sont
+                    indispensables.</p>
+            </blockquote>
+
+            <p>Les variables superglobales sont des variables internes qui sont
+                toujours disponibles, quel que soit le contexte (elles peuvent toutefois
+                être désactivées - une à une - par la configuration du PHP). </p>
+            <p>Les superglobales sont préfixées à la fois par les signes <code>$</code> et <code>_</code> (trait
+                souligné ou <em>underscore</em>).</p>
+            <p>Une superglobale se comporte comme un tableau associatif. </p>
+            <p><br></p>
+            <p><strong><em>Exemple :</em></strong> </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$_GET</span>[<span class="hljs-string">"societe"</span>] = <span class="hljs-string">"Plouf"</span>;
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$_GET</span>[<span class="hljs-string">'societe"]; // Affiche '</span>Plouf<span class="hljs-string">' </span></code></pre>
+            <p><br></p>
+            <p>Liste des superglobales PHP :</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Fonction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>$_SERVER</code></td>
+                        <td>contient des informations sur la configuration PHP et script (fichier) en cours d'exécution
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>$_GET</code></td>
+                        <td>retourne une paire clé/valeur passée par une requête HTTP de type GET (notamment dans les
+                            URL)</td>
+                    </tr>
+                    <tr>
+                        <td><code>$_POST</code></td>
+                        <td>retourne une paire clé/valeur passée par une requête HTTP de type POST (notammeent dans un
+                            formulaire)</td>
+                    </tr>
+                    <tr>
+                        <td><code>$_FILES</code></td>
+                        <td>retourne les informations d'un fichier chargé dans un formulaire (champ de type
+                            <code>file</code>)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>$_COOKIE</code></td>
+                        <td>définit et/ou retourne les informations contenues dans un cookie</td>
+                    </tr>
+                    <tr>
+                        <td><code>$_SESSION</code></td>
+                        <td>définit et/ou retourne les informations d'une session</td>
+                    </tr>
+                    <tr>
+                        <td><code>$_REQUEST</code></td>
+                        <td>donne les informations d'une requête HTTP de type GET ou POST, quand
+                            on ignore dans quel type la requête HTTP a été envoyée (équivalent de <code>$_GET</code> et
+                            <code>$_POST</code>)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><br></p>
+            <h3 id="189">Les variables système : <code>$_SERVER</code></h3>
+            <p>Les variables système sont des variables dont la valeur est <em>définie</em> par le serveur. Vous n'avez
+                pas à affecter cette valeur, et ne pouvez pas la modifier, uniquement la consulter. </p>
+            <p><strong>Toutes ces variables sont contenues dans la superglobale <code>$_SERVER</code>.</strong><br>
+                <code>$_SERVER</code> est un tableau associatif, dont chaque entrée apporte une information.
+            </p>
+            <p>Par exemple : </p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">echo</span> <span class="hljs-variable">$_SERVER</span>[<span class="hljs-string">"SERVER_NAME"</span>];</code></pre>
+            <p>affiche le nom de l'hôte (= serveur), soit souvent pour nous, <code>localhost</code> ou
+                <code>127.0.0.1</code>.
+            </p>
+            <p><br></p>
+            <p>Pour visualiser l'ensemble des informations contenues dans <code>$_SERVER</code>, en mode développement,
+                on peut utiliser la méthode <code>var_dump()</code> : </p>
+            <pre><code class="language-php hljs"><span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-variable">$_SERVER</span>);</code></pre>
+            <p>affichera toutes les variables du tableau associatif <code>$_SERVER</code>.</p>
+            <p><br></p>
+            <p>Parmi les variables du tableau <code>$_SERVER</code>, celles-ci vous seront utiles : </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Description</th>
+                        <th>Exemple de valeur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>DOCUMENT_ROOT</code></td>
+                        <td>Adresse physique du répertoire contenant le répertoire par défaut.</td>
+                        <td><code>c:/&lt;chemin_projet&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>HTTP_ACCEPT_LANGUAGE</code></td>
+                        <td>Pays d'origine du visiteur sous forme de code de 2 lettres.</td>
+                        <td><code>fr</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>HTTP_REFERER</code></td>
+                        <td>L'adresse de la page (si elle existe) qui a conduit le client à la page courante</td>
+                        <td><code>http://localhost/jarditou/liste.php</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>HTTP_USER_AGENT</code></td>
+                        <td>Nom et version du navigateur utilisé par le visiteur (client)</td>
+                        <td><code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>REMOTE_ADDR</code></td>
+                        <td>Adresse IP du visiteur qui consulte la page.</td>
+                        <td><code>200.10.41.214</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>SCRIPT_FILENAME</code></td>
+                        <td>Le chemin absolu jusqu'au script courant</td>
+                        <td><code>c:/&lt;chemin_projet&gt;/jarditou/index.php</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>SERVER_ADDR</code></td>
+                        <td>Adresse IP du serveur</td>
+                        <td>(<code>127.0.0.1</code> en IPv4 ou <code>::1</code> en IPv6</td>
+                    </tr>
+                    <tr>
+                        <td><code>SERVER_NAME</code></td>
+                        <td>Le nom du serveur hôte qui exécute le script suivant. Si le script
+                            est exécuté sur un hôte virtuel, ce sera la valeur définie pour cet hôte
+                            virtuel</td>
+                        <td><code>localhost</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>SERVER_PORT</code></td>
+                        <td>Le port de la machine serveur utilisé pour les communications. Par
+                            défaut, c'est '80'; en utilisant SSL, par exemple, il sera remplacé par
+                            le numéro de port HTTP sécurisé.</td>
+                        <td><code>80</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>REQUEST_METHOD</code></td>
+                        <td>Méthode de requête utilisée pour accéder à la page</td>
+                        <td><code>GET</code>, <code>POST</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>QUERY_STRING</code></td>
+                        <td>La chaîne de requête, si elle existe, qui est utilisée pour accéder à la page</td>
+                        <td><code>page=1&amp;categorie=2</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>DOCUMENT_ROOT</code></td>
+                        <td>Chemin depuis la racine (root) vers le fichier (document)</td>
+                        <td><code>C:/&lt;chemin_projet&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>REQUEST_URL</code></td>
+                        <td>L'URL qui a été fournie pour accéder à cette page (en pratique, on utilise plutôt
+                            <code>REQUEST_URI</code>)
+                        </td>
+                        <td><code>/admin/index.php?to=phpinfo</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>SCRIPT_NAME</code></td>
+                        <td>Contient le nom du script courant. Cela sert lorsque les pages doivent s'appeler elles-mêmes
+                        </td>
+                        <td><code>/admin/index.php</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>REQUEST_TIME</code></td>
+                        <td>Heure de début de la requête (= timestamp = timbre de temps), exprimé en secondes depuis le
+                            01/01/1970)</td>
+                        <td><code>1542022030</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><a href="http://php.net/manual/fr/reserved.variables.server.php" target="_blank">--&gt; Voir ici la
+                    documentation complète de PHP sur les variables serveur</a></p>
+            <p><br>
+                <br>
+                <br>
+            </p>
+        </div>
+    </div>
+    <script>hljs.highlightAll();</script>
+    <script src="assets/js/menu-markdown.js"></script>
+    <script>document.title = document.querySelector("h1").textContent;</script>
+</body>
+
+</html>

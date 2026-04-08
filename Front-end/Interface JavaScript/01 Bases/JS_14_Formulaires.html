@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>14 Les Formulaires</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">14 Les formulaires</h1>
+
+      <h2 id="2">Généralités</h2>
+      <p>
+        Les formulaires HTML sont la porte d’entrée des données saisies par
+        l’utilisateur : inscription, connexion, recherche, contact, etc.
+      </p>
+      <p>
+        Avec JavaScript, on peut accéder à chaque élément d’un
+        formulaire&nbsp;:
+      </p>
+      <ul>
+        <li>lire sa valeur,</li>
+        <li>modifier son contenu ou son apparence,</li>
+        <li>valider les données avant envoi au serveur,</li>
+        <li>réagir aux événements (clic, changement, soumission…).</li>
+      </ul>
+      <p>
+        C’est ce qui permet de créer des formulaires
+        <strong>interactifs</strong> et <strong>conviviaux</strong> (messages
+        d’erreur, surlignage des champs invalides, etc.).
+      </p>
+
+      <hr />
+
+      <h2 id="6">Déclaration d’un formulaire</h2>
+
+      <p>
+        Un formulaire est déclaré en HTML avec la balise
+        <code>&lt;form&gt;</code> :
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form&gt;
+  ...
+&lt;/form&gt;</code></pre>
+
+      <p>
+        En pratique, on utilise presque toujours plusieurs attributs
+        importants&nbsp;:
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form
+  id="contact-form"
+  name="contactForm"
+  action="/api/contact"
+  method="post"
+&gt;
+  ...
+&lt;/form&gt;</code></pre>
+
+      <ul>
+        <li>
+          <code>id</code> : identifiant unique, très pratique pour cibler le
+          formulaire avec JavaScript
+          (<code>document.querySelector('#contact-form')</code>).
+        </li>
+        <li>
+          <code>name</code> : nom logique du formulaire, encore utilisé par
+          l’API <code>document.forms</code>.
+        </li>
+        <li>
+          <code>action</code> : URL vers laquelle le formulaire sera envoyé
+          (côté serveur).
+        </li>
+        <li>
+          <code>method</code> : méthode HTTP d’envoi (<code>get</code> ou
+          <code>post</code> en général).
+        </li>
+      </ul>
+
+      <blockquote>
+        <p>
+          Si tu utilises le formulaire uniquement pour des traitements côté
+          client (sans serveur), <code>action</code> peut être vide, et tu
+          peux intercepter la soumission en JavaScript pour empêcher l’envoi
+          par défaut.
+        </p>
+      </blockquote>
+
+      <hr />
+
+      <h2 id="11">Accéder au formulaire et à ses éléments</h2>
+
+      <p>
+        Le formulaire fait partie du DOM, tu peux donc y accéder comme à
+        n’importe quel autre élément.
+      </p>
+
+      <h3>Anciennes syntaxes (encore visibles dans du code)</h3>
+
+      <pre><code class="language-javascript hljs">// Via le nom du formulaire (attribut name)
+document.form1              // si &lt;form name="form1"&gt;
+
+// Via la collection document.forms
+document.forms[0]           // premier formulaire de la page
+document.forms['form1']     // formulaire dont name="form1"</code></pre>
+
+      <h3>Syntaxes modernes recommandées</h3>
+
+      <pre><code class="language-javascript hljs">// Cibler via id
+const form = document.getElementById('contact-form');
+
+// Ou avec querySelector (CSS)
+const form2 = document.querySelector('#contact-form');</code></pre>
+
+      <p>
+        Pour accéder directement à un champ du formulaire, on utilise
+        principalement :
+      </p>
+
+      <pre><code class="language-javascript hljs">// Par identifiant
+const emailInput = document.getElementById('email');
+
+// Par name (renvoie une NodeList)
+const inputsNom = document.getElementsByName('nom');
+
+// Ciblage moderne (CSS)
+const cityInput = document.querySelector('#city');           // par id
+const allErrors = document.querySelectorAll('.error-message'); // par classe</code></pre>
+
+      <p>
+        Sur un élément de formulaire, on lit et on écrit la valeur avec la
+        propriété <code>value</code>.
+      </p>
+
+      <pre><code class="language-javascript hljs">console.log(emailInput.value); // lire
+emailInput.value = 'test@example.com'; // écrire</code></pre>
+
+      <hr />
+
+      <h3 id="16">Contrôles de saisie (validation côté client)</h3>
+
+      <p>
+        JavaScript permet de valider les formulaires côté client, avant
+        l’envoi au serveur&nbsp;:
+      </p>
+      <ul>
+        <li>vérifier qu’un champ est rempli&nbsp;;</li>
+        <li>
+          vérifier un code postal, une adresse email, un numéro de
+          téléphone&nbsp;;
+        </li>
+        <li>afficher des messages d’erreur personnalisés.</li>
+      </ul>
+
+      <blockquote>
+        <p>
+          Même avec une validation JavaScript, il reste
+          <strong>obligatoire</strong>
+          de contrôler les données côté serveur. JavaScript peut être
+          désactivé ou contourné.
+        </p>
+      </blockquote>
+
+      <h4>HTML5 + JavaScript : la combinaison moderne</h4>
+
+      <p>
+        HTML5 propose déjà des attributs de validation&nbsp;:
+        <code>required</code>, <code>type="email"</code>,
+        <code>minlength</code>, <code>maxlength</code>, <code>pattern</code>,
+        etc.
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form id="signup-form" novalidate&gt;
+  &lt;label&gt;Email&lt;/label&gt;
+  &lt;input
+    id="email"
+    name="email"
+    type="email"
+    required
+    placeholder="vous@example.com"
+  /&gt;
+
+  &lt;button type="submit"&gt;S'inscrire&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+      <p>
+        L’attribut <code>novalidate</code> désactive les popups par défaut du
+        navigateur pour te laisser la main sur les messages (via JS).
+      </p>
+
+      <h4>Intercepter la soumission avec <code>addEventListener</code></h4>
+
+      <p>
+        Bonne pratique moderne : intercepter l’événement
+        <code>submit</code> en JavaScript et utiliser
+        <code>event.preventDefault()</code> pour empêcher l’envoi si les
+        données sont invalides.
+      </p>
+
+      <pre><code class="language-javascript hljs">const form = document.querySelector('#signup-form');
+
+form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault(); // empêche l'envoi automatique
+
+  const emailInput = document.querySelector('#email');
+  const email = emailInput.value.trim();
+
+  if (!email) {
+    alert('Merci de saisir votre email.');
+    emailInput.focus();
+    return;
+  }
+
+  if (!email.includes('@')) {
+    alert("L'adresse email doit contenir '@'.");
+    emailInput.focus();
+    return;
+  }
+
+  // Si tout est OK, tu peux soit :
+  // - soumettre vraiment le formulaire
+  //   form.submit();
+  // - soit envoyer les données via fetch() (AJAX)
+  console.log('Formulaire valide, envoi au serveur…');
+});</code></pre>
+
+      <h4 id="23">Ancienne approche : <code>onsubmit="return ..."</code></h4>
+
+      <p>
+        Tu rencontreras beaucoup d’exemples où le contrôle passe par un
+        attribut HTML <code>onsubmit</code> qui appelle une fonction JS
+        renvoyant <code>true</code> ou <code>false</code>.
+      </p>
+
+      <pre><code class="language-html hljs">&lt;!-- Approche historique, à connaître mais à éviter dans du nouveau code --&gt;
+&lt;form id="form1" onsubmit="return checkForm(this);"&gt;
+  &lt;input type="text" name="chp" value="essai" /&gt;
+  &lt;input type="submit" value="Valider" /&gt;
+&lt;/form&gt;
+
+&lt;script&gt;
+  function checkForm(f) {
+    alert('Contrôle champ ' + f.elements['chp'].value);
+    return false; // n'envoie pas le formulaire
+  }
+&lt;/script&gt;</code></pre>
+
+      <p>
+        Cette forme fonctionne, mais mélange HTML et JavaScript. On lui
+        préfère aujourd’hui une approche “non intrusive” en attachant les
+        écouteurs via JavaScript.
+      </p>
+
+      <hr />
+
+      <h2 id="34">Propriétés utiles des principaux champs HTML</h2>
+
+      <h3 id="35">
+        Zones de texte : <code>input type="text"</code> et
+        <code>&lt;textarea&gt;</code>
+      </h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>name</code></td>
+            <td>
+              Nom du contrôle, utilisé lors de l’envoi au serveur (clé du
+              paramètre) et dans certaines API JS
+              (<code>form.elements['nom']</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>value</code></td>
+            <td>
+              Valeur actuelle du champ (celle saisie par l’utilisateur ou
+              définie par script).
+            </td>
+          </tr>
+          <tr>
+            <td><code>defaultValue</code></td>
+            <td>
+              Valeur initiale définie dans le HTML (par l’attribut
+              <code>value</code> ou le contenu de <code>textarea</code>).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Toute valeur lue dans un champ est une
+        <strong>chaîne de caractères</strong>.
+      </p>
+
+      <pre><code class="language-javascript hljs">const priceInput = document.querySelector('#price');
+
+// Conversion en nombre
+const price = parseFloat(priceInput.value.replace(',', '.'));
+
+if (Number.isNaN(price)) {
+  alert('Merci de saisir un nombre valide.');
+}</code></pre>
+
+      <h3 id="39">Boutons radio : <code>input type="radio"</code></h3>
+
+      <p>
+        Les boutons radio fonctionnent en <strong>groupes</strong>. Tous les
+        boutons d’un même groupe partagent le <code>name</code>, mais ont des
+        valeurs <code>value</code> différentes.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>name</code></td>
+            <td>Nom du groupe de boutons radio.</td>
+          </tr>
+          <tr>
+            <td><code>value</code></td>
+            <td>Valeur renvoyée lorsque ce bouton est sélectionné.</td>
+          </tr>
+          <tr>
+            <td><code>checked</code></td>
+            <td>
+              Booléen indiquant si le bouton est actuellement sélectionné.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <pre><code class="language-javascript hljs">// Récupérer la valeur sélectionnée dans un groupe
+const selected = document.querySelector('input[name="gender"]:checked');
+if (selected) {
+  console.log('Genre choisi :', selected.value);
+} else {
+  console.log('Aucun choix sélectionné');
+}</code></pre>
+
+      <h3 id="41">Cases à cocher : <code>input type="checkbox"</code></h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>name</code></td>
+            <td>
+              Nom du contrôle (souvent identique pour un groupe d’options).
+            </td>
+          </tr>
+          <tr>
+            <td><code>checked</code></td>
+            <td>
+              Booléen indiquant si la case est cochée (<code>true</code>) ou
+              non (<code>false</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>value</code></td>
+            <td>
+              Valeur envoyée si la case est cochée (souvent “on” si non
+              précisée).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <pre><code class="language-javascript hljs">const newsletter = document.querySelector('#newsletter');
+
+if (newsletter.checked) {
+  console.log('Inscrit à la newsletter');
+} else {
+  console.log('Pas inscrit');
+}</code></pre>
+
+      <h3 id="43">Listes de sélection : <code>&lt;select&gt;</code></h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>name</code></td>
+            <td>Nom de la liste, utilisé lors de l’envoi au serveur.</td>
+          </tr>
+          <tr>
+            <td><code>length</code></td>
+            <td>Nombre d’options dans la liste.</td>
+          </tr>
+          <tr>
+            <td><code>selectedIndex</code></td>
+            <td>
+              Index de l’option sélectionnée (commence à 0, vaut -1 si rien
+              n’est sélectionné).
+            </td>
+          </tr>
+          <tr>
+            <td><code>value</code></td>
+            <td>
+              Valeur de l’option sélectionnée (<code>option.value</code> ou
+              texte si <code>value</code> est absent).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <pre><code class="language-javascript hljs">const techSelect = document.querySelector('#tech');
+
+console.log(techSelect.selectedIndex);
+console.log(techSelect.value);
+
+const selectedOption = techSelect.options[techSelect.selectedIndex];
+console.log(selectedOption.text);</code></pre>
+
+      <hr />
+
+      <h3 id="45">L’emploi de <code>this</code> dans les formulaires</h3>
+
+      <p>
+        Le mot-clé <code>this</code> désigne l’<strong>objet courant</strong>.
+        Dans le contexte des formulaires, on le rencontre encore dans des
+        attributs HTML :
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form name="form3"&gt;
+  &lt;input type="radio" name="choix" value="1" /&gt; Choix 1&lt;br /&gt;
+  &lt;input type="radio" name="choix" value="2" /&gt; Choix 2&lt;br /&gt;
+  &lt;input type="radio" name="choix" value="3" /&gt; Choix 3&lt;br /&gt;
+
+  &lt;input
+    type="button"
+    value="Quel est votre choix ?"
+    onclick="choixprop(this.form)"
+  /&gt;
+&lt;/form&gt;
+
+&lt;script&gt;
+  function choixprop(form) {
+    const choix = form.querySelector('input[name="choix"]:checked');
+    if (!choix) {
+      alert('Aucun choix sélectionné');
+      return;
+    }
+    alert('Choix numéro ' + choix.value);
+  }
+&lt;/script&gt;</code></pre>
+
+      <p>
+        Ici, <code>this.form</code> désigne le formulaire auquel appartient le
+        bouton. Dans du code moderne, on privilégie cependant
+        <code>addEventListener</code> et des variables explicites :
+      </p>
+
+      <pre><code class="language-javascript hljs">const form3 = document.querySelector('form[name="form3"]');
+const button = form3.querySelector('input[type="button"]');
+
+button.addEventListener('click', () =&gt; {
+  const choix = form3.querySelector('input[name="choix"]:checked');
+  ...
+});</code></pre>
+
+      <p>
+        En dehors des formulaires, <code>this</code> sert aussi à définir des
+        propriétés d’objets :
+      </p>
+
+      <pre><code class="language-javascript hljs">function Livre(auteur, editeur, prix) {
+  this.auteur = auteur;
+  this.editeur = editeur;
+  this.prix = prix;
+}
+
+const l1 = new Livre('Mon Auteur', 'Mon Éditeur', 15.0);
+console.log(`Le livre de ${l1.auteur} coûte ${l1.prix} €.`);</code></pre>
+
+      <p>
+        En JavaScript moderne, on utiliserait plutôt la syntaxe
+        <code>class</code>, mais l’exemple ci-dessus reste fréquent dans du
+        code existant.
+      </p>
+
+      <hr />
+
+      <h3 id="57">Exercice : formulaire de contact avec validation</h3>
+
+      <p>
+        Réalise un fichier <code>contact.html</code> correspondant au modèle
+        ci-dessous, avec les contraintes suivantes.
+      </p>
+      <p>
+        <img src="assets/img/Form1.png" alt="formulaire à réaliser" />
+      </p>
+
+      <p>
+        Le champ <strong>"Environnement technique"</strong> est une liste
+        déroulante dans laquelle on peut choisir les techniques utilisées pour
+        le projet proposé, ainsi qu'une zone de texte qui reçoit la sélection.
+      </p>
+
+      <ul>
+        <li>HTML / CSS : structure et mise en forme de pages web</li>
+        <li>
+          JavaScript : interactions client, manipulation du DOM, événements
+        </li>
+        <li>PHP / MySQL : développement backend avec base de données</li>
+        <li>Java : applications serveur robustes et multiplateformes</li>
+        <li>.NET : développement d’applications Windows ou web (ASP.NET)</li>
+        <li>
+          Autre : frameworks, bibliothèques ou technologies spécifiques au
+          projet
+        </li>
+      </ul>
+
+      <h4>Contraintes de saisie</h4>
+      <ul>
+        <li>Le formulaire sera envoyé avec la méthode <code>POST</code>.</li>
+        <li>La “Société” doit comporter au moins 1 caractère.</li>
+        <li>
+          La “Personne à contacter” doit comporter au moins 1 caractère.
+        </li>
+        <li>Le “Code postal” doit comporter 5 caractères numériques.</li>
+        <li>La “Ville” doit comporter au moins 1 caractère.</li>
+        <li>
+          L’email doit au minimum contenir le caractère <code>@</code> (tu
+          peux utiliser un contrôle plus strict si tu veux).
+        </li>
+      </ul>
+
+      <p>
+        Le champ <strong>“Environnement technique”</strong> est composé d’une
+        liste déroulante (select) pour choisir une technologie, et d’une zone
+        de texte qui cumule les choix et permet d’ajouter des informations
+        manuelles.
+      </p>
+
+      <ul>
+        <li>
+          La valeur “Choisissez” de la liste ne doit jamais être ajoutée dans
+          la zone de texte.
+        </li>
+        <li>
+          L’utilisateur peut ajouter ou modifier librement le contenu de la
+          zone de texte.
+        </li>
+      </ul>
+
+      <p>
+        Tu peux t’inspirer de l’interface illustrée dans les images du cours
+        (maquette texte ou capture).
+      </p>
+
+      <h4>Validation à implémenter</h4>
+
+      <p>Au clic sur le bouton d’envoi, ton script doit :</p>
+      <ol>
+        <li>
+          Empêcher l’envoi par défaut (<code>event.preventDefault()</code>).
+        </li>
+        <li>Contrôler chaque champ selon les règles ci-dessus.</li>
+        <li>
+          Afficher des messages d’erreur appropriés (via
+          <code>alert()</code>, message sous le champ, ou les deux).
+        </li>
+        <li>
+          N’autoriser l’envoi (appel à <code>form.submit()</code> ou
+          <code>fetch()</code>) que si tous les contrôles sont OK.
+        </li>
+      </ol>
+
+      <p>Exemple de squelette JavaScript possible :</p>
+
+      <pre><code class="language-javascript hljs">const form = document.querySelector('#contact-form');
+const companyInput = document.querySelector('#company');
+const contactInput = document.querySelector('#contact');
+const postalInput = document.querySelector('#postal-code');
+const cityInput = document.querySelector('#city');
+const emailInput = document.querySelector('#email');
+
+form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault();
+
+  let hasError = false;
+
+  if (!companyInput.value.trim()) {
+    alert('La société est obligatoire.');
+    hasError = true;
+  }
+
+  if (!contactInput.value.trim()) {
+    alert('La personne à contacter est obligatoire.');
+    hasError = true;
+  }
+
+  if (!/^\d{5}$/.test(postalInput.value.trim())) {
+    alert('Le code postal doit comporter 5 chiffres.');
+    hasError = true;
+  }
+
+  if (!cityInput.value.trim()) {
+    alert('La ville est obligatoire.');
+    hasError = true;
+  }
+
+  const email = emailInput.value.trim();
+  if (!email || !email.includes('@')) {
+    alert("L'adresse email doit contenir '@'.");
+    hasError = true;
+  }
+
+  if (!hasError) {
+    // soit form.submit(), soit traitement AJAX via fetch()
+    console.log('Formulaire contact valide, envoi…');
+  }
+});</code></pre>
+
+      <p>
+        Pour la partie “Environnement technique”, tu peux ajouter un bouton
+        “Ajouter” qui prend la valeur sélectionnée dans la liste (sauf
+        “Choisissez”) et la concatène à la zone de texte, en évitant les
+        doublons si tu veux aller plus loin.
+      </p>
+
+      <p>L’objectif de cet exercice est de manipuler :</p>
+      <ul>
+        <li>les valeurs des champs (<code>value</code>),</li>
+        <li>les événements <code>submit</code> et <code>click</code>,</li>
+        <li>une regex simple pour le code postal,</li>
+        <li>
+          et l’interaction entre une liste déroulante et une zone de texte.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+  </script>
+  <script>
+    document.title = "" + document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

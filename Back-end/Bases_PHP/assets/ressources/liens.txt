@@ -1,0 +1,16 @@
+https://www.php.net
+https://developer.mozilla.org
+https://www.w3.org
+https://stackoverflow.com
+https://github.com
+https://git-scm.com
+https://symfony.com
+https://www.mysql.com
+https://mariadb.org
+https://www.postgresql.org
+https://www.gnu.org
+https://www.linux.org
+https://www.debian.org
+https://fr.wikipedia.org
+https://www.openstreetmap.org
+

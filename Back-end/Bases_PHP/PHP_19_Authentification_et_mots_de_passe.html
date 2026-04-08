@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>L'authentification et les mots de passe</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - L'authentification et les mots de passe</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="3">La gestion des mots de passe</h2>
+            <h3 id="4">Introduction</h3>
+            <p>Le mot de passe est sûrement l'élément auquel on pense en premier
+                lieu en termes de sécurité informatique et en constitue aussi le maillon
+                faible. </p>
+            <p><a href="https://password.kaspersky.com/fr" target="_blank">Combien faut-il de temps pour craquer votre
+                    mot de passe ?</a></p>
+            <p><a href="https://www.undernews.fr/nos-services/tester-la-force-de-votre-mot-de-passe"
+                    target="_blank">Testeur de robustesse</a></p>
+            <h3 id="8">Stockage des mots de passe</h3>
+            <p>Un mot de passe ne doit <strong>jamais être stocké en clair</strong> : il doit être crypté à l’aide d’un
+                algorithme de cryptage afin que sa valeur ne puisse être lue.</p>
+      <div class="callout callout-info" role="note" aria-label="Vocabulaire">
+        <p><strong>Vocabulaire :</strong> pour les mots de passe, on parle surtout de <strong>hachage</strong> (hash) avec un sel, pas de chiffrement réversible. L'idée est précisément qu'on ne puisse pas retrouver le mot de passe d'origine, seulement vérifier qu'une saisie correspond au hash stocké.</p>
+      </div>
+
+            <p>Exemple : le mot de passe <code>vacances</code> sera transformé en
+                <code>$2y$10$xybwIx80qUbemOsCiobdZeK4JIg2qe8BrT83vGJF1QqyJ9bnycrx6</code>
+            </p>
+            <p>Si le sujet vous intéresse, vous pouvez consulter les ressources suivantes : </p>
+            <ul>
+                <li><a href="https://www.cnil.fr/fr/comprendre-les-grands-principes-de-la-cryptologie-et-du-chiffrement"
+                        target="_blank"></a><a
+                        href="https://www.cnil.fr/fr/comprendre-les-grands-principes-de-la-cryptologie-et-du-chiffrement">https://www.cnil.fr/fr/comprendre-les-grands-principes-de-la-cryptologie-et-du-chiffrement</a>
+                </li>
+                <li><a href="https://www.ssi.gouv.fr/particulier/bonnes-pratiques/crypto-le-webdoc/crypto-sensu"
+                        target="_blank"></a><a
+                        href="https://www.ssi.gouv.fr/particulier/bonnes-pratiques/crypto-le-webdoc/crypto-sensu">https://www.ssi.gouv.fr/particulier/bonnes-pratiques/crypto-le-webdoc/crypto-sensu</a>
+                </li>
+            </ul>
+            <blockquote>
+                <p>On peut lire sur le web des exemples utilisant les algorithmes <em>MD5</em> ou <em>SHA1</em>.
+                    C'était valable il y a une dizaine d'années, mais ces algorithmes ont été
+                    cassés (de nombreux sites web permettent de réafficher en clair une
+                    chaîne hachée en MD5 ou SHA1). </p>
+            </blockquote>
+            <p>Aujourd'hui, les fonctions PHP telles que <code>password_hash()</code> et <code>password_verify()</code>
+                permettent de gérer à moindre coût le problème du stockage des mots de passe. </p>
+            <h3 id="15">La fonction PHP password_hash()</h3>
+            <p>La fonction <a href="http://php.net/manual/fr/function.password-hash.php"
+                    target="_blank"><code>password_hash()</code></a>
+                permet d’utiliser des algorithmes de cryptage en PHP et donc de générer
+                le hash d’une chaîne de caractères, grain de sel inclus. </p>
+            <pre><code class="language-php hljs">    <span class="hljs-title function_ invoke__">password_hash</span>(<span class="hljs-variable">$chaine</span>, <span class="hljs-variable">$algorithme</span>);</code></pre>
+            <ul>
+                <li>1er argument (<code>$chaine</code>) : la chaîne à crypter (le mot de passe).</li>
+                <li>2ème argument (<code>$algorithme</code>) : l’algorithme de cryptage à utiliser.</li>
+            </ul>
+            <p>Comme l'algorithme de cryptage (2ème argument) est obligatoire, il
+                faut donc en indiquer un, y compris si on souhaite utiliser celui
+                proposé par défaut : dans ce cas il faut indiquer la valeur <code>PASSWORD_DEFAULT</code>. </p>
+            <p>La chaîne sera alors hachée avec <a href="https://fr.wikipedia.org/wiki/Bcrypt"
+                    target="_blank">bcrypt</a>, et le hash généré aura toujours une longueur de 60 caractères (la doc
+                officielle propose de prévoir un type <code>varchar(60)</code> pour le champ qui stockera le mot de
+                passe crypté dans la base de données) . </p>
+      <div class="callout callout-warn" role="note" aria-label="À retenir">
+        <p><strong>À retenir :</strong> <code>PASSWORD_DEFAULT</code> peut changer d'algorithme/paramètres au fil des versions de PHP. Pour le stockage, prévois une taille suffisante (souvent <code>VARCHAR(255)</code>) afin d'être tranquille, plutôt que de viser une longueur fixe trop serrée.</p>
+      </div>
+
+            <p>Exemple :</p>
+            <pre><code class="language-php hljs">    <span class="hljs-variable">$password_hash</span> = <span class="hljs-title function_ invoke__">password_hash</span>(<span class="hljs-string">"vacances"</span>, PASSWORD_DEFAULT);
+    <span class="hljs-keyword">echo</span> <span class="hljs-variable">$password_hash</span>; </code></pre>
+            <p>Ceci affichera <code>$2y$10$xybwIx80qUbemOsCiobdZeK4JIg2qe8BrT83vGJF1QqyJ9bnycrx6</code>. <strong>C'est
+                    cette valeur qu’il faut stocker en base de données</strong>. </p>
+            <h3 id="24">La fonction PHP password_verify()</h3>
+            <p>Pour vérifier si un mot de passe saisi est bien celui enregistré en base, il faut utiliser la fonction <a
+                    href="http://php.net/manual/fr/function.password-verify.php"
+                    target="_blank"><code>password_verify()</code></a>.</p>
+            <p>Cette fonction reçoit 2 paramètres obligatoires :</p>
+            <pre><code class="language-php hljs">password_verify(<span class="hljs-variable">$chaine_saisie_en_clair</span>, <span class="hljs-variable">$hash_stocke_en_bdd</span>);</code></pre>
+      <div class="callout callout-info" role="note" aria-label="Évolution des hashes">
+        <p><strong>Évolution :</strong> quand tu changes les options de hachage (ou quand PHP fait évoluer l'algorithme par défaut), tu peux ré-hacher progressivement au moment de la connexion avec <code>password_needs_rehash()</code>.</p>
+      </div>
+
+            <h3 id="28">Recommandations officielles</h3>
+            <p>L'Agence Nationale de la Sécurité des Systèmes Informatiques (ANSSI)
+                et la CNIL éditent des recommandations officielles pour les mots de
+                passe :</p>
+            <ul>
+                <li><a href="https://www.ssi.gouv.fr/guide/mot-de-passe" target="_blank" rel="noopener noreferrer">https://www.ssi.gouv.fr/guide/mot-de-passe</a>
+                </li>
+                <li><a href="https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-un-bon-mot-de-passe"
+                        target="_blank"></a><a
+                        href="https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-un-bon-mot-de-passe">https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-un-bon-mot-de-passe</a>
+                </li>
+            </ul>
+            <h3 id="31">Spécifications fonctionnelles</h3>
+            <h4 id="32">Création d'un compte</h4>
+            <ul>
+                <li>L'utilisateur renseigne un formulaire avec, pour identifiant unique,
+                    une adresse mail. L'information qui sert d'identifiant doit être
+                    strictement unique dans la base.</li>
+                <li>Un mot de passe est saisi par l'utilisateur</li>
+                <li>Si l'utilisateur choisit librement son mot de passe, il doit le saisir 2 fois (un second champ
+                    <em>Confirmation</em>)
+                </li>
+                <li>Tester la validité (comparer notamment les 2 saisies demandées), la
+                    robustesse (utiliser des expressions régulières) pour s'assurer que le
+                    mot de passe respecte les recommandations officielles.</li>
+                <li>Une fois que tout est valide, le mot de passe doit être haché.</li>
+                <li>la version hachée du mot de passe est ensuite enregistrée en base de données. </li>
+                <li>Ne jamais stocker un mot de passe en clair, ne jamais le mettre en
+                    session , envoyer un mail de confirmation sans renvoyer le mot de passe
+                    en clair comme on peut le voir parfois.</li>
+            </ul>
+            <h4 id="34">Authentification</h4>
+            <ul>
+                <li>
+                    <p>L'utilisateur saisit son identifiant et son mot de passe. Limiter les
+                        essais de connexion à 3 tentatives (recommandation officielle) et donc
+                        bloquer les utilisateurs qui ont atteint ce nombre (à stocker dans une
+                        colonne en base de données). </p>
+                </li>
+                <li>
+                    <p>Une fois l'utilisateur connecté, on stocke certaines informations
+                        (identifiant, nom/prénom) en session, mais jamais le mot de passe. </p>
+                </li>
+            </ul>
+      <div class="callout callout-warn" role="note" aria-label="Limiter les tentatives">
+        <p><strong>Limiter les tentatives :</strong> « 3 essais » est une bonne idée pédagogique, mais en pratique on préfère souvent une stratégie graduelle (délai croissant, fenêtre de temps, blocage temporaire) et on évite de donner des indices (message identique pour login ou mot de passe incorrect) afin de limiter l'énumération d'utilisateurs.</p>
+      </div>
+
+            <h4 id="36">Perte du mot de passe</h4>
+            <p>Lorsqu'un utilisateur ne se souvient plus de son mot de passe, il
+                faut bien entendu lui permettre d'en saisir un nouveau (impossible de
+                lui renvoyer l'actuel, puisqu'il est stocké en base sous forme hashée ).
+            </p>
+            <p>Pour cela : </p>
+      <div class="callout callout-info" role="note" aria-label="Réinitialisation sécurisée">
+        <p><strong>Réinitialisation sécurisée :</strong> dans l'email « mot de passe perdu », on envoie généralement un <strong>token à usage unique</strong> (avec expiration) qui pointe vers une page de réinitialisation. En base, on stocke idéalement un hash du token + une date d'expiration.</p>
+      </div>
+
+            <ul>
+                <li>Placer un lien du type <strong>mot de passe perdu</strong> sur le formulaire de connexion, qui
+                    aboutit donc sur un second formulaire</li>
+                <li>Le second formulaire demande l'identifiant : celui-ci demande le login ou l'adresse email de
+                    l'utilisateur</li>
+                <li>Si l'utilisateur est trouvé en base, on lui envoie un mail (qui
+                    permet de s'assurer qu'il s'agit du bon utilisateur) avec un lien vers
+                    un formulaire de saisie d’un nouveau mot de passe. </li>
+            </ul>
+            <blockquote>
+                <p>Ne jamais envoyer un mail contenant un nouveau mot de passe . </p>
+            </blockquote>
+            <h3 id="41">Exercice : formulaire d'authentification</h3>
+      <div class="callout callout-danger" role="note" aria-label="Attention">
+        <p><strong>Attention :</strong> le couple <code>admin/admin</code> est OK pour un exercice, mais dans une vraie appli on ne code jamais d'identifiants en dur, et on ne compare jamais un mot de passe en clair à une valeur stockée.</p>
+      </div>
+
+            <p>Créer un formulaire d'authentification utilisant le principe des sessions. </p>
+            <ul>
+                <li>
+                    <p>Créer un formulaire <code>login_form.php</code> contenant 2 champs :
+                        login (qui peut être l'adresse email) et mot de passe. Ce formulaire
+                        doit poster les données sur le script <code>login_script.php</code>.</p>
+                </li>
+                <li>
+                    <p>Le fichier <code>login_script.php</code> doit traiter les données du formulaire de la façon
+                        suivante:</p>
+                </li>
+                <li>
+                    <p>Si le login et le mot de passe sont corrects (pour exemple
+                        login='admin' et mot de passe='admin') alors nous initialisons une
+                        variable de session <code>auth</code> avec la valeur <code>ok</code>.</p>
+                </li>
+                <li>
+                    <p>Sinon la variable de session <code>auth</code> est détruite.</p>
+                </li>
+                <li>
+                    <p>Une autre page PHP devra être accessible uniquement si une session a
+                        été initialisée, c'est-à-dire si l'utilisateur s'est authentifié
+                        correctement (donc i la variable de session <code>auth</code> existe et contient la valeur
+                        <code>ok</code>). Si ce n'est pas le cas, l'utilisateur devra être redirigé sur la page de
+                        connexion.
+                    </p>
+                </li>
+            </ul>
+            <h3 id="44">Exercice : mot de passe</h3>
+            <p>Reprendre l'exercice précédent et y ajouter la gestion des mots de passe selon les consignes suivantes :
+            </p>
+            <ul>
+                <li>Créer une table <code>user</code> destinée à stocker le nom, le prénom, l'adresse mail, le mot de
+                    passe. </li>
+                <li>Créer un formulaire d'inscription pour renseigner et enregistrer les
+                    informations demandées. Celles-ci doivent être vérifiées correctement
+                    avant d'être enregistrées. </li>
+                <li>Modifier le script PHP d'authentification pour vérifier le login et le mot de passe par rapport au
+                    contenu de la table <code>user</code>. </li>
+                <li>Vous devrez utiliser les fonctions PHP <code>password_hash()</code> et
+                    <code>password_verify()</code>.
+                </li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

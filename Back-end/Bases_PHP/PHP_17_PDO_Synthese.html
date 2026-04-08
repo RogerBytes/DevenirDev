@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PDO - Synthèse</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP -&gt; PDO - Synthèse</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="3">Se connecter à une base de données</h2>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">try</span> {
+    <span class="hljs-variable">$db</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">PDO</span>(<span class="hljs-string">'mysql:host=localhost;dbname=record'</span>, <span class="hljs-string">'admin'</span>, <span class="hljs-string">'votremotdepasse'</span>);
+    <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">setAttribute</span>(PDO::<span class="hljs-variable constant_">ATTR_ERRMODE</span>, PDO::<span class="hljs-variable constant_">ERRMODE_EXCEPTION</span>);
+} <span class="hljs-keyword">catch</span> (PDOException <span class="hljs-variable">$e</span>) {
+    <span class="hljs-keyword">print</span> <span class="hljs-string">"Erreur !: "</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getMessage</span>() . <span class="hljs-string">"&lt;br&gt;"</span>;
+    <span class="hljs-keyword">die</span>();
+}</code></pre>
+      <div class="callout callout-warn" role="note" aria-label="Bonne pratique">
+        <p><strong>Bonne pratique :</strong> sur MySQL/MariaDB, pense souvent à préciser le <code>charset</code> (ex: <code>utf8mb4</code>) dans le DSN pour gérer correctement Unicode :</p>
+<pre><code class="language-php hljs">$db = new PDO('mysql:host=localhost;dbname=record;charset=utf8mb4', 'admin', 'votremotdepasse');</code></pre>
+      </div>
+
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="6">Exécuter une requête</h2>
+      <div class="callout callout-info" role="note" aria-label="Fetch modes">
+        <p><strong>Fetch modes :</strong> pense à garder en tête le mode de récupération :</p>
+        <ul>
+          <li><code>PDO::FETCH_ASSOC</code> - tableau associatif (<code>$row["col"]</code>)</li>
+          <li><code>PDO::FETCH_OBJ</code> - objet (<code>$row-&gt;col</code>)</li>
+        </ul>
+      </div>
+
+            <h3 id="7"><strong>Lecture globale</strong></h3>
+      <div class="callout callout-info" role="note" aria-label="Sécurité">
+        <p><strong>Rappel :</strong> <code>query()</code> est pratique pour une requête fixe. Dès qu'une valeur provient de l'utilisateur (formulaire, URL, etc.), utilise <code>prepare()</code> + <code>execute()</code> pour éviter les injections SQL.</p>
+      </div>
+
+            <pre><code class="language-php hljs"><span class="hljs-comment">// recherche de tous les artistes :</span>
+<span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">query</span>(<span class="hljs-string">"SELECT * FROM artist"</span>);
+
+<span class="hljs-comment">// récupération de tous les enregistrements trouvés avec fetchAll() :</span>
+<span class="hljs-variable">$tableau</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetchAll</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);
+
+<span class="hljs-comment">// manipulation des données :</span>
+<span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$tableau</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$ligne</span>) {
+    <span class="hljs-comment">// syntaxe avec $variable-&gt;nomcolonne à cause du mode PDO::FETCH_OBJ dans fetchAll()</span>
+    <span class="hljs-keyword">echo</span> <span class="hljs-variable">$ligne</span>-&gt;artist_name;
+}</code></pre>
+            <p><strong><em>ou</em></strong></p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// recherche de tous les artistes :</span>
+<span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">query</span>(<span class="hljs-string">"SELECT * FROM artist"</span>);
+
+<span class="hljs-comment">// récupération d'un enregistrement à la fois avec fetch() :</span>
+<span class="hljs-keyword">while</span> (<span class="hljs-variable">$ligne</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetch</span>())
+{
+    <span class="hljs-comment">// syntaxe avec $variable["nomcolonne"] car par défaut le fetch() prend le mode PDO::FETCH_ASSOC</span>
+    <span class="hljs-keyword">echo</span> <span class="hljs-variable">$ligne</span>[<span class="hljs-string">"artist_name"</span>];
+}</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="12"><strong>Lecture avec paramètres</strong></h3>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// exemple avec "Neil Young" :</span>
+<span class="hljs-variable">$name</span> = <span class="hljs-string">"Neil Young"</span>;
+
+<span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"SELECT * FROM artist WHERE artist_name= :nom"</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":nom"</span>, <span class="hljs-variable">$name</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();
+
+<span class="hljs-comment">// puis lecture des données :</span>
+<span class="hljs-variable">$tableau</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetchAll</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);</code></pre>
+            <p><strong><em>ou</em></strong></p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"SELECT * FROM artist WHERE artist_name=?"</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-variable">$name</span>));
+
+<span class="hljs-variable">$tableau</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetchAll</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);</code></pre>
+            <p><strong><em>ou</em></strong></p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"SELECT * FROM artist WHERE artist_name= :nom"</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindParam</span>(<span class="hljs-string">":nom"</span>, <span class="hljs-variable">$name</span>);
+
+<span class="hljs-comment">// ... autres traitements pouvant éventuellement changer la valeur de $name</span>
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();
+
+<span class="hljs-variable">$tableau</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetchAll</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);</code></pre>
+      <div class="callout callout-warn" role="note" aria-label="Précision">
+        <p><strong>Précision :</strong> la méthode PDO s'appelle <code>bindParam()</code> (et non <code>bindParameter()</code>). Elle lie une variable <strong>par référence</strong>, ce qui permet de modifier la valeur avant le <code>execute()</code>.</p>
+      </div>
+
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="19"><strong>Action d'insertion de données</strong></h3>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (?, ?);"</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-variable">$name</span>, <span class="hljs-variable">$url</span>));</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="22"><strong>Action de modification de données</strong></h3>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"UPDATE artist SET artist_name = :nom, artist_url = :url WHERE artist_id = :id;"</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":id"</span>, <span class="hljs-variable">$id</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":nom"</span>, <span class="hljs-variable">$name</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":url"</span>, <span class="hljs-variable">$url</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="25"><strong>Action de suppression de données</strong></h3>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"DELETE FROM artist WHERE artist_id = :id;"</span>);
+<span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-string">":id"</span> =&gt; <span class="hljs-variable">$id</span>));</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="28">Ressources complémentaires</h2>
+            <ul>
+                <li><a href="https://fr.wikipedia.org/wiki/PHP_Data_Objects">Définition de PDO</a></li>
+                <li><a href="https://www.php.net/manual/fr/book.pdo.php">Liste complète des méthodes de PDO</a></li>
+                <li><a href="https://www.php.net/manual/fr/pdo.setattribute.php">La méthode
+                        <code>setAttribute()</code></a> </li>
+                <li><a href="https://apprendre-php.com/tutoriels/tutoriel-29-les-classes-et-objets.html">Les classes et
+                        objets en PHP</a></li>
+                <li><a href="https://www.php.net/manual/fr/language.exceptions.php">Les exceptions</a> </li>
+                <li><a href="https://www.php.net/manual/fr/class.pdoexception.php">La classe PDOException</a> </li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

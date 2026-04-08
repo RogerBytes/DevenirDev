@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>08 Tableaux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">08 Tableaux</h1>
+      <h2 id="2">Objectifs</h2>
+      <ul>
+        <li>Découvrir et comprendre la notion de tableau</li>
+        <li>
+          Créer et manipuler des tableaux et les données qu’ils contiennent.
+        </li>
+        <li>Connaître les fonctions courantes de manipulation de tableaux</li>
+      </ul>
+      <h2 id="4">Définition</h2>
+      <p>
+        Imaginons que dans un programme, nous ayons besoin simultanément de 12
+        valeurs, par exemple des notes pour calculer une moyenne. Évidemment,
+        la seule solution dont nous disposons à l’heure actuelle consiste à
+        déclarer douze variables, appelées par exemple N1, N2, N3… mais cela
+        ne change pas fondamentalement le problème, car arrivé au calcul, et
+        après une succession de douze instructions de lecture distinctes, cela
+        donnera obligatoirement quelque chose comme :
+      </p>
+      <p>
+        Moy = (N1 + N2 + N3 + N4 + N5 + N6 + N7 + N8 + N9 + N10 + N11 + N12) /
+        12
+      </p>
+      <p>
+        Ce qui est laborieux. Et pour un peu que nous soyons dans un programme
+        de gestion avec quelques centaines ou quelques milliers de valeurs à
+        traiter, cela se révèle fortement problématique.
+      </p>
+      <p>
+        Si, de plus, on est dans une situation où l’on ne peut pas savoir
+        d’avance combien il y aura de valeurs à traiter, on se retrouve là
+        face à un mur.
+      </p>
+      <p>
+        C’est pourquoi la programmation nous permet
+        <strong>de rassembler toutes ces variables en une seule</strong>, au
+        sein de laquelle chaque valeur sera désignée par un numéro.
+      </p>
+      <p>
+        En bon français, cela donnerait donc quelque chose du genre « la note
+        numéro 1 », « la note numéro 2 », « la note numéro 8 ».
+      </p>
+      <p>
+        Un tableau est une
+        <strong>suite d’éléments (une liste) de variables</strong>. On peut
+        accéder à un élément d’un tableau en utilisant sa position : l’index,
+        ou encore « indice », « clé ».
+      </p>
+      <p>
+        Un tableau s’utilise comme une variable et peut donc être passé en
+        argument à une fonction (y compris méthode d’une classe) ou être
+        retourné comme résultat d’une fonction.
+      </p>
+      <h2 id="13">Déclaration et création</h2>
+      <p>En JavaScript, un tableau peut se déclarer de plusieurs façons :</p>
+      <p>Initialisation d’un tableau vide (sans données) :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = []; </code></pre>
+      <p>Initialisation d’un tableau avec des données de type chaîne :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = [<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>]; <span class="hljs-comment">// Données de type chaîne</span>
+<span class="hljs-keyword">let</span> myTableau = [<span class="hljs-number">123</span>, <span class="hljs-number">456</span>, <span class="hljs-number">789</span>]; <span class="hljs-comment">// Données de type entier</span></code></pre>
+      <p>
+        Notez qu’un tableau JavaScript peut contenir des éléments de
+        différents types (chaînes, entiers) à la fois, ce qui n’est pas le cas
+        dans certains langages (par exemple en C#).
+      </p>
+      <p>On pourrait donc avoir :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = [<span class="hljs-string">"pomme"</span>, <span class="hljs-number">123</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-number">456</span>]; </code></pre>
+      <p>Initialisation d’un tableau avec l’objet « Array » :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(); <span class="hljs-comment">// Tableau vide</span>
+<span class="hljs-keyword">let</span> myTableau = <span class="hljs-title class_">Array</span>(); <span class="hljs-comment">// Tableau vide</span>
+<span class="hljs-keyword">let</span> myTableau = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">5</span>); <span class="hljs-comment">// Tableau vide qui contiendra 5 éléments</span>
+<span class="hljs-keyword">let</span> myTableau = <span class="hljs-title class_">Array</span>(<span class="hljs-number">5</span>); <span class="hljs-comment">// Tableau vide qui contiendra 5 éléments</span>
+<span class="hljs-keyword">let</span> myTableau = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>); <span class="hljs-comment">// Tableau avec données</span>
+<span class="hljs-keyword">let</span> myTableau = <span class="hljs-title class_">Array</span>(<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>); <span class="hljs-comment">// Tableau avec données</span></code></pre>
+      <p>
+        La traduction du mot <strong>« tableau »</strong> en
+        <strong>anglais</strong> est <strong>« array »</strong>. On retrouve
+        ce terme dans la plupart des langages informatiques.
+      </p>
+      <p><strong>Attention</strong></p>
+      <p>
+        Les syntaxes <code>new Array(5)</code> et <code>Array(5)</code> qui
+        permettent de déclarer le nombre d’éléments d’un tableau font qu’il
+        est impossible de les utiliser pour créer un tableau qui ne
+        contiendrait qu’un seul élément de type entier. Dans ce cas, seule la
+        syntaxe avec crochets doit être employée :
+        <code>let myTableau = [5];</code>
+      </p>
+      <h3 id="27"><strong>Utilisation</strong></h3>
+      <p>
+        Pour accéder à un élément du tableau, on appelle le tableau suivi
+        entre crochets [] de la position de l’élément souhaité.
+      </p>
+      <p>
+        Mais attention : en JavaScript (comme dans beaucoup d’autres
+        langages),
+        <strong>le premier élément d'un tableau se trouve à l’indice 0</strong>.
+      </p>
+      <p>
+        Donc
+        <strong>le deuxième élément d’un tableau se trouve lui à la position
+          1</strong>, le troisième à la position 2 et ainsi de suite avec toujours un
+        décalage de -1. Par exemple dans le tableau suivant :<br />
+        <code>let myTableau = ["pomme", "poire", "banane", "fraise",
+            "abricot"];</code>
+      </p>
+      <p>
+        Si on veut accéder à l’<strong>élément</strong> «
+        <strong>pomme</strong> » - le premier - on écrira
+        <strong>myTableau[0]</strong>, pour l’élément « fraise » - le 4e - on
+        écrira <code>myTableau[3]</code>.
+      </p>
+      <h2 id="32">Remplir un tableau</h2>
+      <p>
+        Lorsqu’on a déclaré un tableau vide, on le remplit en assignant une
+        valeur à la position souhaitée :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = [];
+myTableau[<span class="hljs-number">0</span>] = <span class="hljs-string">"pomme"</span>;  
+myTableau[<span class="hljs-number">1</span>] = <span class="hljs-string">"poire"</span>;  </code></pre>
+      <h2 id="35">Fonctions courantes sur les tableaux</h2>
+      <p>
+        Dans les langages informatiques, de nombreuses fonctions natives
+        spécifiques à chacun d’entre eux permettent d’exploiter les tableaux
+        et leurs données : tris, calculs, extraction de données, connaître la
+        longueur (c’est-à-dire le nombre d’éléments d’un tableau) etc.
+      </p>
+      <p>Voici quelques fonctions utiles en JavaScript.</p>
+      <h3 id="38">Connaître le nombre d’éléments dans un tableau</h3>
+      <p>
+        La <strong>propriété</strong> <code>length</code> (= longueur)
+        retourne le nombre d’éléments dans un tableau :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = [<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>, <span class="hljs-string">"fraise"</span>, <span class="hljs-string">"abricot"</span>]; 
+<span class="hljs-keyword">let</span> nb = myTableau.<span class="hljs-property">length</span>;
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Le tableau contient "</span> + nb + <span class="hljs-string">" éléments"</span>); <span class="hljs-comment">// Affiche : 5</span></code></pre>
+      <h3 id="41">Parcourir un tableau</h3>
+      <p>
+        Les boucles <code>for</code> et <code>for...in</code> permettent,
+        combinées à la propriété <code>length</code>, de parcourir un tableau
+        : on va passer autant de fois que le tableau contient d’éléments,
+        c’est-à-dire tant qu’on n’a pas atteint la longueur du tableau :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> myTableau = [<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>, <span class="hljs-string">"fraise"</span>, <span class="hljs-string">"abricot"</span>];
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; myTableau.<span class="hljs-property">length</span>; i++) 
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Fruit : "</span> + myTableau[i]);
+}</code></pre>
+      <p>
+        Il s’agit ici d’une boucle <code>for</code> tout à fait banale mais il
+        existe une autre syntaxe plus simple d’écriture (mais plus lente en
+        exécution) : <code>for…in</code>
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> fruit <span class="hljs-keyword">in</span> myTableau) 
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Fruit : "</span> + myTableau[fruit]);
+}</code></pre>
+      <p>
+        Notez bien qu’avec <code>for…in</code> la variable extraite (dans
+        notre cas la variable <code>fruit</code>) contient l’indice et non pas
+        la valeur, il faut donc écrire <code>tableau[indice]</code> pour
+        afficher la valeur.
+      </p>
+      <p>
+        <code>for…in</code> est l’équivalent de l’instruction
+        <code>foreach</code>
+        qui existe dans d’autres langages (notamment en PHP).
+      </p>
+      <p>
+        Il existe une ancienne variante <code>for each...in</code> qui ne
+        fonctionnait que dans Firefox, elle est donc
+        <strong>à oublier</strong>.
+      </p>
+
+      <div class="alert alert-secondary" role="note">
+        <h4>Bonnes pratiques modernes en JavaScript</h4>
+        <ul>
+          <li>
+            <strong>Préférer la syntaxe avec crochets</strong> pour créer un
+            tableau : <code>const tab = [];</code> plutôt que
+            <code>new Array()</code>.
+          </li>
+          <li>
+            Utiliser <code>const</code> pour les tableaux qui ne changent pas
+            de référence, et <code>let</code> seulement si tu réaffectes la
+            variable.
+          </li>
+          <li>
+            <strong>Ne pas utiliser <code>for...in</code> sur les tableaux</strong>
+            : cette syntaxe est plutôt faite pour les objets et parcourt aussi
+            les propriétés héritées. Sur les tableaux, elle peut réserver des
+            surprises.
+          </li>
+          <li>
+            Pour parcourir un tableau, préférer :
+            <ul>
+              <li><code>for</code> classique avec un index ;</li>
+              <li>
+                <code>for...of</code> pour récupérer directement les valeurs ;
+              </li>
+              <li>
+                <code>tab.forEach(...)</code> pour appliquer une fonction à
+                chaque élément.
+              </li>
+            </ul>
+          </li>
+          <li>
+            Rappel : <code>length</code> est une <strong>propriété</strong>,
+            pas une fonction : on écrit <code>tab.length</code> et non
+            <code>tab.length()</code>.
+          </li>
+        </ul>
+      </div>
+
+      <h3 id="49">Fonctions de manipulation de données d’un tableau</h3>
+      <p>
+        Certaines de ces fonctions ont un nom que l’on pourra retrouver dans
+        d’autres langages (PHP…) pour des usages identiques mais parfois avec
+        des syntaxes/arguments différents.
+      </p>
+      <p>
+        Les exemples des fonctions ci-dessous sont donnés à partir du tableau
+        suivant :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> fruits = [<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>, <span class="hljs-string">"fraise"</span>, <span class="hljs-string">"abricot"</span>];</code></pre>
+      <table>
+        <tbody>
+          <tr>
+            <td valign="top">concat</td>
+            <td valign="top">
+              Réunit deux tableaux.<br />
+              Exemple :<br />
+              <code>let fruits = ["pomme", "poire", "banane", "fraise",
+                  "abricot"];</code><br />
+              <code>let autres = ["sucre", "farine", "oeufs"];</code><br />
+              <code>let ingredients = fruits.concat(autres);</code>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">indexOf</td>
+            <td valign="top">
+              Retourne le premier indice pour lequel on trouve l’élément dans
+              un tableau (occurrence) :<br />
+              <code>fruits.indexOf("banane")</code> ⇒ retourne <code>2</code>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">lastIndexOf</td>
+            <td valign="top">
+              Retourne le dernier indice de l’occurrence de l’élément dans un
+              tableau :<br />
+              <code>let fruits = ["pomme", "poire", "banane", "fraise", "banane",
+                  "abricot"];</code><br />
+              <code>fruits.lastIndexOf("banane");</code> ⇒ retourne
+              <code>4</code>
+              (position du dernier « banane »)
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">pop</td>
+            <td valign="top">
+              Supprime le dernier élément d'un tableau et retourne cet
+              élément. Cette méthode modifie la longueur du tableau :<br />
+              <code>let last = fruits.pop();</code><br />
+              <code>console.log(last);</code> ⇒ retourne
+              <code>"abricot"</code> et le supprime du tableau.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">push</td>
+            <td valign="top">
+              Ajoute un ou plusieurs éléments à la fin d’un tableau et
+              retourne la nouvelle taille du tableau.<br />
+              <code>let nb = fruits.push("mangue", "prune");</code><br /><br />
+              Le nouveau tableau sera le suivant :<br /><br />
+              <code>fruits = ["pomme", "poire", "banane", "fraise", "abricot",
+                  "mangue", "prune"];</code><br /><br />
+              et la variable <code>nb</code> vaudra <code>7</code>.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">shift</td>
+            <td valign="top">
+              Retourne le 1er élément d’un tableau et le supprime.<br />
+              <code>fruits.shift();</code> ⇒ retourne <code>"pomme"</code>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">sort</td>
+            <td valign="top">
+              Trie le tableau en ordre alphabétique (par défaut) :<br />
+              <code>fruits.sort();</code> ⇒ retourne
+              <code>"abricot", "banane", "fraise", "poire", "pomme"</code>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">split</td>
+            <td valign="top">
+              Découpe une chaîne selon un caractère passé en argument, le
+              résultat de cette « découpe » sera un tableau :<br /><br />
+              Exemple :<br />
+              <code>let ladate = "15/05/2018";</code><br />
+              <code>let myTableau = ladate.split("/");</code><br /><br />
+              Le tableau <code>myTableau</code> contiendra les valeurs
+              <code>"15"</code>, <code>"05"</code> et <code>"2018"</code>.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        À noter que l’on peut utiliser ces fonctions sans forcément affecter
+        leur retour à une variable.
+      </p>
+      <p>
+        Il existe beaucoup d’autres fonctions JavaScript pour les tableaux :
+        vous pouvez les consulter
+        <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array">sur cette page</a>
+        (liste des fonctions dans la colonne de gauche).
+      </p>
+      <h2 id="56">Tableaux multidimensionnels</h2>
+      <p>
+        On l’a déjà dit, un tableau peut contenir des chaînes, des entiers,
+        voire les deux, et peut aussi contenir des… tableaux, ce qui donne
+        donc des « tableaux de tableaux » : on appelle ça des tableaux à
+        plusieurs dimensions ou multidimensionnels.
+      </p>
+      <p>Déclarons un tableau vide :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> tab1 = []; </code></pre>
+      <p>Puis affectons-lui des éléments :</p>
+      <pre><code class="hljs language-javascript">tab1[<span class="hljs-number">0</span>] = [<span class="hljs-string">"poireau"</span>, <span class="hljs-string">"tomate"</span>, <span class="hljs-string">"carotte"</span>];
+tab1[<span class="hljs-number">1</span>] = [<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>];  </code></pre>
+      <p>
+        <strong>Vous remarquerez que les éléments ajoutés sont eux-mêmes des
+          tableaux !</strong>
+      </p>
+      <p>Puis, nous pouvons par exemple écrire :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(tab1[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]); </code></pre>
+      <p>
+        Ce qui affiche « banane » : en effet, on a demandé le troisième
+        élément (indice 2 : <code>"banane"</code>) de l’élément d’indice 1
+        (donc le tableau des fruits) du tableau <code>tab1</code>.
+      </p>
+      <p>
+        Dans cet exemple, il n’y a que 2 niveaux de tableaux, mais il peut y
+        avoir 3, 4, 5 niveaux ou plus, c’est illimité sauf que cela devient
+        vite très compliqué à gérer (imaginez pour accéder aux données du 5e
+        tableau !).
+      </p>
+      <p>Notez qu’on aurait très bien pu utiliser la forme suivante :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> legumes = [<span class="hljs-string">"poireau"</span>, <span class="hljs-string">"tomate"</span>, <span class="hljs-string">"carotte"</span>];
+<span class="hljs-keyword">let</span> fruits = [<span class="hljs-string">"pomme"</span>, <span class="hljs-string">"poire"</span>, <span class="hljs-string">"banane"</span>];  
+
+tab1[<span class="hljs-number">0</span>] = legumes;
+tab1[<span class="hljs-number">1</span>] = fruits;</code></pre>
+      <h2 id="69">Opérations et tri sur les tableaux</h2>
+      <h3 id="70">Opérations diverses sur un tableau non trié</h3>
+      <ul>
+        <li>
+          <p>
+            Sur une structure de données de type tableau, il est possible de
+            faire plusieurs types de traitement, comme par exemple la
+            recherche du minimum ou du maximum, la somme ou le produit ou la
+            moyenne des postes du tableau.
+          </p>
+        </li>
+        <li>
+          <p>
+            On peut également vouloir rechercher un élément donné dans un
+            tableau.
+          </p>
+        </li>
+        <li>
+          <p>
+            Par exemple, sur un tableau de 35 postes numériques, on désire
+            calculer la somme des postes, et rechercher le plus petit élément.
+          </p>
+        </li>
+        <li>
+          <p>
+            Pour le calcul de la somme, on ajoutera le contenu des cases une à
+            une, depuis la première jusqu’à la trente-cinquième.
+          </p>
+        </li>
+        <li>
+          <p>Pour la recherche du minimum :</p>
+        </li>
+        <li>
+          <p>
+            On va supposer que la première case contient le minimum relatif.
+          </p>
+        </li>
+        <li>
+          <p>
+            On va comparer le contenu de la deuxième case avec le minimum
+            relatif : si celui-ci est inférieur, il deviendra le minimum
+            relatif.
+          </p>
+        </li>
+        <li>
+          <p>On recommencera l’opération avec les postes restants.</p>
+        </li>
+      </ul>
+      <h3 id="72">Tri d’un tableau</h3>
+      <p>
+        Un tableau est ordonné lorsqu’il existe une relation d’ordre entre les
+        différentes cases :
+      </p>
+      <p>On parle de :</p>
+      <ul>
+        <li>
+          tri croissant si le contenu de la case d’indice <code>i</code> est
+          inférieur ou égal au contenu de la case d’indice <code>i + 1</code>
+        </li>
+        <li>
+          tri décroissant si le contenu de la case d’indice <code>i</code> est
+          supérieur ou égal au contenu de la case d’indice <code>i + 1</code>
+        </li>
+      </ul>
+      <p>
+        Plusieurs méthodes de tri existent ; en voici deux exemples sur la
+        base d’un tableau de 30 valeurs numériques <code>VALNUM</code>.
+      </p>
+      <p>
+        <strong><strong>Tri croissant par recherche successive des minima</strong></strong>
+      </p>
+      <p>Le principe est le suivant :</p>
+      <ul>
+        <li>
+          Recherche du minimum dans le tableau de 30 valeurs, et échange du
+          contenu des cases d’indice 1 et d’indice correspondant à la valeur
+          du minimum.
+        </li>
+        <li>
+          Application du même principe sur 29 valeurs (30 - première), puis
+          sur 28, puis 27 ... jusqu’au tableau de deux cases.
+        </li>
+      </ul>
+      <p>Visualisation du traitement sur 4 valeurs :</p>
+      <pre><code>
+            <span>Tableau initial</span>                 <span class="hljs-number">8</span>   <span class="hljs-number">1</span>   <span class="hljs-number">7</span>   <span class="hljs-number">5</span>
+            <span>Après le premier passage</span>        <span class="hljs-number">1</span>   <span class="hljs-number">8</span>   <span class="hljs-number">7</span>   <span class="hljs-number">5</span>
+            <span>Après le deuxième passage</span>       <span class="hljs-number">1</span>   <span class="hljs-number">5</span>   <span class="hljs-number">7</span>   <span class="hljs-number">8</span>
+            <span>Après le troisième passage</span>      <span class="hljs-number">1</span>   <span class="hljs-number">5</span>   <span class="hljs-number">7</span>   <span class="hljs-number">8</span></code></pre>
+      <p>
+        Lors du premier passage, on a inversé les cases d’indices 1 et 2. Lors
+        du deuxième passage, le minimum de (5, 7, 8) étant 5, on a inversé les
+        cases d’indices 2 et 4. Lors du troisième passage, rien ne s’est
+        passé.
+      </p>
+      <p><strong>Tri à bulle</strong></p>
+      <p>Le principe est le suivant :</p>
+      <p>Le tableau est parcouru en comparant les éléments consécutifs.</p>
+      <p>
+        S’ils sont mal ordonnés, ces deux éléments sont permutés. On
+        recommence jusqu’à ce qu’il n’y ait plus d’échange.
+      </p>
+      <p>Visualisation du traitement sur 5 valeurs :</p>
+      <pre><code>
+          <span>Tableau initial</span>         <span class="hljs-number">5</span>  <span class="hljs-number">18</span>  <span class="hljs-number">14</span>   <span class="hljs-number">4</span>  <span class="hljs-number">26</span>
+          <span>Premier passage</span>         <span class="hljs-number">5</span>  <span class="hljs-number">14</span>  <span class="hljs-number">18</span>   <span class="hljs-number">4</span>  <span class="hljs-number">26</span>
+          <span>Deuxième passage</span>        <span class="hljs-number">5</span>  <span class="hljs-number">14</span>   <span class="hljs-number">4</span>  <span class="hljs-number">18</span>  <span class="hljs-number">26</span>
+          <span>Troisième passage</span>       <span class="hljs-number">5</span>   <span class="hljs-number">4</span>  <span class="hljs-number">14</span>  <span class="hljs-number">18</span>  <span class="hljs-number">26</span>
+          <span>Quatrième passage</span>       <span class="hljs-number">4</span>   <span class="hljs-number">5</span>  <span class="hljs-number">14</span>  <span class="hljs-number">18</span>  <span class="hljs-number">26</span>
+          <span>Cinquième passage</span>       <span class="hljs-number">4</span>   <span class="hljs-number">5</span>  <span class="hljs-number">14</span>  <span class="hljs-number">18</span>  <span class="hljs-number">26</span></code></pre>
+      <p>Comme aucune permutation n’a été réalisée, l’algorithme s’arrête.</p>
+      <p>
+        <strong>Méthode</strong> : Les éléments sont comparés deux à deux, et
+        on affecte une variable booléenne à <code>true</code> si un échange
+        est réalisé.
+      </p>
+      <p>
+        La condition d’arrêt du traitement est que la variable booléenne soit
+        restée à <code>false</code>.
+      </p>
+      <p><strong>Recherche d’un élément sur un tableau trié</strong></p>
+      <p>
+        Une première manière de vérifier si un mot se trouve dans le
+        dictionnaire consiste à examiner successivement tous les mots du
+        dictionnaire, du premier au dernier, et à les comparer avec le mot à
+        vérifier.
+      </p>
+      <p>
+        Ça marche, mais cela risque d'être long : si le mot ne se trouve pas
+        dans le dictionnaire, le programme ne le saura qu’après 40 000 tours
+        de boucle ! Et même si le mot figure dans le dictionnaire, la réponse
+        exigera tout de même en moyenne 20 000 tours de boucle. C'est
+        beaucoup, même pour un ordinateur.
+      </p>
+      <p>
+        Or, il y a une autre manière de chercher, bien plus intelligente
+        pourrait-on dire, et qui met à profit le fait que dans un
+        dictionnaire, les mots sont triés par ordre alphabétique. D'ailleurs,
+        un être humain qui cherche un mot dans le dictionnaire ne lit jamais
+        tous les mots, du premier au dernier : il utilise lui aussi le fait
+        que les mots soient triés.
+      </p>
+      <p>
+        Pour une machine, quelle est la manière la plus rationnelle de
+        chercher dans un dictionnaire ? C'est de comparer le mot à vérifier
+        avec le mot qui se trouve pile au milieu du dictionnaire. Si le mot à
+        vérifier est antérieur dans l'ordre alphabétique, on sait qu'on devra
+        le chercher dorénavant dans la première moitié du dictionnaire. Sinon,
+        on sait maintenant qu'on devra le chercher dans la deuxième moitié.
+      </p>
+      <p>
+        À partir de là, on prend la moitié de dictionnaire qui nous reste, et
+        on recommence : on compare le mot à chercher avec celui qui se trouve
+        au milieu du morceau de dictionnaire restant. On écarte la mauvaise
+        moitié, et on recommence, et ainsi de suite.
+      </p>
+      <p>
+        À force de couper notre dictionnaire en deux, puis encore en deux,
+        etc. on va finir par se retrouver avec des morceaux qui ne contiennent
+        plus qu'un seul mot.
+      </p>
+      <p>
+        Et si on n'est pas tombé sur le bon mot à un moment ou à un autre,
+        c'est que le mot à vérifier ne fait pas partie du dictionnaire.
+      </p>
+      <p>
+        Regardons ce que cela donne en termes de nombre d'opérations à
+        effectuer, en choisissant le pire cas, celui où le mot est absent du
+        dictionnaire :
+      </p>
+      <p>Au départ, on cherche le mot parmi 40 000.</p>
+      <p>Après le test n°1, on ne le cherche plus que parmi 20 000.</p>
+      <p>Après le test n°2, on ne le cherche plus que parmi 10 000.</p>
+      <p>Après le test n°3, on ne le cherche plus que parmi 5 000.</p>
+      <p>Après le test n°15, on ne le cherche plus que parmi 2.</p>
+      <p>Après le test n°16, on ne le cherche plus que parmi 1.</p>
+      <p>
+        Et là, on sait que le mot n'existe pas. Moralité : on a obtenu notre
+        réponse en 16 opérations contre 40 000 précédemment !
+      </p>
+      <p>
+        Il n'y a pas photo sur l'écart de performances entre la technique «
+        barbare » et la technique « futée ».
+      </p>
+      <p>
+        Attention, toutefois, même si c'est évident,
+        <strong>la recherche dichotomique ne peut s'effectuer que sur des éléments
+          préalablement triés</strong>.
+      </p>
+
+      <h2 id="110">Exercices</h2>
+
+      <h3 id="111">Exercice 1 - Création et affichage simple</h3>
+      <p>
+        Écrivez un programme permettant de créer un tableau de nombres, dont
+        la taille est saisie au clavier (avec <code>prompt</code>).
+      </p>
+      <p>
+        Ensuite, l'utilisateur doit saisir une à une les différentes valeurs
+        du tableau (toujours avec <code>prompt</code>).
+      </p>
+      <p>Votre programme doit ensuite :</p>
+      <ul>
+        <li>afficher le contenu du tableau dans la console ;</li>
+        <li>
+          afficher le nombre d'éléments du tableau (propriété
+          <code>length</code>) ;
+        </li>
+        <li>calculer et afficher la somme de toutes les valeurs ;</li>
+        <li>calculer et afficher la valeur minimum et la valeur maximum.</li>
+      </ul>
+
+      <h3 id="112">
+        Exercice 2 - Moyenne et valeurs supérieures à la moyenne
+      </h3>
+      <p>
+        Reprenez le principe de l'exercice 1 : création d'un tableau de
+        nombres à partir des saisies de l'utilisateur.
+      </p>
+      <p>À partir de ce tableau, votre programme doit :</p>
+      <ul>
+        <li>calculer la moyenne des valeurs ;</li>
+        <li>afficher cette moyenne ;</li>
+        <li>
+          compter combien de valeurs sont strictement supérieures à la moyenne
+          et afficher ce nombre ;
+        </li>
+        <li>afficher la liste des valeurs supérieures à la moyenne.</li>
+      </ul>
+      <p>
+        Vous ne devez pas utiliser la fonction <code>sort()</code> pour cet
+        exercice.
+      </p>
+
+      <h3 id="113">
+        Exercice 3 - Manipulation d'un tableau avec <code>push</code>,
+        <code>pop</code> et <code>shift</code>
+      </h3>
+      <p>
+        Créez au départ un tableau contenant quelques prénoms, par exemple :
+      </p>
+      <pre><code class="language-js">let prenoms = ["Alice", "Bob", "Claire"];</code></pre>
+      <p>Écrivez un programme qui :</p>
+      <ul>
+        <li>affiche le tableau initial ;</li>
+        <li>
+          demande à l'utilisateur un prénom à ajouter à la fin du tableau et
+          l'ajoute avec <code>push()</code> ;
+        </li>
+        <li>
+          supprime le dernier élément du tableau avec <code>pop()</code> et
+          affiche le prénom supprimé ;
+        </li>
+        <li>
+          supprime le premier élément du tableau avec <code>shift()</code> et
+          affiche le prénom supprimé ;
+        </li>
+        <li>affiche enfin le tableau final et sa longueur.</li>
+      </ul>
+
+      <h3 id="114">Exercice 4 - Tableau multidimensionnel</h3>
+      <p>Créez un tableau multidimensionnel contenant deux sous-tableaux :</p>
+      <ul>
+        <li>
+          un tableau de légumes (par exemple :
+          <code>"poireau", "tomate", "carotte"</code>) ;
+        </li>
+        <li>
+          un tableau de fruits (par exemple :
+          <code>"pomme", "poire", "banane"</code>).
+        </li>
+      </ul>
+      <p>Par exemple :</p>
+      <pre><code class="language-js">let tabAliments = [];
+tabAliments[0] = ["poireau", "tomate", "carotte"]; // légumes
+tabAliments[1] = ["pomme", "poire", "banane"];     // fruits</code></pre>
+      <p>Votre programme doit :</p>
+      <ul>
+        <li>afficher tous les légumes (ligne 0) dans la console ;</li>
+        <li>afficher tous les fruits (ligne 1) dans la console ;</li>
+        <li>
+          afficher un élément précis, par exemple le deuxième fruit et le
+          troisième légume ;
+        </li>
+        <li>
+          parcourir tout le tableau avec deux boucles imbriquées et afficher
+          chaque élément avec son type (légume ou fruit).
+        </li>
+      </ul>
+
+      <h3 id="115">Exercice 5 - Tri par recherche successive des minima</h3>
+      <p>
+        Créez un tableau de nombres (par exemple 10 valeurs au choix, ou
+        saisies au clavier).
+      </p>
+      <p>
+        Écrivez une fonction qui trie ce tableau par ordre croissant en
+        appliquant le principe du
+        <strong>tri par recherche successive des minima</strong> vu dans le
+        cours :
+      </p>
+      <ul>
+        <li>on cherche le plus petit élément du tableau ;</li>
+        <li>on l'échange avec l'élément en première position ;</li>
+        <li>
+          on recommence sur le reste du tableau (à partir de la deuxième
+          position), etc.
+        </li>
+      </ul>
+      <p>
+        Vous ne devez pas utiliser la fonction <code>sort()</code> de
+        JavaScript.
+      </p>
+      <p>Le programme doit afficher :</p>
+      <ul>
+        <li>le tableau initial ;</li>
+        <li>le tableau trié.</li>
+      </ul>
+
+      <h3 id="116">Exercice 6 - Recherche dichotomique (optionnel)</h3>
+      <p>
+        À partir d'un tableau de nombres déjà trié par ordre croissant,
+        écrivez une fonction qui recherche une valeur donnée en appliquant le
+        principe de la <strong>recherche dichotomique</strong>
+        (explication dans le cours).
+      </p>
+      <p>Votre fonction doit :</p>
+      <ul>
+        <li>prendre en paramètre le tableau et la valeur à chercher ;</li>
+        <li>retourner l'indice de la valeur si elle est trouvée ;</li>
+        <li>
+          retourner <code>-1</code> si la valeur n'est pas présente dans le
+          tableau.
+        </li>
+      </ul>
+      <p>Testez votre fonction avec plusieurs valeurs :</p>
+      <ul>
+        <li>une valeur présente dans le tableau ;</li>
+        <li>une valeur absente ;</li>
+        <li>une valeur située au début, au milieu et à la fin du tableau.</li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    hljs.highlightAll();
+  </script>
+
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+  /* Force le fond sombre sur TA navbar uniquement */
+  #jsnav {
+    background-color: #343a40 !important; /* même couleur que bg-dark Bootstrap */
+  }
+
+  /* Si un thème a forcé .navbar à être verte, on casse ça ici */
+  #jsnav.navbar {
+    background-image: none !important;
+  }
+
+  /* (rappel) hauteur et style des liens */
+  #jsnav {
+    height: 34px;
+    line-height: 34px;
+  }
+
+  #jsnav .nav-link {
+    font-size: 13px;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    color: #ddd;
+  }
+
+  #jsnav .nav-link:hover,
+  #jsnav .nav-link.active {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  body {
+    padding-top: 40px; /* s'adapte à la hauteur réduite */
+  }

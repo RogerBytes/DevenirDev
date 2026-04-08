@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>PHP - Les tableaux</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+  <link rel="stylesheet" href="assets/css/menu-markdown.css" />
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+
+  <style>
+    .note-pedago {
+      border-left: 4px solid rgba(255, 255, 255, .35);
+      padding: .85rem 1rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 10px;
+    }
+
+    .note-pedago code {
+      white-space: normal;
+    }
+
+    .note-pedago p {
+      margin: 0.25rem 0;
+    }
+  </style>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    });
+  </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main class="container">
+    <article class="markdown-body">
+      <h1 id="1">PHP - Les tableaux</h1>
+
+      <p><br /><br /></p>
+
+      <h2 id="3">Introduction</h2>
+      <p>
+        Un tableau est une variable contenant une liste de valeurs regroupées sous forme d'un tableau en lignes et en
+        colonnes.
+      </p>
+      <p>Les tableaux ont une grande importance dans la création de script PHP, comme dans bien d'autres langages
+        d'ailleurs.</p>
+      <p><strong>Dans le cas d'accès à des bases de données par exemple certaines fonctions retournent des valeurs sous
+          forme de tableaux.</strong></p>
+
+      <div class="note-pedago">
+        <p><strong>Note pédagogique</strong> : en PHP, un “tableau” (<code>array</code>) est une structure très flexible
+          :</p>
+        <ul>
+          <li>il peut être indexé numériquement (0,1,2...),</li>
+          <li>ou associatif (clé → valeur),</li>
+          <li>et il peut contenir des tableaux (multi-dimension).</li>
+        </ul>
+        <p>En PHP 5.4+, tu peux aussi utiliser la syntaxe courte <code>[]</code> à la place de <code>array()</code> (les
+          deux existent encore).</p>
+      </div>
+
+      <h2 id="7">Déclaration de tableaux</h2>
+
+      <h3 id="8">Tableaux simples</h3>
+      <p>Exemple :</p>
+
+      <pre><code class="language-php hljs">&lt;?php
+$tableau = array(); // instruction optionnelle
+$tableau[0] = "Pomme";
+$tableau[1] = "Poire";
+$tableau[2] = "Banane";</code></pre>
+
+      <p>ou</p>
+
+      <pre><code class="language-php hljs">&lt;?php
+$tableau = array(); // instruction optionnelle
+$tableau[] = "Pomme";
+$tableau[] = "Poire";
+$tableau[] = "Banane";</code></pre>
+
+      <p>ou</p>
+
+      <pre><code class="language-php hljs">$tableau = array("Pomme", "Poire", "Banane");</code></pre>
+
+      <p>Ces trois exemples sont en fait identiques dans le résultat.</p>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : en PHP moderne, la même écriture avec la syntaxe courte est :</p>
+        <pre><code class="language-php hljs">$tableau = ["Pomme", "Poire", "Banane"];</code></pre>
+        <p>(On garde ici <code>array()</code> car ton support l'utilise, mais nous verront beaucoup
+          <code>[]</code> dans la vraie vie.)
+        </p>
+      </div>
+
+      <p><br /></p>
+
+      <h3 id="17">Tableaux à plusieurs dimensions</h3>
+      <pre><code class="language-php hljs">$tab1[] = array(1, "janvier", "2016");
+$tab1[] = array(2, "février", "2017");
+$tab1[] = array(3, "mars", "2018");
+$tab1[] = array(4, "avril", "2019");</code></pre>
+
+      <p>Exemple :</p>
+      <pre><code class="language-php hljs">// Affiche : 3 mars 2018
+echo $tab1[2][0] . " " . $tab1[2][1] . " " . $tab1[2][2] . "&lt;br&gt;";</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Point technique</strong> : ici, <code>$tab1[2]</code> est une ligne du tableau (un sous-tableau), et
+          <code>[0]</code>, <code>[1]</code>, <code>[2]</code> accèdent aux colonnes.
+        </p>
+        <p><strong>Bon réflexe</strong> : pour éviter les “indices magiques”, on utilisera souvent des clés associatives
+          (voir plus bas) ou des constantes.</p>
+      </div>
+
+      <p><br /></p>
+
+      <h3 id="22">Tableaux associatifs</h3>
+      <p>
+        Comme son nom l'indique, le tableau associatif permet d'associer une valeur à une autre plus représentative que
+        celle-ci.
+      </p>
+      <p>
+        Imaginons que vous vouliez représenter ce que vous avez payé comme facture de téléphone par mois sur une année.
+        Si vous utilisez un tableau classique vous allez associer chaque ligne du tableau aux mois et la colonne aux
+        valeurs.
+      </p>
+
+      <pre><code class="language-php hljs">$facture[0] = 500; // représente Janvier
+$facture[1] = 620; // représente Février
+// [...]
+$facture[11] = 300; // représente Décembre</code></pre>
+
+      <p>Grâce aux tableaux associatifs vous allez représenter le même tableau comme suit :</p>
+
+      <pre><code class="language-php hljs">$facture["Janvier"] = 500;
+$facture["Février"] = 620;
+// [...]
+$facture["Décembre"] = 300;</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : dans ton exemple initial, le dernier mois était écrit
+          <code>"décembre"</code> (minuscule) alors que les autres étaient en majuscule.
+          Ce n'est pas “grave”, mais ça crée un piège : <code>$facture["Décembre"]</code> et
+          <code>$facture["décembre"]</code> seraient deux clés différentes.
+        </p>
+      </div>
+
+      <p>
+        Vous pouvez aussi l'écrire en utilisant l'opérateur de l'association <code>=&gt;</code> (signe égal et signe
+        supérieur à)
+      </p>
+
+      <pre><code class="language-php hljs">$facture = array(
+    "Janvier"  =&gt; 500,
+    "Février"  =&gt; 620,
+    "Décembre" =&gt; 300
+);</code></pre>
+
+      <p><br /></p>
+
+      <h2 id="31">Manipulations de tableaux</h2>
+      <h3 id="32">Manipulation des tableaux associatifs</h3>
+      <p>
+        Après avoir créé un tableau associatif, il est bien sûr indispensable de pouvoir manipuler et trier les valeurs
+        de celui-ci.
+        Pour cela PHP nous offre une multitude de fonctions.
+      </p>
+
+      <p>Exemple :</p>
+
+      <pre><code class="language-php hljs">$facture = array(
+   "Janvier" =&gt; 500,
+   "Février" =&gt; 620,
+   "Mars" =&gt; 300,
+   "Avril" =&gt; 130,
+   "Mai" =&gt; 560,
+   "Juin" =&gt; 350
+);
+
+$facture_sixmois = 0;
+
+foreach ($facture as $mois =&gt; $montant)
+{
+   echo "Facture du mois de $mois : $montant Euros&lt;br&gt;";
+   $facture_sixmois += $montant;
+}
+
+echo "Facture total de six mois : &lt;b&gt;$facture_sixmois Euros&lt;/b&gt;";</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique importante</strong> : dans ta version initiale, tu faisais
+          <code>$facture_sixmois += $valeur;</code> alors que la variable s'appelle <code>$montant</code>.
+          Cela provoque une notice/erreur (variable non définie) et un total faux. Ici, c'est corrigé sans supprimer
+          l'exemple.
+        </p>
+        <p><strong>Note</strong> : on peut aussi écrire <code>$facture_sixmois = array_sum($facture);</code> pour
+          obtenir le total, mais <code>foreach</code> reste idéal pour apprendre.</p>
+      </div>
+
+      <blockquote>
+        <p>NB: Sur un tableau associatif, l'instruction <code>foreach</code> permet d'extraire le couple "clé" /
+          "valeur" à chaque tour de boucle.</p>
+      </blockquote>
+
+      <p><br /></p>
+
+      <h2 id="38">Tri dans les tableaux</h2>
+      <p>PHP propose un ensemble complet de fonctions pour le tri de tableaux.</p>
+
+      <h3 id="40">Les fonctions <code>sort()</code> et <code>rsort()</code></h3>
+      <p>Ces fonctions permettent le tri des <strong>valeurs</strong> d'un <strong>tableau simple</strong>,</p>
+      <ul>
+        <li>dans l'ordre alphabétique ou numérique croissant : <code>sort()</code></li>
+        <li>dans l'ordre alphabétique ou numérique décroissant : <code>rsort()</code></li>
+      </ul>
+      <p>
+        Les clés associées (en cas de tableaux associatifs) ne sont pas prises en compte.<br />
+        Le résultat est un <strong><em>tableau simple</em></strong>.
+      </p>
+
+      <pre><code class="language-php hljs">$nom = array("franck","laurent","caroline","magali","veronique");
+
+// on effectue un TRI CROISSANT DES VALEURS
+sort($nom);
+
+for ($i = 0 ; $i &lt; count($nom) ; $i++)
+{
+   echo $nom[$i] . "&lt;br&gt;";
+}
+
+// Résultat :
+//    caroline
+//    franck
+//    laurent
+//    magali
+//    veronique</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : dans un <code>for</code> + <code>count()</code>, tu peux stocker le résultat
+          de <code>count()</code> dans une variable si le tableau est grand
+          (micro-optimisation), mais pour un cours débutant c'est OK comme ça.</p>
+      </div>
+
+      <p><br /></p>
+
+      <h3 id="46">Les fonctions <code>asort()</code> et <code>arsort()</code></h3>
+      <p>Ces fonctions permettent le tri des <strong>valeurs</strong> d'un <strong>tableau associatif</strong>,</p>
+      <ul>
+        <li>dans l'ordre alphabétique ou numérique croissant : <code>asort()</code></li>
+        <li>dans l'ordre alphabétique ou numérique décroissant : <code>arsort()</code></li>
+      </ul>
+      <p>
+        L'indexation des clefs est conservée : une fois le tri effectué, chaque valeur reste associée à sa clé
+        initiale.<br />
+        Le résultat est un <strong><em>tableau associatif</em></strong>.
+      </p>
+
+      <pre><code class="language-php hljs">$tableau = array(
+   "a" =&gt; "Lundi",
+   "b" =&gt; "Jeudi",
+   "c" =&gt; "Vendredi",
+   "d" =&gt; "Mardi",
+   "e" =&gt; "Mercredi"
+);
+
+// on effectue un TRI DECROISSANT DES VALEURS
+arsort($tableau);
+
+foreach($tableau as $cle =&gt; $valeur)
+{
+   echo $cle . " : " . $valeur . "&lt;br&gt;";
+}
+
+// Résultat :
+//    c : Vendredi
+//    e : Mercredi
+//    d : Mardi
+//    a : Lundi
+//    b : Jeudi</code></pre>
+
+      <p><br /></p>
+
+      <h3 id="52">Les fonctions <code>ksort()</code> et <code>krsort()</code></h3>
+      <p>Ces fonctions permettent le tri des <strong>clés</strong> d'un <strong>tableau associatif</strong>,</p>
+      <ul>
+        <li>dans l'ordre alphabétique ou numérique croissant : <code>ksort()</code></li>
+        <li>dans l'ordre alphabétique ou numérique décroissant : <code>krsort()</code></li>
+      </ul>
+      <p>
+        L'indexation des valeurs est conservée : une fois le tri effectué, chaque clé reste associée à sa valeur
+        initiale.<br />
+        Le résultat est un <strong><em>tableau associatif</em></strong>.
+      </p>
+
+      <pre><code class="language-php hljs">$tableau = array(
+   "a" =&gt; "Lundi",
+   "b" =&gt; "Jeudi",
+   "c" =&gt; "Vendredi",
+   "d" =&gt; "Mardi",
+   "e" =&gt; "Mercredi"
+);
+
+// on effectue un TRI CROISSANT DES CLES
+ksort($tableau);
+
+foreach($tableau as $cle =&gt; $valeur)
+{
+   echo $cle . " : " . $valeur . "&lt;br&gt;";
+}
+
+// Résultat :
+//    a : Lundi
+//    b : Jeudi
+//    c : Vendredi
+//    d : Mardi
+//    e : Mercredi</code></pre>
+
+      <p><br /></p>
+
+      <h3 id="58">
+        <a href="https://www.php.net/manual/fr/array.sorting.php" target="_blank" rel="noopener noreferrer">--&gt; Voir
+          ici la documentation PHP sur le tri des tableaux</a>
+      </h3>
+
+      <p><br /><br /></p>
+
+      <h2 id="60">Manipulation de tableaux</h2>
+
+      <h3 id="61">La fonction <code>count()</code></h3>
+      <p><strong>Comptage</strong> du nombre d'éléments d'un tableau.</p>
+
+      <pre><code class="language-php hljs">$tableau = array("Lundi","Mardi","Mercredi", "Jeudi", "Vendredi");
+
+$nb = count($tableau);
+
+echo "Le tableau contient " . $nb . " éléments.";
+
+// Résultat :
+//    Le tableau contient 5 éléments.</code></pre>
+
+      <blockquote>
+        <p>NB: La fonction <code>sizeof()</code> fait strictement la même chose; il s'agit d'un <em>alias</em> de
+          <code>count()</code>.
+        </p>
+      </blockquote>
+
+      <p><br /></p>
+
+      <h3 id="66">Les fonctions <code>array_unshift()</code> et <code>array_push()</code></h3>
+      <p><strong>Ajout</strong> d'un élément dans le tableau,</p>
+      <ul>
+        <li>au début : <code>array_unshift()</code></li>
+        <li>à la fin : <code>array_push()</code></li>
+      </ul>
+
+      <pre><code class="language-php hljs">$tableau = array("Mercredi","Jeudi");
+
+array_unshift($tableau, "Lundi", "Mardi");
+array_push($tableau, "Vendredi");
+
+foreach($tableau as $valeur)
+{
+   echo $valeur . "&lt;br&gt;";
+}
+// Résultat :
+//    Lundi
+//    Mardi
+//    Mercredi
+//    Jeudi
+//    Vendredi</code></pre>
+
+      <p><br /></p>
+
+      <h3 id="71">Les fonctions <code>array_shift</code> et <code>array_pop()</code></h3>
+      <p><strong>Suppression</strong> d'un élément dans le tableau,</p>
+      <ul>
+        <li>au début : <code>array_shift()</code></li>
+        <li>à la fin : <code>array_pop()</code></li>
+      </ul>
+
+      <pre><code class="language-php hljs">$tableau = array("Lundi", "Mardi", "Mercredi","Jeudi", "Vendredi");
+
+array_shift($tableau);
+array_pop($tableau);
+
+foreach($tableau as $valeur)
+{
+   echo $valeur . "&lt;br&gt;";
+}
+// Résultat :
+//    Mardi
+//    Mercredi
+//    Jeudi</code></pre>
+
+      <p><br /></p>
+
+      <h3 id="76">Autres fonctions</h3>
+      <p>
+        Pour en comprendre le fonctionnement, reproduisez les exemples donnés dans la documentation officielle de ces
+        autres fonctions utiles pour les tableaux PHP :
+      </p>
+      <ul>
+        <li><code>array_reverse()</code></li>
+        <li><code>array_key_exists()</code></li>
+        <li><code>array_merge()</code></li>
+        <li><code>array_diff()</code></li>
+        <li><code>array_intersect()</code></li>
+        <li><code>array_column()</code></li>
+        <li><code>array_slice()</code></li>
+        <li><code>array_splice()</code></li>
+        <li><code>array_sum()</code></li>
+        <li><code>array_unique()</code></li>
+        <li><code>in_array()</code></li>
+        <li><code>array_values()</code></li>
+        <li><code>shuffle()</code></li>
+      </ul>
+
+      <div class="note-pedago">
+        <p><strong>Conseil “terrain”</strong> : parmi ces fonctions, les plus utiles très tôt en projet sont souvent :
+        </p>
+        <ul>
+          <li><code>in_array()</code> / <code>array_key_exists()</code> pour vérifier une présence,</li>
+          <li><code>array_merge()</code> pour fusionner,</li>
+          <li><code>array_column()</code> pour extraire une colonne d'un résultat de BDD,</li>
+          <li><code>array_sum()</code> / <code>count()</code> pour statistiques rapides.</li>
+        </ul>
+      </div>
+
+      <p><br /></p>
+
+      <h3 id="80">
+        <a href="http://php.net/manual/fr/ref.array.php" target="_blank" rel="noopener noreferrer">--&gt; Voir ici la
+          documentation complète des fonctions PHP sur les tableaux</a>
+      </h3>
+
+      <p><br /><br /></p>
+
+      <h2 id="82">Exercices</h2>
+
+      <h4 id="83">1. Mois de l'année non bissextile</h4>
+      <p>Créez un tableau associant à chaque mois de l’année le nombre de jours du mois.</p>
+      <p>Utilisez le nom des mois comme clés de votre tableau associatif.</p>
+      <p>
+        Affichez votre tableau (dans un tableau HTML) pour faire apparaitre sur chaque ligne le nom du mois et le nombre
+        de jours du mois.
+      </p>
+      <p>Triez ensuite votre tableau en utilisant comme critère le nombre de jours, puis affichez le résultat.</p>
+
+      <div class="note-pedago">
+        <p><strong>Piste pédagogique</strong> : pour trier sur le nombre de jours (valeur) en conservant les mois
+          (clés), la fonction naturelle est <code>asort()</code> (croissant) ou <code>arsort()</code> (décroissant).</p>
+      </div>
+
+      <p><br /></p>
+
+      <h4 id="89">2. Capitales</h4>
+      <pre><code class="language-php hljs">$capitales = array(
+    "Bucarest" =&gt; "Roumanie",
+    "Bruxelles" =&gt; "Belgique",
+    "Oslo" =&gt; "Norvège",
+    "Ottawa" =&gt; "Canada",
+    "Paris" =&gt; "France",
+    "Port-au-Prince" =&gt; "Haïti",
+    "Port-d'Espagne" =&gt; "Trinité-et-Tobago",
+    "Prague" =&gt; "République tchèque",
+    "Rabat" =&gt; "Maroc",
+    "Riga" =&gt; "Lettonie",
+    "Rome" =&gt; "Italie",
+    "San José" =&gt; "Costa Rica",
+    "Santiago" =&gt; "Chili",
+    "Sofia" =&gt; "Bulgarie",
+    "Alger" =&gt; "Algérie",
+    "Amsterdam" =&gt; "Pays-Bas",
+    "Andorre-la-Vieille" =&gt; "Andorre",
+    "Asuncion" =&gt; "Paraguay",
+    "Athènes" =&gt; "Grèce",
+    "Bagdad" =&gt; "Irak",
+    "Bamako" =&gt; "Mali",
+    "Berlin" =&gt; "Allemagne",
+    "Bogota" =&gt; "Colombie",
+    "Brasilia" =&gt; "Brésil",
+    "Bratislava" =&gt; "Slovaquie",
+    "Varsovie" =&gt; "Pologne",
+    "Budapest" =&gt; "Hongrie",
+    "Le Caire" =&gt; "Egypte",
+    "Canberra" =&gt; "Australie",
+    "Caracas" =&gt; "Venezuela",
+    "Jakarta" =&gt; "Indonésie",
+    "Kiev" =&gt; "Ukraine",
+    "Kigali" =&gt; "Rwanda",
+    "Kingston" =&gt; "Jamaïque",
+    "Lima" =&gt; "Pérou",
+    "Londres" =&gt; "Royaume-Uni",
+    "Madrid" =&gt; "Espagne",
+    "Malé" =&gt; "Maldives",
+    "Mexico" =&gt; "Mexique",
+    "Minsk" =&gt; "Biélorussie",
+    "Moscou" =&gt; "Russie",
+    "Nairobi" =&gt; "Kenya",
+    "New Delhi" =&gt; "Inde",
+    "Stockholm" =&gt; "Suède",
+    "Téhéran" =&gt; "Iran",
+    "Tokyo" =&gt; "Japon",
+    "Tunis" =&gt; "Tunisie",
+    "Copenhague" =&gt; "Danemark",
+    "Dakar" =&gt; "Sénégal",
+    "Damas" =&gt; "Syrie",
+    "Dublin" =&gt; "Irlande",
+    "Erevan" =&gt; "Arménie",
+    "La Havane" =&gt; "Cuba",
+    "Helsinki" =&gt; "Finlande",
+    "Islamabad" =&gt; "Pakistan",
+    "Vienne" =&gt; "Autriche",
+    "Vilnius" =&gt; "Lituanie",
+    "Zagreb" =&gt; "Croatie"
+);</code></pre>
+
+      <p>A partir du tableau ci-dessus:</p>
+      <ol>
+        <li>
+          <p>Affichez la liste des capitales (par ordre alphabétique) suivie du nom du pays.</p>
+        </li>
+        <li>
+          <p>Affichez la liste des pays (par ordre alphabétique) suivie du nom de la capitale.</p>
+        </li>
+        <li>
+          <p>Affichez le nombre de pays dans le tableau.</p>
+        </li>
+        <li>
+          <p>Supprimer du tableau toutes les capitales commençant par la lettre 'B', puis affichez le contenu du
+            tableau.</p>
+        </li>
+      </ol>
+
+      <div class="note-pedago">
+        <p><strong>Point technique</strong> : pour l'exercice 2, “capitales par ordre alphabétique” signifie trier sur
+          les <strong>clés</strong> du tableau (capitales) :
+          utilise <code>ksort()</code>. Pour “pays par ordre alphabétique”, il faut trier sur les
+          <strong>valeurs</strong> : <code>asort()</code> (mais attention, tu perds la relation “pays → capitale” si tu
+          inverses sans méthode).
+        </p>
+        <p><strong>Astuce</strong> : pour afficher “pays → capitale”, tu peux inverser le tableau avec
+          <code>array_flip()</code> si les valeurs sont uniques.
+        </p>
+      </div>
+
+      <p><br /></p>
+
+      <h4 id="94">3. Départements</h4>
+      <pre><code class="language-php hljs">$departements = array(
+    "Hauts-de-france" =&gt; array("Aisne", "Nord", "Oise", "Pas-de-Calais", "Somme"),
+    "Bretagne" =&gt; array("Côtes d'Armor", "Finistère", "Ille-et-Vilaine", "Morbihan"),
+    "Grand-Est" =&gt; array("Ardennes", "Aube", "Marne", "Haute-Marne", "Meurthe-et-Moselle", "Meuse", "Moselle", "Bas-Rhin", "Haut-Rhin", "Vosges"),
+    "Normandie" =&gt; array("Calvados", "Eure", "Manche", "Orne", "Seine-Maritime")
+);</code></pre>
+
+      <p>A partir du tableau ci-dessus:</p>
+      <ol>
+        <li>
+          <p>Affichez la liste des régions (par ordre alphabétique) suivie du nom des départements</p>
+        </li>
+        <li>
+          <p>Affichez la liste des régions suivie du nombre de départements</p>
+        </li>
+      </ol>
+
+      <div class="note-pedago">
+        <p><strong>Note pédagogique</strong> : ici tu manipules un tableau <em>associatif</em> (région → liste de
+          départements).
+          Pour compter les départements d'une région : <code>count($departements["Bretagne"])</code> (ou une boucle
+          <code>foreach</code> sur toutes les régions).
+        </p>
+      </div>
+
+      <p><br /><br /><br /></p>
+    </article>
+  </main>
+</body>
+
+</html>

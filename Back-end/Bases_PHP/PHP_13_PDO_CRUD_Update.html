@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDO - CRUD : Update</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - PDO -&gt; CRUD : Update</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Une fois nos enregistrements en BDD, il faut pouvoir modifier les fiches afin de les mettre à jour.</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="5">Création d'un lien vers le formulaire</h2>
+            <p>Modifiez la page contenant le détail de votre fiche Artiste (page <em>artist_detail.php</em>) pour
+                ajouter un bouton permettant de la modifier : </p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// Début de page : traitement PHP + entête HTML</span>
+<span class="hljs-comment">// ...</span>
+
+    &lt;body&gt;
+        Artiste N°<span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">echo</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>
+        Nom de l'artiste : <span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_name <span class="hljs-meta">?&gt;</span>
+        Site Internet : <span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_url <span class="hljs-meta">?&gt;</span>
+        &lt;a href="artist_form.php?id=<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>"&gt;Modifier&lt;/a&gt;
+    &lt;/body&gt;
+
+// Fin de page : fermetures de blocs HTML</code></pre>
+            <p>Ce bouton nous envoie sur une page nommée <em>artist_form.php</em>, qui a la possibilité de réceptionner,
+                via la méthode <code>GET</code> (visible dans l'URL grâce au <code>?</code>), l'ID de la fiche à
+                modifier.</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>À nous maintenant de fournir un formulaire de modification à notre utilisateur !</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="12">Création du formulaire</h2>
+      <div class="callout callout-warn" role="note" aria-label="Bonne pratique">
+        <p><strong>Bonne pratique :</strong> valide l'ID transmis en <code>GET</code> avant de l'utiliser :</p>
+<pre><code class="language-php hljs">$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if ($id === null || $id === false) {
+  header('Location: artists.php');
+  exit;
+}</code></pre>
+      </div>
+
+            <p>Notre formulaire de modification, pour la fiche n°8 par exemple, sera appelé grâce à l'URL suivante :
+            </p>
+            <pre><code class="hljs language-bash">https://urlduserveurlocal/artist_form.php?<span class="hljs-built_in">id</span>=8</code></pre>
+            <p>De la même manière que pour le formulaire d'ajout, créons notre formulaire HTML, appelé cette fois
+                <em>artist_form.php</em> pour la modification d'une fiche.<br>
+                Les données saisies dans le formulaire seront envoyées vers <em>script_artist_modif.php</em> via la
+                méthode <code>POST</code> :
+            </p>
+            <pre><code class="language-php hljs">&lt;!DOCTYPE html&gt;
+&lt;html lang=<span class="hljs-string">"fr"</span>&gt;
+&lt;head&gt;
+    &lt;meta charset=<span class="hljs-string">"UTF-8"</span>&gt;
+    &lt;meta name=<span class="hljs-string">"viewport"</span> content=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;
+    &lt;meta http-equiv=<span class="hljs-string">"X-UA-Compatible"</span> content=<span class="hljs-string">"ie=edge"</span>&gt;
+    &lt;title&gt;Ajout&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h1&gt;Artiste n°<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$resultat</span>-&gt;artist_id; <span class="hljs-meta">?&gt;</span>&lt;/h1&gt;
+
+    &lt;a href=<span class="hljs-string">"artists.php"</span>&gt;Retour à la liste des artistes&lt;/a&gt;
+
+    &lt;br&gt;
+    &lt;br&gt;
+
+    &lt;form action =<span class="hljs-string">"script_artist_modif.php"</span> method=<span class="hljs-string">"post"</span>&gt;
+
+        &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"nom_for_label"</span>&gt;Nom de l<span class="hljs-string">'artiste :&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" name="nom" id="nom_for_label"&gt;
+        &lt;br&gt;&lt;br&gt;
+
+        &lt;label for="url_for_label"&gt;Adresse site internet :&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" name="url" id="url_for_label"&gt;
+        &lt;br&gt;&lt;br&gt;
+
+        &lt;input type="reset" value="Annuler"&gt;
+        &lt;input type="submit" value="Modifier"&gt;
+
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Mis à part la particularité de l'ID, rien d'exceptionnel jusqu'ici... Sauf que notre formulaire initial
+                est vide !<br>
+                Il nous faut donc charger en amont les informations de notre enregistrement et les injecter dans les
+                champs. </p>
+            <p>Ajoutez le bloc PHP ci-dessous en haut de la page <em>artist_form.php</em>, avant le HTML :</p>
+            <pre><code class="language-php hljs">    <span class="hljs-comment">// On charge l'enregistrement correspondant à l'ID passé en paramètre :</span>
+    <span class="hljs-keyword">require</span> <span class="hljs-string">"db.php"</span>;
+    <span class="hljs-variable">$db</span> = <span class="hljs-title function_ invoke__">connexionBase</span>();
+    <span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"SELECT * FROM artist WHERE artist_id=?"</span>);
+    <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">"id"</span>]));
+    <span class="hljs-variable">$myArtist</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetch</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);
+    <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">closeCursor</span>();</code></pre>
+      <div class="callout callout-warn" role="note" aria-label="Chemins fiables">
+        <p><strong>Chemins fiables :</strong> <code>db.php</code> est une dépendance indispensable, donc <code>require</code> est adapté. Pour éviter les soucis de chemins relatifs :</p>
+<pre><code class="language-php hljs">require __DIR__ . '/db.php';</code></pre>
+      </div>
+
+            <p>Les données de notre artiste (si tant est que l'enregistrement a bien
+                été trouvé en BDD), se trouvent donc maintenant dans la variable <code>$myArtist</code>. </p>
+            <p>De la même manière, ici, que pour l'affichage des données de l'artiste dans la page
+                <em>artist_detail.php</em>, nous allons injecter les différentes informations dans le champ de
+                formulaire correspondant :
+            </p>
+            <blockquote>
+                <p>Souvenez-vous que le contenu des champs HTML est stocké dans l'attribut <code>value</code> !</p>
+            </blockquote>
+      <div class="callout callout-info" role="note" aria-label="Sécurité HTML">
+        <p><strong>Sécurité HTML :</strong> quand tu réinjectes une valeur en attribut <code>value</code>, pense à échapper les caractères spéciaux (sinon un nom contenant des guillemets peut casser le HTML). Exemple :</p>
+<pre><code class="language-php hljs">value="&lt;?= htmlspecialchars($myArtist-&gt;artist_name, ENT_QUOTES, 'UTF-8') ?&gt;"</code></pre>
+      </div>
+
+            <pre><code class="language-php hljs">    &lt;form action =<span class="hljs-string">"script_artist_modif.php"</span> method=<span class="hljs-string">"post"</span>&gt;
+
+        &lt;input type=<span class="hljs-string">"hidden"</span> name=<span class="hljs-string">"id"</span> value=<span class="hljs-string">"&lt;?= <span class="hljs-subst">$myArtist</span>-&gt;artist_id ?&gt;"</span>&gt;
+
+        &lt;label <span class="hljs-keyword">for</span>=<span class="hljs-string">"nom_for_label"</span>&gt;Nom de l<span class="hljs-string">'artiste :&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" name="nom" id="nom_for_label" value="&lt;?= $myArtist-&gt;artist_name ?&gt;"&gt;
+        &lt;br&gt;&lt;br&gt;
+
+        &lt;label for="url_for_label"&gt;Adresse site internet :&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" name="url" id="url_for_label" value="&lt;?= $myArtist-&gt;artist_url ?&gt;"&gt;
+        &lt;br&gt;&lt;br&gt;
+
+        &lt;input type="reset" value="Annuler"&gt;
+        &lt;input type="submit" value="Modifier"&gt;
+
+    &lt;/form&gt;</span></code></pre>
+            <blockquote>
+                <p><strong>Avez-vous remarqué l'<code>input</code> contenant l'ID, ajouté au formulaire et contenant
+                        l'attribut <code>type="hidden"</code> ?</strong><br>
+                    Comme nous allons modifier notre fiche, nous aurons besoin d'une requête <code>UPDATE</code>, qui
+                    aille sélectionner l'enregistrement voulu pour le mettre à jour.<br>
+                    L'ID d'un enregistrement ne doit pas être modifié, donc <strong>le champ ne doit pas être laissé au
+                        libre cours de l'utilisateur</strong>, mais pour autant, nous avons besoin que l'ID soit envoyé
+                    avec les données dans le <code>POST</code> pour que notre <em>script_artist_modif.php</em> puisse le
+                    récupérer. </p>
+                <p>Au stade où nous en sommes, un champ caché est donc un très bon compromis !<br>
+                    Mais nous pourrions aussi, par exemple, le faire apparaître en lecture seule avec l'attribut
+                    <code>readonly</code>...
+                </p>
+            </blockquote>
+      <div class="callout callout-warn" role="note" aria-label="À retenir">
+        <p><strong>À retenir :</strong> un champ <code>type="hidden"</code> n'est pas une protection : l'utilisateur peut le modifier. C'est pratique pour transporter l'ID, mais côté serveur, tu dois toujours <strong>valider</strong> et <strong>contrôler</strong> ce que tu reçois.</p>
+      </div>
+
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="27">Création du script de modification</h2>
+      <div class="callout callout-info" role="note" aria-label="Style et robustesse">
+        <p><strong>Style / robustesse :</strong> en PHP, on écrit <code>null</code> (minuscule). Et après un <code>header("Location: ...")</code>, pense à faire <code>exit;</code> immédiatement pour éviter que le script continue.</p>
+      </div>
+
+            <p>Le principe est le même que pour un formulaire d'ajout (contrôles de
+                saisie à faire, redirection éventuelle vers le formulaire, etc.), si ce
+                n'est que, évidemment, l'instruction à écrire pour le traitement en BDD
+                sera non pas, un <code>INSERT</code>, mais un <code>UPDATE</code> : </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-comment">// Récupération des valeurs :</span>
+    <span class="hljs-variable">$id</span> = (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">'id'</span>]) &amp;&amp; <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'id'</span>] != <span class="hljs-string">""</span>) ? <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'id'</span>] : Null;
+    <span class="hljs-variable">$nom</span> = (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">'nom'</span>]) &amp;&amp; <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'nom'</span>] != <span class="hljs-string">""</span>) ? <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'nom'</span>] : Null;
+    <span class="hljs-variable">$url</span> = (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">'url'</span>]) &amp;&amp; <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'url'</span>] != <span class="hljs-string">""</span>) ? <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'url'</span>] : Null;
+
+    <span class="hljs-comment">// En cas d'erreur, on renvoie vers le formulaire</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable">$id</span> == Null) {
+        <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">"Location: artists.php"</span>);
+    }
+    <span class="hljs-keyword">elseif</span> (<span class="hljs-variable">$nom</span> == Null || <span class="hljs-variable">$url</span> == Null) {
+        <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">"Location: artist_form.php?id="</span>.<span class="hljs-variable">$id</span>);
+        <span class="hljs-keyword">exit</span>;
+    }
+
+    <span class="hljs-comment">// Si la vérification des données est ok :</span>
+    <span class="hljs-keyword">require</span> <span class="hljs-string">"db.php"</span>; 
+    <span class="hljs-variable">$db</span> = <span class="hljs-title function_ invoke__">connexionBase</span>();
+
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-comment">// Construction de la requête UPDATE sans injection SQL :</span>
+        <span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"UPDATE artist SET artist_name = :nom, artist_url = :url WHERE artist_id = :id;"</span>);
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":id"</span>, <span class="hljs-variable">$id</span>, PDO::<span class="hljs-variable constant_">PARAM_INT</span>);
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":nom"</span>, <span class="hljs-variable">$nom</span>, PDO::<span class="hljs-variable constant_">PARAM_STR</span>);
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":url"</span>, <span class="hljs-variable">$url</span>, PDO::<span class="hljs-variable constant_">PARAM_STR</span>);
+
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">closeCursor</span>();
+    }
+
+    <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">Exception</span> <span class="hljs-variable">$e</span>) {
+        <span class="hljs-keyword">echo</span> <span class="hljs-string">"Erreur : "</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getMessage</span>() . <span class="hljs-string">"&lt;br&gt;"</span>;
+        <span class="hljs-keyword">die</span>(<span class="hljs-string">"Fin du script (script_artist_modif.php)"</span>);
+    }
+
+    <span class="hljs-comment">// Si OK: redirection vers la page artist_detail.php</span>
+    <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">"Location: artist_detail.php?id="</span> . <span class="hljs-variable">$id</span>);
+    <span class="hljs-keyword">exit</span>;</code></pre>
+      <div class="callout callout-info" role="note" aria-label="Gestion d'erreurs PDO">
+        <p><strong>Gestion d'erreurs :</strong> tu peux attraper <code>PDOException</code> pour cibler les erreurs PDO. Et en production, on évite d'afficher les détails SQL à l'écran : on journalise (logs) et on affiche un message générique.</p>
+      </div>
+
+            <blockquote>
+                <p>Vous vous en doutez... : vérifiez en BDD que votre mise à jour est OK ! </p>
+            </blockquote>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

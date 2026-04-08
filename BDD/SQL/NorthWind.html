@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>NorthWind</title>
+
+    <link rel="stylesheet" href="NorthWind_fichiers/font-awesome.min.css" />
+    <link rel="stylesheet" href="NorthWind_fichiers/bootstrap.min.css" />
+    <link rel="stylesheet" href="NorthWind_fichiers/github-markdown.css" />
+    <link rel="stylesheet" href="NorthWind_fichiers/stackoverflow-dark.min.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <main class="markdown-body">
+        <h1 id="northwind">NorthWind</h1>
+
+        <p>
+          La base de données <code>NorthWind</code> est une base exemple fournie par
+          <code>Microsoft</code> pour servir de démonstration. Elle représente un système de
+          gestion commercial (Clients, Commandes, Produits...).
+        </p>
+
+        <figure>
+          <img
+            src="NorthWind_fichiers/northwind2.png"
+            alt="Schéma relationnel simplifié de la base NorthWind"
+            loading="lazy"
+          />
+        </figure>
+
+        <blockquote>
+          <p>Faites bien attention à la casse des tables et des colonnes.</p>
+        </blockquote>
+
+        <h2 id="installation">Installation</h2>
+
+        <p>
+          Téléchargez
+          <a
+            href="NorthWind_fichiers/Northwind.MySQL5.sql"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            le fichier de création de la base
+          </a>.
+        </p>
+
+        <p>Exécutez la commande suivante :</p>
+
+        <pre><code class="language-bash">cat Northwind.MySQL5.sql | mysql -u admin -p</code></pre>
+
+        <p>
+          Après avoir saisi le mot de passe de l'utilisateur <code>admin</code> et patienté quelques
+          instants, vous devriez pouvoir utiliser la base <code>northwind</code>.
+        </p>
+
+        <h2 id="exercices">Maintenant, vous pouvez répondre à ces interrogations :</h2>
+
+        <ol>
+          <li>Liste des clients français (Nom, Adresse, Ville, Code postal, Pays)</li>
+          <li>
+            Liste des clients français dans le département 75 (Nom, Adresse, Ville, Code postal,
+            Pays)
+          </li>
+          <li>Combien y a-t-il de clients français ?</li>
+          <li>
+            Liste des produits (Id, Nom, Prix unitaire, unité en stock, niveau de réapprovisionnement,
+            abandonné)
+          </li>
+          <li>Liste des produits dont le stock est inférieur au niveau de réapprovisionnement</li>
+          <li>Liste des produits abandonnés</li>
+          <li>Quels sont les produits vendus par le fournisseur "Exotic Liquids" ?</li>
+          <li>
+            Pour chaque fournisseur français, afficher le nombre de produits vendus, dans l’ordre
+            décroissant
+          </li>
+          <li>Afficher la liste des clients français ayant plus de 10 commandes</li>
+          <li>Afficher la liste des clients ayant un chiffre d’affaires &gt; 30000</li>
+          <li>
+            Afficher la liste des pays dont les clients ont passé commande de produits fournis par
+            "Exotic Liquids"
+          </li>
+          <li>Montant des ventes de 1997</li>
+          <li>Montant des ventes de 1997 mois par mois</li>
+          <li>Depuis quelle date le client "Du monde entier" n’a plus commandé ?</li>
+          <li>Quel est le délai moyen de livraison en jours ?</li>
+        </ol>
+      </main>
+    </div>
+
+    <!-- JS (chargé en fin de page) -->
+    <script src="NorthWind_fichiers/inject.js"></script>
+    <script src="NorthWind_fichiers/jquery-3.4.1.min.js"></script>
+    <script src="NorthWind_fichiers/popper.min.js"></script>
+    <script src="NorthWind_fichiers/bootstrap.min.js"></script>
+    <script src="NorthWind_fichiers/highlight.min.js"></script>
+
+    <script>
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    </script>
+  </body>
+</html>

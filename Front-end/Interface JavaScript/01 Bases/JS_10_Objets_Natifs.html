@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>10 Les objets natifs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">10 Les objets natifs</h1>
+
+      <p>
+        Les objets sont des briques essentielles de JavaScript : ils
+        regroupent des données (propriétés) et des comportements (méthodes).
+      </p>
+      <p>
+        Le langage fournit un ensemble d’objets standards, dits
+        <strong>objets natifs</strong>, qui permettent de manipuler les
+        chaînes de caractères, les nombres, les dates, les tableaux, etc.
+      </p>
+
+      <hr />
+
+      <h2 id="5">L'objet <code>String</code></h2>
+
+      <p>
+        L’objet <code>String</code> représente une chaîne de caractères. Dans
+        le JavaScript moderne, on utilise presque toujours des
+        <strong>littéraux de chaîne</strong> plutôt que le constructeur
+        <code>new String()</code>.
+      </p>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// (déconseillé) - objet String construit explicitement</span>
+<span class="hljs-keyword">const</span> strObj = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(<span class="hljs-string">"Bonjour"</span>);
+
+<span class="hljs-comment">// (recommandé) - chaîne primitive</span>
+<span class="hljs-keyword">const</span> message = <span class="hljs-string">"Bonjour"</span>;
+<span class="hljs-comment">// Les primitives de type string bénéficient automatiquement des méthodes de String</span></code></pre>
+
+      <p>
+        La position du premier caractère d’une chaîne est
+        <strong>0</strong>. Par exemple, dans <code>"JavaScript"</code> :
+        <code>'J'</code> est à la position 0, <code>'a'</code> à la position
+        1, etc.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>length</code></td>
+            <td>
+              Propriété qui indique la longueur de la chaîne de caractères.
+            </td>
+          </tr>
+          <tr>
+            <td><code>charAt(index)</code></td>
+            <td>Retourne le caractère à la position <code>index</code>.</td>
+          </tr>
+          <tr>
+            <td><code>indexOf(texte[, fromIndex])</code></td>
+            <td>
+              Retourne la position de la première occurrence de
+              <code>texte</code> (ou <code>-1</code> si non trouvé).
+            </td>
+          </tr>
+          <tr>
+            <td><code>lastIndexOf(texte[, fromIndex])</code></td>
+            <td>
+              Identique à <code>indexOf</code> mais en partant de la fin de la
+              chaîne.
+            </td>
+          </tr>
+          <tr>
+            <td><code>includes(texte)</code></td>
+            <td>
+              Retourne <code>true</code> si la chaîne contient
+              <code>texte</code>, sinon <code>false</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>startsWith(texte)</code></td>
+            <td>Teste si la chaîne commence par <code>texte</code>.</td>
+          </tr>
+          <tr>
+            <td><code>endsWith(texte)</code></td>
+            <td>Teste si la chaîne se termine par <code>texte</code>.</td>
+          </tr>
+          <tr>
+            <td><code>substring(début, fin)</code></td>
+            <td>
+              Retourne la partie de la chaîne entre les indices
+              <code>début</code> (inclus) et <code>fin</code> (exclu).
+            </td>
+          </tr>
+          <tr>
+            <td><code>slice(début[, fin])</code></td>
+            <td>
+              Semblable à <code>substring</code>, mais accepte aussi des
+              indices négatifs (à partir de la fin).
+            </td>
+          </tr>
+          <tr>
+            <td><code>toLowerCase()</code></td>
+            <td>Retourne une copie de la chaîne en minuscules.</td>
+          </tr>
+          <tr>
+            <td><code>toUpperCase()</code></td>
+            <td>Retourne une copie de la chaîne en majuscules.</td>
+          </tr>
+          <tr>
+            <td><code>trim()</code></td>
+            <td>
+              Supprime les espaces (et retours à la ligne) en début et fin de
+              chaîne.
+            </td>
+          </tr>
+          <tr>
+            <td><code>split(séparateur)</code></td>
+            <td>
+              Découpe la chaîne en tableau selon le séparateur (par exemple
+              <code>","</code> ou <code>" "</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>replace(recherche, remplacement)</code></td>
+            <td>
+              Retourne une nouvelle chaîne où la première occurrence de
+              <code>recherche</code> est remplacée par
+              <code>remplacement</code>. Peut utiliser une expression
+              régulière.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="string-exemple">Exemple : normaliser un nom d’utilisateur</h3>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// On veut :</span>
+<span class="hljs-comment">// - supprimer les espaces superflus</span>
+<span class="hljs-comment">// - ne garder que des minuscules</span>
+<span class="hljs-comment">// - vérifier que le pseudo fait au moins 3 caractères</span>
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">normaliserPseudo</span>(<span class="hljs-params">pseudoBrut</span>) {
+  <span class="hljs-keyword">const</span> nettoyé = pseudoBrut.trim().toLowerCase();
+  <span class="hljs-keyword">if</span> (nettoyé.length &lt; <span class="hljs-number">3</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; <span class="hljs-comment">// pseudo trop court</span>
+  }
+  <span class="hljs-keyword">return</span> nettoyé;
+}
+
+<span class="hljs-keyword">const</span> entrée = <span class="hljs-string">"   Manuel   "</span>;
+<span class="hljs-keyword">const</span> pseudo = <span class="hljs-title function_">normaliserPseudo</span>(entrée);
+
+<span class="hljs-keyword">if</span> (pseudo) {
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Pseudo enregistré : <span class="hljs-subst">${pseudo}</span>`</span>);
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Pseudo invalide."</span>);
+}</code></pre>
+
+      <p>
+        À partir d’ES6, on dispose également des
+        <strong>gabarits de chaîne</strong> (template strings) avec les
+        backticks <code>`...`</code> et les expressions <code>${...}</code>,
+        très pratiques pour construire des chaînes lisibles.
+      </p>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-keyword">const</span> prénom = <span class="hljs-string">"Ella"</span>;
+<span class="hljs-keyword">const</span> nbMessages = <span class="hljs-number">5</span>;
+<span class="hljs-keyword">const</span> phrase = <span class="hljs-string">`Bonjour <span class="hljs-subst">${prénom}</span>, tu as <span class="hljs-subst">${nbMessages}</span> nouveaux messages.`</span>;
+<span class="hljs-variable language_">console</span>.log(phrase);</code></pre>
+
+      <hr />
+
+      <h2 id="11">L'objet <code>Math</code> et les nombres</h2>
+
+      <p>
+        L’objet <code>Math</code> fournit des fonctions mathématiques
+        courantes. Il n’est pas destiné à être instancié :
+        <strong>on l’utilise directement</strong> :
+      </p>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-keyword">const</span> maxVal = <span class="hljs-title class_">Math</span>.max(<span class="hljs-number">10</span>, <span class="hljs-number">20</span>); <span class="hljs-comment">// 20</span>
+<span class="hljs-keyword">const</span> racine = <span class="hljs-title class_">Math</span>.sqrt(<span class="hljs-number">16</span>);         <span class="hljs-comment">// 4</span></code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Méthode</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Math.abs(x)</code></td>
+            <td>Valeur absolue de <code>x</code>.</td>
+          </tr>
+          <tr>
+            <td><code>Math.ceil(x)</code></td>
+            <td>Arrondi à l’entier supérieur ou égal à <code>x</code>.</td>
+          </tr>
+          <tr>
+            <td><code>Math.floor(x)</code></td>
+            <td>Arrondi à l’entier inférieur ou égal à <code>x</code>.</td>
+          </tr>
+          <tr>
+            <td><code>Math.round(x)</code></td>
+            <td>Arrondi au plus proche entier.</td>
+          </tr>
+          <tr>
+            <td><code>Math.max(...valeurs)</code></td>
+            <td>Plus grande des valeurs passées en argument.</td>
+          </tr>
+          <tr>
+            <td><code>Math.min(...valeurs)</code></td>
+            <td>Plus petite des valeurs passées en argument.</td>
+          </tr>
+          <tr>
+            <td><code>Math.pow(x, y)</code></td>
+            <td><code>x</code> à la puissance <code>y</code>.</td>
+          </tr>
+          <tr>
+            <td><code>Math.sqrt(x)</code></td>
+            <td>Racine carrée de <code>x</code>.</td>
+          </tr>
+          <tr>
+            <td><code>Math.random()</code></td>
+            <td>Nombre pseudo-aléatoire entre 0 (inclus) et 1 (exclu).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        <code>Math</code> propose aussi des fonctions trigonométriques
+        (<code>sin</code>, <code>cos</code>, <code>tan</code>, etc.) et
+        d’autres utilitaires (<code>Math.trunc</code>, <code>Math.sign</code>,
+        …).
+      </p>
+
+      <h3 id="math-random-exemple">Exemple : tirer un entier aléatoire</h3>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Tirer un entier entre min et max inclus</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">entierAléatoire</span>(<span class="hljs-params">min, max</span>) {
+  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.floor(<span class="hljs-title class_">Math</span>.random() * (max - min + <span class="hljs-number">1</span>)) + min;
+}
+
+<span class="hljs-keyword">const</span> tirage = <span class="hljs-title function_">entierAléatoire</span>(<span class="hljs-number">1</span>, <span class="hljs-number">6</span>); <span class="hljs-comment">// simulacre d'un lancer de dé</span>
+<span class="hljs-variable language_">console</span>.log(tirage);</code></pre>
+
+      <h3 id="number-utils">Fonctions liées aux nombres</h3>
+
+      <p>
+        JavaScript fournit aussi des fonctions et méthodes pour convertir et
+        tester des nombres. Les versions modernes sont disponibles sur l’objet
+        <code>Number</code>.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Number.parseInt(texte[, base])</code></td>
+            <td>
+              Convertit la chaîne en entier. Par exemple :
+              <code>Number.parseInt("42")</code> donne <code>42</code>,<br />
+              <code>Number.parseInt("10", 2)</code> donne <code>2</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>Number.parseFloat(texte)</code></td>
+            <td>
+              Convertit la chaîne en nombre à virgule (notation
+              <em>point</em> : <code>"3.14"</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>Number.isNaN(x)</code></td>
+            <td>
+              Retourne <code>true</code> si <code>x</code> est exactement
+              <code>NaN</code>. Plus fiable que la fonction globale
+              <code>isNaN()</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>Number.isFinite(x)</code></td>
+            <td>
+              Retourne <code>true</code> si <code>x</code> est un nombre fini
+              (ni <code>Infinity</code>, ni <code>-Infinity</code>, ni
+              <code>NaN</code>).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <blockquote>
+        <p>
+          <strong>Attention :</strong> la fonction globale
+          <code>eval()</code> permet d’exécuter du code construit sous forme
+          de chaîne. Elle est considérée comme dangereuse (problèmes de
+          sécurité, de performance, de lisibilité) et doit être évitée dans le
+          code moderne.
+        </p>
+      </blockquote>
+
+      <h3 id="prix-exemple">
+        Exemple : calculer un total à partir de champs texte
+      </h3>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Imaginons un formulaire avec des champs texte qui contiennent des prix</span>
+<span class="hljs-keyword">const</span> prixBruts = [<span class="hljs-string">"12.50"</span>, <span class="hljs-string">"3.20"</span>, <span class="hljs-string">"7.30"</span>];
+
+<span class="hljs-keyword">const</span> prixNumériques = prixBruts.map(<span class="hljs-function"><span class="hljs-params">valeur</span> =&gt;</span> <span class="hljs-title class_">Number</span>.parseFloat(valeur));
+
+<span class="hljs-keyword">const</span> total = prixNumériques.reduce(
+  (<span class="hljs-params">somme, prix</span>) =&gt; somme + prix,
+  <span class="hljs-number">0</span>
+);
+
+<span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Total = <span class="hljs-subst">${total.toFixed(<span class="hljs-number">2</span>)}</span> €`</span>);</code></pre>
+
+      <hr />
+
+      <h2 id="19">L'objet <code>Date</code></h2>
+
+      <p>L’objet <code>Date</code> représente un instant dans le temps.</p>
+
+      <p>On peut le créer de plusieurs façons :</p>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Date et heure actuelles</span>
+<span class="hljs-keyword">const</span> maintenant = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();
+
+<span class="hljs-comment">// À partir de millisecondes écoulées depuis le 1er janvier 1970 (UTC)</span>
+<span class="hljs-keyword">const</span> dateDepuisEpoch = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-number">3600</span> * <span class="hljs-number">24</span> * <span class="hljs-number">365</span> * <span class="hljs-number">40</span>);
+
+<span class="hljs-comment">// À partir de composants (année, mois, jour, ...) - mois entre 0 et 11</span>
+<span class="hljs-keyword">const</span> dateAnniversaire = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-number">2025</span>, <span class="hljs-number">2</span>, <span class="hljs-number">15</span>); <span class="hljs-comment">// 15 mars 2025</span>
+
+<span class="hljs-comment">// Avec heures, minutes, secondes</span>
+<span class="hljs-keyword">const</span> rendezVous = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-number">2025</span>, <span class="hljs-number">2</span>, <span class="hljs-number">15</span>, <span class="hljs-number">9</span>, <span class="hljs-number">30</span>, <span class="hljs-number">0</span>);
+
+<span class="hljs-comment">// À partir d'une chaîne de caractères (format reconnu par le moteur)</span>
+<span class="hljs-keyword">const</span> dateIso = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">"2025-03-15T09:30:00"</span>);</code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Méthode</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>getFullYear()</code></td>
+            <td>Année sur 4 chiffres (ex : 2025).</td>
+          </tr>
+          <tr>
+            <td><code>getMonth()</code></td>
+            <td>
+              Mois entre <code>0</code> (janvier) et <code>11</code>
+              (décembre).
+            </td>
+          </tr>
+          <tr>
+            <td><code>getDate()</code></td>
+            <td>Jour du mois entre 1 et 31.</td>
+          </tr>
+          <tr>
+            <td><code>getDay()</code></td>
+            <td>
+              Jour de la semaine entre 0 et 6 (0 = dimanche, 1 = lundi, etc.).
+            </td>
+          </tr>
+          <tr>
+            <td><code>getHours()</code></td>
+            <td>Heures entre 0 et 23.</td>
+          </tr>
+          <tr>
+            <td><code>getMinutes()</code></td>
+            <td>Minutes entre 0 et 59.</td>
+          </tr>
+          <tr>
+            <td><code>getSeconds()</code></td>
+            <td>Secondes entre 0 et 59.</td>
+          </tr>
+          <tr>
+            <td><code>getTime()</code></td>
+            <td>
+              Nombre de millisecondes écoulées depuis le 1er janvier 1970
+              (UTC).
+            </td>
+          </tr>
+          <tr>
+            <td><code>getTimezoneOffset()</code></td>
+            <td>
+              Différence en minutes entre le fuseau local et l’heure UTC
+              (souvent un multiple de 60).
+            </td>
+          </tr>
+          <tr>
+            <td><code>toLocaleString()</code></td>
+            <td>
+              Retourne une représentation locale de la date et l’heure (format
+              dépendant de la langue et des options).
+            </td>
+          </tr>
+          <tr>
+            <td><code>Date.now()</code></td>
+            <td>
+              Méthode statique qui retourne
+              <code>new Date().getTime()</code>.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        L’objet <code>Date</code> possède également des méthodes
+        <code>setFullYear</code>, <code>setMonth</code>, <code>setDate</code>,
+        etc. pour modifier une date existante.
+      </p>
+
+      <h3 id="date-exemple">
+        Exemple : afficher une date lisible et calculer une durée
+      </h3>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-keyword">const</span> maintenant2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();
+
+<span class="hljs-keyword">const</span> options = {
+  <span class="hljs-attr">weekday</span>: <span class="hljs-string">"long"</span>,
+  <span class="hljs-attr">year</span>: <span class="hljs-string">"numeric"</span>,
+  <span class="hljs-attr">month</span>: <span class="hljs-string">"long"</span>,
+  <span class="hljs-attr">day</span>: <span class="hljs-string">"numeric"</span>,
+  <span class="hljs-attr">hour</span>: <span class="hljs-string">"2-digit"</span>,
+  <span class="hljs-attr">minute</span>: <span class="hljs-string">"2-digit"</span>
+};
+
+<span class="hljs-keyword">const</span> texteDate = maintenant2.toLocaleString(<span class="hljs-string">"fr-FR"</span>, options);
+<span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Nous sommes le <span class="hljs-subst">${texteDate}</span>`</span>);
+
+<span class="hljs-comment">// Calculer le nombre de jours entre deux dates</span>
+<span class="hljs-keyword">const</span> début = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">"2025-01-01"</span>);
+<span class="hljs-keyword">const</span> fin = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(<span class="hljs-string">"2025-12-31"</span>);
+
+<span class="hljs-keyword">const</span> diffMs = fin.getTime() - début.getTime();
+<span class="hljs-keyword">const</span> unJourMs = <span class="hljs-number">1000</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">24</span>;
+<span class="hljs-keyword">const</span> nbJours = diffMs / unJourMs;
+
+<span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Il y a environ <span class="hljs-subst">${nbJours}</span> jours entre ces deux dates.`</span>);</code></pre>
+
+      <hr />
+
+      <h2 id="28">L'objet <code>Array</code></h2>
+
+      <p>
+        L’objet <code>Array</code> représente une liste ordonnée d’éléments.
+        On parle souvent de <strong>tableau</strong>.
+      </p>
+      <p>
+        En JavaScript moderne, on utilise principalement la syntaxe
+        <strong>littérale</strong> <code>[]</code>.
+      </p>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Création de tableaux</span>
+<span class="hljs-keyword">const</span> nombres = [<span class="hljs-number">10</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">20</span>];
+<span class="hljs-keyword">const</span> prénoms = [<span class="hljs-string">"Alice"</span>, <span class="hljs-string">"Bob"</span>, <span class="hljs-string">"Charlie"</span>];
+
+<span class="hljs-comment">// Tableau vide et ajout d'éléments</span>
+<span class="hljs-keyword">const</span> tCarnet = [];
+tCarnet.push(<span class="hljs-string">"Philippe"</span>);
+tCarnet[<span class="hljs-number">1</span>] = <span class="hljs-string">"Léa"</span>;
+
+<span class="hljs-comment">// L'indexation commence à 0</span>
+<span class="hljs-variable language_">console</span>.log(tCarnet[<span class="hljs-number">0</span>]); <span class="hljs-comment">// "Philippe"</span></code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété / Méthode</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>length</code></td>
+            <td>Retourne le nombre d’éléments du tableau (un entier).</td>
+          </tr>
+          <tr>
+            <td><code>push(élément)</code></td>
+            <td>Ajoute un élément à la fin du tableau.</td>
+          </tr>
+          <tr>
+            <td><code>pop()</code></td>
+            <td>Supprime et retourne le dernier élément.</td>
+          </tr>
+          <tr>
+            <td><code>unshift(élément)</code></td>
+            <td>Ajoute un élément au début du tableau.</td>
+          </tr>
+          <tr>
+            <td><code>shift()</code></td>
+            <td>Supprime et retourne le premier élément.</td>
+          </tr>
+          <tr>
+            <td><code>join([séparateur])</code></td>
+            <td>
+              Construit une chaîne à partir des éléments du tableau, séparés
+              par <code>séparateur</code> (par défaut une virgule).
+            </td>
+          </tr>
+          <tr>
+            <td><code>reverse()</code></td>
+            <td>Inverse l’ordre des éléments (modifie le tableau).</td>
+          </tr>
+          <tr>
+            <td><code>sort([fonctionDeComparaison])</code></td>
+            <td>
+              Trie le tableau. Par défaut, tri lexicographique (par ordre
+              alphabétique des chaînes).
+            </td>
+          </tr>
+          <tr>
+            <td><code>slice(début[, fin])</code></td>
+            <td>
+              Retourne une copie partielle du tableau du rang
+              <code>début</code> (inclus) à <code>fin</code> (exclu).
+            </td>
+          </tr>
+          <tr>
+            <td><code>forEach(fonction)</code></td>
+            <td>
+              Exécute une fonction pour chaque élément (itération simple).
+            </td>
+          </tr>
+          <tr>
+            <td><code>map(fonction)</code></td>
+            <td>
+              Crée un nouveau tableau contenant le résultat de
+              <code>fonction</code> appliquée à chaque élément.
+            </td>
+          </tr>
+          <tr>
+            <td><code>filter(fonction)</code></td>
+            <td>
+              Crée un nouveau tableau avec les éléments pour lesquels la
+              fonction retourne <code>true</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>reduce(fonction, valeurInitiale)</code></td>
+            <td>
+              Combine les éléments du tableau en une seule valeur (somme,
+              produit, objet accumulé, etc.).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="array-exemple">Exemple : filtrer et transformer des données</h3>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Liste de tâches avec une propriété "terminée"</span>
+<span class="hljs-keyword">const</span> tâches = [
+  { <span class="hljs-attr">titre</span>: <span class="hljs-string">"Préparer le café"</span>, <span class="hljs-attr">terminée</span>: <span class="hljs-literal">true</span> },
+  { <span class="hljs-attr">titre</span>: <span class="hljs-string">"Lire la documentation JS"</span>, <span class="hljs-attr">terminée</span>: <span class="hljs-literal">false</span> },
+  { <span class="hljs-attr">titre</span>: <span class="hljs-string">"Corriger un bug"</span>, <span class="hljs-attr">terminée</span>: <span class="hljs-literal">true</span> }
+];
+
+<span class="hljs-comment">// Ne garder que les tâches terminées</span>
+<span class="hljs-keyword">const</span> terminées = tâches.filter(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.terminée);
+
+<span class="hljs-comment">// Récupérer uniquement les titres</span>
+<span class="hljs-keyword">const</span> titresTerminés = terminées.map(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.titre);
+
+<span class="hljs-variable language_">console</span>.log(titresTerminés.join(<span class="hljs-string">", "</span>));</code></pre>
+
+      <hr />
+
+      <h2 id="40">L'objet <code>Image</code> et les images</h2>
+
+      <p>
+        Dans les navigateurs, une balise <code>&lt;img&gt;</code> dans le DOM
+        est représentée par un objet de type <code>HTMLImageElement</code>. On
+        peut aussi créer des images dynamiquement en JavaScript.
+      </p>
+
+      <h3 id="image-preload">Pré-charger une image</h3>
+
+      <p>
+        On peut créer une image en mémoire, lui donner une URL, puis
+        l’utiliser plus tard (par exemple pour un effet de survol).
+      </p>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Préchargement d'une image</span>
+<span class="hljs-keyword">const</span> imageSurvol = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Image</span>();
+imageSurvol.src = <span class="hljs-string">"images/bouton-survol.png"</span>;
+
+imageSurvol.addEventListener(<span class="hljs-string">"load"</span>, () =&gt; {
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Image de survol prête en mémoire."</span>);
+});</code></pre>
+
+      <h3 id="image-dom-exemple">
+        Exemple : changer une image au survol (version DOM moderne)
+      </h3>
+
+      <pre><code class="language-html hljs language-xml"><span class="hljs-comment">&lt;!-- Dans le HTML --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">img</span>
+  <span class="hljs-attr">id</span>=<span class="hljs-string">"btnPlay"</span>
+  <span class="hljs-attr">src</span>=<span class="hljs-string">"images/bouton-normal.png"</span>
+  <span class="hljs-attr">alt</span>=<span class="hljs-string">"Bouton Lecture"</span>
+/&gt;</span></code></pre>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-comment">// Dans un fichier .js ou un &lt;script&gt; séparé</span>
+<span class="hljs-keyword">const</span> btnPlay = <span class="hljs-variable language_">document</span>.getElementById(<span class="hljs-string">"btnPlay"</span>);
+<span class="hljs-keyword">const</span> imgNormal = <span class="hljs-string">"images/bouton-normal.png"</span>;
+<span class="hljs-keyword">const</span> imgSurvol = <span class="hljs-string">"images/bouton-survol.png"</span>;
+
+btnPlay.addEventListener(<span class="hljs-string">"mouseenter"</span>, () =&gt; {
+  btnPlay.src = imgSurvol;
+});
+
+btnPlay.addEventListener(<span class="hljs-string">"mouseleave"</span>, () =&gt; {
+  btnPlay.src = imgNormal;
+});</code></pre>
+
+      <blockquote>
+        <p>
+          Ne pas confondre l’objet JavaScript <code>Image</code> (instance
+          créée avec <code>new Image()</code>) avec la balise
+          <code>&lt;img&gt;</code> présente dans le HTML. Les deux
+          représentent des images, mais n’ont pas exactement le même rôle.
+        </p>
+      </blockquote>
+
+      <hr />
+
+      <h2 id="51">Exercice</h2>
+
+      <p>
+        Écrivez un programme qui permet à l’utilisateur de saisir plusieurs
+        valeurs numériques (avec <code>window.prompt</code>). Ces valeurs
+        seront rangées dans un tableau.
+      </p>
+      <ul>
+        <li>La saisie s’arrête quand l’utilisateur saisit la valeur 0.</li>
+        <li>
+          À la fin, le programme doit afficher :
+          <ul>
+            <li>le nombre de valeurs saisies (hors 0 de fin),</li>
+            <li>la somme de ces valeurs,</li>
+            <li>la moyenne.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3 id="51-solution">Piste de solution (console)</h3>
+
+      <pre><code class="language-js hljs language-javascript"><span class="hljs-keyword">const</span> valeurs = [];
+
+<span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+  <span class="hljs-keyword">const</span> saisie = <span class="hljs-variable language_">window</span>.prompt(<span class="hljs-string">"Entrez une valeur numérique (0 pour terminer) :"</span>);
+
+  <span class="hljs-keyword">if</span> (saisie === <span class="hljs-literal">null</span>) {
+    <span class="hljs-comment">// L'utilisateur a cliqué sur Annuler : on arrête aussi</span>
+    <span class="hljs-keyword">break</span>;
+  }
+
+  <span class="hljs-keyword">const</span> valeur = <span class="hljs-title class_">Number</span>.parseFloat(saisie);
+
+  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Number</span>.isNaN(valeur)) {
+    <span class="hljs-variable language_">window</span>.alert(<span class="hljs-string">"Ce n'est pas un nombre valide."</span>);
+    <span class="hljs-keyword">continue</span>;
+  }
+
+  <span class="hljs-keyword">if</span> (valeur === <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">break</span>;
+  }
+
+  valeurs.push(valeur);
+}
+
+<span class="hljs-keyword">if</span> (valeurs.length === <span class="hljs-number">0</span>) {
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Aucune valeur saisie."</span>);
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-keyword">const</span> somme = valeurs.reduce(
+    (<span class="hljs-params">acc, v</span>) =&gt; acc + v,
+    <span class="hljs-number">0</span>
+  );
+  <span class="hljs-keyword">const</span> moyenne = somme / valeurs.length;
+
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Nombre de valeurs : <span class="hljs-subst">${valeurs.length}</span>`</span>);
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Somme : <span class="hljs-subst">${somme}</span>`</span>);
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">`Moyenne : <span class="hljs-subst">${moyenne}</span>`</span>);
+}</code></pre>
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+  </script>
+  <script>
+    document.title = "" + document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

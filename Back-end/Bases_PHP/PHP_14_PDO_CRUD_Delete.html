@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDO - CRUD : Delete</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - PDO -&gt; CRUD : Delete</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Des enregistrements en trop ? Nous allons pouvoir les supprimer !</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="5">Création d'un lien vers le formulaire</h2>
+            <p>Vous voyez sans doute venir l'idée : modifiez la page contenant le détail de votre fiche Artiste (page
+                <em>artist_detail.php</em>) pour ajouter un bouton permettant de la supprimer :
+            </p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// Début de page : traitement PHP + entête HTML</span>
+<span class="hljs-comment">// ...</span>
+
+    &lt;body&gt;
+        Artiste N°<span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">echo</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        Nom de l'artiste : <span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_name <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        Site Internet : <span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_url <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        &lt;a href="artist_form.php?id=<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>"&gt;Modifier&lt;/a&gt;
+        &lt;a href="script_artist_delete.php?id=<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>"&gt;Supprimer&lt;/a&gt;
+    &lt;/body&gt;
+
+// Fin de page : fermetures de blocs HTML</span></code></pre>
+            <p>Petite particularité pour la suppression : puisqu'a priori il n'est
+                pas nécessaire de ré-afficher un formulaire, on peut directement faire
+                pointer le lien vers le script de suppression nommé <em>script_artist_delete.php</em> (que nous allons
+                écrire) en envoyant, ici aussi l'ID de la fiche à supprimer, en paramètre à la page via la méthode
+                <code>GET</code>.
+            </p>
+            <div class="spacer" aria-hidden="true"></div>
+            <blockquote>
+                <p><strong>Pour éviter toute suppression involontaire, ajoutez une demande de confirmation</strong> (par
+                    exemple, en JavaScript), qui permettra si on annule, de stopper le processus de suppression en BDD !
+                </p>
+            </blockquote>
+      <div class="callout callout-warn" role="note" aria-label="Confirmation de suppression">
+        <p><strong>Confirmation :</strong> pour éviter une suppression accidentelle, ajoute une confirmation au clic. Exemple simple :</p>
+<pre><code class="language-html hljs">&lt;a
+  href="script_artist_delete.php?id=&lt;?= $myArtist-&gt;artist_id ?&gt;"
+  onclick="return confirm('Supprimer cet artiste ?');"
+&gt;Supprimer&lt;/a&gt;</code></pre>
+        <p>Si l'utilisateur annule, <code>confirm()</code> renvoie <code>false</code> et la navigation est bloquée.</p>
+      </div>
+
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="12">Création du script de suppression</h2>
+      <div class="callout callout-info" role="note" aria-label="Validation de l'ID">
+        <p><strong>Validation de l'ID :</strong> une version plus robuste du contrôle peut utiliser <code>filter_input()</code> :</p>
+<pre><code class="language-php hljs">$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if ($id === null || $id === false || $id &lt;= 0) {
+  header('Location: artists.php');
+  exit;
+}</code></pre>
+      </div>
+
+            <p>La demande de suppression de fiche est effective ? C'est parti, envoyons l'instruction en BDD !<br>
+                Créez votre <em>script_artist_delete.php</em> auquel on accèdera grâce à l'URL construite dans notre
+                lien : </p>
+            <pre><code class="hljs language-bash">https://urlduserveurlocal/script_artist_delete.php?<span class="hljs-built_in">id</span>=10</code></pre>
+            <p>Le script contiendra, très succinctement le code suivant : </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-comment">// Contrôle de l'ID (si inexistant ou &lt;= 0, rediriger vers la liste d'artistes) :</span>
+    <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'id'</span>])) || <span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'id'</span>]) &lt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">"Location: artists.php"</span>);
+        <span class="hljs-keyword">exit</span>;
+    }
+
+    <span class="hljs-comment">// Si la vérification est ok :</span>
+    <span class="hljs-keyword">require</span> <span class="hljs-string">"db.php"</span>; 
+
+      <div class="callout callout-warn" role="note" aria-label="Chemins fiables">
+        <p><strong>Chemins fiables :</strong> pour inclure <code>db.php</code>, tu peux fiabiliser avec <code>__DIR__</code> :</p>
+<pre><code class="language-php hljs">require __DIR__ . '/db.php';</code></pre>
+      </div>
+    <span class="hljs-variable">$db</span> = <span class="hljs-title function_ invoke__">connexionBase</span>();
+
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-comment">// Construction de la requête DELETE sans injection SQL :</span>
+        <span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"DELETE FROM artist WHERE artist_id = ?"</span>);
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">"id"</span>]));
+        <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">closeCursor</span>();
+    }
+    <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">Exception</span> <span class="hljs-variable">$e</span>) {
+        <span class="hljs-keyword">echo</span> <span class="hljs-string">"Erreur : "</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getMessage</span>() . <span class="hljs-string">"&lt;br&gt;"</span>;
+        <span class="hljs-keyword">die</span>(<span class="hljs-string">"Fin du script (script_artist_modif.php)"</span>);
+    }
+
+    <span class="hljs-comment">// Si OK: redirection vers la page artists.php</span>
+
+    <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">"Location: artists.php"</span>);
+    <span class="hljs-keyword">exit</span>;</code></pre>
+      <div class="callout callout-info" role="note" aria-label="Gestion d'erreurs PDO">
+        <p><strong>Gestion d'erreurs :</strong> pour PDO, tu peux attraper <code>PDOException</code>. Et en production, on évite d'afficher <code>$e-&gt;getMessage()</code> (informations sensibles) : on journalise (logs) et on affiche un message générique.</p>
+      </div>
+
+            <p>Dans l'exemple ci-dessus, le contrôle d'entrée se fait avec un <code>if</code> : si l'ID est absent ou invalide, on redirige immédiatement avec <code>header()</code>, puis on arrête le script avec <code>exit;</code>. Cela évite d'exécuter la suppression dans un état incohérent.</p>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

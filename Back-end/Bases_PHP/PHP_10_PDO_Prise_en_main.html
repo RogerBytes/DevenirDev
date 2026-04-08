@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PDO - Prise en main</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - PDO -&gt; Prise en main</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Maintenant que vous avez appris les bases de PHP et rempli votre base
+                de données, il est temps d'accéder à votre base et d'en afficher le
+                contenu. </p>
+            <p>Nous allons utiliser <a target="_blank"
+                    href="assets/ressources/record.sql">la
+                    base de données <em>record.sql</em></a> pour afficher le détail d'un enregistrement de sa table
+                <em>disc</em> dans une page web.
+            </p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="6">Connexion à la base de données</h2>
+            <p>Les fonctions d'accès aux bases de données en PHP sont très simples
+                d'utilisation et permettent d'effectuer toutes les opérations
+                nécessaires à la mise à jour de la base. </p>
+            <p>Depuis sa version 5, PHP fournit par défaut un <em>composant d'abstraction</em> de bases de données,
+                c'est-à-dire de connexion et de requêtage.<br>
+                Ce composant est nommé <em>PHP Data Objects</em>, en abrégé : PDO. </p>
+            <p><br></p>
+            <h3 id="10"><strong>Qu'est-ce que PDO ?</strong></h3>
+            <p>Le <a href="http://php.net/manual/fr/book.pdo.php" target="_blank">PHP Data Objects (PDO)</a> fournit une
+                interface d'abstraction à l'accès aux données.<br>
+                Cela signifie qu'il vous permet d'utiliser les mêmes fonctions pour <em>exécuter</em> des requêtes ou
+                <em>récupérer</em> des données, et ce, quelle que soit la base de données utilisée (MySQL, Oracle,
+                etc.).
+            </p>
+            <p>PDO est une <em>classe</em>, qui va nous permettre d'<em>instancier</em> un objet représentant la
+                connexion à la base.</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="14"><strong>Connexion à un serveur MySQL</strong></h3>
+            <p>Les connexions à la BDD sont établies en créant des instances
+                (objets) de la classe PDO. Le constructeur accepte des paramètres pour
+                spécifier le nom/l'adresse du serveur de bases de données (<em>Data Source Name</em>, en abrégé : DSN),
+                le nom d'utilisateur et le mot de passe.</p>
+            <p><br></p>
+            <p><strong><em>Exemple :</em></strong> </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$db</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">PDO</span>(<span class="hljs-string">'mysql:host=localhost;dbname=record;charset=utf8'</span>, <span class="hljs-string">'admin'</span>, <span class="hljs-string">'votremotdepasse'</span>);</code></pre>
+            <p>L'appel au mot-clé <code>new</code> retourne une instance de la classe PDO que l'on stocke dans une
+                variable (<code>$db</code>). </p>
+            <p>Lors de l'instanciation d'un objet <code>PDO</code>, 3 paramètres sont à préciser pour la connexion :
+            </p>
+            <ol>
+                <li>
+                    <p>commande permettant de lancer le SGBD voulu, avec les paramètres nécessaires, à savoir :</p>
+                    <ul>
+                        <li><code>mysql:</code> : lancement du SGBD MySQL</li>
+                        <li><code>host</code> : adresse du serveur hébergeant la base de données (ici,
+                            <em>localhost</em>)
+                        </li>
+                        <li><code>dbname</code> : nom de la base de données (ici, <em>record</em>)</li>
+                        <li><code>charset</code> : jeu de caractères utilisé (ici, <em>utf8</em>)</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>identifiant de l'utilisateur pour la BDD (= utilisateur MySQL, soit pour nous : <em>admin</em>)
+                    </p>
+                </li>
+                <li>
+                    <p>le dernier argument précise le mot de passe pour cet utilisateur (ici, <em>votremotdepasse</em>)
+                    </p>
+                </li>
+            </ol>
+            <p><br></p>
+            <h3 id="23"><strong>Gestion des erreurs de connexion</strong></h3>
+      <div class="callout callout-info" role="note" aria-label="À retenir">
+        <p><strong>À retenir :</strong> pour capturer précisément les erreurs PDO, tu peux cibler <code>PDOException</code> dans le <code>catch</code>. Et en production, on évite d'afficher les détails d'erreur à l'écran : on les <strong>journalise</strong> (logs) et on affiche un message générique.</p>
+      </div>
+
+            <p>S'il y a des erreurs de <em>connexion</em>, un objet <code>PDOException</code>
+                est lancé. Vous pouvez attraper cette exception si vous voulez gérer
+                vous-même l'erreur, ou la laisser être gérée par le gestionnaire global
+                d'exception. </p>
+            <p>Pour l'exécution des requêtes, <code>PDO</code> active par défaut le
+                mode d'erreur silencieux (c'est à dire qu'il n'affiche pas d'information
+                lorsqu'une erreur survient...). Aussi, pour vérifier si une erreur
+                s'est produite, et retrouver d'où vient le souci, vous devez vous-même
+                lui faire réactiver le déclenchement de la gestion d'erreurs.</p>
+            <p>Pour ce faire, on utilise la syntaxe suivante :</p>
+            <pre><code class="language-php hljs"><span class="hljs-keyword">try</span> 
+{
+    <span class="hljs-variable">$db</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">PDO</span>(<span class="hljs-string">"mysql:host=localhost;charset=utf8;dbname=record"</span>, <span class="hljs-string">"admin"</span>, <span class="hljs-string">"votremotdepasse"</span>);
+    <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">setAttribute</span>(PDO::<span class="hljs-variable constant_">ATTR_ERRMODE</span>, PDO::<span class="hljs-variable constant_">ERRMODE_EXCEPTION</span>);
+} 
+<span class="hljs-keyword">catch</span> (<span class="hljs-built_in">Exception</span> <span class="hljs-variable">$e</span>) 
+{
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">'Erreur : '</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getMessage</span>() . <span class="hljs-string">'&lt;br /&gt;'</span>;
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">'N° : '</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getCode</span>();
+    <span class="hljs-keyword">die</span>(<span class="hljs-string">'Fin du script'</span>);
+}</code></pre>
+            <p><br></p>
+            <ul>
+                <li>
+                    <p>La méthode <code>setAttribute()</code> permet d'indiquer à <code>PDO</code> qu'il faut générer
+                        une exception <em>à chaque fois</em> qu'un problème est rencontré. </p>
+                    <blockquote>
+                        <p><strong><em>Très pratique en mode développement, mais déconseillé en mode production
+                                    !</em></strong></p>
+                    </blockquote>
+                </li>
+                <li>
+                    <p>Le <code>TRY... CATCH</code> permet de capter l'exception (dans la variable <code>$e</code>)
+                        en cas d'échec de connexion, et d'utiliser les informations sur cette
+                        exception pour obtenir un message d'erreur, notamment avec les méthodes
+                        <code>getMessage()</code> et <code>getCode()</code>.
+                    </p>
+                </li>
+                <li>
+                    <p>On utilise enfin le <code>die()</code> pour que le serveur arrête la lecture du script PHP.</p>
+                </li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="31">Affichage d'une liste d'enregistrements</h2>
+            <blockquote>
+                <p>Vous aurez besoin <a target="_blank"
+                        href="assets/ressources/jaquettes.zip">de
+                        ces images</a> pour les jaquettes de disque</p>
+            </blockquote>
+            <p>Pour afficher nos données sur une page, une première étape s'impose donc : notre connexion à la base de
+                données ! </p>
+            <p>Pour cela, nous allons créer un fichier <code>db.php</code>, reprenant le code de connexion vu
+                précédemment, préparé dans une méthode : </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ConnexionBase</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">try</span> 
+    {
+        <span class="hljs-variable">$connexion</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">PDO</span>(<span class="hljs-string">'mysql:host=localhost;charset=utf8;dbname=record'</span>, <span class="hljs-string">'admin'</span>, <span class="hljs-string">'votremotdepasse'</span>);
+        <span class="hljs-variable">$connexion</span>-&gt;<span class="hljs-title function_ invoke__">setAttribute</span>(PDO::<span class="hljs-variable constant_">ATTR_ERRMODE</span>, PDO::<span class="hljs-variable constant_">ERRMODE_EXCEPTION</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$connexion</span>;
+
+    } <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">Exception</span> <span class="hljs-variable">$e</span>) {
+        <span class="hljs-keyword">echo</span> <span class="hljs-string">"Erreur : "</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getMessage</span>() . <span class="hljs-string">"&lt;br&gt;"</span>;
+        <span class="hljs-keyword">echo</span> <span class="hljs-string">"N° : "</span> . <span class="hljs-variable">$e</span>-&gt;<span class="hljs-title function_ invoke__">getCode</span>();
+        <span class="hljs-keyword">die</span>(<span class="hljs-string">"Fin du script"</span>);
+    }
+}
+<span class="hljs-meta">?&gt;</span></code></pre>
+            <blockquote>
+                <p><strong>Reproduisez ce fichier !</strong></p>
+            </blockquote>
+            <p>Le fichier <code>db.php</code> contient maintenant une méthode de connexion,
+                <code>ConnexionBase()</code>, que nous allons pouvoir utiliser pour lancer nos requêtes.
+            </p>
+      <div class="callout callout-warn" role="note" aria-label="Convention">
+        <p><strong>Convention :</strong> en PHP, les noms de fonctions ne sont pas sensibles à la casse, donc <code>ConnexionBase()</code> et <code>connexionBase()</code> fonctionneront. Mais par lisibilité, garde une casse cohérente partout dans ton projet.</p>
+      </div>
+
+            <p><br></p>
+            <h3 id="39">Construction d'une requête SQL</h3>
+            <p>Dans une page destinée à l'affichage des artistes stockés en BDD,
+                nous allons utiliser notre fichier de connexion et lancer une requête
+                d'extraction de la table <em>artist</em>.</p>
+            <p>Nous aurons besoin, dans ce fichier, d'utiliser notre méthode <code>ConnexionBase()</code>, et donc,
+                d'accéder au fichier <code>db.php</code>.<br>
+                Nous aurons pour cela recours à <strong>l'instruction <code>include</code></strong>, qui permet
+                d'importer le contenu d'un fichier.</p>
+            <p>Dans le même répertoire que le fichier <code>db.php</code>, créez un fichier <code>artists.php</code>
+                contenant le code suivant : </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+
+    <span class="hljs-comment">// on importe le contenu du fichier "db.php"</span>
+    <span class="hljs-keyword">include</span> <span class="hljs-string">"db.php"</span>;
+    <span class="hljs-comment">// on exécute la méthode de connexion à notre BDD</span>
+    <span class="hljs-variable">$db</span> = <span class="hljs-title function_ invoke__">connexionBase</span>();
+
+    <span class="hljs-comment">// on lance une requête pour chercher toutes les fiches d'artistes</span>
+    <span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">query</span>(<span class="hljs-string">"SELECT * FROM artist"</span>);
+    <span class="hljs-comment">// on récupère tous les résultats trouvés dans une variable</span>
+    <span class="hljs-variable">$tableau</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetchAll</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);
+    <span class="hljs-comment">// on clôt la requête en BDD</span>
+    <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">closeCursor</span>();
+
+<span class="hljs-meta">?&gt;</span></code></pre>
+            <p>Ici, </p>
+            <ul>
+                <li>la connexion créée avec notre méthode <code>connexionBase()</code> est stockée dans la variable
+                    <code>$db</code> (qui récupère l'objet PDO renvoyé avec <code>return $connexion;</code>)
+                </li>
+                <li>la requête <code>SELECT</code> en BDD est lancée grâce à la méthode <code>query()</code> de l'objet
+                    PDO et la réponse de la BDD est stockée dans la variable <code>$requete</code></li>
+                <li>la méthode <code>fetchAll()</code> extrait les enregistrements trouvés et les renvoie sous forme de
+                    tableau d'objets, dans la variable <code>$tableau</code></li>
+                <li>la méthode <code>closeCursor();</code> libère la requête, pour pouvoir en lancer d'autres</li>
+            </ul>
+            <p><br></p>
+            <p>La variable <strong><code>$tableau</code> contient donc le résultat de notre requête</strong>,
+                c'est-à-dire la liste des artistes trouvés.<br>
+                Chaque artiste est représenté sous la forme d'un <em>objet</em>. </p>
+            <blockquote>
+                <p><strong><em>En phase de développement</em></strong>, pour visualiser le contenu de vos variables,
+                    utilisez la méthode <code>var_dump()</code> : </p>
+                <pre><code class="language-php hljs"><span class="hljs-comment">// en haut de page, avec la requête :</span>
+<span class="hljs-variable">$tableau</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetchAll</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);
+<span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-variable">$tableau</span>);</code></pre>
+            </blockquote>
+            <p><br></p>
+            <p>Là où c'est nécessaire, il nous est ainsi possible de manipuler notre tableau d'enregistrements et ses
+                données.<br>
+                Ici par exemple, affichons les informations sur chacun des artistes extraits de notre BDD.<br>
+                A la suite du bloc PHP dans la page <em>artists.php</em>, ajoutez le code suivant : </p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// ... après le bloc PHP :</span>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=<span class="hljs-string">"fr"</span>&gt;
+&lt;head&gt;
+    &lt;meta charset=<span class="hljs-string">"UTF-8"</span>&gt;
+    &lt;meta http-equiv=<span class="hljs-string">"X-UA-Compatible"</span> content=<span class="hljs-string">"IE=edge"</span>&gt;
+    &lt;meta name=<span class="hljs-string">"viewport"</span> content=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;
+    &lt;title&gt;PDO - Liste&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;th&gt;ID&lt;/th&gt;
+            &lt;th&gt;Nom&lt;/th&gt;
+        &lt;/tr&gt;
+
+        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$tableau</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$artist</span>): <span class="hljs-meta">?&gt;</span>
+
+        <span class="hljs-meta">&lt;?php</span> <span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-variable">$artist</span>); <span class="hljs-comment">// Le var_dump() est écrit à titre informatif.&gt;</span>
+        &lt;tr&gt;
+            &lt;td&gt;<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$artist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>&lt;/td&gt;
+            &lt;td&gt;<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$artist</span>-&gt;artist_name <span class="hljs-meta">?&gt;</span>&lt;/td&gt;
+        &lt;/tr&gt;
+
+        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endforeach</span>; <span class="hljs-meta">?&gt;</span>
+
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p>Dans ce code,</p>
+            <ul>
+                <li>la variable <code>$artist</code> contient, à chaque itération de la boucle <code>foreach</code>, un
+                    objet correspondant à un enregistrement d'artiste en BDD</li>
+                <li>pour accéder aux <em>propriétés</em> d'un artiste (= colonnes de la table <em>artist</em> en BDD),
+                    il faut utiliser la syntaxe : <code>objetBDD-&gt;nomdelacolonne</code> ; ici, on essaie donc de lire
+                    l'ID, et le nom de notre artiste.</li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="55">CRUD ?</h2>
+            <p>Nous venons de voir comment manipuler des données issues d'une BDD pour les afficher sur une page voulue.
+            </p>
+            <p>Les outils comme PDO nous permettent de faire principalement des <strong>CRUD</strong>. Cet acronyme
+                signifie :</p>
+            <ul>
+                <li><strong>C</strong>reate (= création, ajout)</li>
+                <li><strong>R</strong>ead (= Lecture), ou parfois Retrieve (= récupération)</li>
+                <li><strong>U</strong>pdate (= mise à jour, modification)</li>
+                <li><strong>D</strong>elete (= suppression)</li>
+            </ul>
+            <p>Si vous avez suivi les séances sur les bases de données, ces mots vous seront familier... </p>
+            <p>Pour faire bref, mettre en place un CRUD sur une table, ou plus
+                largement sur une BDD, revient à réaliser les traitements (Front et/ou
+                Back, et BDD) nécessaires à leur gestion, soit : besoins d'affichage, de
+                création, de modification et de suppression de données. </p>
+            <p>Dans un projet, une gestion CRUD sur une table donnée peut être représentée de la manière suivante : </p>
+            <p><img src="assets/img/crud_schema.png" alt="Shema du CRUD"></p>
+            <p>Nous venons ainsi de réaliser la première étape, qui correspond à la <code>liste</code>.<br>
+                Dans les séances suivantes, on s'attaque au reste ! </p>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

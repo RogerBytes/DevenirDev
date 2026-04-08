@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Les sessions</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - Les sessions</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="3">Définition</h2>
+            <p>La session est un mécanisme qui permet de conserver des données entre 2 pages web. </p>
+            <p>Par exemple, on peut utiliser les sessions pour stocker des informations liées à l'authentification, le
+                contenu d'un panier ...</p>
+            <h2 id="6">Fonctionnement</h2>
+            <p>Pour stocker des informations en session, PHP a recours à la variable <code>$_SESSION</code>. Il s'agit
+                d'une variable <a href="http://php.net/manual/fr/language.variables.superglobals.php"
+                    target="_blank">superglobale</a> (même type que <code>$_GET</code> ou <code>$_POST</code> etc.) qui
+                se comporte donc comme un tableau PHP avec des paires clé/valeur. </p>
+            <p>Mais avant toute utilisation de cette variable, il est <strong>impératif</strong> d'utiliser la fonction
+                <code>session_start()</code>
+                au début de chaque fichier PHP dans lequel on manipulera cette variable
+                et avant tout envoi de requêtes HTTP, c'est-à-dire avant tout <code>echo</code> ou quoi que ce soit
+                d'autre : rien ne doit avoir encore été écrit/envoyé à la page web.
+            </p>
+      <div class="callout callout-warn" role="note" aria-label="Important">
+        <p><strong>Important :</strong> <code>session_start()</code> doit être appelé <strong>avant toute sortie</strong> (HTML envoyé, <code>echo</code>, espace avant <code>&lt;?php</code>, etc.), sinon PHP ne peut plus envoyer l'en-tête <code>Set-Cookie</code> ni gérer correctement la session.</p>
+      </div>
+
+            <p>Ensuite, on utilise donc <code>$_SESSION</code> avec entre crochets, un nom de variable suivi de
+                l'affectation d'une valeur :</p>
+            <pre><code class="language-php hljs"><span class="hljs-title function_ invoke__">session_start</span>();
+
+<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>] = <span class="hljs-string">"webmaster"</span>;
+
+<span class="hljs-keyword">echo</span> <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>];</code></pre>
+            <p>Nous avons pour le moment en session une variable <code>login</code> qui a pour valeur
+                <code>webmaster</code>.<br>
+                Dans une autre page PHP, nous pourrons désormais tester si la session
+                existe et autoriser ou non l'utilisateur à voir le contenu d’une page,
+                accéder à des fonctionnalités etc.
+            </p>
+            <h2 id="12">L'identifiant de session</h2>
+            <p>Le mécanisme de session repose sur un identifiant <strong>unique</strong>
+                : l'identifiant de session. Celui-ci est fourni par défaut par PHP. Il
+                s'agit d’une chaîne de caractères alphanumérique, par exemple : <code>jr48dn2gqsliubpq02u0cbchk5</code>.
+            </p>
+            <p>La fonction <code>session_id()</code> permet d'afficher cet identifiant : </p>
+            <pre><code class="language-php hljs">    <span class="hljs-title function_ invoke__">session_start</span>();
+
+    <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>] = <span class="hljs-string">"webmaster"</span>;
+    <span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"role"</span>] = <span class="hljs-string">"admin"</span>;
+
+    <span class="hljs-keyword">echo</span><span class="hljs-string">"- session ID : "</span>.<span class="hljs-title function_ invoke__">session_id</span>();</code></pre>
+            <blockquote>
+                <p><code>session_id()</code> retourne une chaîne vide s'il n'y a pas de session en cours. </p>
+            </blockquote>
+            <h2 id="17">Mécanisme</h2>
+            <p>La création d’une session génère donc un identifiant unique stocké à
+                la fois côté client (sur le PC de l’utilisateur, dans un fichier de type
+                cookie) et côté serveur. </p>
+      <div class="callout callout-warn" role="note" aria-label="Cookies de session">
+        <p><strong>Cookies de session :</strong> quand tu as HTTPS, configure idéalement les cookies de session avec <code>Secure</code> et <code>HttpOnly</code>, et un <code>SameSite</code> adapté. Cela se règle via <code>php.ini</code> ou <code>session_set_cookie_params()</code>.</p>
+      </div>
+
+            <p>Lors des échanges, lorsque le serveur reçoit le cookie contenant
+                l'identifiant de session, il reconstitue les variables de session (le
+                tableau <code>$_SESSION</code>).</p>
+            <h2 id="20">Tester la session</h2>
+            <p>Une fois une session initialisée, c'est-à-dire par exemple qu’un
+                utilisateur s’est authentifié avec un identifiant/mot de passe, il reste
+                à contrôler si cet utilisateur peut ou non accéder à la page web. Pour
+                cela, on va utiliser de simples conditions : </p>
+            <pre><code class="language-php hljs">    <span class="hljs-title function_ invoke__">session_start</span>();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>]) 
+    {
+       <span class="hljs-keyword">echo</span><span class="hljs-string">"Vous êtes autorisé à voir cette page."</span>;  
+    } 
+    <span class="hljs-keyword">else</span> 
+    {
+       <span class="hljs-keyword">echo</span><span class="hljs-string">"Cette page nécessite une identification."</span>;  
+    }</code></pre>
+            <p>ou</p>
+            <pre><code class="language-php hljs">    <span class="hljs-title function_ invoke__">session_start</span>();
+
+    <span class="hljs-keyword">if</span> ( ! <span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>]) ) 
+    {
+        <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">"Location:index.php"</span>);
+        <span class="hljs-keyword">exit</span>;
+    }
+
+    <span class="hljs-comment">// Reste du code (PHP/HTML)</span>
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">"Bonjour "</span>.<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>].<span class="hljs-string">"&lt;br&gt;"</span>;  </code></pre>
+            <p>Si la variable de session n'existe pas, on redirige (avec la fonction <code>header()</code>) sur la page
+                <code>index.php</code>.
+                Si au contraire la variable de session <code>login</code> est initialisée, la redirection ne s'exécutera
+                pas et la page s'affichera normalement.
+            </p>
+            <h2 id="26">Détruire une session</h2>
+      <div class="callout callout-info" role="note" aria-label="Précision">
+        <p><strong>Précision :</strong> pour manipuler / détruire une session, il faut en général commencer par <code>session_start()</code> (sinon <code>$_SESSION</code> n'est pas initialisée et PHP ne sait pas quelle session viser).</p>
+      </div>
+
+            <p>Pour supprimer une information en session, on utilisera la fonction <code>unset()</code> avec en
+                paramètre la variable de session à détruire. Ceci est utilisé par exemple lorsque l'on a un lien
+                <em>Déconnexion</em> sur un site.
+            </p>
+            <p>Exemple :</p>
+            <pre><code class="language-php hljs">    <span class="hljs-keyword">unset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>]);
+    <span class="hljs-keyword">unset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"role"</span>]);</code></pre>
+            <p>Attention, cela ne suffit pas à détruire complètement et proprement
+                une session, même si toutes les variables contenues dans la session ont
+                été supprimées avec <code>unset()</code>.</p>
+            <p>Voici le code pour détruire proprement une session : </p>
+            <pre><code class="language-php hljs">    <span class="hljs-keyword">unset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"login"</span>]);
+    <span class="hljs-keyword">unset</span>(<span class="hljs-variable">$_SESSION</span>[<span class="hljs-string">"role"</span>]);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">ini_get</span>(<span class="hljs-string">"session.use_cookies"</span>)) 
+    {
+        <span class="hljs-title function_ invoke__">setcookie</span>(<span class="hljs-title function_ invoke__">session_name</span>(), <span class="hljs-string">''</span>, <span class="hljs-title function_ invoke__">time</span>()-<span class="hljs-number">42000</span>);
+    }
+
+    <span class="hljs-title function_ invoke__">session_destroy</span>();</code></pre>
+            <p>Explications :</p>
+            <ul>
+                <li>Lignes 1-2 : destruction des variables de session. </li>
+                <li>Lignes 4-7 : la fonction <code>setcookie()</code>, nous permet de forcer la date d'expiration </li>
+                <li>On détruit le reste de la session, via la fonction <code>session_destroy()</code>.</li>
+            </ul>
+            <h2 id="35">Configuration avancée et sécurité</h2>
+      <div class="callout callout-info" role="note" aria-label="Bonne pratique">
+        <p><strong>Bonne pratique :</strong> la régénération d'ID est particulièrement importante <strong>au moment de la connexion</strong> (authentification réussie) pour limiter les attaques de type <em>session fixation</em> :</p>
+<pre><code class="language-php hljs">session_start();
+// ... vérification identifiant/mot de passe OK
+session_regenerate_id(true);
+$_SESSION['login'] = $login;</code></pre>
+      </div>
+
+            <p>PHP permet une configuration (directives du fichier <code>php.ini</code>) assez fine des sessions :
+                volume de données, durée, mode de stockage et <a href="http://php.net/manual/fr/session.security.php"
+                    target="_blank">sécurité</a>,
+                ce dernier point étant un sujet important : il est en effet possible de
+                détourner des sessions par vol d'identifiant (lecture du cookie
+                contenant l’id de session). Une bonne pratique est d'utiliser la
+                fonction <code>session_regenerate_id()</code> dès que l’on modifie quelque chose en session (ajout d'une
+                variable, modification d’une valeur). </p>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

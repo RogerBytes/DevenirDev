@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Les jointures en SQL</title>
+
+    <link rel="stylesheet" href="Les_jointures_en_SQL_fichiers/font-awesome.min.css" />
+    <link rel="stylesheet" href="Les_jointures_en_SQL_fichiers/bootstrap.min.css" />
+    <link rel="stylesheet" href="Les_jointures_en_SQL_fichiers/github-markdown.css" />
+    <link rel="stylesheet" href="Les_jointures_en_SQL_fichiers/stackoverflow-dark.min.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <main class="markdown-body">
+        <h1 id="les-jointures-en-sql">Les jointures en SQL</h1>
+
+        <p>
+          Les jointures en SQL permettent de lier des données provenant de différentes tables en
+          utilisant une clé commune entre elles. Cette opération permet d'obtenir des résultats plus
+          précis et complets en combinant les données de plusieurs tables.
+        </p>
+
+        <p>
+          Dans ce tutoriel, nous allons utiliser la base <code>exemple</code> pour illustrer les
+          différents types de jointures possibles en SQL. Cette base contient deux tables :
+          <code>employe</code> et <code>dept</code>.<br />
+          La table <code>employe</code> contient des informations sur les employés, y compris leur
+          département et leur superviseur (supérieur hiérarchique).<br />
+          La table <code>dept</code> contient des informations sur les départements/services de
+          l'entreprise.
+        </p>
+
+        <h2 id="types-de-jointures">Types de jointures</h2>
+
+        <p>
+          Il y a plusieurs types de jointures en SQL, mais nous allons nous concentrer sur les quatre
+          types les plus courants : <strong>INNER JOIN</strong>, <strong>LEFT JOIN</strong>,
+          <strong>RIGHT JOIN</strong> et <strong>FULL OUTER JOIN</strong>.
+        </p>
+
+        <h3 id="inner-join">INNER JOIN</h3>
+
+        <p>
+          L'<strong>INNER JOIN</strong> renvoie <strong>uniquement</strong> les enregistrements qui
+          ont une correspondance dans <strong>les deux tables</strong>. Il est donc important que
+          les clés de jointure soient définies correctement.
+        </p>
+
+        <p>Syntaxe :</p>
+
+        <pre><code class="language-sql">SELECT colonnes
+FROM table1
+INNER JOIN table2 ON table1.colonne = table2.colonne;</code></pre>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, d.nom
+FROM employe e
+INNER JOIN dept d ON e.nodep = d.nodept;</code></pre>
+
+        <blockquote>
+          <p>
+            Cette requête retourne les noms des employés et des départements dans lesquels ils
+            travaillent, en utilisant la colonne <code>nodep</code> pour faire la jointure entre les
+            deux tables.
+          </p>
+        </blockquote>
+
+        <p><strong>Note :</strong> Vous pouvez même omettre le mot-clé <code>INNER</code>, le résultat sera le même.</p>
+
+        <h3 id="left-join">LEFT JOIN</h3>
+
+        <p>
+          Le <strong>LEFT JOIN</strong> renvoie tous les enregistrements de la table de gauche (ici,
+          la table <code>employe</code>) et les enregistrements correspondants de la table de droite
+          (la table <code>dept</code>). Si aucun enregistrement ne correspond dans la table de
+          droite, les valeurs <strong>NULL</strong> sont renvoyées.
+        </p>
+
+        <p>Syntaxe :</p>
+
+        <pre><code class="language-sql">SELECT colonnes
+FROM table1
+LEFT JOIN table2 ON table1.colonne = table2.colonne;</code></pre>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, d.nom
+FROM employe e
+LEFT JOIN dept d ON e.nodep = d.nodept;</code></pre>
+
+        <blockquote>
+          <p>
+            Cette requête renvoie tous les noms des employés et des départements dans lesquels ils
+            travaillent, même si certains employés ne sont pas affectés à un département
+            (<strong>valeurs NULL pour le département</strong>).
+          </p>
+        </blockquote>
+
+        <h3 id="right-join">RIGHT JOIN</h3>
+
+        <p>
+          Le <strong>RIGHT JOIN</strong> renvoie tous les enregistrements de la table de droite
+          (ici, la table <code>dept</code>) et les enregistrements correspondants de la table de
+          gauche (la table <code>employe</code>). Si aucun enregistrement ne correspond dans la
+          table de gauche, les valeurs <strong>NULL</strong> sont renvoyées.
+        </p>
+
+        <p>
+          <strong>Note :</strong> La table de droite est la deuxième table spécifiée dans la clause
+          <code>FROM</code>, tandis que la table de gauche est la première table spécifiée dans la
+          clause <code>FROM</code>.
+        </p>
+
+        <p>Syntaxe :</p>
+
+        <pre><code class="language-sql">SELECT colonnes
+FROM table1
+RIGHT JOIN table2 ON table1.colonne = table2.colonne;</code></pre>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, d.nom
+FROM employe e
+RIGHT JOIN dept d ON e.nodep = d.nodept;</code></pre>
+
+        <blockquote>
+          <p>
+            Cette requête renvoie tous les noms des départements, même si certains départements n'ont
+            aucun employé (valeurs NULL pour les employés).
+          </p>
+        </blockquote>
+
+        <h3 id="full-outer-join">FULL OUTER JOIN</h3>
+
+        <p>
+          Le <strong>FULL OUTER JOIN</strong> (ou <strong>FULL JOIN</strong>) renvoie tous les
+          enregistrements des deux tables, avec les enregistrements correspondants des deux tables.
+          Si aucun enregistrement ne correspond, les valeurs <strong>NULL</strong> sont renvoyées.
+        </p>
+
+        <p>
+          <strong>Note :</strong> Ce type de jointure n'est pas compatible avec MySQL, mais il peut
+          être reproduit en utilisant <code>UNION</code> entre une jointure <code>LEFT JOIN</code> et
+          une jointure <code>RIGHT JOIN</code>.
+        </p>
+
+        <p>Syntaxe :</p>
+
+        <pre><code class="language-sql">SELECT colonnes
+FROM table1
+FULL OUTER JOIN table2 ON table1.colonne = table2.colonne;</code></pre>
+
+        <p>Exemple avec <code>UNION</code> :</p>
+
+        <pre><code class="language-sql">SELECT colonnes
+FROM table1
+LEFT OUTER JOIN table2 ON table1.colonne = table2.colonne
+
+UNION
+
+SELECT colonnes
+FROM table1
+RIGHT OUTER JOIN table2 ON table1.colonne = table2.colonne;</code></pre>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, d.nom
+FROM employe e
+LEFT OUTER JOIN dept d ON e.nodep = d.nodept
+UNION
+SELECT e.nom, d.nom
+FROM employe e
+RIGHT OUTER JOIN dept d ON e.nodep = d.nodept;</code></pre>
+
+        <blockquote>
+          <p>
+            Cette requête renvoie tous les noms des employés et des départements dans lesquels ils
+            travaillent, ainsi que les départements sans employés (valeurs NULL pour les employés)
+            et les employés sans département (valeurs NULL pour les départements).
+          </p>
+        </blockquote>
+
+        <h2 id="autres-types-de-jointures">Autres types de jointures</h2>
+
+        <p>
+          Il existe d'autres types de jointures en SQL, bien que les quatre types vus jusqu'à présent
+          soient les plus couramment utilisés. En voici quelques-uns :
+        </p>
+
+        <h3 id="cross-join">CROSS JOIN</h3>
+
+        <p>
+          La jointure <strong>CROSS JOIN</strong> retourne toutes les combinaisons possibles de
+          lignes entre deux tables, créant ainsi un produit cartésien. Cette jointure n'a pas besoin
+          de condition de jointure spécifique.
+        </p>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, d.nom
+FROM employe e
+CROSS JOIN dept d;</code></pre>
+
+        <blockquote>
+          <p>
+            Cette requête retourne toutes les combinaisons possibles de noms d'employés et de noms de
+            départements.
+          </p>
+        </blockquote>
+
+        <h3 id="self-join">SELF JOIN</h3>
+
+        <p>
+          Un <strong>SELF JOIN</strong> (auto-jointure) est une jointure effectuée sur une seule
+          table, en utilisant des alias pour relier des lignes entre elles. Cela peut être utile pour
+          associer des enregistrements avec eux-mêmes afin d'effectuer des comparaisons.
+        </p>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, patron.nom AS superviseur
+FROM employe e
+LEFT JOIN employe patron ON e.nosup = patron.noemp;</code></pre>
+
+        <p>
+          Explication : cette requête renvoie les noms des employés et le nom de leur superviseur
+          s'ils en ont un.
+        </p>
+
+        <h3 id="natural-join">NATURAL JOIN</h3>
+
+        <p>
+          La jointure <strong>NATURAL JOIN</strong> est effectuée sur les colonnes de deux tables
+          qui ont le même nom. Si une colonne a le même nom dans les deux tables, elle est utilisée
+          comme condition de jointure implicite.
+        </p>
+
+        <p>
+          <strong>Attention :</strong> <code>NATURAL JOIN</code> est déconseillée en production car
+          elle dépend implicitement des noms de colonnes. Une modification de schéma peut casser
+          silencieusement la requête.
+        </p>
+
+        <p>Exemple :</p>
+
+        <pre><code class="language-sql">SELECT e.nom, d.nom
+FROM employe e
+NATURAL JOIN dept d;</code></pre>
+
+        <blockquote>
+          <p>
+            Cette requête retourne les noms des employés et les noms des départements dans lesquels
+            ils travaillent, en utilisant une colonne commune comme condition de jointure implicite.
+          </p>
+        </blockquote>
+
+        <p>
+          Certains types de jointures peuvent être plus efficaces que d'autres en termes de temps
+          d'exécution et de performance globale. Les performances dépendent surtout des index, des
+          volumes de données et du plan d'exécution.
+        </p>
+
+        <p>
+          <strong>Note :</strong> Il est recommandé d'utiliser des méthodes d'optimisation
+          (indexation, normalisation, et utilisation judicieuse des clauses <strong>WHERE</strong> et
+          <strong>GROUP BY</strong>) pour améliorer les performances.
+        </p>
+      </main>
+    </div>
+
+    <!-- JS (chargé en fin de page) -->
+    <script src="Les_jointures_en_SQL_fichiers/inject.js"></script>
+    <script src="Les_jointures_en_SQL_fichiers/jquery-3.4.1.min.js"></script>
+    <script src="Les_jointures_en_SQL_fichiers/popper.min.js"></script>
+    <script src="Les_jointures_en_SQL_fichiers/bootstrap.min.js"></script>
+    <script src="Les_jointures_en_SQL_fichiers/highlight.min.js"></script>
+
+    <script>
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    </script>
+  </body>
+</html>

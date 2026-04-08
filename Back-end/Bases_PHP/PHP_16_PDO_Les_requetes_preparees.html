@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PDO - Les requêtes préparées</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - PDO -&gt; Les requêtes préparées</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Une <em>requête préparée</em> est en quelque sorte un "modèle" de
+                requête, qui sera gardé en mémoire et qui pourra être réutilisé
+                plusieurs fois (avec les mêmes paramètres, ou des paramètres
+                différents). Elle utilise donc moins de ressources, et s'exécute plus
+                rapidement ! </p>
+            <p>Elle permet en outre d'éviter les <em>injections SQL</em> !</p>
+      <div class="callout callout-info" role="note" aria-label="Nuance performance">
+        <p><strong>Nuance :</strong> une requête préparée peut être plus efficace lorsqu'elle est réutilisée plusieurs fois (surtout avec la même connexion). Mais l'intérêt principal dans nos TP reste la <strong>sécurité</strong> (prévenir les injections SQL) et la <strong>lisibilité</strong> du code.</p>
+      </div>
+
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="6">Construction d'une requête préparée</h2>
+            <h3 id="7">Préparation de l'instruction</h3>
+            <p>On utilise la méthode <code>prepare()</code> pour construire notre "modèle" de requête. </p>
+            <p>Comme <strong>nous n'allons pas mettre directement les valeurs dans celle-ci</strong> afin de pouvoir
+                l'utiliser plusieurs fois, nous mettrons à la place ce que l'on appelle des <strong>marqueurs</strong>
+                (qui seront bien sûr remplacés par nos valeurs, plus tard). </p>
+            <p>Il existe deux types de marqueurs : </p>
+            <ul>
+                <li>Les marqueurs <strong>nommés</strong>, qui ont la syntaxe suivante : <code>:data</code></li>
+                <li>Les marqueurs <strong>interrogatifs</strong>, qui prennent la forme d'un <code>?</code> </li>
+            </ul>
+      <div class="callout callout-warn" role="note" aria-label="Conseil">
+        <p><strong>Conseil :</strong> choisis un style de marqueurs et garde-le cohérent. Les marqueurs <strong>nommés</strong> sont souvent plus lisibles dans un CRUD (tu vois quel paramètre correspond à quoi).</p>
+      </div>
+
+            <div class="spacer" aria-hidden="true"></div>
+            <p><strong><em>Exemple :</em></strong> </p>
+            <p>Avec des marqueurs interrogatifs :</p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// Préparation de la requête</span>
+<span class="hljs-variable">$requete</span> = <span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (?, ?)"</span>;
+<span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-variable">$requete</span>);</code></pre>
+            <p>ou encore, sans variable, et avec des marqueurs nommés : </p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// Préparation de la requête</span>
+<span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (:nom_artiste, :url_artiste)"</span>);</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="19">Association de valeurs et lancement de la requête</h2>
+            <h3 id="20">Remplacement des marqueurs</h3>
+            <p>Nous allons ensuite devoir associer nos valeurs à ces marqueurs pour
+                pouvoir exécuter notre requête. Pour ce faire, nous allons utiliser la
+                méthode <a href="https://www.php.net/manual/fr/pdostatement.bindvalue.php"
+                    target="_blank"><code>bindValue()</code></a>.</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <p><strong><em>Exemple :</em></strong> </p>
+            <p>Avec des marqueurs nommés :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$requete</span> = <span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (:nom_artiste, :url_artiste)"</span>;
+<span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-variable">$requete</span>);
+
+<span class="hljs-comment">// Association des valeurs aux paramètres :</span>
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":nom_artiste"</span>, <span class="hljs-variable">$monartiste</span>);
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":url_artiste"</span>, <span class="hljs-variable">$urldemonartiste</span>);</code></pre>
+            <p>Et avec des marqueurs interrogatifs : </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (?, ?)"</span>);
+
+<span class="hljs-comment">// Association des valeurs aux paramètres :</span>
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-number">1</span>, <span class="hljs-variable">$monartiste</span>);
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-number">2</span>, <span class="hljs-variable">$urldemonartiste</span>);</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="29">Exécution de la requête</h3>
+            <p>Une fois nos données ajoutées, il ne reste simplement plus qu'à utiliser la méthode
+                <code>execute()</code>, pour lancer notre requête :
+            </p>
+            <blockquote>
+                <p>Ajoutons un <code>TRY ... CATCH</code> pour plus de sécurité tout de même...</p>
+            </blockquote>
+      <div class="callout callout-info" role="note" aria-label="Gestion d'erreurs PDO">
+        <p><strong>Gestion d'erreurs :</strong> pour PDO, tu peux cibler <code>PDOException</code> dans le <code>catch</code>. Et en production, on évite d'afficher les détails d'erreur à l'écran: on journalise (logs) et on affiche un message générique.</p>
+      </div>
+
+            <pre><code class="language-php hljs"><span class="hljs-keyword">try</span> {
+    <span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (:nom_artiste, :url_artiste)"</span>);
+    <span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":nom_artiste"</span>, <span class="hljs-variable">$monartiste</span>);
+    <span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":url_artiste"</span>, <span class="hljs-variable">$urldemonartiste</span>);
+
+    <span class="hljs-comment">// Exécution de la requête :</span>
+    <span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();  
+}
+<span class="hljs-keyword">catch</span> (<span class="hljs-built_in">Exception</span> <span class="hljs-variable">$e</span>) {
+    <span class="hljs-comment">// gestion des erreurs</span>
+}</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="34">Syntaxe raccourcie</h3>
+      <div class="callout callout-warn" role="note" aria-label="Syntaxe moderne">
+        <p><strong>Syntaxe moderne :</strong> aujourd'hui, on utilise généralement <code>[]</code> plutôt que <code>array()</code>. Exemple :</p>
+<pre><code class="language-php hljs">$req-&gt;execute([$monartiste, $urldemonartiste]);
+// ou, avec des marqueurs nommés :
+$req-&gt;execute([
+  ':nom_artiste' =&gt; $monartiste,
+  ':url_artiste' =&gt; $urldemonartiste,
+]);</code></pre>
+      </div>
+
+            <p>L'écriture raccourcie consiste à utiliser directement un tableau pour lier nos valeurs à nos
+                marqueurs.<br>
+                Auquel cas, la méthode <code>bindValue</code> sera appelée de manière <em>implicite</em>, en même temps
+                que <code>execute()</code> : </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (?, ?)"</span>);
+
+<span class="hljs-comment">// Exécution de la requête avec appel au bindValue() :</span>
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-variable">$monartiste</span>, <span class="hljs-variable">$urldemonartiste</span>));</code></pre>
+            <p>Avec les marqueurs nommés, il nous faut un tableau associatif :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (:nom_artiste, :url_artiste)"</span>);
+
+<span class="hljs-comment">// Exécution de la requête avec appel au bindValue() :</span>
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(
+<span class="hljs-string">':nom_artiste'</span> =&gt; <span class="hljs-variable">$monartiste</span>,
+<span class="hljs-string">':url_artiste'</span> =&gt; <span class="hljs-variable">$urldemonartiste</span>
+));</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <h3 id="40">Récupération différée des valeurs</h3>
+      <div class="callout callout-info" role="note" aria-label="Précision bindParam">
+        <p><strong>Précision :</strong> <code>bindParam()</code> lie une variable <strong>par référence</strong>. Il faut donc lui passer une variable (pas une valeur calculée). C'est justement ce qui explique l'effet « valeur lue au moment du <code>execute()</code> ».</p>
+      </div>
+
+            <p>Il existe une autre méthode en PHP pour gérer les paramètres de requête et éviter les injections SQL : la
+                méthode <a href="https://www.php.net/manual/fr/pdostatement.bindparam.php"
+                    target="_blank"><code>bindParam()</code></a>. </p>
+            <p>Les méthodes <code>bindValue()</code> et <code>bindParam()</code> ont le même objectif : remplacer les
+                marqueurs par des données. La différence tient au <em>moment</em> où les données associées vont être
+                lues par le serveur : </p>
+            <ul>
+                <li>avec <code>bindValue()</code>, on récupère les données au moment où la méthode
+                    <code>bindValue()</code> est appelée
+                </li>
+                <li>avec <code>bindParam()</code>, on récupère les données au moment où la requête est lancée (méthode
+                    <code>execute()</code>)
+                </li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Cela veut dire que pour le code suivant :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$monartiste</span> = <span class="hljs-string">"Bon Jovi"</span>;
+<span class="hljs-variable">$urldemonartiste</span> = <span class="hljs-string">"https://www.metalzone.fr/bon-jovi/"</span>;
+
+<span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (:nom_artiste, :url_artiste)"</span>);
+
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":nom_artiste"</span>, <span class="hljs-variable">$monartiste</span>);
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindValue</span>(<span class="hljs-string">":url_artiste"</span>, <span class="hljs-variable">$urldemonartiste</span>);
+
+<span class="hljs-variable">$monartiste</span> = <span class="hljs-string">"BON JOVI"</span>;
+
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();</code></pre>
+            <p>le nom de l'artiste ajouté en BDD par cette requête sera <strong><code>Bon Jovi</code></strong>, soit la
+                valeur de la variable <code>$monartiste</code> au moment du <code>bindValue()</code>... </p>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Mais si l'on utilise le même code, avec <code>bindParam()</code> :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$monartiste</span> = <span class="hljs-string">"Bon Jovi"</span>;
+<span class="hljs-variable">$urldemonartiste</span> = <span class="hljs-string">"https://www.metalzone.fr/bon-jovi/"</span>;
+
+<span class="hljs-variable">$req</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"INSERT INTO artist (artist_name, artist_url) VALUES (:nom_artiste, :url_artiste)"</span>);
+
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindParam</span>(<span class="hljs-string">":nom_artiste"</span>, <span class="hljs-variable">$monartiste</span>);
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">bindParam</span>(<span class="hljs-string">":url_artiste"</span>, <span class="hljs-variable">$urldemonartiste</span>);
+
+<span class="hljs-variable">$monartiste</span> = <span class="hljs-string">"BON JOVI"</span>;
+
+<span class="hljs-variable">$req</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>();</code></pre>
+            <p>la requête enregistrera en BDD l'artiste comme <strong><code>BON JOVI</code></strong>, soit cette fois,
+                la valeur de la variable <code>$monartiste</code> au moment du <code>execute()</code> !</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="53">Ressources complémentaires</h2>
+            <ul>
+                <li><a href="https://www.php.net/manual/fr/mysqli.quickstart.prepared-statements.php">Documentation PHP
+                        sur les requêtes préparées</a> </li>
+                <li><a href="https://www.pierre-giraud.com/php-mysql-apprendre-coder-cours/requete-preparee/">Les
+                        requêtes préparées, cours de Pierre Giraud</a></li>
+                <li><a
+                        href="https://www.julp.fr/blog/posts/19-quelle-est-la-difference-entre-les-methodes-pdostatement-execute-bindvalue-et-bindparam-pour-realiser-les-binds">Différence
+                        entre bindValue et bindParam</a></li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

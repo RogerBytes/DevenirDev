@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>PHP - Le téléchargement de fichiers</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+  <link rel="stylesheet" href="assets/css/menu-markdown.css" />
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+
+  <script src="assets/js/highlight.min.js" defer></script>
+
+  <style>
+    .note-pedago {
+      border-left: 4px solid rgba(255, 255, 255, .35);
+      padding: .85rem 1rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 10px;
+    }
+
+    .note-pedago code {
+      white-space: normal;
+    }
+
+    .note-pedago p {
+      margin: 0.25rem 0;
+    }
+
+    .note-pedago ul {
+      margin: 0.4rem 0 0.4rem 1.1rem;
+    }
+  </style>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    });
+  </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main class="container">
+    <article class="markdown-body">
+      <h1 id="1">PHP - Le téléchargement de fichiers</h1>
+
+      <p><br /><br /></p>
+
+      <p>
+        Les formulaires HTML offrent la possibilité de télécharger un fichier : par exemple une photo, la notice d'un
+        produit,
+        un C.V. sur un site d'emploi (donc au format Word ou PDF).
+      </p>
+
+      <p>
+        Tout d'abord, un point sur le mot <em>télécharger</em> qui peut désigner aussi bien les opérations suivantes :
+      </p>
+
+      <ul>
+        <li>
+          enregistrement sur un PC d'un fichier présent sur un serveur distant (site web) : il s'agit de
+          <strong>download</strong>.
+        </li>
+        <li>
+          envoi vers un serveur distant d'un fichier qui se trouve sur un PC : il s'agit de <strong>l'upload</strong>.
+        </li>
+      </ul>
+
+      <p><strong>C'est ce second cas qui nous intéresse ici.</strong></p>
+
+      <div class="note-pedago">
+        <p><strong>Point sécurité (important)</strong> : un upload est une “porte d'entrée” classique. On doit :</p>
+        <ul>
+          <li>valider le type réel du fichier,</li>
+          <li>limiter la taille,</li>
+          <li>renommer le fichier côté serveur,</li>
+          <li>stocker au bon endroit (public ou privé),</li>
+          <li>et ne jamais exécuter ce qui a été uploadé.</li>
+        </ul>
+      </div>
+
+      <h2 id="7">Formulaire HTML</h2>
+
+      <p>
+        Pour que le téléchargement soit possible, il faut ajouter l'attribut <code>enctype</code> à la balise
+        <code>&lt;form&gt;</code>. La valeur doit être <code>multipart/form-data</code> :
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form action="post.php" method="post" enctype="multipart/form-data"&gt;</code></pre>
+
+      <p>
+        Ensuite, on a besoin d'un champ de type <code>file</code>, qui fera apparaître un bouton contenant le texte
+        <em>Parcourir</em>
+        avec lequel on pourra choisir un fichier présent sur le PC :
+      </p>
+
+      <pre><code class="language-html hljs">&lt;input type="file" name="fichier"&gt;</code></pre>
+
+      <!-- +++ TODO +++ à déplacer, subtilité avec les limites de la configuration en PHP 
+Il est possible d'ajouter un second champ, de type `hidden` pour spécifier le poids maximum des fichiers à envoyer :  
+    <input type="hidden" name="MAX_FILE_SIZE" value="30000">
+-->
+
+      <div class="note-pedago">
+        <p><strong>Note pédagogique</strong> : le champ <code>MAX_FILE_SIZE</code> peut aider, mais :</p>
+        <ul>
+          <li>il ne remplace pas la configuration serveur (<code>upload_max_filesize</code>,
+            <code>post_max_size</code>),
+          </li>
+          <li>et il ne remplace pas la validation côté PHP.</li>
+        </ul>
+      </div>
+
+      <h2 id="12">Traitement en PHP</h2>
+
+      <p>
+        Dans le fichier de traitement PHP (celui assigné comme valeur à l'attribut <code>action</code>), lorsque le
+        formulaire est soumis,
+        on récupère les informations sur le fichier via la variable superglobale <code>$_FILES</code>.
+        Comme les 7 autres superglobales, cette variable se comporte comme un tableau PHP.
+      </p>
+
+      <p>
+        <strong>Exercice : créer un formulaire d'upload et le fichier PHP de traitement correspondant, dans le fichier
+          PHP écrivez juste
+          <code>var_dump($_FILES);</code> et observez le résultat.</strong>
+      </p>
+
+      <p>Vous devriez avoir quelque chose du genre :</p>
+
+      <ul>
+        <li><code>'name'</code> =&gt; <em>nom du fichier d'origine</em></li>
+        <li><code>'type'</code> =&gt; <em>type MIME annoncé par le navigateur</em> (attention : peu fiable)</li>
+        <li><code>'tmp_name'</code> =&gt; <em>nom et chemin du fichier temporaire</em></li>
+        <li><code>'error'</code> =&gt; <em>code erreur (0 si OK)</em></li>
+        <li><code>'size'</code> =&gt; <em>taille du fichier, en octets</em></li>
+      </ul>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : la valeur <code>$_FILES["fichier"]["type"]</code> est déclarative
+          (envoyée par le navigateur).
+          Pour la sécurité, on ne s'y fie pas. On valide le type réel via <code>Fileinfo</code> (voir plus bas).</p>
+      </div>
+
+      <h2 id="17">Gestion des erreurs</h2>
+
+      <p>
+        Si le téléchargement échoue, les erreurs sont retournées dans <code>$_FILES["fichier"]["error"]</code>.
+        Les cas d'erreur sont prédéfinis.
+      </p>
+
+      <ul>
+        <li>S'il n'y a pas d'erreur, <code>$_FILES["fichier"]["error"]</code> vaut 0 (constante
+          <code>UPLOAD_ERR_OK</code>),
+        </li>
+        <li>S'il y en a, <code>$_FILES["fichier"]["error"]</code> contient un code &gt; 0.</li>
+      </ul>
+
+      <p>Pour savoir si le téléchargement contient des erreurs, il faut donc faire :</p>
+
+      <pre><code class="language-php hljs">if ($_FILES["fichier"]["error"] !== UPLOAD_ERR_OK) {
+    // ... gérer l'erreur
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction importante</strong> : dans la version initiale, le test utilisait
+          <code>sizeof($_FILES["fichier"]["error"])</code>.
+          Or <code>error</code> est un <strong>entier</strong>, pas un tableau. Le test correct est ci-dessus.
+        </p>
+        <p><strong>Bon réflexe</strong> : on peut aussi afficher un message selon le code (ex.
+          <code>UPLOAD_ERR_INI_SIZE</code>, <code>UPLOAD_ERR_FORM_SIZE</code>, etc.).
+        </p>
+      </div>
+
+      <p>
+        --&gt;
+        <a href="http://php.net/manual/fr/features.file-upload.errors.php" target="_blank" rel="noopener noreferrer">
+          Voir ici la documentation complète de PHP sur la gestion des erreurs d'<em>upload</em>
+        </a>
+      </p>
+
+      <h2 id="23">Sécurité</h2>
+
+      <p>
+        Le problème principal de l'upload d'un fichier est la sécurité : c'est l'utilisateur qui envoie un fichier
+        présent sur son PC, et comme
+        il ne faut jamais faire confiance aux actions de l'utilisateur, il faut vérifier que le fichier reçu est bien du
+        type attendu
+        et ne comporte pas de code malicieux (tentative d'attaque via un fichier exécutable, virus, logiciel espion
+        etc.).
+      </p>
+
+      <p>
+        Il faut ensuite s'assurer des droits sur ce fichier (écriture, lecture, exécution) et le stocker correctement
+        sur le serveur
+        (s'agit-il d'un fichier accessible publiquement à tous les internautes ou d'un contenu confidentiel ?).
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Checklist “minimum viable”</strong> :</p>
+        <ul>
+          <li>limiter la taille + rejeter si trop gros,</li>
+          <li>refuser les extensions dangereuses (<code>.php</code>, <code>.phtml</code>, <code>.phar</code>, etc.),
+          </li>
+          <li>valider le MIME réel (fileinfo),</li>
+          <li>générer un nom de fichier côté serveur (UUID/sha1),</li>
+          <li>stocker hors du dossier public si c'est confidentiel,</li>
+          <li>ne jamais servir un fichier uploadé comme “exécutable”.</li>
+        </ul>
+      </div>
+
+      <h3 id="26">Vérifier le type</h3>
+
+      <p>On doit tout d'abord s'assurer de points basiques :</p>
+
+      <ul>
+        <li>un fichier a-t-il bien été téléchargé ?</li>
+        <li>le type du fichier envoyé par l'utilisateur est-il celui attendu (image, document Word, PDF...) ?</li>
+      </ul>
+
+      <p>Les fausses bonnes idées, car les informations retournées ne sont pas fiables :</p>
+
+      <ul>
+        <li>tester uniquement l'extension comme chaîne de caractère</li>
+        <li>
+          tester le type MIME retourné par le navigateur (celui dans <code>$_FILES["fichier"]["type"]</code>).
+        </li>
+      </ul>
+
+      <p>
+        PHP fournit une extension nommée <code>fileinfo</code> qui fait référence en termes de sécurité.
+        Voici comment l'utiliser, pour un type :
+      </p>
+
+      <!-- https://www.saotn.org/validate-mime-types-with-php-fileinfo -->
+      <pre><code class="language-php hljs">// On met les types autorisés dans un tableau (ici pour une image)
+$aMimeTypes = array(
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/x-png",
+    "image/tiff"
+);
+
+// On extrait le type du fichier via l'extension fileinfo
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+$mimetype = finfo_file($finfo, $_FILES["fichier"]["tmp_name"]);
+finfo_close($finfo);
+
+if (in_array($mimetype, $aMimeTypes, true)) {
+    /* Le type est parmi ceux autorisés, donc OK, on va pouvoir
+       déplacer et renommer le fichier */
+} else {
+    // Le type n'est pas autorisé, donc ERREUR
+    echo "Type de fichier non autorisé";
+    exit;
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : dans la version initiale, les MIME étaient écrits
+          <code>img/jpeg</code> etc.
+          Les MIME standards sont <code>image/jpeg</code>, <code>image/png</code>, etc.
+        </p>
+        <p><strong>Bonus</strong> : pour les images, tu peux aussi utiliser <code>getimagesize()</code> (qui lit
+          l'en-tête image) en plus de <code>fileinfo</code>.</p>
+      </div>
+
+      <h3 id="33">Déplacer et renommer le fichier</h3>
+
+      <p>
+        Par défaut, le fichier téléchargé est stocké dans le répertoire <code>tmp</code> de votre serveur.
+        Mais ce fichier devra sans doute se trouver dans un répertoire de votre projet, il faut donc le déplacer.
+      </p>
+
+      <p>
+        Il est nécessaire aussi de renommer le fichier, pour répondre à une éventuelle charte de nommage et surtout
+        pour que l'utilisateur ne puisse tenter d'exécuter le fichier via l'URL (le nom sur le serveur sera différent
+        de celui qu'il connaissait).
+      </p>
+
+      <p>
+        Pour cela, PHP propose une fonction "2 en 1" :
+        <a href="http://php.net/manual/fr/function.move-uploaded-file.php" target="_blank"
+          rel="noopener noreferrer"><code>move_uploaded_file()</code></a>.
+      </p>
+
+      <p>
+        Exemple : déplacer et renommer un fichier (de type image) de <code>tmp</code> vers un répertoire nommé
+        <code>images</code>
+        d'un projet :
+      </p>
+
+      <pre><code class="language-php hljs">$destination = __DIR__ . "/images/photo.jpg";
+
+if (!move_uploaded_file($_FILES["fichier"]["tmp_name"], $destination)) {
+    echo "Erreur lors du déplacement du fichier";
+    exit;
+}</code></pre>
+
+      <blockquote>
+        <p>La logique veut que les contrôles de sécurité aient été réalisés avant le déplacement.</p>
+      </blockquote>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : ne garde pas le nom original côté serveur. Exemple :</p>
+        <pre><code class="language-php hljs">$ext = "jpg"; // à déterminer selon le MIME validé
+$nomServeur = bin2hex(random_bytes(16)) . "." . $ext;
+$destination = __DIR__ . "/images/" . $nomServeur;</code></pre>
+      </div>
+
+      <h3 id="40">Spécifier des droits sur le fichier</h3>
+
+      <p>
+        Sur les systèmes d'exploitation (Windows, Linux...), les fichiers possèdent des droits (ou permissions) de
+        lecture, d'exécution
+        et d'écriture accordés aux utilisateurs. Il s'agit d'un système un peu complexe mais qui participe grandement à
+        la sécurité.
+      </p>
+
+      <p>Lire ces ressources :</p>
+
+      <ul>
+        <li>
+          <a href="https://codex.wordpress.org/fr:Modifier_les_Permissions_sur_les_Fichiers" target="_blank"
+            rel="noopener noreferrer">
+            Modifier les permissions sur un fichier
+          </a>
+        </li>
+        <li>
+          <a href="http://php.net/manual/fr/function.chmod.php" target="_blank" rel="noopener noreferrer">
+            La fonction <code>chmod()</code> de PHP
+          </a>
+        </li>
+      </ul>
+
+      <div class="note-pedago">
+        <p><strong>Règle simple</strong> : donne le <em>minimum</em> de droits nécessaires.</p>
+        <ul>
+          <li>Sur un serveur web, les fichiers uploadés ne devraient pas être exécutables.</li>
+          <li>Si tu stockes dans un dossier public, configure le serveur pour interdire l'exécution de scripts dans ce
+            dossier.</li>
+        </ul>
+      </div>
+
+      <p><br /><br /><br /></p>
+    </article>
+  </main>
+</body>
+
+</html>

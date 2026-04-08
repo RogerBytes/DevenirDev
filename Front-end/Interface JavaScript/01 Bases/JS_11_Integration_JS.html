@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>11 Intégrer du JavaScript dans une page web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">11 Intégrer du JavaScript dans une page web</h1>
+
+      <p>
+        Il existe plusieurs façons d’intégrer du JavaScript dans une page
+        HTML. Certaines sont historiques et plutôt à éviter aujourd’hui,
+        d’autres correspondent aux bonnes pratiques modernes.
+      </p>
+
+      <blockquote>
+        <p>
+          Remarque : comme pour les feuilles de style CSS, on distingue du
+          JavaScript intégré directement dans le HTML et du JavaScript
+          externalisé dans des fichiers <code>.js</code>.
+        </p>
+      </blockquote>
+
+      <hr />
+
+      <h2 id="4">1. Intégration directe dans une balise HTML (inline)</h2>
+
+      <p>
+        On peut écrire du JavaScript directement dans les attributs des
+        balises HTML, via des <strong>attributs d’événements</strong> :
+        <code>onclick</code>, <code>onmouseover</code>, <code>onchange</code>,
+        etc.
+      </p>
+
+      <p>
+        Cette méthode fonctionne, mais elle est aujourd’hui
+        <strong>déconseillée</strong> :
+      </p>
+      <ul>
+        <li>elle mélange structure (HTML) et comportement (JS) ;</li>
+        <li>elle rend le code difficile à maintenir et à tester ;</li>
+        <li>
+          elle complique l’accessibilité (navigation clavier, lecteurs
+          d’écran…).
+        </li>
+      </ul>
+
+      <p>Exemple (à ne pas reproduire dans du code moderne) :</p>
+
+      <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Titre du fichier<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"page.html"</span>
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Voir la page"</span>
+    <span class="hljs-attr">onclick</span>=<span class="hljs-string">"alert('Lien cliqué !');"</span>
+  &gt;</span>Aller à la page<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <p>
+        Version moderne recommandée pour le même comportement (séparation HTML
+        / JS) :
+      </p>
+
+      <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Titre du fichier<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+    <span class="hljs-attr">id</span>=<span class="hljs-string">"lien-page"</span>
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"page.html"</span>
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Voir la page"</span>
+  &gt;</span>Aller à la page<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-keyword">const</span> lien = <span class="hljs-variable language_">document</span>.getElementById(<span class="hljs-string">"lien-page"</span>);
+  lien.addEventListener(<span class="hljs-string">"click"</span>, <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+    <span class="hljs-comment">// Exemple : on affiche un message et on laisse le lien fonctionner normalement</span>
+    <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Lien cliqué !"</span>);
+  });
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <hr />
+
+      <h2 id="9">
+        2. Intégration via une balise <code>&lt;script&gt;</code>
+      </h2>
+
+      <p>
+        On peut écrire du JavaScript à l’intérieur d’un
+        <code>&lt;script&gt;</code> dans la page HTML. C’est ce qu’on appelle
+        un <strong>script interne</strong>.
+      </p>
+
+      <p>Exemple minimal :</p>
+
+      <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Titre du fichier<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Bonjour ! Ouvrez la console du navigateur.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Hello JavaScript !"</span>);
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <p>
+        Historiquement, on plaçait souvent les scripts dans le
+        <code>&lt;head&gt;</code>, ce qui bloquait le chargement de la page en
+        attendant que les scripts soient téléchargés et exécutés.
+      </p>
+
+      <p>En pratique, il est préférable de :</p>
+      <ul>
+        <li>
+          soit placer les scripts à la fin de <code>&lt;body&gt;</code> ;
+        </li>
+        <li>
+          soit les charger dans le <code>&lt;head&gt;</code> avec l’attribut
+          <code>defer</code> (scripts différés).
+        </li>
+      </ul>
+
+      <h3 id="script-defer">Exemple avec <code>defer</code></h3>
+
+      <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Exemple avec defer<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- Le script est téléchargé en parallèle, puis exécuté une fois le DOM prêt --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"app.js"</span> <span class="hljs-attr">defer</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Page avec script différé<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"btn-test"</span>&gt;</span>Tester<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <p>Dans <code>app.js</code> :</p>
+
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">const</span> bouton = <span class="hljs-variable language_">document</span>.getElementById(<span class="hljs-string">"btn-test"</span>);
+bouton.addEventListener(<span class="hljs-string">"click"</span>, () =&gt; {
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Bouton cliqué !"</span>);
+});</code></pre>
+
+      <p>
+        Grâce à <code>defer</code>, on n’a pas besoin d’attendre
+        <code>DOMContentLoaded</code> : le script s’exécute une fois le DOM
+        prêt, dans l’ordre des balises <code>&lt;script&gt;</code>.
+      </p>
+
+      <hr />
+
+      <h2 id="13">3. Intégration via un fichier JavaScript externe</h2>
+
+      <p>
+        C’est la méthode <strong>recommandée</strong> pour des projets réels :
+      </p>
+      <ul>
+        <li>
+          on sépare le HTML (structure), le CSS (présentation) et le JS
+          (comportement) ;
+        </li>
+        <li>
+          les fichiers <code>.js</code> sont mis en cache par le navigateur ;
+        </li>
+        <li>
+          on évite de dupliquer le même script sur plusieurs pages : un seul
+          fichier partagé.
+        </li>
+      </ul>
+
+      <p>
+        L’appel du fichier <code>.js</code> se fait via une balise
+        <code>&lt;script&gt;</code> avec l’attribut <code>src</code>, de
+        préférence avec <code>defer</code> :
+      </p>
+
+      <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Titre du fichier<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- Fichier JavaScript externe --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"assets/js/monscript.js"</span> <span class="hljs-attr">defer</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"page.html"</span>
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Voir la page"</span>
+    <span class="hljs-attr">id</span>=<span class="hljs-string">"lien-exemple"</span>
+  &gt;</span>Aller à la page<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <p>
+        L’attribut <code>src</code> accepte un chemin relatif (ex :
+        <code>assets/js/monscript.js</code>) ou une URL complète (par exemple
+        un CDN : <code>https://cdn.example.com/lib.js</code>).
+      </p>
+
+      <h3 id="script-module">
+        Option moderne : scripts de type <code>module</code>
+      </h3>
+
+      <p>
+        Pour profiter des imports/exports ES6 (modules JavaScript), on peut
+        utiliser <code>type="module"</code> :
+      </p>
+
+      <pre><code class="hljs language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"module"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"assets/js/main.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+      <p>Dans <code>main.js</code> :</p>
+
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">initialiserUI</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./ui.js"</span>;
+
+<span class="hljs-title class_">initialiserUI</span>();</code></pre>
+
+      <p>
+        Les modules sont automatiquement exécutés en mode strict et sont
+        différés (comportement proche de <code>defer</code>).
+      </p>
+
+      <hr />
+
+      <h2 id="dom-ready">
+        4. Chargement du DOM et événement <code>DOMContentLoaded</code>
+      </h2>
+
+      <p>
+        Si tu ne peux pas (ou ne veux pas) utiliser <code>defer</code>, tu
+        peux attendre que le DOM soit prêt avant de manipuler les éléments
+        HTML :
+      </p>
+
+      <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>DOM prêt<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-variable language_">document</span>.addEventListener(<span class="hljs-string">"DOMContentLoaded"</span>, () =&gt; {
+    <span class="hljs-keyword">const</span> titre = <span class="hljs-variable language_">document</span>.querySelector(<span class="hljs-string">"h1"</span>);
+    titre.textContent = <span class="hljs-string">"DOM chargé !"</span>;
+  });
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Chargement en cours...<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <hr />
+
+      <h2 id="21">5. Exercices : du code intégré à l’externe</h2>
+
+      <p>
+        Le but est d’externaliser le code JavaScript dans un fichier
+        <code>.js</code>, puis de tester l’ajout de contenu HTML via
+        JavaScript.
+      </p>
+
+      <h3 id="21-1">Exercice 1 – Version « historique » (pour comprendre)</h3>
+
+      <ol>
+        <li>
+          <p>
+            Copie le code suivant dans ton éditeur et enregistre-le sous
+            <code>exercice1.html</code>.
+          </p>
+
+          <pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Mon 1er script<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- Script intégré (peu recommandé, mais utile pour comprendre) --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-title function_">alert</span>(<span class="hljs-string">"Coucou !"</span>);
+  <span class="hljs-variable language_">console</span>.log(<span class="hljs-string">"Ah que Coucou !"</span>);
+  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">write</span>(<span class="hljs-string">"Coucou beuh !"</span>);
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- Le contenu ci-dessous sera en partie remplacé par document.write() --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Rien à ajouter<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+          <p>
+            Ouvre ce fichier dans ton navigateur. Observe :
+            <strong>alert</strong>, <strong>console</strong> et
+            <strong>document.write</strong>. Remarque ce qui arrive au contenu
+            de <code>&lt;body&gt;</code>.
+          </p>
+        </li>
+
+        <li>Crée un fichier JavaScript nommé <code>exercice1.js</code>.</li>
+
+        <li>
+          Déplace le code JavaScript présent dans la balise
+          <code>&lt;script&gt;</code> vers <code>exercice1.js</code>, puis
+          modifie le HTML pour importer ce fichier en externe (avec
+          <code>defer</code> de préférence).
+        </li>
+
+        <li>
+          Modifie l’appel à <code>document.write()</code> pour y inclure du
+          HTML, par exemple : <code>&lt;h1&gt;Titre ajouté&lt;/h1&gt;</code>.
+          Que constates-tu sur le rendu final de la page ?
+        </li>
+
+        <li>
+          Modifie <code>alert()</code> pour y passer du « pseudo-HTML » (par
+          exemple <code>"&lt;strong&gt;Texte&lt;/strong&gt;"</code>). Est-ce
+          que l’alerte interprète le HTML ?
+        </li>
+      </ol>
+
+      <blockquote>
+        <p>
+          <strong>Important :</strong> <code>document.write()</code> est
+          aujourd’hui considéré comme une pratique obsolète. Il peut remplacer
+          le contenu de la page ou casser le DOM s’il est utilisé après le
+          chargement initial. Dans le code moderne, on lui préfère les
+          manipulations du DOM (<code>innerHTML</code>,
+          <code>appendChild</code>, etc.).
+        </p>
+      </blockquote>
+
+      <h3 id="21-2">Exercice 2 – Version moderne (recommandée)</h3>
+
+      <ol>
+        <li>
+          À partir du même HTML, remplace l’appel à
+          <code>document.write()</code> par une modification d’un élément
+          existant du DOM :
+          <ul>
+            <li>
+              ajoute un <code>&lt;div id="zone-message"&gt;</code> vide dans
+              le <code>&lt;body&gt;</code> ;
+            </li>
+            <li>
+              dans <code>exercice1.js</code>, récupère cette zone avec
+              <code>document.getElementById()</code> et remplis-la avec du
+              contenu HTML via <code>innerHTML</code>.
+            </li>
+          </ul>
+        </li>
+        <li>
+          Ajoute un bouton dans le HTML,
+          <code>&lt;button id="btn-hello"&gt;Dire bonjour&lt;/button&gt;</code>, puis dans le fichier JS, ajoute un
+          écouteur
+          <code>click</code> dessus pour afficher un message dans la console
+          et dans la zone de message.
+        </li>
+        <li>
+          Vérifie que ton fichier <code>.js</code> ne contient plus
+          <code>document.write()</code> et que tout fonctionne en utilisant
+          uniquement les manipulations de DOM.
+        </li>
+      </ol>
+
+      <p>Ces exercices te permettent de voir :</p>
+      <ul>
+        <li>comment passer d’un script intégré à un script externe ;</li>
+        <li>
+          pourquoi <code>document.write()</code> est à éviter dans le code
+          moderne ;
+        </li>
+        <li>comment modifier la page en JavaScript via le DOM.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+  </script>
+  <script>
+    document.title = "" + document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

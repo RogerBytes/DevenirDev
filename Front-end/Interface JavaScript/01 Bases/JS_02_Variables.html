@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>02 Les variables</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">02 Les variables</h1>
+      <h2 id="2">La déclaration de variables</h2>
+      <p>
+        Les variables contiennent des données qui peuvent être modifiées lors
+        de l'exécution d'un programme.
+      </p>
+      <p>
+        Le no de votre variable doit commencer par une lettre (alphabet ASCII)
+        ou le signe <code>_</code> et se composer de lettres, de chiffres et
+        des caractères <code>_</code> et <code>$</code> (à l'exclusion du
+        blanc).
+      </p>
+      <blockquote>
+        <p>JavaScript est sensible à la casse.</p>
+      </blockquote>
+      <p>
+        Les variables se déclarent aujourd’hui principalement avec
+        <code>let</code> (pour une valeur amenée à changer) ou
+        <code>const</code> (pour une valeur qui ne doit pas être modifiée).
+        L’instruction <code>var</code> existe encore, mais elle est considérée
+        comme obsolète, car elle crée souvent des comportements inattendus
+        liés à sa portée et au mécanisme de <em>hoisting</em>.
+      </p>
+
+      <p>
+        <strong>Portée des variables :</strong><br />
+        - <code>let</code> et <code>const</code> ont une
+        <strong>portée de bloc</strong> : une variable n’existe que dans les
+        <code>{ }</code> où elle est déclarée.<br />
+        - <code>var</code> a une <strong>portée de fonction</strong> et ignore
+        les blocs simples.
+      </p>
+
+      <p><strong>Exemple (let) :</strong></p>
+
+      <pre><code class="language-javascript hljs">
+// Variable modifiable
+let num = 1;
+
+// Variable contenant du texte
+let prenom = "Jean";
+
+alert(num);
+alert(prenom);
+</code></pre>
+
+      <blockquote>
+        <p>
+          <img src="assets/img/exos.png" height="30" alt="Exemple à tester" />
+          Testez cet exemple.
+        </p>
+      </blockquote>
+
+      <p><strong>Exemple de portée (let) :</strong></p>
+
+      <pre><code class="language-javascript hljs">
+let x = 10;
+
+if (true) {
+  let x = 20;  // cette variable n'existe que dans ce bloc
+  alert("Dans le bloc : " + x);
+}
+
+alert("Hors du bloc : " + x); // on retrouve la valeur 10
+</code></pre>
+
+      <blockquote>
+        <p>
+          Les deux variables <code>x</code> sont distinctes : la version "20"
+          est limitée au bloc <code>{ }</code>.
+        </p>
+      </blockquote>
+
+      <p>
+        Il existe une façon de déclarer des valeurs qui ne doivent pas changer
+        : les <strong>constantes</strong>. Elles se déclarent avec le mot clé
+        <code>const</code>. Une constante doit recevoir une valeur
+        immédiatement et ne peut plus être réassignée.
+      </p>
+
+      <p><strong>Exemple (const) :</strong></p>
+
+      <pre><code class="language-javascript hljs">
+const age = 37;
+age = 27; // Erreur : impossible de modifier une constante
+
+alert(age);
+</code></pre>
+
+      <blockquote>
+        <p>
+          <img src="assets/img/exos.png" height="30" alt="Exemple à tester" />
+          Testez cet exemple et vérifiez le message d’erreur dans la console.
+        </p>
+      </blockquote>
+
+      <p><strong>Exemple de portée (var) – à éviter :</strong></p>
+
+      <pre><code class="language-javascript hljs">
+var a = 5;
+
+if (true) {
+  var a = 99; // redéclare et écrase la variable du dessus !
+}
+
+alert(a); // affiche 99 (comportement surprenant)
+</code></pre>
+
+      <blockquote>
+        <p>
+          Avec <code>var</code>, la variable <code>a</code> n’est pas limitée
+          au bloc <code>{ }</code> : c’est pourquoi son usage est fortement
+          déconseillé.
+        </p>
+      </blockquote>
+
+      <h2 id="14">Les types de données</h2>
+      <p>JavaScript utilise 5 types de données :</p>
+      <ul>
+        <li>
+          <p>
+            Nombre : Tout nombre entier ou avec virgule tel que
+            <code>22</code> ou <code>3.1416</code>. Tout entier en octal ou
+            hexadécimal tel que <code>0387</code>, <code>0xFFA8</code>.
+          </p>
+        </li>
+        <li>
+          <p>
+            Chaîne : toute suite de caractères comprise entre guillemets ou
+            côtes telle que "suite de caractères" ou 'suite de caractères'
+          </p>
+        </li>
+        <li>
+          <p>
+            Booléen : les mots <code>true</code> pour vrai et
+            <code>false</code> pour faux
+          </p>
+        </li>
+        <li>
+          <p>
+            Objet : toute utilisation de variable par référence vers tout
+            objet natif JavaScript (Array, Date, String …) ou tout objet du
+            DOM.
+          </p>
+        </li>
+        <li>
+          <p>
+            <code>null</code> : mot réservé qui ne représente pas de valeur.
+            La valeur <code>null</code> est affectée volontairement à une
+            variable.
+          </p>
+        </li>
+        <li>
+          <p>
+            <code>undefined</code> : mot réservé qui est renvoyé par une
+            variable référencée qui n'a pas encore été définie (la variable
+            existe mais n'a reçu aucune affectation de valeur).
+          </p>
+        </li>
+      </ul>
+      <p><strong>Exemples :</strong></p>
+      <pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> myVar;              <span class="hljs-comment">// le type de la variable myVar est undefined</span>
+myVar = <span class="hljs-number">324</span>;            <span class="hljs-comment">// type number</span>
+myVar = <span class="hljs-string">"Bonjour"</span>;      <span class="hljs-comment">// type string</span>
+myVar = <span class="hljs-literal">true</span>;           <span class="hljs-comment">// type boolean</span>
+myVar = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>();    <span class="hljs-comment">// type object</span></code></pre>
+      <h4 id="19">Connaître le type d'une donnée</h4>
+      <p>
+        Une variable peut changer de type après une affectation. On peut
+        vérifier le type en cours d'une variable avec l'instruction
+        <code>typeof</code> :
+      </p>
+      <pre><code class="language-javascript hljs"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">typeof</span> <span class="hljs-number">42</span>);             <span class="hljs-comment">// Affiche "number"</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">typeof</span> <span class="hljs-string">'blubber'</span>);      <span class="hljs-comment">// Affiche "string"</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">typeof</span> <span class="hljs-literal">true</span>);           <span class="hljs-comment">// Affiche "boolean"</span>
+
+<span class="hljs-keyword">var</span> myVar;
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">typeof</span> myVar);          <span class="hljs-comment">// Affiche 'undefined'</span></code></pre>
+      <blockquote>
+        <p>
+          <img src="assets/img/exos.png" height="30" alt="Exemple à tester" />
+          Testez cet exemple.
+        </p>
+      </blockquote>
+    </div>
+  </div>
+  <script>
+    hljs.highlightAll();
+  </script>
+
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

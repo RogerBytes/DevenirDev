@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>13 Les expressions régulières</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">13 Les expressions régulières</h1>
+
+      <h2 id="2">Définition</h2>
+      <p>
+        Une <strong>expression régulière</strong> (ou <em>regex</em>) est un
+        motif (pattern) qui décrit un ensemble de chaînes de caractères.
+      </p>
+      <p>En JavaScript, on utilise les expressions régulières pour&nbsp;:</p>
+      <ul>
+        <li>
+          vérifier la validité d’une chaîne (validation de formulaires) ;
+        </li>
+        <li>
+          chercher un motif dans un texte (par exemple trouver un mot ou un
+          numéro de téléphone) ;
+        </li>
+        <li>
+          remplacer des parties d’un texte (nettoyage, formatage, etc.).
+        </li>
+      </ul>
+      <p>
+        Tu peux voir une expression régulière comme un
+        <strong>filtre de vérification</strong> ou une
+        <strong>contrainte</strong> appliquée à une chaîne.
+      </p>
+      <p>
+        Les expressions régulières existent dans de très nombreux langages
+        (JavaScript, PHP, Python, Java…). La syntaxe de base est très
+        similaire, même si les fonctions pour les utiliser changent selon le
+        langage.
+      </p>
+      <p>
+        Elles sont extrêmement puissantes… mais leur écriture peut sembler
+        dense ou “cryptique” au début. L’important est de comprendre
+        progressivement les briques de base : classes de caractères,
+        quantificateurs, ancres, groupes, etc.
+      </p>
+
+      <hr />
+
+      <h2 id="9">Créer une expression régulière en JavaScript</h2>
+
+      <h3>Deux syntaxes possibles</h3>
+      <p>
+        En JavaScript, il existe deux façons principales de créer une
+        regex&nbsp;:
+      </p>
+      <ol>
+        <li><strong>Littérale</strong> (la plus courante)</li>
+      </ol>
+
+      <pre><code class="language-javascript hljs">const regex = /^[a-z]+$/; // seulement des lettres minuscules</code></pre>
+
+      <ol start="2">
+        <li>
+          <strong>Via le constructeur <code>RegExp</code></strong>
+        </li>
+      </ol>
+
+      <pre><code class="language-javascript hljs">const regex = new RegExp("^[a-z]+$");</code></pre>
+
+      <p>
+        La forme littérale est plus lisible et bénéficie d’un
+        <strong>compilateur</strong> (la regex est construite une seule fois).
+        On utilise surtout la forme <code>new RegExp()</code> lorsqu’on doit
+        construire dynamiquement la regex à partir de variables.
+      </p>
+
+      <h3>Les drapeaux (flags)</h3>
+      <p>
+        Une regex peut avoir des <strong>drapeaux</strong> qui modifient son
+        comportement :
+      </p>
+      <ul>
+        <li>
+          <code>i</code> : insensible à la casse (<em>case-insensitive</em>) ;
+        </li>
+        <li>
+          <code>g</code> : recherche globale (ne s’arrête pas au premier
+          match) ;
+        </li>
+        <li>
+          <code>m</code> : mode multi-ligne pour <code>^</code> et
+          <code>$</code> ;
+        </li>
+        <li>
+          <code>s</code> : permet à <code>.</code> de matcher aussi les
+          retours à la ligne.
+        </li>
+      </ul>
+
+      <pre><code class="language-javascript hljs">const regexInsensitive = /^[a-z]+$/i;   // "toto" ou "ToTo"
+const regexGlobale      = /[a-z]+/gi;   // toutes les suites de lettres, sans tenir compte de la casse</code></pre>
+
+      <hr />
+
+      <h2 id="13">Exemple simple</h2>
+      <p>
+        On veut vérifier que le mot <code>"javascript"</code> contient
+        uniquement des lettres minuscules (pas de chiffres, pas d’espaces, pas
+        de majuscules).
+      </p>
+
+      <pre><code class="language-javascript hljs">const filtre = /^[a-z]+$/;
+const resultat = filtre.test("javascript");
+console.log(resultat); // true</code></pre>
+
+      <ul>
+        <li>
+          <code>^</code> : ancre le <strong>début</strong> de la chaîne.
+        </li>
+        <li>
+          <code>[a-z]</code> : une lettre minuscule entre <code>a</code> et
+          <code>z</code>.
+        </li>
+        <li><code>+</code> : “une ou plusieurs fois”.</li>
+        <li><code>$</code> : ancre la <strong>fin</strong> de la chaîne.</li>
+      </ul>
+
+      <p>
+        Résultat : la chaîne entière doit être composée d’une ou plusieurs
+        lettres minuscules <strong>du début à la fin</strong>. Si un seul
+        caractère ne respecte pas la règle, <code>test()</code> renverra
+        <code>false</code>.
+      </p>
+
+      <hr />
+
+      <h2 id="17">Ressources complémentaires</h2>
+      <p>Pour aller plus loin&nbsp;:</p>
+      <ul>
+        <li>
+          Documentation MDN sur l’objet
+          <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/RegExp">RegExp</a>
+        </li>
+        <li>
+          Documentation MDN sur
+          <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Regular_expressions">les expressions
+            régulières en JavaScript</a>
+        </li>
+        <li>
+          Outil en ligne très pratique (selectionne
+          <strong>ECMAScript (JavaScript)</strong>) :
+          <a href="https://regex101.com/">regex101.com</a>
+        </li>
+        <li>
+          Un exercice complet sur la validation de formulaires (HTML + JS) :
+          <a href="https://www.pierre-giraud.com/javascript-apprendre-coder-cours/validation-formulaire/">TD de
+            validation de formulaires</a>
+        </li>
+      </ul>
+
+      <hr />
+
+      <h2 id="24">Écriture des règles : briques de base</h2>
+
+      <p>On manipule deux grandes catégories :</p>
+      <ul>
+        <li>
+          les <strong>caractères normaux</strong> (lettres, chiffres, etc.) ;
+        </li>
+        <li>
+          les <strong>métacaractères</strong> (ou caractères spéciaux) qui ont
+          un sens particulier : <code>.</code>, <code>\</code>,
+          <code>?</code>, <code>*</code>, <code>+</code>, <code>{}</code>,
+          <code>()</code>, <code>[]</code>, <code>^</code>, <code>$</code>,
+          <code>|</code>.
+        </li>
+      </ul>
+
+      <h3 id="27">Chaînes alphabétiques</h3>
+
+      <p>
+        <code>[A-Za-z]</code> correspond à une
+        <strong>lettre</strong> (majuscule ou minuscule, sans accent).
+      </p>
+
+      <p>On peut écrire la regex&nbsp;:</p>
+      <ul>
+        <li><code>/[A-Za-z]/</code> (forme littérale)</li>
+        <li>
+          <code>"[A-Za-z]"</code> (utilisée dans <code>new RegExp()</code>)
+        </li>
+      </ul>
+
+      <p>
+        Pour indiquer qu’on ne veut <strong>que</strong> des lettres et au
+        moins une :
+      </p>
+
+      <pre><code class="language-javascript hljs">const regex = /^[A-Za-z]+$/;</code></pre>
+
+      <ul>
+        <li><code>^</code> : début de chaîne ;</li>
+        <li><code>[A-Za-z]</code> : lettre ;</li>
+        <li><code>+</code> : une ou plusieurs fois ;</li>
+        <li><code>$</code> : fin de chaîne.</li>
+      </ul>
+
+      <h3 id="35">Chaînes numériques</h3>
+
+      <p>Deux écritures classiques&nbsp;:</p>
+
+      <pre><code class="language-javascript hljs">/^[0-9]*$/   // 0 ou plusieurs chiffres (la chaîne vide est acceptée)
+/^\d+$/      // au moins un chiffre (équivalent à [0-9]+)</code></pre>
+
+      <p>
+        <code>*</code> signifie « 0 ou plusieurs fois » (la chaîne peut être
+        vide) alors que <code>+</code> signifie « 1 ou plusieurs fois ».
+      </p>
+
+      <h3 id="41">Dates simples</h3>
+
+      <p>Une date de la forme <code>14/7/2003</code> (très basique) :</p>
+
+      <pre><code class="language-javascript hljs">/^[0-9]+\/[0-9]+\/[0-9]+$/</code></pre>
+
+      <p>
+        Ici, on contrôle juste le format général, pas la validité exacte de la
+        date (29/02/2025 passera, par exemple).
+      </p>
+
+      <p>Version un peu plus stricte, où&nbsp;:</p>
+      <ul>
+        <li>le jour et le mois ont 1 ou 2 chiffres ;</li>
+        <li>l’année a 2 ou 4 chiffres.</li>
+      </ul>
+
+      <pre><code class="language-javascript hljs">/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9][0-9]([0-9][0-9])?$/</code></pre>
+
+      <ul>
+        <li>
+          <code>?</code> après un motif signifie “0 ou 1 fois” (facultatif).
+        </li>
+        <li>
+          Les parenthèses <code>( ... )</code> permettent d’appliquer le
+          quantificateur à un <em>groupe</em>.
+        </li>
+      </ul>
+
+      <p>
+        Pour accepter plusieurs séparateurs (slash, tiret, point) :
+        <code>(\/|-|\.)</code>
+      </p>
+
+      <pre><code class="language-javascript hljs">/^[0-9][0-9]?(\/|-|\.)[0-9][0-9]?(\/|-|\.)[0-9][0-9]([0-9][0-9])?$/</code></pre>
+
+      <p>
+        Encore une fois, cela ne garantit pas la validité “calendaire” de la
+        date, seulement la forme générale.
+      </p>
+
+      <h3 id="49">Adresses email (version raisonnable)</h3>
+
+      <p>
+        Valider parfaitement une adresse email avec une regex est extrêmement
+        complexe. En pratique, on se contente souvent d’une règle
+        “raisonnable” pour filtrer les erreurs évidentes, puis on valide
+        réellement via un email de confirmation.
+      </p>
+
+      <p>
+        Exemple simple pour une adresse du type <code>nom@domaine.tld</code> :
+      </p>
+
+      <pre><code class="language-javascript hljs">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code></pre>
+
+      <p>
+        Cette version n’est pas parfaite mais couvre la majorité des cas
+        courants.
+      </p>
+
+      <p>
+        Un exemple plus restrictif (toujours pas parfait, mais plus strict) :
+      </p>
+
+      <pre><code class="language-javascript hljs">/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i</code></pre>
+
+      <ul>
+        <li><code>[a-z0-9._%+-]+</code> : utilisateur ;</li>
+        <li><code>[a-z0-9.-]+</code> : nom de domaine ;</li>
+        <li><code>\.[a-z]{2,}</code> : extension (2 caractères ou plus) ;</li>
+        <li><code>i</code> : insensible à la casse.</li>
+      </ul>
+
+      <h3 id="59">Numéros de téléphone français</h3>
+
+      <p>Format <code>0111111111</code> (10 chiffres, commençant par 0) :</p>
+
+      <pre><code class="language-javascript hljs">/^0[1-9]{9}$/</code></pre>
+
+      <p>
+        Formats acceptant des séparateurs (<code>.</code>, espace ou tiret) :
+      </p>
+      <ul>
+        <li><code>01 23 45 67 89</code></li>
+        <li><code>01.23.45.67.89</code></li>
+        <li><code>01-23-45-67-89</code></li>
+        <li><code>0123456789</code></li>
+      </ul>
+
+      <pre><code class="language-javascript hljs">/^0[1-9]([-. ]?[0-9]{2}){4}$/</code></pre>
+
+      <p>Avec <code>\d</code> à la place de <code>[0-9]</code> :</p>
+
+      <pre><code class="language-javascript hljs">/^0[1-9]([-. ]?\d{2}){4}$/</code></pre>
+
+      <h3 id="66">Autres cas fréquents</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Règle à vérifier</th>
+            <th>Regex (exemple)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chaîne alphanumérique simple</td>
+            <td>
+              Lettres et chiffres uniquement (par exemple identifiant sans
+              espaces)
+            </td>
+            <td><code>/^[0-9A-Za-z]+$/</code></td>
+          </tr>
+          <tr>
+            <td>Code couleur hexadécimal</td>
+            <td>
+              Format <code>#RRGGBB</code> ou <code>#RGB</code> (valeurs
+              hexadécimales 0-9, A-F, a-f)
+            </td>
+            <td><code>/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/</code></td>
+          </tr>
+          <tr>
+            <td>Mot de passe simple</td>
+            <td>
+              Au moins 8 caractères, avec au moins une lettre et un chiffre
+            </td>
+            <td>
+              <code> /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/ </code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr />
+
+      <h2 id="68">Principaux caractères spéciaux</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Caractère</th>
+            <th>Signification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>\</code></td>
+            <td>
+              Échappe le caractère suivant s’il est spécial (pour le prendre
+              littéralement) ou introduit une séquence spéciale comme
+              <code>\d</code>, <code>\s</code>, etc.
+              <br />
+              Exemple : <code>\d</code> signifie un chiffre,
+              <code>\*</code> cherche le caractère <code>*</code> lui-même.
+            </td>
+          </tr>
+          <tr>
+            <td><code>^</code></td>
+            <td>Début de chaîne (ou début de ligne en mode multi-ligne).</td>
+          </tr>
+          <tr>
+            <td><code>$</code></td>
+            <td>Fin de chaîne (ou fin de ligne en mode multi-ligne).</td>
+          </tr>
+          <tr>
+            <td><code>.</code></td>
+            <td>
+              N’importe quel caractère sauf le retour à la ligne (sauf avec le
+              flag <code>s</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>*</code></td>
+            <td>0, 1 ou plusieurs répétitions du motif précédent.</td>
+          </tr>
+          <tr>
+            <td><code>+</code></td>
+            <td>1 ou plusieurs répétitions du motif précédent.</td>
+          </tr>
+          <tr>
+            <td><code>?</code></td>
+            <td>
+              0 ou 1 répétition du motif précédent (motif
+              <em>facultatif</em>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>(x)</code></td>
+            <td>
+              Groupe capturant : le motif doit correspondre à <code>x</code>,
+              et le résultat peut être “capturé” (récupéré) par certaines
+              fonctions.
+            </td>
+          </tr>
+          <tr>
+            <td><code>|</code></td>
+            <td>
+              OU logique. Exemple : <code>x|y</code> correspond à “x” ou “y”.
+            </td>
+          </tr>
+          <tr>
+            <td><code>{n}</code></td>
+            <td>Exactement <code>n</code> répétitions du motif précédent.</td>
+          </tr>
+          <tr>
+            <td><code>{n,p}</code></td>
+            <td>
+              Entre <code>n</code> et <code>p</code> répétitions du motif
+              précédent.
+            </td>
+          </tr>
+          <tr>
+            <td><code>[abc]</code></td>
+            <td>Un caractère parmi ceux listés (ici “a”, “b” ou “c”).</td>
+          </tr>
+          <tr>
+            <td><code>[^abc]</code></td>
+            <td>
+              Un caractère qui <strong>n’est pas</strong> dans la liste (“a”,
+              “b” ou “c” sont interdits).
+            </td>
+          </tr>
+          <tr>
+            <td><code>\s</code></td>
+            <td>Espace, tabulation, retour chariot…</td>
+          </tr>
+          <tr>
+            <td><code>\S</code></td>
+            <td>Tout caractère sauf un espace.</td>
+          </tr>
+          <tr>
+            <td><code>\d</code></td>
+            <td>Un chiffre (équivalent à <code>[0-9]</code>).</td>
+          </tr>
+          <tr>
+            <td><code>\D</code></td>
+            <td>Tout caractère sauf un chiffre.</td>
+          </tr>
+          <tr>
+            <td><code>\w</code></td>
+            <td>
+              Caractère “mot” : lettres, chiffres, underscore (équivalent à
+              <code>[A-Za-z0-9_]</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>\W</code></td>
+            <td>
+              Tout caractère qui n’est pas un caractère “mot” (équivalent à
+              <code>[^A-Za-z0-9_]</code>).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr />
+
+      <h2 id="71">Méthodes utiles avec les regex en JavaScript</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Méthode</th>
+            <th>Utilisation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>test()</code></td>
+            <td>
+              Méthode de l’objet <code>RegExp</code>. Retourne
+              <code>true</code> si la chaîne respecte l’expression, sinon
+              <code>false</code>.
+              <br />
+              <pre><code class="language-javascript hljs">const regex = /^\d+$/;
+console.log(regex.test("123"));   // true
+console.log(regex.test("12a"));   // false</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><code>exec()</code></td>
+            <td>
+              Méthode de l’objet <code>RegExp</code>. Applique la regex à une
+              chaîne et renvoie un tableau contenant les correspondances (ou
+              <code>null</code> si aucun match).
+              <br />
+              <pre><code class="language-javascript hljs">const regex = /(\d{2})\/(\d{2})\/(\d{4})/;
+const match = regex.exec("Date : 14/07/2003");
+
+if (match) {
+  console.log(match[0]); // "14/07/2003" (match complet)
+  console.log(match[1]); // "14" (jour)
+  console.log(match[2]); // "07" (mois)
+  console.log(match[3]); // "2003" (année)
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><code>match()</code></td>
+            <td>
+              Méthode des chaînes (<code>String.prototype.match</code>).
+              Renvoie les correspondances selon la regex.
+              <br />
+              <pre><code class="language-javascript hljs">const texte = "JS 101, JS 202, JS 303";
+const matches = texte.match(/JS \d+/g);
+console.log(matches); // ["JS 101", "JS 202", "JS 303"]</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><code>replace()</code></td>
+            <td>
+              Méthode des chaînes. Remplace les sous-chaînes qui vérifient
+              l’expression par une autre chaîne (ou le résultat d’une
+              fonction).
+              <br />
+              <pre><code class="language-javascript hljs">const texte = "Bonjour    le   monde   !";
+const propre = texte.replace(/\s+/g, " ");
+console.log(propre); // "Bonjour le monde !"</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><code>search()</code></td>
+            <td>
+              Méthode des chaînes. Renvoie l’index de la première occurrence
+              qui vérifie l’expression, ou <code>-1</code> si rien n’est
+              trouvé.
+              <br />
+              <pre><code class="language-javascript hljs">const texte = "Bonjour le monde";
+console.log(texte.search(/monde/)); // 11
+console.log(texte.search(/JS/));    // -1</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td><code>split()</code></td>
+            <td>
+              Méthode des chaînes. Découpe une chaîne selon l’expression
+              régulière.
+              <br />
+              <pre><code class="language-javascript hljs">const texte = "un, deux;trois  quatre";
+const mots = texte.split(/[,; ]+/);
+console.log(mots); // ["un", "deux", "trois", "quatre"]</code></pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        En pratique, tu utiliseras très souvent le combo
+        <code>regex.test(valeur)</code> pour la validation, et
+        <code>chaine.replace(regex, ...)</code> ou
+        <code>chaine.split(regex)</code> pour transformer le texte.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+  </script>
+  <script>
+    document.title = "" + document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

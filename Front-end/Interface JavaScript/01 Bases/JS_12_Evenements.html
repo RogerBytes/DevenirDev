@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>12 Les événements</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">12 Les événements</h1>
+
+      <h2 id="2">Définition</h2>
+      <p>
+        Les événements correspondent à des actions effectuées soit par
+        l’utilisateur (clic, frappe clavier, survol…), soit par le navigateur
+        lui-même (chargement de la page, redimensionnement de la fenêtre, fin
+        d’une requête réseau…).
+      </p>
+      <p>
+        Ce sont les événements qui permettent au JavaScript de rendre une page
+        web <strong>interactive</strong>.
+      </p>
+      <p>Quelques exemples d’événements que tu as déjà rencontrés :</p>
+      <ul>
+        <li>cliquer sur un lien ou un bouton ;</li>
+        <li>remplir et envoyer un formulaire ;</li>
+        <li>le chargement complet d’une page ;</li>
+        <li>taper dans un champ texte ;</li>
+        <li>faire défiler la page (scroll).</li>
+      </ul>
+
+      <hr />
+
+      <h2 id="6">Principaux événements courants</h2>
+      <p>
+        Il existe une grande quantité d’événements. Voici un échantillon des
+        plus utilisés :
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Événement</th>
+            <th>Quand est-il déclenché ?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>click</code></td>
+            <td>
+              Quand l’utilisateur clique sur un élément (bouton, lien, image,
+              div…)
+            </td>
+          </tr>
+          <tr>
+            <td><code>dblclick</code></td>
+            <td>Double-clic sur un élément</td>
+          </tr>
+          <tr>
+            <td><code>input</code></td>
+            <td>
+              Quand la valeur d’un champ de formulaire change (au fur et à
+              mesure de la saisie)
+            </td>
+          </tr>
+          <tr>
+            <td><code>change</code></td>
+            <td>
+              Quand la valeur d’un champ est modifiée puis validée (perte de
+              focus, sélection terminée…)
+            </td>
+          </tr>
+          <tr>
+            <td><code>focus</code></td>
+            <td>Quand un élément reçoit le focus (clavier)</td>
+          </tr>
+          <tr>
+            <td><code>blur</code></td>
+            <td>Quand un élément perd le focus</td>
+          </tr>
+          <tr>
+            <td><code>submit</code></td>
+            <td>
+              Quand un formulaire est soumis (bouton
+              <code>type="submit"</code> ou touche Entrée)
+            </td>
+          </tr>
+          <tr>
+            <td><code>keydown</code>, <code>keyup</code></td>
+            <td>Quand une touche est enfoncée / relâchée</td>
+          </tr>
+          <tr>
+            <td><code>mouseover</code>, <code>mouseout</code></td>
+            <td>Quand le pointeur de la souris entre / sort d’un élément</td>
+          </tr>
+          <tr>
+            <td><code>load</code></td>
+            <td>
+              Quand la page ou une ressource (image, script…) a fini de
+              charger
+            </td>
+          </tr>
+          <tr>
+            <td><code>DOMContentLoaded</code></td>
+            <td>
+              Quand le DOM est entièrement chargé (structure HTML prête)
+            </td>
+          </tr>
+          <tr>
+            <td><code>scroll</code></td>
+            <td>Quand l’utilisateur fait défiler la page</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Pour une liste plus complète et détaillée des événements, tu peux
+        consulter la
+        <a href="https://developer.mozilla.org/fr/docs/Web/Events">documentation MDN</a>.
+      </p>
+
+      <blockquote>
+        <p>
+          <strong>Attention :</strong> n’appelle
+          <code>document.write()</code> <strong>jamais</strong> à l’intérieur
+          d’un gestionnaire d’événement : cela efface et remplace tout le
+          contenu de la page si le DOM est déjà chargé.
+        </p>
+      </blockquote>
+
+      <hr />
+
+      <h2 id="12">Comment JavaScript réagit à un événement ?</h2>
+      <p>
+        Lorsqu’un événement se produit sur un élément, on peut demander à
+        JavaScript d’exécuter une fonction : c’est le rôle des
+        <strong>gestionnaires d’événements</strong> (event handlers).
+      </p>
+      <p>
+        Un gestionnaire d’événement est une fonction que le navigateur
+        <em>appellera automatiquement</em> quand un événement précis se
+        produit sur un élément donné.
+      </p>
+
+      <h3 id="14">
+        Gestionnaires d’événements inline (à connaître, mais à éviter)
+      </h3>
+      <p>
+        Historiquement, on écrivait le code JavaScript directement dans la
+        balise HTML via des attributs comme <code>onclick</code>,
+        <code>onmouseover</code>, etc. :
+      </p>
+
+      <pre><code class="language-html hljs language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"alert('OK');"</span>&gt;</span>Clique ici<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></code></pre>
+
+      <p>
+        Dans cet exemple, un clic sur le paragraphe déclenche une boîte
+        d’alerte.
+      </p>
+
+      <p>Aujourd’hui, cette pratique est <strong>déconseillée</strong> :</p>
+      <ul>
+        <li>mélange HTML (structure) et JavaScript (comportement) ;</li>
+        <li>code difficile à maintenir et à tester ;</li>
+        <li>problème d’accessibilité et de lisibilité.</li>
+      </ul>
+
+      <h3 id="22">JavaScript non intrusif (bonne pratique)</h3>
+      <p>
+        La bonne pratique moderne est le JavaScript
+        <strong>non intrusif</strong> : tout le JS est dans des fichiers
+        séparés (ou au minimum dans des balises <code>&lt;script&gt;</code>),
+        et le HTML ne contient <strong>aucun</strong>
+        code JS.
+      </p>
+      <p>On utilise principalement deux choses :</p>
+      <ul>
+        <li>
+          une méthode de sélection d’un élément :
+          <code>document.getElementById</code>,
+          <code>document.querySelector</code>, etc. ;
+        </li>
+        <li>
+          la méthode <code>addEventListener</code> pour « écouter » un
+          événement.
+        </li>
+      </ul>
+
+      <p>
+        Exemple non intrusif équivalent au paragraphe cliquable ci-dessus :
+      </p>
+
+      <pre><code class="language-html hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"fr"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Événements - Exemple<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">defer</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"events-example.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"paragraphe-cliquable"</span>&gt;</span>
+      Clique ici
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <p>Fichier <code>events-example.js</code> :</p>
+
+      <pre><code class="language-javascript hljs">const p = document.getElementById("paragraphe-cliquable");
+
+p.addEventListener("click", () =&gt; {
+  alert("OK");
+});</code></pre>
+
+      <p>
+        Ici, le HTML reste propre, et toute la logique est dans le JavaScript.
+      </p>
+
+      <hr />
+
+      <h2 id="31"><code>addEventListener</code> et l’objet événement</h2>
+
+      <p>
+        La méthode <code>addEventListener</code> prend au minimum deux
+        arguments :
+      </p>
+      <ul>
+        <li>le nom de l’événement (ex : <code>"click"</code>) ;</li>
+        <li>
+          une fonction callback à exécuter quand l’événement se produit.
+        </li>
+      </ul>
+
+      <pre><code class="language-javascript hljs">const bouton = document.querySelector("#mon-bouton");
+
+bouton.addEventListener("click", (event) =&gt; {
+  console.log("Le bouton a été cliqué !");
+  console.log("Type d'événement :", event.type);
+});</code></pre>
+
+      <p>
+        Le paramètre <code>event</code> (ou <code>e</code>) est un objet
+        représentant l’événement. Il fournit beaucoup d’informations utiles :
+      </p>
+      <ul>
+        <li>
+          <code>event.target</code> : l’élément sur lequel l’événement a eu
+          lieu ;
+        </li>
+        <li>
+          <code>event.currentTarget</code> : l’élément sur lequel
+          <code>addEventListener</code> a été appelé ;
+        </li>
+        <li><code>event.key</code> pour les événements clavier ;</li>
+        <li>
+          <code>event.clientX</code> / <code>event.clientY</code> pour la
+          souris ;
+        </li>
+        <li>
+          <code>event.preventDefault()</code> pour empêcher le comportement
+          par défaut (soumission de formulaire, navigation sur un lien…).
+        </li>
+      </ul>
+
+      <h3>Exemple : annuler la soumission d’un formulaire</h3>
+
+      <pre><code class="language-html hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"fr"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Formulaire avec validation JS<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">defer</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"form-validation.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"login-form"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"email"</span>&gt;</span>Email<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">required</span> /&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>Se connecter<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"message-erreur"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <p>Fichier <code>form-validation.js</code> :</p>
+
+      <pre><code class="language-javascript hljs">const form = document.querySelector("#login-form");
+const emailInput = document.querySelector("#email");
+const messageErreur = document.querySelector("#message-erreur");
+
+form.addEventListener("submit", (event) =&gt; {
+  if (!emailInput.value.includes("@")) {
+    event.preventDefault(); // on bloque la soumission du formulaire
+    messageErreur.textContent = "Merci de saisir une adresse mail valide.";
+  }
+});</code></pre>
+
+      <hr />
+
+      <h2 id="37">Sélectionner des éléments pour poser des écouteurs</h2>
+
+      <p>
+        Avant de pouvoir attacher un événement, il faut d’abord retrouver
+        l’élément dans le DOM. Quelques méthodes fréquentes :
+      </p>
+
+      <ul>
+        <li>
+          <code>document.getElementById(id)</code> : un seul élément par
+          identifiant ;
+        </li>
+        <li>
+          <code>document.getElementsByClassName(classe)</code> : renvoie une
+          collection (pseudo-tableau) d’éléments ayant cette classe ;
+        </li>
+        <li>
+          <code>document.getElementsByTagName(nomBalise)</code> : renvoie tous
+          les éléments d’un type donné (<code>div</code>, <code>button</code>,
+          etc.) ;
+        </li>
+        <li>
+          <code>document.querySelector(selecteurCSS)</code> : renvoie le
+          premier élément correspondant au sélecteur CSS ;
+        </li>
+        <li>
+          <code>document.querySelectorAll(selecteurCSS)</code> : renvoie
+          <em>tous</em> les éléments correspondant au sélecteur CSS
+          (NodeList).
+        </li>
+      </ul>
+
+      <p>Exemple avec <code>querySelectorAll</code> :</p>
+
+      <pre><code class="language-javascript hljs">const boutons = document.querySelectorAll(".btn-choix");
+
+boutons.forEach((btn) =&gt; {
+  btn.addEventListener("click", () =&gt; {
+    console.log("Tu as cliqué sur :", btn.textContent);
+  });
+});</code></pre>
+
+      <hr />
+
+      <h2 id="47">Résumé des objets / balises / événements typiques</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Objet / usage</th>
+            <th>Balises concernées</th>
+            <th>Événements typiques</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fenêtre / document</td>
+            <td><code>&lt;body&gt;</code>, <code>window</code></td>
+            <td>
+              <code>load</code>, <code>DOMContentLoaded</code>,
+              <code>scroll</code>, <code>resize</code>
+            </td>
+          </tr>
+          <tr>
+            <td>Liens et boutons</td>
+            <td><code>&lt;a&gt;</code>, <code>&lt;button&gt;</code></td>
+            <td><code>click</code>, <code>focus</code>, <code>blur</code></td>
+          </tr>
+          <tr>
+            <td>Formulaire</td>
+            <td><code>&lt;form&gt;</code></td>
+            <td><code>submit</code>, <code>reset</code></td>
+          </tr>
+          <tr>
+            <td>Champs de formulaire</td>
+            <td>
+              <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>,
+              <code>&lt;textarea&gt;</code>
+            </td>
+            <td>
+              <code>input</code>, <code>change</code>, <code>focus</code>,
+              <code>blur</code>
+            </td>
+          </tr>
+          <tr>
+            <td>Images</td>
+            <td><code>&lt;img&gt;</code></td>
+            <td><code>load</code>, <code>error</code></td>
+          </tr>
+          <tr>
+            <td>Clavier</td>
+            <td>Tout élément focusable</td>
+            <td>
+              <code>keydown</code>, <code>keyup</code>,
+              <code>keypress</code> (héritage)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr />
+
+      <h2 id="51">
+        Exemples autour du survol (mouseover) et du changement d’image
+      </h2>
+
+      <h3>
+        Version « historique » inline (à ne plus utiliser dans du nouveau
+        code)
+      </h3>
+
+      <pre><code class="language-html hljs language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">img</span>
+  <span class="hljs-attr">src</span>=<span class="hljs-string">"images/bleu_p.jpg"</span>
+  <span class="hljs-attr">onmouseover</span>=<span class="hljs-string">"this.src='images/bleu_a.jpg'"</span>
+  <span class="hljs-attr">onmouseout</span>=<span class="hljs-string">"this.src='images/bleu_p.jpg'"</span>
+  <span class="hljs-attr">alt</span>=<span class="hljs-string">"Bouton bleu"</span>
+/&gt;</span></code></pre>
+
+      <p>
+        Ici, le JavaScript est directement collé dans le HTML. Cela
+        fonctionne, mais ce n’est pas maintenable.
+      </p>
+
+      <h3>Version moderne avec classes CSS et JavaScript non intrusif</h3>
+
+      <p>HTML :</p>
+      <pre><code class="language-html hljs language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">img</span>
+  <span class="hljs-attr">id</span>=<span class="hljs-string">"btn-bleu"</span>
+  <span class="hljs-attr">src</span>=<span class="hljs-string">"images/bleu_p.jpg"</span>
+  <span class="hljs-attr">alt</span>=<span class="hljs-string">"Bouton bleu"</span>
+/&gt;</span></code></pre>
+
+      <p>JavaScript :</p>
+      <pre><code class="language-javascript hljs">const boutonBleu = document.querySelector("#btn-bleu");
+
+boutonBleu.addEventListener("mouseover", () =&gt; {
+  boutonBleu.src = "images/bleu_a.jpg";
+});
+
+boutonBleu.addEventListener("mouseout", () =&gt; {
+  boutonBleu.src = "images/bleu_p.jpg";
+});</code></pre>
+
+      <p>
+        En pratique, pour des effets « au survol », on utilise souvent
+        simplement le CSS (<code>:hover</code>) plutôt que JavaScript, sauf si
+        la logique est plus complexe qu’un simple changement de style.
+      </p>
+
+      <hr />
+
+      <h2 id="69">Exercice : le nombre magique (the Magic Number)</h2>
+
+      <p>Objectif :</p>
+      <ul>
+        <li>
+          Générer un nombre aléatoire compris entre 1 et 100 (par exemple)
+          avec <code>Math.random()</code> ;
+        </li>
+        <li>
+          L’utilisateur propose un nombre dans un champ texte, puis clique sur
+          un bouton ;
+        </li>
+        <li>
+          Ton script affiche dans un label :
+          <strong>"Trop grand"</strong>, <strong>"Trop petit"</strong> ou
+          <strong>"Bravo !"</strong>.
+        </li>
+        <li>
+          Commence avec un JavaScript « intrusif » (onclick dans le HTML) pour
+          comprendre, puis refactorise en JavaScript non intrusif.
+        </li>
+      </ul>
+
+      <h3>Point de départ (structure HTML)</h3>
+
+      <pre><code class="language-html hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"fr"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Nombre magique<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">defer</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"nombre-magique.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"label1"</span>&gt;</span>Entrez votre proposition<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"textBox1"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"number"</span> <span class="hljs-attr">min</span>=<span class="hljs-string">"1"</span> <span class="hljs-attr">max</span>=<span class="hljs-string">"100"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"button1"</span>&gt;</span>Vérifier<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+
+      <h3>Script JavaScript suggéré (<code>nombre-magique.js</code>)</h3>
+
+      <pre><code class="language-javascript hljs">const label = document.querySelector("#label1");
+const input = document.querySelector("#textBox1");
+const bouton = document.querySelector("#button1");
+
+const nombreMagique = Math.floor(Math.random() * 100) + 1;
+let essais = 0;
+
+bouton.addEventListener("click", () =&gt; {
+  const valeur = Number(input.value);
+  if (!valeur) {
+    label.textContent = "Saisis un nombre entre 1 et 100.";
+    return;
+  }
+
+  essais++;
+
+  if (valeur === nombreMagique) {
+    label.textContent = `Bravo ! ${valeur} était bien le nombre magique. Trouvé en ${essais} essai(s).`;
+    input.disabled = true;
+    bouton.disabled = true;
+  } else if (valeur &lt; nombreMagique) {
+    label.textContent = "Trop petit ! Essaie un nombre plus grand.";
+  } else {
+    label.textContent = "Trop grand ! Essaie un nombre plus petit.";
+  }
+});</code></pre>
+
+      <p>Étapes proposées :</p>
+      <ol>
+        <li>
+          Commence par une version simple (sans compteur d’essais, sans
+          vérification de saisie).
+        </li>
+        <li>
+          Ajoute la gestion des erreurs (champ vide, valeur hors limites).
+        </li>
+        <li>
+          Ajoute le compteur d’essais et le blocage des entrées lorsque le
+          nombre est trouvé.
+        </li>
+        <li>
+          Vérifie que ton code est bien <strong>non intrusif</strong> : aucun
+          <code>onclick</code> dans le HTML.
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+  </script>
+  <script>
+    document.title = "" + document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

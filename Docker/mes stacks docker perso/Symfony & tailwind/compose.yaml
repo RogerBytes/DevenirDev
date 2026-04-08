@@ -1,0 +1,56 @@
+services:
+    # J'ai besoin que mon service php se lance avant le service node, donc je le met avant, en premier
+    php:
+        build:
+            context: .
+            dockerfile: ./docker/dev/php/Dockerfile
+        volumes:
+            - ./:/var/www/html
+        depends_on:
+            database:
+                condition: service_healthy
+
+    web:
+        image: nginx:1.28.3-alpine
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www/html
+            - ./docker/dev/web/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            php:
+                condition: service_started
+
+    database:
+        image: postgres:18.3-alpine
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        ports:
+            - "6000:5432"
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+            interval: 5s
+            retries: 5
+
+    cloudbeaver:
+        image: dbeaver/cloudbeaver
+        restart: unless-stopped
+        depends_on:
+            database:
+                condition: service_healthy
+        ports:
+            - "7852:8978"
+
+    mail:
+        image: axllent/mailpit:edge
+        restart: unless-stopped
+        ports:
+            - "8025:8025"
+
+volumes:
+    db_data:
+    node_modules:

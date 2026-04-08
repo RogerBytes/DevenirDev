@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>PHP - Les formulaires et les variables serveur</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+  <link rel="stylesheet" href="assets/css/menu-markdown.css" />
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+
+  <style>
+    .note-pedago {
+      border-left: 4px solid rgba(255, 255, 255, .35);
+      padding: .85rem 1rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 10px;
+    }
+
+    .note-pedago code {
+      white-space: normal;
+    }
+
+    .note-pedago p {
+      margin: 0.25rem 0;
+    }
+
+    .note-pedago ul {
+      margin: 0.4rem 0 0.4rem 1.1rem;
+    }
+  </style>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    });
+  </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main class="container">
+    <article class="markdown-body">
+      <h1 id="1">PHP - Les formulaires et les variables serveur</h1>
+
+      <p><br /><br /></p>
+
+      <h2 id="3">Récupérer les données d'un formulaire</h2>
+
+      <h3 id="4">Généralités</h3>
+      <p>
+        Pour récupérer les données en provenance d'un formulaire HTML, PHP met à votre disposition quelques fonctions
+        bien utiles.
+      </p>
+      <p>
+        Dans la création d'un formulaire HTML vous avez deux façons de l'envoyer vers un script PHP, soit par GET ou
+        POST.
+        Vous indiquez ce choix avec l'attribut <code>method</code> de la balise <code>form</code>.
+        L'attribut <code>action</code> vous permet de spécifier quel script sera déclenché sur le serveur.
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form action="script.php" method="GET"&gt;
+
+&lt;/form&gt;</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Note pédagogique</strong> :</p>
+        <ul>
+          <li><strong>GET</strong> : les données passent dans l'URL (pratique pour recherche/filtre, mais visible,
+            limitée en taille, et enregistrée dans l'historique).</li>
+          <li><strong>POST</strong> : les données passent dans le corps de la requête (préférable pour formulaire
+            “métier”, données sensibles, écriture/CRUD).</li>
+        </ul>
+        <p><strong>Point sécurité</strong> : même en POST, les données viennent de l'utilisateur. Il faut toujours
+          valider et sécuriser côté serveur.</p>
+      </div>
+
+      <h3 id="8">Récupération des données</h3>
+      <ul>
+        <li>Si les données HTML sont transmises avec la méthode GET, dans votre script PHP vous utilisez :
+          <code>$_GET</code> ou <code>$_REQUEST</code>
+        </li>
+        <li>Si les données HTML sont transmises avec la méthode POST, dans votre script PHP vous utilisez :
+          <code>$_POST</code> ou <code>$_REQUEST</code>
+        </li>
+      </ul>
+
+      <p>Remarquez que dans les deux cas, <code>$_REQUEST</code> peut être utilisé.</p>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe (recommandé)</strong> : en pratique, on évite <code>$_REQUEST</code> pour la clarté et la
+          sécurité.
+          On lit explicitement <code>$_GET</code> ou <code>$_POST</code> selon le formulaire attendu, et on teste
+          <code>$_SERVER['REQUEST_METHOD']</code>.
+        </p>
+      </div>
+
+      <p>Exemple :</p>
+      <p>un champ nommé prenom :</p>
+
+      <pre><code class="language-html hljs">&lt;input type="text" name="prenom" /&gt;</code></pre>
+
+      <ul>
+        <li>Si il est transmis en GET sera récupéré de la manière suivante <code>$_GET["prenom"]</code> ou
+          <code>$_REQUEST["prenom"]</code>
+        </li>
+        <li>Si il est transmis en POST sera récupéré de la manière suivante <code>$_POST["prenom"]</code> ou
+          <code>$_REQUEST["prenom"]</code>
+        </li>
+      </ul>
+
+      <p>On peut tester si l’envoi est fait par POST ou GET :</p>
+
+      <pre><code class="language-php hljs">if ($_SERVER['REQUEST_METHOD'] === "GET") {
+
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : utilise <code>===</code> (comparaison stricte) et des guillemets
+          simples standardisés (<code>'...'</code>) pour éviter les caractères typographiques (ex: ‘ ’) qui cassent le
+          code.</p>
+      </div>
+
+      <h2 id="17">Gestion des données sur le serveur</h2>
+      <p>DANS UN FORMULAIRE SIMPLE</p>
+      <p>Voilà un exemple et son code</p>
+
+      <pre><code class="language-html hljs">&lt;form action="script.php" method="post"&gt;
+  Nom : &lt;input type="text" name="nom" size="20" maxlength="40" /&gt; &lt;br /&gt;
+  Prenom : &lt;input type="text" name="prenom" size="20" maxlength="40" /&gt;
+  &lt;input type="submit" value="ENVOYER" /&gt;
+&lt;/form&gt;</code></pre>
+
+      <p>Dans le fichier <code>script.php</code>, nous récupérons directement les variables issues du nom des champs du
+        formulaire.</p>
+
+      <pre><code class="language-php hljs">/* Récupère le nom et le prénom automatiquement */
+echo "bonjour" . $_REQUEST['prenom'] . " " . $_REQUEST['nom'] . "&lt;br&gt;";</code></pre>
+
+      <p>Ce qui a pour effet d'afficher le contenu des champs texte du formulaire.</p>
+      <p>Dans ce cas, vous pouvez lire les données du formulaire en utilisant les tableaux <code>$_REQUEST</code> ou
+        <code>$_POST</code>.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Correction pédagogique + sécurité (sans retirer l'exemple)</strong> :</p>
+        <ul>
+          <li>Ajoute un espace après “bonjour” (sinon “bonjourJean”).</li>
+          <li>Teste l'existence avec <code>isset()</code> ou l'opérateur <code>??</code> (sinon “Undefined index”).</li>
+          <li>Échappe l'affichage HTML pour éviter une injection XSS.</li>
+        </ul>
+        <pre><code class="language-php hljs">if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $prenom = $_POST['prenom'] ?? '';
+    $nom = $_POST['nom'] ?? '';
+
+    echo "bonjour " .
+        htmlspecialchars($prenom, ENT_QUOTES, 'UTF-8') . " " .
+        htmlspecialchars($nom, ENT_QUOTES, 'UTF-8') . "&lt;br&gt;";
+}</code></pre>
+      </div>
+
+      <h3 id="25">Transmettre des champs de formulaire sous la forme d'un tableau</h3>
+      <p>Voilà un exemple et son code :</p>
+
+      <pre><code class="language-html hljs">&lt;form action="check.php" method="post"&gt;
+  Tu utilises internet plutôt le :&lt;br /&gt;
+  &lt;input type="checkbox" name="Fjour[]" value="Lundi" /&gt;Lundi&lt;br /&gt;
+  &lt;input type="checkbox" name="Fjour[]" value="Mardi" /&gt;Mardi&lt;br /&gt;
+  &lt;input type="checkbox" name="Fjour[]" value="Mercredi" /&gt;Mercredi&lt;br /&gt;
+  &lt;input type="checkbox" name="Fjour[]" value="Jeudi" /&gt;Jeudi&lt;br /&gt;
+  &lt;input type="checkbox" name="Fjour[]" value="Vendredi" /&gt;Vendredi&lt;br /&gt;
+  &lt;input type="submit" name="Envoyer" value="ENVOYER" /&gt;
+&lt;/form&gt;</code></pre>
+
+      <p>
+        Vous remarquerez que nous passons en fait un tableau <code>Fjour[]</code> pour rassembler l'ensemble des valeurs
+        possibles des différentes cases à cocher.
+      </p>
+      <p>Dans FORM ACTION nous postons cela au fichier check.php qui est composé comme cela :</p>
+
+      <pre><code class="language-php hljs">echo "Tu surfes sur le web en semaine plutôt le : ";
+
+// Lecture du tableau
+foreach ($_REQUEST["Fjour"] as $jour)
+{
+    echo " $jour - ";
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique + robustesse</strong> : si aucune case n'est cochée,
+          <code>$_POST['Fjour']</code> n'existe pas.
+          Il faut donc tester avant le <code>foreach</code> (sinon warning).
+        </p>
+        <pre><code class="language-php hljs">echo "Tu surfes sur le web en semaine plutôt le : ";
+
+$jours = $_POST['Fjour'] ?? [];
+
+foreach ($jours as $jour) {
+    echo " " . htmlspecialchars($jour, ENT_QUOTES, 'UTF-8') . " - ";
+}</code></pre>
+      </div>
+
+      <h3 id="31">L'UTILISATION DES CHAMPS CACHES</h3>
+
+      <pre><code class="language-html hljs">&lt;form action="page.php" method="post"&gt;
+  Votre e-mail : &lt;input type="text" name="email" /&gt;
+  &lt;input type="hidden" name="secret" value="texte à passer discrètement" /&gt;
+  &lt;input type="submit" value="OK" /&gt;
+&lt;/form&gt;</code></pre>
+
+      <p>
+        Après avoir rempli la case "Votre Email" du formulaire et en cliquant sur "OK", celui-ci appellera la page
+        "page.php" qui recevra les variables
+        "Email" et "secret".
+      </p>
+
+      <blockquote>
+        <p>
+          L'utilisation du type "hidden" permet de passer des variables discrètement, sans qu'elles soient affichées à
+          l'écran, mais elles sont visibles dans le code.
+        </p>
+      </blockquote>
+
+      <div class="note-pedago">
+        <p><strong>Point sécurité très important</strong> : un champ <code>hidden</code> n'est <strong>pas</strong> une
+          donnée “secrète”.
+          L'utilisateur peut la lire et la modifier (DevTools).
+          On l'utilise pour des “indications” (id, étape, choix), mais tout doit être revalidé côté serveur.
+        </p>
+      </div>
+
+      <h3 id="35">Passer des variables par l'URL (Method GET)</h3>
+      <p>
+        Pour passer une variable d'une page à une autre, il faudra ajouter un point d'interrogation (?) à l'URL suivi de
+        la variable à transmettre.
+        Pour passer plusieurs variables, il suffira de les séparer par le signe &amp; :
+      </p>
+
+      <pre><code class="language-html hljs">http://www.monserveur.com/page.php?prenom=bill&amp;lang=fr</code></pre>
+
+      <p>Cela correspond à l'utilisation de la méthode GET</p>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : quand tu construis une URL, encode les valeurs :</p>
+        <pre><code class="language-php hljs">$url = 'page.php?prenom=' . urlencode($prenom) . '&amp;lang=' . urlencode($lang);</code></pre>
+      </div>
+
+      <p>LA PAGE FORMULAIRE ET LE SCRIPT PEUVENT NE FAIRE QU'UN:</p>
+
+      <pre><code class="language-php hljs">&lt;form action="&lt;?php echo htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?&gt;" method="post"&gt;
+  &lt;input type="text" name="zoneDeTexte" size="40" maxlength="40"&gt;
+  &lt;input type="submit" name="btnEnvoyer" value="envoyer"&gt;
+&lt;/form&gt;</code></pre>
+
+      <p>
+        La variable <code>$_SERVER['PHP_SELF']</code> est créée par le système et contient le nom du script courant.
+      </p>
+      <p>
+        Notre page affichée est donc construite par notre script PHP et à l'envoi du formulaire, c'est le même script
+        qui est executé,
+        pas nécessairement la même page qui est affichée.
+      </p>
+      <p>
+        Remarque : La variable <code>$_SERVER['PHP_SELF']</code> pose parfois des problèmes chez certains hébergeurs,
+        elle contient l'URL complète avec le nom de domaine.
+        Pour travailler en local, pas de problèmes.
+      </p>
+      <p>
+        Pour savoir ce qu'elle contient il suffit de faire un <code>echo $_SERVER['PHP_SELF']</code> dans un script PHP.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique + sécurité</strong> :</p>
+        <ul>
+          <li>Dans ton code initial, tu avais des guillemets typographiques (<code>‘PHP_SELF’</code>) : ça casse PHP. Il
+            faut <code>'PHP_SELF'</code>.</li>
+          <li><code>PHP_SELF</code> peut contenir des caractères injectés (XSS) selon configuration. Si tu l'utilises
+            dans du HTML, échappe-le avec <code>htmlspecialchars</code> (comme ci-dessus).</li>
+          <li>En alternative simple : mettre <code>action=""</code> (souvent interprété comme “la page courante”) et
+            garder un routage clair en MVC/Symfony.</li>
+        </ul>
+      </div>
+
+      <p>
+        Quel est l'intérêt d'utiliser le même script pour envoyer et recevoir ? Vous allez vite comprendre.
+        Imaginons le formulaire qui lit ses informations dans une base de données, cela permet à l'utilisateur de
+        corriger, supprimer et créer des fiches.
+      </p>
+
+      <p>On insère des boutons "création", "modification"... dans le formulaire :</p>
+
+      <pre><code class="language-html hljs">&lt;input type="submit" name="delete" value="Supprimer"&gt;
+&lt;input type="submit" name="create" value="Créer"&gt;
+&lt;input type="submit" name="update" value="Modifier"&gt;</code></pre>
+
+      <p>
+        Le script gère le bouton qui a été utilisé pour transmettre le formulaire afin de mettre en œuvre les actions
+        adéquates.
+        On utilise ici la fonction <code>isset</code> qui retourne <code>true</code> si la variable a reçu une valeur.
+      </p>
+
+      <pre><code class="language-php hljs">if (isset($_POST['update'])) { // mise à jour
+    echo "mise a jour";
+} elseif (isset($_POST['delete'])) {
+    echo "suppression";
+} elseif (isset($_POST['create'])) {
+    echo "Création";
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : dans ton exemple initial, il y avait des parenthèses en trop dans les
+          <code>elseif</code>,
+          ce qui rendait le code invalide. Ici, c'est corrigé sans changer l'intention.
+        </p>
+        <p><strong>Conseil</strong> : en projet, tu traites ensuite l'action en appelant une fonction dédiée (ex:
+          <code>update()</code>, <code>delete()</code>, <code>create()</code>) et tu sécurises l'accès (droits, CSRF,
+          validation).
+        </p>
+      </div>
+
+      <p>
+        Ensuite dans le corps de la page on affiche la fiche modifiée ou une fiche vierge avec des valeurs par défaut
+        par exemple.
+        Dans le cas de la suppression, il faut faire des choix soit la précédente ou la suivante, en testant que ce
+        n'est pas suivant le cas la première ou la dernière.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Point sécurité (niveau CDA)</strong> : sur un formulaire d'écriture (create/update/delete), ajoute un
+          jeton CSRF côté serveur.
+          Exemple en “pur PHP” :</p>
+        <pre><code class="language-php hljs">// Au chargement du formulaire
+session_start();
+$_SESSION['csrf'] = bin2hex(random_bytes(32));</code></pre>
+        <pre><code class="language-html hljs">&lt;input type="hidden" name="csrf" value="&lt;?php echo $_SESSION['csrf']; ?&gt;" /&gt;</code></pre>
+        <pre><code class="language-php hljs">// À la réception
+if (!hash_equals($_SESSION['csrf'] ?? '', $_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    exit('CSRF invalid');
+}</code></pre>
+        <p>(En Symfony, c'est géré nativement.)</p>
+      </div>
+
+      <h2 id="51">Exercice</h2>
+      <p>
+        Reprenez le formulaire que vous avez réalisé dans la séance précédente (JavaScript).
+        Dans ce formulaire, vous devez modifier l'attribut action de la balise form pour indiquer l'adresse d'un script
+        PHP.
+      </p>
+
+      <pre><code class="language-html hljs">&lt;form action="monscript.php"&gt;</code></pre>
+
+      <p>Puis créer un script PHP permettant d'afficher l'ensemble des valeurs transmises.</p>
+
+      <pre><code class="language-php hljs">$_REQUEST["nom_du_input"]</code></pre>
+
+      <p>Cette instruction permet de récupérer la valeur du paramètre <code>nom_du_input</code>.</p>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe (exercice)</strong> : affiche proprement toutes les valeurs reçues :</p>
+        <pre><code class="language-php hljs">echo "&lt;pre&gt;";
+var_dump($_POST); // ou $_GET selon le formulaire
+echo "&lt;/pre&gt;";</code></pre>
+        <p>Et pour “montrer” le résultat sans risque XSS, utilise aussi <code>htmlspecialchars</code> sur chaque valeur
+          lors d'un affichage HTML.</p>
+      </div>
+
+      <p><br /><br /><br /></p>
+    </article>
+  </main>
+</body>
+
+</html>

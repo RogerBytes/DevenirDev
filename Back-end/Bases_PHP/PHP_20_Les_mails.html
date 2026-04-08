@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Les mails</title>
+
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/github-markdown.css">
+    <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+
+    <style>
+        body {
+            padding-top: 56px;
+        }
+
+        .spacer {
+            height: 1.5rem;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: -999px;
+            top: 0;
+            background: #000;
+            color: #fff;
+            padding: .5rem .75rem;
+            z-index: 2000;
+        }
+
+        .skip-link:focus {
+            left: .5rem;
+            top: .5rem;
+        }
+
+        .callout {
+            border-left: 4px solid currentColor;
+            padding: .75rem 1rem;
+            margin: 1rem 0;
+            border-radius: .25rem;
+        }
+
+        .callout-info {
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, .08);
+        }
+
+        .callout-warn {
+            color: #ffc107;
+            background: rgba(255, 193, 7, .10);
+        }
+
+        .callout-danger {
+            color: #dc3545;
+            background: rgba(220, 53, 69, .10);
+        }
+
+        .callout strong {
+            color: inherit;
+        }
+    </style>
+
+    <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+    <script src="assets/js/popper.min.js" defer></script>
+    <script src="assets/js/bootstrap.min.js" defer></script>
+    <script src="assets/js/highlight.min.js" defer></script>
+    <script src="assets/js/menu-markdown.js" defer></script>
+</head>
+
+<body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main id="contenu" class="container" role="main">
+        <article class="markdown-body">
+            <h1 id="1">PHP - Les mails</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <!-- TODO: à revoir, le cours est prévu pour Windows et Wamp ? -->
+            <p>Envoyer un mail est une chose courante dans une application web.</p>
+            <p>Notez bien que cela fonctionne dans les 2 sens :</p>
+            <ul>
+                <li>l'internaute prend contact avec le propriétaire d'un site à partir d'un formulaire de contact (ou
+                    d'inscription)</li>
+                <li>le propriétaire d'un site envoie des mails aux internautes :
+                    <ul>
+                        <li>confirmation d'inscription </li>
+                        <li>confirmation de commande d'un achat en ligne</li>
+                        <li>newsletter </li>
+                        <li>rappel d'identifiant, réinitialisation d'un mot de passe</li>
+                        <li>pièce jointe : facture, documentation... </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Un mail est structuré en 2 parties : </p>
+            <ul>
+                <li>Une partie entête (= <em>headers</em>) indiquant des données
+                    techniques. Comme pour une page HTML, cette partie n'est pas affichée au
+                    lecteur du mail mais reste visible dans le code source.</li>
+                <li>Une partie corps (= <em>body</em>) qui comprend le message et représente donc la partie visible
+                    affichée par les logiciels de messagerie.</li>
+            </ul>
+            <blockquote>
+                <p><strong>Important :</strong> l'envoi d'un mail ne relève pas que du
+                    langage informatique utilisé. Plusieurs normes informatiques (RFC 2822,
+                    RFC 2047...), logiciels serveurs et protocoles de communication (SMTP,
+                    IMAP etc.) entrent en jeu, ainsi que la configuration des serveurs
+                    d'envoi et de réception, des hébergeurs ou encore des fournisseurs de
+                    messagerie (Gmail, Yahoo, Orange, Free…), des logiciels de lecture
+                    clients (Outlook, Thunderbird...) et filtres antispam. Autant de points
+                    qui rendent compliqué de s'assurer de la bonne réception d'un courriel
+                    par un destinataire.</p>
+            </blockquote>
+            <h2 id="9">Pré-requis : configuration d'un serveur mail</h2>
+            <p>Par défaut, votre système ne doit pas pouvoir envoyer de mails.</p>
+            <p>Il est nécessaire d'installer un faux serveur de messagerie pour tester que votre site est capable
+                d'envoyer des messages.</p>
+            <h3 id="12">Installation d'un serveur mail</h3>
+            <p><a href="https://github.com/mailhog/MailHog">mailhog</a> permet facilement de faire ce genre de chose.
+            </p>
+            <p><strong>Procédure d'installation :</strong></p>
+            <pre><code class="hljs language-bash"># Installation de Go (si nécessaire)
+sudo apt-get -y install golang-go
+
+# Installation de MailHog (Go 1.17+)
+go install github.com/mailhog/MailHog@latest
+
+# Mise à disposition dans le PATH (adapte selon ton $GOPATH / $HOME)
+sudo cp ~/go/bin/MailHog /usr/local/bin/mailhog</code></pre>
+            <h3 id="16">Configuration de PHP</h3>
+            <ul>
+                <li>Ouvrez le fichier <em>php.ini</em> (fichier de configuration de PHP)
+                    <pre><code class="hljs language-apache"><span class="hljs-attribute">sudo</span> nano /etc/php/<span class="hljs-number">7</span>.<span class="hljs-number">4</span>/cli/php.ini</code></pre>
+                </li>
+            </ul>
+            <blockquote>
+                <p>La commande ci-dessus est à adapter en fonction de votre version de <code>PHP</code></p>
+            </blockquote>
+            <p>Trouvez la ligne qui contient <code>sendmail_path</code> et modifiez-la pour utiliser
+                <code>MailHog</code> comme ci-dessous
+            </p>
+            <pre><code class="hljs language-ini"><span class="hljs-attr">sendmail_path</span> = /usr/local/bin/mailhog sendmail</code></pre>
+            <h3 id="21">Lancement de mailhog</h3>
+            <ul>
+                <li>Ouvrez un terminal et lancez la commande <code>mailhog</code>
+                </li>
+                <li>Ouvrez l'adresse <a href="http://localhost:8025/">http://localhost:8025</a> dans votre navigateur
+                </li>
+            </ul>
+            <blockquote>
+                <p>Attention : Mailhog n'est qu'un émulateur qui ne fait qu'intercepter
+                    et afficher les mails sur le SMTP local, il ne les envoient pas
+                    réellement. C'est un outil de mise au point des mails en phase de
+                    développement et non pas un serveur de mails complet comme <em>sendmail</em>.</p>
+            </blockquote>
+            <h2 id="24">la fonction <code>mail()</code></h2>
+            <div class="callout callout-warn" role="note" aria-label="En pratique">
+                <p><strong>En pratique :</strong> la fonction <code>mail()</code> est utile pour comprendre les bases,
+                    mais elle est souvent limitée (délivrabilité, configuration, quotas) et parfois désactivée chez les
+                    hébergeurs. En production, on privilégie généralement :</p>
+                <ul>
+                    <li>un envoi SMTP authentifié (ou API) via une librairie (ex: PHPMailer, Symfony Mailer)</li>
+                    <li>un service d'emailing transactionnel (ex: Mailjet, Sendinblue/Brevo, etc.)</li>
+                </ul>
+            </div>
+
+            <p>Pour expédier un mail, PHP fournit <a href="https://www.php.net/manual/fr/function.mail.php"
+                    target="_blank" rel="noopener noreferrer">la fonction <code>mail()</code></a></p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-variable">$to</span> = <span class="hljs-string">'dave.loper@plouf.com'</span>;
+<span class="hljs-variable">$subject</span> = <span class="hljs-string">"Confirmation d'inscription"</span>;
+
+<span class="hljs-variable">$message</span> = <span class="hljs-string">"Bienvenue sur Jarditou ! Tu peux y acheter des tomates cerises pour l'apéro et une brouette pour les transporter."</span>;
+
+<span class="hljs-variable">$headers</span> = <span class="hljs-keyword">array</span>(
+  <span class="hljs-string">'From'</span> =&gt; <span class="hljs-string">'contact@jarditou.com'</span>,
+  <span class="hljs-string">'Reply-To'</span> =&gt; <span class="hljs-string">'commercial@jarditou.com'</span>,
+  <span class="hljs-string">'X-Mailer'</span> =&gt; <span class="hljs-string">'PHP/'</span> . <span class="hljs-title function_ invoke__">phpversion</span>(),
+);
+
+<span class="hljs-variable">$ok</span> = <span class="hljs-title function_ invoke__">mail</span>(<span class="hljs-variable">$to</span>, <span class="hljs-variable">$subject</span>, <span class="hljs-variable">$message</span>, <span class="hljs-variable">$headers</span>);</code></pre>
+            <p><em>Autre syntaxe pour un tableau PHP :</em></p>
+            <pre><code class="language-php hljs">     <span class="hljs-variable">$aHeaders</span> = <span class="hljs-keyword">array</span>(<span class="hljs-string">'MIME-Version'</span> =&gt; <span class="hljs-string">'1.0'</span>,
+                       <span class="hljs-string">'Content-Type'</span> =&gt; <span class="hljs-string">'text/html; charset=utf-8'</span>,
+                       <span class="hljs-string">'From'</span> =&gt; <span class="hljs-string">'Dave Loper &lt;dave.loper@plouf.fr&gt;'</span>,
+                       <span class="hljs-string">'Reply-To'</span> =&gt; <span class="hljs-string">'Service commercial &lt;commerciaux@jarditou.com&gt;'</span>,
+                       <span class="hljs-string">'X-Mailer'</span> =&gt; <span class="hljs-string">'PHP/'</span> . <span class="hljs-title function_ invoke__">phpversion</span>()
+                       );</code></pre>
+            <p>Liste des entêtes courantes :</p>
+            <blockquote>
+                <p>Respecter la casse des noms d'entête.</p>
+            </blockquote>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Valeur</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BCC</td>
+                        <td>
+                            <i>Blind Carbon Copy</i>, ou copie carbone cachée :
+                            adresses mail des personnes recevant une copie du message; ces adresses
+                            sont masquées par le destinataire. Attention, les logiciels antispam
+                            n'aiment pas.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CC</td>
+                        <td>
+                            <i>Carbon Copy</i>, ou copie carbone : adresses mail des
+                            personnes recevant une copie du message; ces adresses sont visibles par
+                            le destinataire. Attention, les logiciels antispam n'aiment pas.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>Type de contenu du mail, c'est-à-dire le format.</td>
+                    </tr>
+                    <tr>
+                        <td>From</td>
+                        <td>Expéditeur du mail.</td>
+                    </tr>
+                    <tr>
+                        <td>MIME-Version</td>
+                        <td>Version du type MIME, toujours la valeur <i>1.0</i>.</td>
+                    </tr>
+                    <tr>
+                        <td>Reply-To</td>
+                        <td>
+                            Adresse mail de réponse au mail. Si non indiquée, cette adresse sera celle de l'expéditeur
+                            spécifiée dans <i>From</i>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>X-Mailer</td>
+                        <td>
+                            Indique le logiciel, service ou langage (par exemple la version de PHP) utilisé pour envoyer
+                            le mail.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 id="63">Format texte et format HTML</h2>
+            <p>Un mail peut être envoyé soit au format texte, soit au format HTML, ou les 2 en même temps.</p>
+            <h3 id="65">Le format texte</h3>
+            <p>Au format, texte (<em>plain text</em> en anglais), le mail sera
+                affiché à la lecture en texte brut sans aucune mise en forme (couleurs,
+                polices...), un peu comme dans le bloc-note donc.</p>
+            <p>Il s'agit du format par défaut, il est donc inutile de le préciser dans les entêtes, c'est donc que vous
+                avez vu au paragraphe <em>la fonction <code>mail()</code></em>.</p>
+            <p>Le format texte permet de s'assurer que le mail pourra être lu par
+                tous les dispositifs d'affichage et tous les logiciels. Ceci est de
+                moins en moins vrai car la plupart des clients de messagerie modernes
+                sont capables d'interpréter le format HTML.</p>
+            <p><strong>Exemple</strong></p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$aHeaders</span>[] = <span class="hljs-string">'Content-Type: text/plain; charset=utf-8'</span>;</code></pre>
+            <h3 id="71">Le format HTML</h3>
+            <div class="callout callout-warn" role="note" aria-label="Limites HTML email">
+                <p><strong>HTML email :</strong> en théorie on peut écrire du HTML/CSS, mais <strong>en
+                        pratique</strong> beaucoup de clients de messagerie bloquent ou filtrent :</p>
+                <ul>
+                    <li>le JavaScript (souvent désactivé)</li>
+                    <li>certaines règles CSS modernes</li>
+                    <li>les images distantes (chargement parfois bloqué)</li>
+                </ul>
+                <p>On fait donc souvent des templates très « conservateurs » (CSS inline, table layout) et on teste sur
+                    plusieurs clients.</p>
+            </div>
+
+            <p>Dans le format HTML, un mail est affiché à l'internaute comme une
+                véritable page web avec une structure en HTML, une mise en forme via
+                CSS, ajout de liens, d'images etc., on peut même y adjoindre des
+                interactions Javascript.</p>
+            <p>Pour indiquer le format HTML, il faut ajouter les 2 entêtes suivantes :</p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$aHeaders</span>[] = <span class="hljs-string">'MIME-Version: 1.0'</span>;
+<span class="hljs-variable">$aHeaders</span>[] = <span class="hljs-string">'Content-Type: text/html; charset=utf-8'</span>;</code></pre>
+            <p>Le message sera lui codé en HTML.</p>
+            <p><strong>Exemple (avec Bootstrap)</strong> </p>
+            <pre><code class="language-php hljs"><span class="hljs-variable">$message</span> = <span class="hljs-string">'&lt;!DOCTYPE html&gt;
+            &lt;html lang="fr"&gt;
+            &lt;head&gt;
+            &lt;meta charset="utf-8"&gt;
+            &lt;title&gt;Mon premier mail HTML&lt;/title&gt;   
+            &lt;meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"&gt;
+            &lt;link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"&gt;
+            &lt;style&gt;
+                html 
+                    {
+                    font-size: 100%;
+                    }
+
+                body 
+                    {
+                    font-size: 1rem; /* Si html fixé à 100%, 1rem = 16px = taille par défaut de police de Firefox ou Chrome */
+                    }
+            &lt;/style&gt;  
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;div class="container"&gt;
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-12"&gt;
+                            &lt;h1&gt;Mon premier mail HTML&lt;/h1&gt;
+                        &lt;/div&gt;    
+                    &lt;/div&gt;   
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-12"&gt;
+                            &lt;p&gt;Ouah c\'est trop génial ! On peut même mettre une image.&lt;/p&gt;
+                        &lt;/div&gt;    
+                    &lt;/div&gt;   
+                    &lt;div class="row"&gt;
+                        &lt;div class="col-12"&gt;
+                            &lt;img src="jarditou_logo.jpg" title="Logo" alt="Logo" class="img-fluid"&gt;
+                        &lt;/div&gt;    
+                    &lt;/div&gt;   
+                &lt;/div&gt; 
+                &lt;script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"&gt;&lt;/script&gt;
+                &lt;script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"&gt;&lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;";</span></code></pre>
+            <p>Bien évidemment, on peut mettre dans le code de la page des variables
+                PHP : données postées d'un formulaire (de contact par exemple) ou
+                extraites d'une base de données.</p>
+            <h3 id="79">Formats combinés</h3>
+            <p>Il est recommandé en termes de bonnes pratiques de proposer un mail dans <a
+                    href="https://www.arobase.org/newsletters/mime-multipart-alternative.htm" target="_blank"
+                    rel="noopener noreferrer">les 2
+                    formats</a>.</p>
+            <p>Dans ce cas, le code source du mail est alors scindé en 2 parties distinctes séparées par une "frontière"
+                (<em>boundary</em> en anglais). On retrouve cette technique dans les mails avec pièce jointe.</p>
+            <h2 id="82">Mail avec pièce jointe</h2>
+            <p>Pour ajouter un document en pièce jointe, </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-variable">$to</span> = <span class="hljs-string">'contact@plouf.com'</span>;
+<span class="hljs-variable">$subject</span> = <span class="hljs-string">"Confirmation d'inscription"</span>;
+
+<span class="hljs-comment">// Boundary multipart</span>
+<span class="hljs-variable">$boundary</span> = <span class="hljs-string">'----='</span> . <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-title function_ invoke__">uniqid</span>((<span class="hljs-keyword">string</span>)<span class="hljs-title function_ invoke__">time</span>(), <span class="hljs-keyword">true</span>));
+
+<span class="hljs-variable">$headers</span> = <span class="hljs-keyword">array</span>(
+  <span class="hljs-string">'From'</span> =&gt; <span class="hljs-string">'Dave Loper &lt;dave.loper@plouf.fr&gt;'</span>,
+  <span class="hljs-string">'MIME-Version'</span> =&gt; <span class="hljs-string">'1.0'</span>,
+  <span class="hljs-string">'Content-Type'</span> =&gt; <span class="hljs-string">"multipart/mixed; boundary=\"{$boundary}\""</span>,
+);
+
+<span class="hljs-comment">// Partie texte</span>
+<span class="hljs-variable">$body</span>  = <span class="hljs-string">"--{$boundary}
+"</span>;
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"Content-Type: text/plain; charset=utf-8
+
+"</span>;
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"Voir la pièce jointe.
+
+"</span>;
+
+<span class="hljs-comment">// Pièce jointe</span>
+<span class="hljs-variable">$filePath</span> = <span class="hljs-string">'print.php'</span>;
+<span class="hljs-variable">$fileData</span> = <span class="hljs-title function_ invoke__">chunk_split</span>(<span class="hljs-title function_ invoke__">base64_encode</span>(<span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-variable">$filePath</span>)));
+
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"--{$boundary}
+"</span>;
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"Content-Type: application/octet-stream; name=\"print.php\"
+"</span>;
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"Content-Transfer-Encoding: base64
+"</span>;
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"Content-Disposition: attachment; filename=\"print.php\"
+
+"</span>;
+<span class="hljs-variable">$body</span> .= <span class="hljs-variable">$fileData</span> . <span class="hljs-string">"
+"</span>;
+
+<span class="hljs-comment">// Fin multipart</span>
+<span class="hljs-variable">$body</span> .= <span class="hljs-string">"--{$boundary}--
+"</span>;
+
+<span class="hljs-variable">$ok</span> = <span class="hljs-title function_ invoke__">mail</span>(<span class="hljs-variable">$to</span>, <span class="hljs-variable">$subject</span>, <span class="hljs-variable">$body</span>, <span class="hljs-variable">$headers</span>);</code></pre>
+
+            <div class="callout callout-warn" role="note" aria-label="Conseil">
+                <p><strong>Conseil :</strong> les emails multipart + pièces jointes sont vite pénibles à maintenir à la
+                    main. Dans un vrai projet, une librairie (PHPMailer / Symfony Mailer) simplifie énormément la vie.
+                </p>
+            </div>
+            <h2 id="85">Librairies, frameworks, CMS et services d'emailing</h2>
+            <div class="callout callout-info" role="note" aria-label="Écosystème Symfony">
+                <p><strong>Écosystème Symfony :</strong> SwiftMailer a longtemps été très utilisé, mais aujourd'hui on
+                    rencontre plutôt <strong>Symfony Mailer</strong> dans les projets Symfony récents. Le principe reste
+                    le même : composer un message, configurer un transport (SMTP/API), et envoyer.</p>
+            </div>
+
+            <p>Pour faciliter le codage des mails, des librairies externes telles que <a
+                    href="https://swiftmailer.symfony.com/" target="_blank" rel="noopener noreferrer">SwiftMailer</a>
+                (écosystème Symfony) ou
+                encore <a href="https://github.com/PHPMailer/PHPMailer" target="_blank"
+                    rel="noopener noreferrer">PHPMailer</a> ont vu le jour.
+            </p>
+            <p>Les frameworks et les CMS possèdent eux des outils natifs ou des plugins, par exemple <a
+                    href="https://www.codeigniter.com/user_guide/libraries/email.html" target="_blank"
+                    rel="noopener noreferrer">la librairie
+                    Email</a> dans CodeIgniter.</p>
+            <p>Enfin, il existe aussi des services d'envoi de mails en masse
+                (campagne emailing, newsletters) en ligne tels que Mailchimp ou
+                Sarbacane, en partie payants et qui assurent une délivrabilité optimale
+                des campagnes d'emailing avec un suivi statistique (taux d'ouverture, de
+                désinscription etc.).</p>
+            <h2 id="89">Bonnes pratiques</h2>
+            <p>L'envoi de mails doit implémenter certaines bonnes pratiques, sous peine de votre classement comme
+                spammeur : </p>
+            <ul>
+                <li>balisage HTML correct</li>
+                <li>définition de l'encodage (UTF-8) </li>
+                <li>HTML responsive pour qu'il puisse être lisible aussi bien sur PC que sur smartphones ou tablettes
+                </li>
+                <li>Présence obligatoire d'un lien de désinscription de l'utilisateur</li>
+                <li>Lien de redirection du mail vers une page web permettant l'affichage
+                    correct du mail (dans le cas où le client de messagerie ne le permet
+                    pas) </li>
+            </ul>
+            <blockquote>
+                <p>Votre serveur (adresse IP) pourrait être blacklisté comme spammeur
+                    pour longtemps (il existe des bases de données sur lesquelles se fondent
+                    les logiciels antispam). Vous pouvez cependant vous retrouver avec un
+                    mail classé en spam suite à une mauvaise configuration du serveur ou un
+                    contenu mal interprété.</p>
+            </blockquote>
+            <div class="spacer" aria-hidden="true"></div>
+        </article>
+    </main>
+
+    <script>
+        if (window.hljs && typeof window.hljs.highlightAll === "function") {
+            window.hljs.highlightAll();
+        }
+        (function () {
+            const h1 = document.querySelector("main h1");
+            if (h1 && h1.textContent) document.title = h1.textContent.trim();
+        })();
+    </script>
+</body>
+
+</html>

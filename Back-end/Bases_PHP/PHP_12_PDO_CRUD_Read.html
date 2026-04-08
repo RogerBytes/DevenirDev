@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDO - CRUD : Read</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/github-markdown.css">
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
+  <style>
+    body { padding-top: 56px; }
+    .spacer { height: 1.5rem; }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #000; color: #fff; padding: .5rem .75rem; z-index: 2000;
+    }
+    .skip-link:focus { left: .5rem; top: .5rem; }
+
+    .callout { border-left: 4px solid currentColor; padding: .75rem 1rem; margin: 1rem 0; border-radius: .25rem; }
+    .callout-info { color: #0dcaf0; background: rgba(13, 202, 240, .08); }
+    .callout-warn { color: #ffc107; background: rgba(255, 193, 7, .10); }
+    .callout-danger { color: #dc3545; background: rgba(220, 53, 69, .10); }
+    .callout strong { color: inherit; }
+
+  </style>
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main id="contenu" class="container" role="main">
+    <article class="markdown-body">
+<h1 id="1">PHP - PDO -&gt; CRUD : Read</h1>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Créons ici une interface permettant de visualiser le détail d'une
+                fiche (pour éventuellement ensuite, la modifier ou la supprimer). </p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="5">Création d'un lien vers la fiche</h2>
+            <p>Modifiez le tableau contenant la liste de vos artistes (page <em>artists.php</em>) pour ajouter une
+                colonne qui contiendra un lien de redirection vers la fiche détaillée chaque artiste :</p>
+            <pre><code class="language-php hljs"><span class="hljs-comment">// Début de page : traitement PHP + entête HTML</span>
+<span class="hljs-comment">// ...</span>
+
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;th&gt;ID&lt;/th&gt;
+            &lt;th&gt;Nom&lt;/th&gt;
+            &lt;!-- Ici, on ajoute une colonne pour insérer un lien --&gt;
+            &lt;th&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+
+        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$tableau</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$artist</span>): <span class="hljs-meta">?&gt;</span>
+        &lt;tr&gt;
+            &lt;td&gt;<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$artist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>&lt;/td&gt;
+            &lt;td&gt;<span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$artist</span>-&gt;artist_name <span class="hljs-meta">?&gt;</span>&lt;/td&gt;
+            &lt;!-- Ici, on ajoute un lien par artiste pour accéder à sa fiche : --&gt;
+            &lt;td&gt;&lt;a href=<span class="hljs-string">"artist_detail.php?id=&lt;?= <span class="hljs-subst">$artist</span>-&gt;artist_id ?&gt;"</span>&gt;Détail&lt;/a&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endforeach</span>; <span class="hljs-meta">?&gt;</span>
+
+    &lt;/table&gt;
+
+<span class="hljs-comment">// Fin de page : fermetures de blocs HTML</span></code></pre>
+            <blockquote>
+                <p>Testez ce nouvel affichage !</p>
+            </blockquote>
+            <p>En survolant chaque lien avec la souris, on se rend vite compte </p>
+            <ul>
+                <li>que <code>Détail</code> renvoie systématiquement vers la page <em>artist_detail.php</em>, </li>
+                <li>et qu'un paramètre nommé <code>id</code>, contenant l'identifiant de la fiche de l'artiste concerné
+                    dans la ligne du tableau, est envoyé à cette page via la méthode <code>GET</code> (visible dans
+                    l'URL grâce au <code>?</code>).</li>
+            </ul>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Construisons maintenant cette page <em>artist_detail.php</em> !</p>
+            <div class="spacer" aria-hidden="true"></div>
+            <h2 id="14">Affichage des informations d'un enregistrement</h2>
+            <p>Nous allons maintenant concevoir la page permettant d'afficher le
+                détail d'un de nos artistes. Le numéro identifiant de la fiche a été
+                passé en paramètre à la page, via la méthode <code>GET</code>.</p>
+            <p>Si la page se nomme <em>artist_detail.php</em>, elle sera donc déclenchée de cette façon :</p>
+            <pre><code class="hljs language-bash">https://urlduserveurlocal/artist_detail.php?<span class="hljs-built_in">id</span>=4</code></pre>
+            <p>Et contiendra le code suivant : </p>
+            <pre><code class="language-php hljs"><span class="hljs-meta">&lt;?php</span>
+    <span class="hljs-comment">// On se connecte à la BDD via notre fichier db.php :</span>
+
+    <span class="hljs-keyword">require</span> <span class="hljs-string">__DIR__ . '/db.php'</span>;
+    <span class="hljs-variable">$db</span> = <span class="hljs-title function_ invoke__">connexionBase</span>();
+
+    <span class="hljs-comment">// On récupère l'ID passé en paramètre :</span>
+    <span class="hljs-variable">$id</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">"id"</span>];
+
+    <span class="hljs-comment">// On crée une requête préparée avec condition de recherche :</span>
+    <span class="hljs-variable">$requete</span> = <span class="hljs-variable">$db</span>-&gt;<span class="hljs-title function_ invoke__">prepare</span>(<span class="hljs-string">"SELECT * FROM artist WHERE artist_id=?"</span>);
+    <span class="hljs-comment">// on ajoute l'ID du disque passé dans l'URL en paramètre et on exécute :</span>
+    <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">execute</span>(<span class="hljs-keyword">array</span>(<span class="hljs-variable">$id</span>));
+
+    <span class="hljs-comment">// on récupère le 1er (et seul) résultat :</span>
+    <span class="hljs-variable">$myArtist</span> = <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">fetch</span>(PDO::<span class="hljs-variable constant_">FETCH_OBJ</span>);
+
+    <span class="hljs-comment">// on clôt la requête en BDD</span>
+    <span class="hljs-variable">$requete</span>-&gt;<span class="hljs-title function_ invoke__">closeCursor</span>();
+<span class="hljs-meta">?&gt;</span>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=<span class="hljs-string">"fr"</span>&gt;
+    &lt;head&gt;
+        &lt;meta charset=<span class="hljs-string">"UTF-8"</span>&gt;
+        &lt;meta http-equiv=<span class="hljs-string">"X-UA-Compatible"</span> content=<span class="hljs-string">"IE=edge"</span>&gt;
+        &lt;meta name=<span class="hljs-string">"viewport"</span> content=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;
+        &lt;title&gt;PDO - Détail&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Artiste N°<span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">echo</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_id <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        Nom de l'artiste : <span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_name <span class="hljs-meta">?&gt;</span>
+        &lt;br&gt;
+        Site Internet : <span class="hljs-meta">&lt;?=</span> <span class="hljs-variable">$myArtist</span>-&gt;artist_url <span class="hljs-meta">?&gt;</span>
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <div class="spacer" aria-hidden="true"></div>
+            <p>Testez cette page avec différentes valeurs pour vérifier son bon fonctionnement ! </p>
+            <p>Essayez avec un ID d'artiste qui n'existe pas : la variable <code>$myArtist</code> contient la valeur
+                <code>null</code> (vérifiez avec un <code>var_dump();</code>).
+            </p>
+      <div class="callout callout-info" role="note" aria-label="Cas non trouvé">
+        <p><strong>Cas « non trouvé » :</strong> <code>fetch()</code> renvoie <code>false</code> si aucun enregistrement ne correspond. Selon ton style, tu peux ensuite afficher un message, ou rediriger vers la liste :</p>
+<pre><code class="language-php hljs">$myArtist = $requete-&gt;fetch(PDO::FETCH_OBJ);
+if ($myArtist === false) {
+  // afficher "Artiste introuvable" ou rediriger
+}</code></pre>
+      </div>
+
+            <p>Faites ensuite en sorte que votre page affiche un message particulier si la fiche n'est pas trouvée en
+                BDD.</p>
+            <div class="spacer" aria-hidden="true"></div>
+    </article>
+  </main>
+
+  <script>
+    if (window.hljs && typeof window.hljs.highlightAll === "function") {
+      window.hljs.highlightAll();
+    }
+    (function () {
+      const h1 = document.querySelector("main h1");
+      if (h1 && h1.textContent) document.title = h1.textContent.trim();
+    })();
+  </script>
+</body>
+</html>

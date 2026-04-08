@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>PHP - Les dates et les heures</title>
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+  <link rel="stylesheet" href="assets/css/menu-markdown.css" />
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js" defer></script>
+  <script src="assets/js/popper.min.js" defer></script>
+  <script src="assets/js/bootstrap.min.js" defer></script>
+  <script src="assets/js/highlight.min.js" defer></script>
+
+  <style>
+    .note-pedago {
+      border-left: 4px solid rgba(255, 255, 255, .35);
+      padding: .85rem 1rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 10px;
+    }
+
+    .note-pedago code {
+      white-space: normal;
+    }
+
+    .note-pedago p {
+      margin: 0.25rem 0;
+    }
+
+    .note-pedago ul {
+      margin: 0.4rem 0 0.4rem 1.1rem;
+    }
+  </style>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.hljs) hljs.highlightAll();
+      const h1 = document.querySelector("h1");
+      if (h1) document.title = h1.textContent.trim();
+    });
+  </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+        <div class="container">
+            <a class="navbar-brand py-0 my-0" href="PHP_01_Les_bases.html" style="font-size: 14px">PHP Cours</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+                aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="jsNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapitres
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+                            <a class="dropdown-item" href="PHP_01_Les_bases.html">
+                                PHP_01_Les_bases
+                            </a>
+                            <a class="dropdown-item" href="PHP_02_Les_instructions_conditionnelles.html">
+                                PHP_02_Les_instructions_conditionnelles
+                            </a>
+                            <a class="dropdown-item" href="PHP_03_Les_tableaux.html">
+                                PHP_03_Les_tableaux
+                            </a>
+                            <a class="dropdown-item" href="PHP_04_Les_fonctions.html">
+                                PHP_04_Les_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_05_Les_dates_et_les_heures.html">
+                                PHP_05_Les_dates_et_les_heures
+                            </a>
+                            <a class="dropdown-item" href="PHP_06_Les_formulaires_et_les_variables_serveur.html">
+                                PHP_06_Les_formulaires_et_les_variables_serveur
+                            </a>
+                            <a class="dropdown-item" href="PHP_07_La_manipulation_de_fichiers.html">
+                                PHP_07_La_manipulation_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_08_Le_telechargement_de_fichiers.html">
+                                PHP_08_Le_telechargement_de_fichiers
+                            </a>
+                            <a class="dropdown-item" href="PHP_09_Les_bibliotheques_de_fonctions.html">
+                                PHP_09_Les_bibliotheques_de_fonctions
+                            </a>
+                            <a class="dropdown-item" href="PHP_10_PDO_Prise_en_main.html">
+                                PHP_10_PDO_Prise_en_main
+                            </a>
+                            <a class="dropdown-item" href="PHP_11_PDO_CRUD_Create.html">
+                                PHP_11_PDO_CRUD_Create
+                            </a>
+                            <a class="dropdown-item" href="PHP_12_PDO_CRUD_Read.html">
+                                PHP_12_PDO_CRUD_Read
+                            </a>
+                            <a class="dropdown-item" href="PHP_13_PDO_CRUD_Update.html">
+                                PHP_13_PDO_CRUD_Update
+                            </a>
+                            <a class="dropdown-item" href="PHP_14_PDO_CRUD_Delete.html">
+                                PHP_14_PDO_CRUD_Delete
+                            </a>
+                            <a class="dropdown-item" href="PHP_15_Les_injections_SQL.html">
+                                PHP_15_Les_injections_SQL
+                            </a>
+                            <a class="dropdown-item" href="PHP_16_PDO_Les_requetes_preparees.html">
+                                PHP_16_PDO_Les_requêtes_préparées
+                            </a>
+                            <a class="dropdown-item" href="PHP_17_PDO_Synthese.html">
+                                PHP_17_PDO_Synthese
+                            </a>
+                            <a class="dropdown-item" href="PHP_18_Les_sessions.html">
+                                PHP_18_Les_sessions
+                            </a>
+                            <a class="dropdown-item" href="PHP_19_Authentification_et_mots_de_passe.html">
+                                PHP_19_Authentification_et_mots_de_passe
+                            </a>
+                            <a class="dropdown-item" href="PHP_20_Les_mails.html">
+                                PHP_20_Les_mails
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <main class="container">
+    <article class="markdown-body">
+      <h1 id="1">PHP - Les dates et les heures</h1>
+
+      <p><br /><br /></p>
+
+      <p>
+        Un développeur travaille en permanence avec des dates (date d'une facture client, d'inscription d'un membre sur
+        un site,
+        calcul d'un délai de livraison...) : PHP fournit un ensemble d'outils pour les manipuler.
+      </p>
+
+      <h2 id="4">Les bases</h2>
+
+      <h3 id="5">Date locale (timezone)</h3>
+      <p>
+        Les dates et surtout les heures pour une localisation donnée sont variables selon le fuseau horaire.
+        Il est donc essentiel de paramétrer le serveur d'hébergement en fonction de la situation géographique de vos
+        internautes.
+        Cette notion se nomme <strong>timezone</strong>.
+      </p>
+      <p>
+        En effet, si vous consultez en France un site canadien (par exemple) hébergé sur un serveur situé au Canada,
+        l'heure sera celle du Canada.
+      </p>
+      <p>
+        Par défaut, certains serveurs sont configurés sur l'heure universelle GMT (méridien de Greenwich),
+        il y aura donc un décalage (de 1 à 2 heures selon l'heure d'hiver/été) avec la France.
+      </p>
+
+      <p>
+        Pour obtenir la bonne heure, il faut configurer la valeur de l'option <code>datetime_zone</code> sur la valeur
+        <em>Europe/Paris</em>. 2 solutions possibles :
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : dans PHP, la directive <code>php.ini</code> s'appelle en réalité
+          <code>date.timezone</code> (et non <code>datetime_zone</code>).
+          On garde le texte d'origine, mais retiens : <code>date.timezone = "Europe/Paris"</code> (ou
+          <code>date_default_timezone_set("Europe/Paris");</code> en code).
+        </p>
+      </div>
+
+      <ul>
+        <li>
+          ajouter l'instruction <code>date_default_timezone_set("Europe/Paris");</code> dans vos scripts avant toute
+          manipulation de dates.
+          Dans ce cas, le fuseau horaire ne sera configuré que pour votre application.
+        </li>
+        <li>
+          configurer cette valeur directement dans php.ini (voir avec un formateur); dans ce cas la modification sera
+          effective pour l'ensemble des projets sur votre serveur.
+        </li>
+      </ul>
+
+      <h3 id="11">La notion de timestamp</h3>
+      <p>
+        Le PHP gère les dates sous la forme d'un entier représentant le nombre de secondes écoulées depuis le
+        <strong>1<sup>er</sup> janvier 1970 0h00 00s GMT</strong>, date issue de l'apparition d'Unix.
+      </p>
+      <p>Ce nombre est appelé <strong>timestamp</strong>.</p>
+      <p>
+        Ainsi, dans un script PHP, quand quelque chose est daté en timestamp,
+        il s'agit du nombre de secondes écoulées depuis le 01/01/1970.
+      </p>
+      <p>On récupère le timestamp grâce à la fonction PHP <code>time()</code> :</p>
+
+      <pre><code class="language-php hljs">echo time();</code></pre>
+
+      <p>
+        Le code ci-dessus affichera, par exemple, <code>1562225602</code> correspondant au 04/07/2019 09h32 22 secondes
+        et quelques secondes.
+      </p>
+      <p>
+        Pour calculer une durée, il faudra alors récupérer le timestamp de fin (par exemple maintenant) et le déduire du
+        timestamp de début,
+        le résultat sera un nombre de secondes qu'il faudra convertir (en mois, en jours ou heures...).
+      </p>
+      <p>
+        Il faut donc pouvoir récupérer une date à partir d'un timestamp ou à l'inverse créer un timestamp pour une date
+        donnée.
+      </p>
+
+      <blockquote>
+        <p>Un timestamp peut être stocké dans une base de données avec le type de colonne <em>timestamp</em>.</p>
+      </blockquote>
+
+      <div class="note-pedago">
+        <p><strong>Point technique</strong> : en base, <code>TIMESTAMP</code> (MySQL/MariaDB) applique souvent des
+          conversions de fuseau et a des limites de plage.
+          <code>DATETIME</code> stocke “tel quel”. Selon le projet, on peut stocker en UTC + convertir à l'affichage, ou
+          stocker un “instant” (timestamp) + timezone utilisateur.
+        </p>
+      </div>
+
+      <h3 id="21">Date du jour</h3>
+      <p>
+        En PHP, la fonction de base pour manipuler les dates est
+        <a href="http://php.net/manual/fr/function.date.php" target="_blank"
+          rel="noopener noreferrer"><code>date()</code></a>,
+        qui s'utilise comme ceci :
+      </p>
+
+      <pre><code class="language-php hljs">echo "Nous sommes le " . date("d/m/Y");</code></pre>
+
+      <p>
+        Ici, la fonction <code>date()</code> retourne la date du jour sous la forme suivante <em>12/11/2018</em>
+        correspondant au format (un pattern) indiqué en paramètre :
+      </p>
+      <ul>
+        <li><code>d</code> : le jour, sur 2 chiffres,</li>
+        <li><code>m</code> : le mois, sur 2 chiffres,</li>
+        <li><code>Y</code> : l'année, sur 4 chiffres.</li>
+        <li>
+          Les slashes (<code>/</code>) servent uniquement à la présentation (séparateurs).
+          On pourrait les remplacer par un tiret, un point ou deux points par exemple.
+        </li>
+      </ul>
+
+      <blockquote>
+        <p>
+          Il existe de <a href="http://php.net/manual/fr/function.date.php" target="_blank"
+            rel="noopener noreferrer">nombreux formatages</a> possibles,
+          attention à la casse (la lettre <code>d</code> en minuscule fournit un résultat différent que <code>D</code>
+          en majuscule).
+        </p>
+      </blockquote>
+
+      <h3 id="27">Heure</h3>
+      <p>
+        Pour obtenir l'heure, on utilise également la fonction <code>date()</code> en lui passant des paramètres de
+        formatage spécifiques :
+      </p>
+
+      <pre><code class="language-php hljs">echo date("H:i:s");</code></pre>
+
+      <p>Cet exemple affichera :</p>
+      <ul>
+        <li><code>H</code> : heure, au format 24 avec zéros.</li>
+        <li><code>i</code> : minutes, avec zéros,</li>
+        <li><code>s</code> : secondes, avec zéros.</li>
+      </ul>
+
+      <h2 id="32">L'objet <code>DateTime</code></h2>
+      <p>
+        Il est désormais recommandé de manipuler les dates en mode objet grâce à l'objet natif <em>DateTime</em>.
+        Cette classe propose un ensemble de méthodes (fonctions) pour faciliter la manipulation (formatage, calculs,
+        intervalles) des dates.
+        Les versions récentes de PHP ont supprimé des fonctions de date traditionnelles ce qui oblige désormais à passer
+        par <em>DateTime</em>
+        pour certaines manipulations.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Nuance technique</strong> : <code>date()</code> et <code>time()</code> existent toujours, mais
+          <code>DateTime</code> est recommandé
+          pour les calculs (ajouts de mois, différences, timezone) car c'est plus robuste et plus lisible.
+        </p>
+      </div>
+
+      <p>La syntaxe est la suivante :</p>
+
+      <pre><code class="language-php hljs">// on déclare une instance de l'objet PHP 'DateTime' :
+$oDate = new DateTime();</code></pre>
+
+      <p>
+        Ce code retourne automatiquement la date et heure de l'instant où il est exécuté.
+        Si on exécute le code suivant (affichage du contenu de la variable <code>$oDate</code>) :
+      </p>
+
+      <pre><code class="language-php hljs">var_dump($oDate);</code></pre>
+
+      <p>Affiche :</p>
+
+      <pre><code class="language-php hljs">C:\&lt;chemin_projet&gt;\php_session\index.php:13:
+
+object(DateTime)[1]
+  public 'date' =&gt; string '2018-07-03 07:12:27.043812' (length=26)
+  public 'timezone_type' =&gt; int 3
+  public 'timezone' =&gt; string 'UTC' (length=3)</code></pre>
+
+      <p>
+        Pour travailler sur une autre date que celle du jour, par exemple une valeur de date enregistrée en base de
+        données,
+        il faut passer la valeur en argument :
+      </p>
+
+      <pre><code class="language-php hljs">$oDate = new DateTime("01-01-2018");</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : les formats ambigus (comme <code>01-01-2018</code>) peuvent dépendre des
+          habitudes.
+          En projet, privilégie :</p>
+        <ul>
+          <li>les formats SQL <code>YYYY-MM-DD</code> et <code>YYYY-MM-DD HH:MM:SS</code>,</li>
+          <li>ou <code>DateTime::createFromFormat()</code> quand tu pars d'un format “humain”.</li>
+        </ul>
+      </div>
+
+      <h3 id="42">Formater une date existante</h3>
+      <p>
+        On a aussi souvent besoin d'afficher une date autre que celle du jour, par exemple une date qui provient de la
+        base de données
+        et qui donc est dans un format MySql :
+      </p>
+      <ul>
+        <li>date, par exemple <em>2018-11-16</em></li>
+        <li>datetime, par exemple <em>2018-11-16 11:26:51</em></li>
+      </ul>
+
+      <p>Pour formater cette date, on va utiliser là encore l'objet PHP <code>DateTime</code> :</p>
+
+      <pre><code class="language-php hljs">// $macolonne_sql est issue d'une requête SQL; avec pour valeur 2018-11-16 11:26:51 (par exemple)
+$oDate = new DateTime($macolonne_sql);
+echo $oDate-&gt;format("d/m/Y H:h:i");</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Correction technique</strong> : dans le format, <code>h</code> correspond à l'heure en 12h (01-12),
+          alors que <code>H</code> est l'heure en 24h (00-23).
+          Et pour afficher “11h26”, on utilise souvent :</p>
+        <pre><code class="language-php hljs">echo $oDate-&gt;format("d/m/Y H\hi"); // ex: 16/11/2018 11h26</code></pre>
+        <p>Ou bien : <code>$oDate-&gt;format("d/m/Y H:i")</code> si tu préfères “11:26”.</p>
+      </div>
+
+      <p>Ceci affichera <code>16/11/2018 11h26</code> (l'affichage des secondes a été volontairement omis).</p>
+
+      <h2 id="48">Récupérer les erreurs de l'objet <code>DateTime</code></h2>
+      <p>
+        L'objet <code>DateTime</code> permet de récupérer les erreurs grâce à <code>DateTime::getLastErrors</code> :
+      </p>
+
+      <pre><code class="language-php hljs">$dateTime = DateTime::createFromFormat('m/d/Y', $date);
+
+$errors = DateTime::getLastErrors();
+
+if (!empty($errors['warning_count']))
+{
+   return FALSE;
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Bon réflexe</strong> : on teste en général <strong>les warnings ET les erreurs</strong> :</p>
+        <pre><code class="language-php hljs">if ($errors['error_count'] &gt; 0 || $errors['warning_count'] &gt; 0) {
+    // date invalide
+}</code></pre>
+      </div>
+
+      <h3 id="51">Vérifier une date</h3>
+      <p>Essayez ce code de validation d'une date par une expression régulière :</p>
+
+      <pre><code class="language-php hljs">$datePattern = "/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/";
+$date = "2015-12-06";
+
+if (preg_match($datePattern, $date))
+{
+    echo "Date " . $date . " valide.&lt;br&gt;";
+}
+else
+{
+    echo "Date " . $date . " erronée.&lt;br&gt;";
+}</code></pre>
+
+      <p>Jusque là tout va bien, la date est valide.</p>
+      <p>
+        Essayez maintenant avec la date <em>32/13/2019</em> : la regex indique qu'elle est valide !
+        En effet, une expression régulière ne vérifie que le format, pas les valeurs.
+      </p>
+
+      <div class="note-pedago">
+        <p><strong>Correction pédagogique</strong> : pour rester cohérent avec le format regex
+          (<code>YYYY-MM-DD</code>), un exemple “faux mais qui passe”
+          serait plutôt <code>2019-13-32</code>. On garde ton texte, mais retiens : une regex valide un format, pas une
+          date réelle.</p>
+      </div>
+
+      <p>Vous pouvez utilisez l'objet <code>DateTime</code> pour vérifier votre date</p>
+
+      <pre><code class="language-php hljs">$oDate = DateTime::createFromFormat("d/m/Y H:i:s", "17/25/1966 03:42:11");
+
+$errors = DateTime::getLastErrors();
+
+if ($errors["error_count"] &gt; 0 || $errors["warning_count"] &gt; 0) {
+    echo "ARGHHHH !";
+}</code></pre>
+
+      <div class="note-pedago">
+        <p><strong>Alternative simple</strong> (si tu as séparé jour/mois/année) :
+          <code>checkdate($mois, $jour, $annee)</code> vérifie une date civile.
+        </p>
+      </div>
+
+      <h2 id="58">Documentation</h2>
+      <ul>
+        <li>
+          <a href="http://php.net/manual/fr/ref.datetime.php" target="_blank" rel="noopener noreferrer">
+            Liste des fonctions pour les dates et les heures
+          </a>
+        </li>
+        <li>
+          <a href="http://php.net/manual/fr/book.datetime.php" target="_blank" rel="noopener noreferrer">
+            L'objet <code>DateTime</code>
+          </a>
+          (et les autres objets de dates : <code>DateInterval</code>, <code>DateTimeZone</code>, etc.)
+        </li>
+      </ul>
+
+      <h2 id="60">Exercices</h2>
+      <blockquote>
+        <p>Utilisez l'objet DateTime, sauf mention contraire.</p>
+      </blockquote>
+      <ul>
+        <li>
+          <p>Trouvez le numéro de semaine de la date suivante : <em>14/07/2019</em>.</p>
+        </li>
+        <li>
+          <p>Combien reste-t-il de jours avant la fin de votre formation ?</p>
+        </li>
+        <li>
+          <p>Comment déterminer si une année est bissextile ?</p>
+        </li>
+        <li>
+          <p>Montrez que la date du 32/17/2019 est erronée.</p>
+        </li>
+        <li>
+          <p>Affichez l'heure courante sous cette forme : <em>11h25</em>.</p>
+        </li>
+        <li>
+          <p>Ajoutez 1 mois à la date courante.</p>
+        </li>
+        <li>
+          <p>Que s'est-il passé le <code>1000200000</code> ?</p>
+        </li>
+      </ul>
+
+      <div class="note-pedago">
+        <p><strong>Piste (sans correction complète)</strong> :</p>
+        <ul>
+          <li>Numéro de semaine : <code>$dt-&gt;format('W')</code>.</li>
+          <li>Ajouter 1 mois : <code>$dt-&gt;modify('+1 month')</code> (ou <code>add(new DateInterval('P1M'))</code>).
+          </li>
+          <li>Bissextile : <code>$dt-&gt;format('L')</code> renvoie 1 si l'année est bissextile.</li>
+          <li>Timestamp <code>1000200000</code> : <code>(new DateTime('@1000200000'))</code> puis définir la timezone si
+            besoin.</li>
+        </ul>
+      </div>
+
+      <p><br /><br /><br /></p>
+    </article>
+  </main>
+</body>
+
+</html>

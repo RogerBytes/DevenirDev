@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>07 Les Fonctions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">07 Fonctions</h1>
+      <h2 id="2">Définition</h2>
+      <p>
+        Une fonction est un groupe de ligne(s) de code de programmation (un «
+        sous-programme ») destiné à exécuter une ou plusieurs tâches et que
+        l'on pourra utiliser à plusieurs reprises (factorisation du code).
+      </p>
+      <p>
+        En outre, l'usage des fonctions améliorera grandement la lisibilité de
+        votre script.
+      </p>
+      <p>
+        En JavaScript, comme d'ailleurs dans tous les langages, il existe deux
+        types de fonctions :
+      </p>
+      <ul>
+        <li>
+          Les fonctions propres à JavaScript (appelées aussi fonctions
+          <em>natives</em>). On les appelle aussi des <em>méthodes</em>. Elles
+          sont associées à un objet bien particulier comme c'est le cas de la
+          méthode <code>alert()</code> avec l'objet <code>window</code>.
+        </li>
+        <li>
+          Les fonctions que vous écrivez pour les besoins de votre script et
+          que nous abordons dans ce cours.
+        </li>
+      </ul>
+      <h2 id="7">Déclaration des fonctions</h2>
+      <p>
+        Pour déclarer ou définir une fonction, on utilise l'instruction
+        <code>function</code>.
+      </p>
+      <p>La syntaxe d'une déclaration de fonction est la suivante :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">nom_de_la_fonction</span>(<span class="hljs-params"><span class="hljs-variable language_">arguments</span></span>) 
+{
+   ... code des instructions ...
+}</code></pre>
+      <p>
+        Le nom de la fonction suit les mêmes règles régissant le nom de
+        variables (nombre de caractères indéfini, commence par une lettre,
+        peut inclure des chiffres...). Pour rappel, JavaScript est sensible à
+        la case. Ainsi <code>mafonction()</code> ne sera pas égal à
+        <code>maFonction()</code>. En outre, tous les noms des fonctions dans
+        un script doivent être uniques.
+      </p>
+      <p>
+        La mention des arguments est facultative mais dans ce cas les
+        parenthèses doivent rester. C'est d'ailleurs grâce à ces parenthèses
+        que l'interpréteur JavaScript distingue les variables des fonctions.
+        Nous reviendrons plus en détail sur les arguments et autres paramètres
+        dans la partie JavaScript avancé.
+      </p>
+      <p>
+        Lorsqu'une accolade est ouverte, elle doit impérativement, sous peine
+        de message d'erreur, être refermée. Prenez la bonne habitude de fermer
+        directement vos accolades et d'écrire votre code entre elles.
+      </p>
+      <h2 id="14">Appel d'une fonction</h2>
+      <p>
+        L'appel d'une fonction se fait simplement par le nom de la fonction
+        (avec les parenthèses) : par exemple
+        <code>nom_de_la_fonction()</code>.
+      </p>
+      <p>
+        Il faudra veiller en toute logique (car l'interpréteur lit votre
+        script de haut vers le bas) à ce que votre fonction soit bien définie
+        avant d'être appelée.
+      </p>
+      <h2 id="17">Passer une valeur à une fonction</h2>
+      <p>
+        On peut passer des valeurs aux fonctions JavaScript. La valeur ainsi
+        passée sera utilisée par la fonction.
+      </p>
+      <p>
+        Pour passer une valeur, aussi appelé <strong>paramètre</strong> ou
+        <strong>argument</strong> à une fonction, on fournit le nom d'une
+        variable dans la déclaration de la fonction.
+      </p>
+      <p><strong>Exemple</strong> :</p>
+      <p>
+        Ecrire une fonction qui affiche un message d’alerte dont le texte peut
+        changer :
+      </p>
+      <pre><code class="hljs language-javascript">function <span class="hljs-built_in">exemple</span>(texte)
+{
+   <span class="hljs-built_in">alert</span>(texte);
+}</code></pre>
+      <p>
+        Le nom de la variable est <em>texte</em> et est définie comme un
+        paramètre de la fonction.
+      </p>
+      <p>Dans l'appel de la fonction, on lui fournit le texte :</p>
+      <p>exemple("Salut à tous");</p>
+      <p>
+        La fonction <code>exemple()</code> pourrait être appelée sur
+        l'événement onLoad de la balise .
+      </p>
+      <h2 id="27">Arguments multiples</h2>
+      <p>
+        On peut passer bien sûr un ou plusieurs arguments : dans ce cas ils
+        doivent être séparés par des virgules. Les types peuvent être
+        différents.
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-comment">/* Arguments multiples */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">maFonction</span>(<span class="hljs-params">arg1, arg2, arg3</span>) 
+{ 
+    ... code des instructions ... 
+}</code></pre>
+      <p>Et pour l'appel de la fonction :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-built_in">maFonction</span>(arg1, arg2, arg3);</code></pre>
+      <h2 id="32">Arguments facultatifs et affectation par défaut</h2>
+      <p>
+        En Javascript, tous les arguments d’une fonction sont facultatifs.
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">maFonction</span>(<span class="hljs-params">obligatoire, facultatif</span>) 
+{
+   <span class="hljs-comment">// Affiche 'Argument 1 : Paul'</span>
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Argument 1 : '</span>+obligatoire); 
+
+   <span class="hljs-comment">// 1er appel : erreur car 2ème argument non envoyé </span>
+   <span class="hljs-comment">// 2ème  appel : affiche 'Argument 2 (facultatif) : Anne'</span>
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Argument 2 (facultatif) : '</span>+facultatif); 
+}
+
+<span class="hljs-title function_">maFonction</span>(<span class="hljs-string">'Paul'</span>); <span class="hljs-comment">// 1er appel</span>
+
+<span class="hljs-title function_">maFonction</span>(<span class="hljs-string">'Paul'</span>, <span class="hljs-string">'Anne'</span>); <span class="hljs-comment">// 2ème appel</span></code></pre>
+      <p>
+        Afin d’éviter l'erreur provoquée parce que l’on a un argument non
+        défini, on va ajouter au sein de la fonction une condition de test sur
+        le type des arguments facultatifs. On pourra alors par la même
+        occasion affecter une valeur par défaut aux arguments que l’on
+        souhaite rendre facultatifs. Dans l'exemple ci-dessous l’argument
+        facultatif reçoit la valeur Anne :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">maFonction</span>(<span class="hljs-params">obligatoire, facultatif</span>) 
+{
+   <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> facultatif == <span class="hljs-string">'undefined'</span>) 
+   {
+      facultatif = <span class="hljs-string">'Anne'</span>;  
+   }      
+
+   <span class="hljs-comment">// Affiche 'Argument 1 : Paul'</span>
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Argument 1 : '</span>+obligatoire); 
+
+    <span class="hljs-comment">// 1er appel : erreur car 2ème argument non envoyé </span>
+   <span class="hljs-comment">// 2ème  appel : affiche 'Argument 2 (facultatif) : Anne'</span>
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Argument 2 (facultatif) : '</span>+facultatif); 
+}
+
+<span class="hljs-title function_">maFonction</span>(<span class="hljs-string">'Paul'</span>); <span class="hljs-comment">// 1er appel</span>
+
+<span class="hljs-title function_">maFonction</span>(<span class="hljs-string">'Paul'</span>, <span class="hljs-string">'Anne'</span>); <span class="hljs-comment">// 2ème appel</span></code></pre>
+      <h2 id="37">Retourner une valeur</h2>
+      <p>
+        Le principe est simple (la pratique parfois moins). Pour renvoyer un
+        résultat, il suffit d'écrire l'instruction <code>return</code> suivi
+        de l'expression à renvoyer. Notez qu'il ne faut pas entourer
+        l'expression de parenthèses.
+      </p>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-comment">// Fonction qui retourne le carré d’un nombre</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">carre</span>(<span class="hljs-params">nombre</span>) 
+{
+  <span class="hljs-keyword">let</span> resultat = nombre*nombre;
+  <span class="hljs-keyword">return</span> resultat; 
+}</code></pre>
+      <p>
+        Dans ce cas, il faut appeler la fonction en affectant une variable qui
+        stockera le résultat retourné par la fonction :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-type">let</span> <span class="hljs-variable">resultat2</span> <span class="hljs-operator">=</span> carre(nombre);</code></pre>
+      <p>
+        Notez que la variable qui stocke le retour n’a pas pour obligation de
+        porter le même nom que celui de la variable qui suit l’instruction
+        return. Précisons que l'instruction return est facultative et qu'on
+        peut trouver plusieurs return dans une même fonction (par exemple dans
+        un bloc de conditions où chaque cas renvoie quelque chose). S’il n’y a
+        aucune instruction return, l’accolade fermante s’y substitue dans
+        certains cas selon la portée des variables (cf. paragraphe suivant).
+      </p>
+      <h2 id="44">Portée des variables</h2>
+      <p>
+        Avec les fonctions, le bon usage des variables locales et globales
+        prend toute son importance. Une variable déclarée dans une fonction
+        par le mot clé <code>let</code> aura une portée limitée à cette seule
+        fonction. On ne pourra donc pas l'exploiter ailleurs dans le script :
+        il s’agit donc d'une variable locale :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">carre</span>(<span class="hljs-params">nombre</span>)
+{   
+    <span class="hljs-keyword">let</span> resultat = nombre*nombre;
+}</code></pre>
+      <p>
+        Par contre, si la variable est déclarée contextuellement (c'est-à-dire
+        sans le mot-clé <code>let</code>) dans une fonction, sa portée devient
+        globale une fois que la fonction aura été exécutée : l'instruction
+        <code>return</code> devient alors facultative.
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">cube</span>(<span class="hljs-params">nombre</span>)
+{
+    resultat = nombre*nombre*nombre;
+}</code></pre>
+      <p>
+        La variable resultat déclarée contextuellement sera ici une variable
+        globale.
+      </p>
+      <h2 id="50">Exercice</h2>
+
+      <p>Testez les exemples ci-dessous :</p>
+      <pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Exercice&lt;/title&gt;    
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Portée d'une variable dans une fonction | Javascript&lt;/h1&gt;
+    &lt;hr&gt;        
+    &lt;script&gt;
+      function maFonction() {
+        let plop1 = 123;       
+        return plop1;
+      }
+
+      function maFonction2() {
+        plop2 = 456; // variable globale implicite (à éviter !)
+      }
+
+      plop1 = maFonction();
+      console.log("fonction 1 / plop1 : " + plop1);
+
+      maFonction2();
+      console.log("maFonction2 > plop2 : " + plop2);
+    &lt;/script&gt; 
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+      <h2 id="54">Expressions de fonctions</h2>
+      <p>
+        Une fonction peut être déclarée avec un nom précédé du mot clé
+        <code>let</code>. On appelle cela une expression de fonction. On peut
+        ensuite appeler la fonction grâce à ce nom :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-comment">// Déclaration de la fonction carre() :</span>
+<span class="hljs-keyword">let</span> carre = <span class="hljs-keyword">function</span>(<span class="hljs-params">nombre</span>)
+{
+    <span class="hljs-keyword">let</span> resultat = nombre*nombre;
+}
+
+<span class="hljs-comment">// Appel de la fonction carre() :</span>
+<span class="hljs-keyword">let</span> k = <span class="hljs-title function_">carre</span>(<span class="hljs-number">2</span>);</code></pre>
+      <p>
+        Il s'agit donc là d'une syntaxe alternative pour nommer une fonction.
+        Les expressions de fonction trouvent leur utilité dans les cas de
+        récursivité ou pour passer une fonction en argument à une fonction.
+      </p>
+      <h2 id="58">Récursivité</h2>
+      <p>
+        Une fonction peut faire référence à elle-même et s'appeler elle-même.
+        Une fonction qui s'appelle elle-même est appelée une fonction
+        récursive. Sous certains aspects, une récursion est semblable à une
+        boucle : toutes les deux exécutent le même code plusieurs fois et
+        toutes les deux requièrent une condition d'arrêt (pour éviter une
+        boucle ou une récursion infinie).
+      </p>
+      <p>Par exemple, ce code utilise une boucle :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">while</span> (x &lt; <span class="hljs-number">5</span>) 
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"x : "</span>+x);
+    x++;
+}</code></pre>
+      <p>
+        On pourra convertir ce code en une fonction récursive de la façon
+        suivante :
+      </p>
+      <pre><code class="hljs language-javascript">function <span class="hljs-built_in">boucle</span>(x) 
+{
+    if (x &gt;= <span class="hljs-number">10</span>) 
+    { 
+        return; 
+    }
+
+    console<span class="hljs-selector-class">.log</span>("x : "+x);
+
+    <span class="hljs-built_in">boucle</span>(x + <span class="hljs-number">1</span>); <span class="hljs-comment">// appel récursif</span>
+}
+
+<span class="hljs-built_in">boucle</span>(<span class="hljs-number">0</span>); <span class="hljs-comment">// appel initial de la fonction</span></code></pre>
+      <p>
+        La récursivité est souvent utilisée pour parcourir une arborescence
+        (par exemple le D.O.M.).
+      </p>
+      <h2 id="65">Exercices</h2>
+      <h3 id="66">Exercice 1</h3>
+      <p>Créer les 2 fonctions suivantes :</p>
+      <ul>
+        <li>
+          <code>produit(x, y)</code> qui retourne le produit des 2 variables
+          <code>x</code>, <code>y</code> passées en paramètre.
+        </li>
+        <li>
+          <code>afficheImg(image)</code> qui affiche l'image passée en
+          paramètre. ( Le paramètre image correspond au chemin de votre image
+          )
+        </li>
+      </ul>
+      <p>Créer la page HTML correspondant au résultat ci-dessous :</p>
+      <p>
+        <img src="assets/img/papillon_demo.gif" alt="image gif d'un papillon" />
+      </p>
+      <p>
+        <em>Vous aurez besoin de
+          <a target="_blank" href="assets/img/papillon.jpg">cette image</a></em>
+      </p>
+      <h4 id="72">Ressource</h4>
+      <p>
+        Veuillez utiliser la propriété <strong>innerHTML</strong> pour
+        réaliser cet exercice :
+      </p>
+      <ul>
+        <li>
+          <a href="https://www.w3schools.com/jsref/prop_html_innerhtml.asp" title="HTML DOM innerHTML">HTML DOM
+            innerHTML</a>
+        </li>
+      </ul>
+      <h3 id="75">Exercice 2 - String Token</h3>
+      <p>
+        Concevez la fonction <code>strtok()</code> qui prend 3 paramètres
+        <code>str1</code>, <code>str2</code>, <code>n</code> en entrée et
+        renvoie une chaîne de caractères : str1 est composée d'une liste de
+        mots séparés par le caractère <code>str2</code>.
+        <code>strtok()</code> sert à extraire le nième mot de
+        <code>str1</code>.
+      </p>
+      <p><strong>Exemple :</strong></p>
+      <p>
+        Pour
+        <em>str1 = « robert ;dupont ;amiens ;80000 », strtok (str1, « ; »,
+          3)</em>
+        doit retourner <em>amiens</em>.
+      </p>
+      <p>
+        <strong>Indice</strong> : <em>utilisez la méthode</em>
+        <code>split()</code>. <br /><br /><br /><br />
+      </p>
+    </div>
+  </div>
+  <script>
+    hljs.highlightAll();
+  </script>
+
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

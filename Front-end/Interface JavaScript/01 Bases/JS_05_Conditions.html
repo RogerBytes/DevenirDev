@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>05 Instructions conditionnelles et alternatives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">05 Instructions conditionnelles et alternatives</h1>
+      <h2 id="2">L'action conditionnée</h2>
+      <p>
+        L'action conditionnée est une instruction élémentaire ou une suite
+        d'instructions exécutées en séquence si l'état du système l'autorise.
+        Le(s) critère(s) à respecter pour exécuter l'action s'exprime(nt) à
+        l'aide d'une condition (= prédicat) évaluable au moment précis où
+        l'action doit, le cas échéant, intervenir.
+      </p>
+      <p>
+        Lors de l'exécution du programme, le processeur est donc amené à
+        évaluer la condition. La condition évaluée constitue alors un énoncé
+        (ou proposition) vrai ou faux.
+      </p>
+      <p><strong>Schéma :</strong></p>
+      <pre><code class="hljs language-undefined">Si _prédicat_ alors
+   _Instruction 1_
+   _Instruction 2_
+   ...
+   _Instruction N_
+Fin si</code></pre>
+      <p><strong>Exemple 1</strong></p>
+      <pre><code class="hljs language-javascript">Si Température &gt; <span class="hljs-number">38</span> alors
+   Écrire <span class="hljs-string">"Le patient a de la fièvre"</span>
+Fin si  </code></pre>
+      <p><strong>Exemple 2</strong></p>
+      <pre><code class="hljs language-javascript">Si Température &gt; <span class="hljs-number">41</span> et Tension &gt; <span class="hljs-number">25</span> alors
+   Écrire <span class="hljs-string">"Le patient va perdre patience"</span>
+Fin si</code></pre>
+      <p><strong>Exemple 3</strong></p>
+      <pre><code class="hljs language-javascript">Si non Patient alors
+   Écrire <span class="hljs-string">"Éconduire l'olibrius"</span>
+Fin si</code></pre>
+      <p><strong>Exemple 4</strong></p>
+      <pre><code class="hljs language-javascript">Si Température &gt; <span class="hljs-number">42</span> ou (Tension &lt; <span class="hljs-number">25</span> et Pouls &gt; <span class="hljs-number">180</span>) alors
+   Écrire <span class="hljs-string">"Prévenir la famille"</span>
+Fin si</code></pre>
+      <p><strong>Exemple 5</strong></p>
+      <pre><code class="hljs language-javascript">Si Température &gt; <span class="hljs-number">40</span> ou Tension &gt;= <span class="hljs-number">25</span> alors
+   Écrire <span class="hljs-string">"Hospitaliser le patient"</span>
+Fin si  </code></pre>
+      <p><strong> Exemple 6</strong></p>
+      <pre><code class="hljs language-javascript">Si Patient <span class="hljs-type">ET</span> <span class="hljs-variable">Pouls</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span> alors
+    Écrire <span class="hljs-string">"Appeler le curé"</span>
+Fin si</code></pre>
+      <p><strong>Syntaxe Javascript :</strong></p>
+      <pre><code class="hljs language-javascript">if (prédicat) 
+{
+   Instruction <span class="hljs-number">1</span>
+   Instruction <span class="hljs-number">2</span>
+   ...   
+   Instruction N
+} </code></pre>
+      <h2 id="21">
+        Les conditions (expressions <code>if</code>, <code>else</code>,
+        <code>switch</code>)
+      </h2>
+      <p>
+        A un moment ou à un autre de la programmation, on aura besoin de
+        tester une condition. Ce qui permettra d'exécuter ou non une série
+        d'instructions.
+      </p>
+      <h3 id="23">Condition simple</h3>
+      <p>
+        Dans sa formulation la plus simple, l'expression <code>if</code> se
+        présente comme suit :
+      </p>
+      <pre><code class="hljs language-javascript">if (conditionvraie)
+{
+   // une (ou plusieurs) instructions;
+}</code></pre>
+      <ul>
+        <li>Si la condition est vérifiée, les instructions s'exécutent.</li>
+        <li>
+          Si elle ne l'est pas, les instructions ne s'exécutent pas et le
+          programme passe à la commande suivant l'accolade de fermeture.
+        </li>
+      </ul>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> reponse = <span class="hljs-string">"oui"</span>; 
+
+<span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"oui"</span>)
+{    
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse !"</span>);    <span class="hljs-comment">// Affichera 'Bonne réponse' dans la console</span>
+}</code></pre>
+      <blockquote>
+        <p>
+          Dans le cas où il n'y a qu'une seule instruction, les accolades
+          peuvent être omises, mais ce n'est pas recommandé pour la lisibilité
+          du code :
+        </p>
+      </blockquote>
+      <pre><code class="hljs language-javascript">if (reponse === "oui")
+   <span class="hljs-variable language_">console</span>.<span class="hljs-built_in">log</span>("Bonne réponse !");  </code></pre>
+      <h2 id="31">Conditions multiples : les opérateurs logiques</h2>
+      <p>
+        Les opérateurs logiques <strong>ET</strong> (signe
+        <code>&amp;&amp;</code>) et <strong>OU</strong> (signe
+        <code>||</code>) permettent de tester une association de conditions :
+      </p>
+      <ul>
+        <li>
+          Utilisation du <strong>ET</strong> :
+          <code>if ((condition1) &amp;&amp; (condition2))</code> teste si la
+          condition 1 <strong>ET</strong> la condition 2 sont réalisées (les
+          deux à la fois)
+        </li>
+        <li>
+          Utilisation du <strong>OU</strong> :
+          <code>if ((condition1) || (condition2))</code> teste si au moins UNE
+          des 2 conditions est vraie. Le fonctionnement est le suivant :
+          <ul>
+            <li>
+              si la 1ère condition est vraie, on ne teste pas la 2ème ; si la
+              1ère est fausse, on teste si la deuxième est vraie.
+            </li>
+            <li>Si aucune des 2 n'est vraie, <em>faux</em> est renvoyé.</li>
+          </ul>
+        </li>
+      </ul>
+      <p><strong>Exemple 1, avec ET :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-comment">// Condition avec ET </span>
+<span class="hljs-keyword">if</span> (age &gt; <span class="hljs-number">18</span> &amp;&amp; permis == <span class="hljs-string">"Voiture"</span>)  
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Vous avez plus de 18 ans ET vous avez un permis de conduire voiture, vous pouvez conduire"</span>);
+}</code></pre>
+      <p>
+        Dans cet exemple, les usagers ayant un permis moto ne peuvent donc pas
+        conduire, quel que soit leur âge !
+      </p>
+      <blockquote>
+        <p>
+          IMPORTANT : Remarquez le signe <code>==</code> pour la comparaison
+          <em>permis == "Voiture"</em>. Ce signe "double égal" est l'opérateur
+          de comparaison, à ne pas confondre avec <code>=</code> seul qui est
+          l'opérateur d'affectation. Retenez également qu'en JavaScript
+          moderne il est important de privilégier l'opérateur de comparaison
+          strict <code>===</code> !
+        </p>
+      </blockquote>
+      <p><strong>Exemple 2, avec OU :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-comment">// Condition avec OU</span>
+<span class="hljs-keyword">if</span> (age &gt; <span class="hljs-number">18</span> || permis === <span class="hljs-string">"Voiture"</span>)  
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Vous avez plus de 18 ans"</span>);
+}</code></pre>
+      <p>
+        Dans cet exemple, cette fois un usager ayant un permis de conduire
+        (Voiture) ou ayant plus de 18 ans est majeur !
+      </p>
+      <p>
+        <strong>Il faut rester vigilant sur la façon d'écrire les conditions. Des
+          conditions mal définies peuvent fausser un algorithme !</strong>
+      </p>
+      <h3 id="42">Autres opérateurs logiques de comparaison</h3>
+      <p>
+        Dans les exemples du paragraphe précédent, le signe
+        <code>&gt;</code> a servi d'opérateur, c'est-à-dire que l'on a
+        considéré que l'âge est supérieur à 18 ans, donc à partir de 19 ans,
+        18 ans n'étant pas pris en compte.
+      </p>
+      <p>
+        Pour prendre en compte l'âge de 18 ans, il est nécessaire d'ajouter le
+        signe égal :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">if</span> (age &gt;= <span class="hljs-number">18</span> || permis === <span class="hljs-string">"Voiture"</span>)  
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Vous avez plus de 18 ans OU vous avez un permis de conduire voiture, vous pouvez conduire"</span>);
+}</code></pre>
+      <table>
+        <thead>
+          <tr>
+            <th>Signe</th>
+            <th>Signification</th>
+            <th>Exemple</th>
+            <th>Condition posée</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>==</td>
+            <td>Comparaison</td>
+            <td>x == 11</td>
+            <td>Est-ce que x vaut 11 ?</td>
+          </tr>
+          <tr>
+            <td>===</td>
+            <td>Égalité stricte (valeur et type)</td>
+            <td>x === 11</td>
+            <td>Est-ce que x est un nombre égal à 11 ?</td>
+          </tr>
+          <tr>
+            <td>&lt;</td>
+            <td>Inférieur (strictement)</td>
+            <td>x &lt; 11</td>
+            <td>
+              Est-ce que x est strictement inférieur à 11 ?<br />- Oui si x
+              vaut jusqu'à 10<br />- Non si x vaut 11 ou plus.
+            </td>
+          </tr>
+          <tr>
+            <td>&lt;=</td>
+            <td>Inférieur ou égal</td>
+            <td>x &lt;= 11</td>
+            <td>
+              Est-ce que x est inférieur ou égal à 11 ?<br />- Oui si x vaut
+              jusqu'à 11<br />- Non si x vaut plus de 11.
+            </td>
+          </tr>
+          <tr>
+            <td>&gt;</td>
+            <td>Supérieur (strictement)</td>
+            <td>x &gt; 11</td>
+            <td>
+              Est-ce que x est strictement supérieur à 11 ?<br />- Oui si x
+              vaut au moins 12<br />- Non si x vaut 11 ou moins.
+            </td>
+          </tr>
+          <tr>
+            <td>&gt;=</td>
+            <td>Supérieur ou égal</td>
+            <td>x &gt;= 11</td>
+            <td>
+              Est-ce que x est supérieur ou égal à 11 ?<br />- Oui si x vaut
+              au moins 11<br />- Non si x vaut moins de 11.
+            </td>
+          </tr>
+          <tr>
+            <td>!=</td>
+            <td>Différence</td>
+            <td>x != "toto"</td>
+            <td>Est-ce que x est différent de la chaîne "toto" ?</td>
+          </tr>
+          <tr>
+            <td>!==</td>
+            <td>Différence stricte (valeur ou type différent)</td>
+            <td>x !== 11</td>
+            <td>Est-ce que x est différent (en valeur ou en type) de 11 ?</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        En JavaScript moderne, on recommande d’utiliser <code>===</code> et
+        <code>!==</code> plutôt que <code>==</code> et <code>!=</code>.
+      </p>
+
+      <h3 id="47">Conditions avec <code>else</code></h3>
+      <p>
+        Si l'on reprend l'exemple du paragraphe <em>condition simple</em>, on
+        voit qu'un autre choix, <em>non</em>, est possible. Pour traiter ce
+        second cas, on pourrait logiquement ajouter une seconde condition :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> reponse = <span class="hljs-string">"oui"</span>; 
+
+<span class="hljs-comment">// 1er cas</span>
+<span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"oui"</span>)
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse !"</span>);
+}
+
+<span class="hljs-comment">// 2ème cas</span>
+<span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"non"</span>)
+{
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Mauvaise réponse !"</span>);
+}</code></pre>
+      <p>
+        Ce code n'est pas faux mais pour un choix simple à deux possibilités
+        comme ici, c'est-à-dire booléen, il existe une instruction permettant
+        de le simplifier : <code>else</code> que l'on traduit par
+        <em>sinon</em> :
+      </p>
+      <ul>
+        <li>
+          Si la condition est vérifiée (true), le bloc d'instructions 1
+          s'exécute.
+        </li>
+        <li>
+          <p>
+            Si elle ne l'est pas (false), le bloc d'instructions 2 s'exécute.
+          </p>
+          <pre><code class="hljs language-javascript"><span class="hljs-keyword">if</span> (condition vraie) 
+{
+   instructions <span class="hljs-number">1</span>;
+} 
+<span class="hljs-keyword">else</span> 
+{
+   instructions <span class="hljs-number">2</span>;
+}</code></pre>
+        </li>
+      </ul>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"oui"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse !"</span>);
+} 
+<span class="hljs-keyword">else</span> 
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Mauvaise réponse !"</span>);
+}</code></pre>
+      <p>
+        Cet exemple est le plus simple mais on peut néanmoins appliquer une
+        condition sur le else :
+      </p>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"A"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse !"</span>);
+} 
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"B"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Mauvaise réponse !"</span>);
+}</code></pre>
+      <p>Tester l'exemple avec les 2 possibilités.</p>
+      <p>
+        Il se pose cependant un problème : si aucun des deux cas n'est avéré,
+        il ne se passera rien ou plutôt on ne rentrera dans aucune des 2
+        conditions.
+      </p>
+      <p>Reprenons l'exemple et testons la réponse <em>C</em> :</p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> reponse = <span class="hljs-string">"C"</span>;
+
+<span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"A"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse !"</span>);
+} 
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"B"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Mauvaise réponse !"</span>);
+}</code></pre>
+      <p>
+        Pour éviter cela et gérer tous les cas possibles, il est recommandé
+        d'ajouter un <code>else</code> sans condition qui permettra donc de
+        traiter tous les autres cas (notez bien que ce <code>else</code> final
+        reste facultatif) :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> reponse = <span class="hljs-string">"C"</span>;
+
+<span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"A"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse !"</span>);
+} 
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"B"</span>)
+{
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Mauvaise réponse !"</span>);
+} 
+<span class="hljs-keyword">else</span> 
+{ 
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Réponse inconnue."</span>);
+} </code></pre>
+      <h3 id="63">L'instruction <code>switch</code></h3>
+      <p>
+        L'instruction <code>switch</code> permet d'écrire un ensemble de
+        conditions sous une autre forme. Elle est introduite par le mot-clé
+        <code>switch</code> qui reçoit en argument la variable à tester, puis,
+        entre accolades, les mot-clés case reçoivent les différentes valeurs
+        attendues pour cette variable. Pour chaque cas on exécute alors des
+        instructions. Chaque bloc case doit se terminer obligatoirement par
+        l’instruction <code>break</code> qui permet de sortir du
+        <code>switch</code> une fois la condition réalisée (si absente toutes
+        les cas sont exécutés !).
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> variable = <span class="hljs-string">"1"</span>; 
+
+<span class="hljs-keyword">switch</span> (variable)
+{   
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"1"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Cas 1"</span>);  
+     <span class="hljs-keyword">break</span>; 
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"2"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Cas 2"</span>);  
+     <span class="hljs-keyword">break</span>;
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"3"</span>:
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Cas 3"</span>);
+     <span class="hljs-keyword">break</span>; 
+} </code></pre>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> modele = <span class="hljs-string">"Clio"</span>; 
+
+<span class="hljs-keyword">switch</span> (modele)
+{   
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"208"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle 208 : marque Peugeot"</span>);  
+     <span class="hljs-keyword">break</span>; 
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"Clio"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle Clio : marque Renault"</span>); 
+     <span class="hljs-keyword">break</span>;  
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"C3"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle C3 : marque Citroën"</span>);
+     <span class="hljs-keyword">break</span>;
+} </code></pre>
+      <p>
+        L'instruction <code>default</code> peut être ajoutée de façon
+        facultative. Elle se place à la fin du bloc <code>switch</code> après
+        tous les <code>case</code>. Son rôle est similaire au else des
+        conditions avec <code>if</code>, c'est-à-dire que si aucune condition
+        n'est réalisée dans les <code>case</code> (on n'est pas sorti du
+        <code>switch</code> car on n'a pas rencontré de <code>break</code>) ce
+        sont les instructions contenues dans ce bloc <code>default</code> qui
+        s'appliqueront :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> modele = <span class="hljs-string">"A4"</span>;
+
+<span class="hljs-keyword">switch</span> (modele)
+{   
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"208"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle 208 : marque Peugeot"</span>);  
+     <span class="hljs-keyword">break</span>; 
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"Clio"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle Clio : marque Renault"</span>); 
+     <span class="hljs-keyword">break</span>;  
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"C3"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle C3 : marque Citroën"</span>);
+     <span class="hljs-keyword">break</span>;
+
+  <span class="hljs-attr">default</span>: 
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle "</span>+modele+<span class="hljs-string">": marque inconnue"</span>);
+} </code></pre>
+      <p>
+        Notez qu'il n'y a pas d'instruction <code>break</code> pour terminer
+        le bloc <code>default</code>.
+      </p>
+      <p>
+        Enfin, sachez qu'il est possible de grouper des cas auxquels on
+        appliquera des instructions communes. Dans l'exemple ci-après, les
+        Laguna et Clio sont 2 modèles de la marque Renault :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> modele = <span class="hljs-string">"Clio"</span>;
+
+<span class="hljs-keyword">switch</span> (modele)
+{   
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"508"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle 508 : marque Peugeot"</span>);  
+     <span class="hljs-keyword">break</span>; 
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"Clio"</span> :   
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"Laguna"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle "</span>+modele+<span class="hljs-string">" : marque Renault"</span>); 
+     <span class="hljs-keyword">break</span>;  
+
+  <span class="hljs-keyword">case</span> <span class="hljs-string">"C5"</span> :
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle C5 : marque Citroën"</span>);
+     <span class="hljs-keyword">break</span>;
+
+  <span class="hljs-attr">default</span>: 
+     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Modèle "</span>+modele+<span class="hljs-string">": marque inconnue"</span>);
+} </code></pre>
+      <h3 id="73">Imbrication de conditions</h3>
+      <p>
+        Un bloc de conditions peut contenir un ou plusieurs autres blocs de
+        conditions (<code>if</code> ou <code>switch</code>) :
+      </p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> reponse = <span class="hljs-string">"oui"</span>;
+        <span class="hljs-keyword">let</span> score = <span class="hljs-number">19</span>;
+
+<span class="hljs-keyword">if</span> (reponse === <span class="hljs-string">"oui"</span>)
+{   
+   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Bonne réponse!"</span>);
+
+   score++; <span class="hljs-comment">// Augmente le score de 1</span>
+
+   <span class="hljs-keyword">if</span> (score === <span class="hljs-number">20</span>)
+   {
+       <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Vous avez gagné !"</span>);
+   } <span class="hljs-comment">// fin du 2ème if  </span>
+
+} <span class="hljs-comment">// fin du 1er if</span></code></pre>
+      <h3 id="76">Condition ternaire</h3>
+      <p>
+        Il existe une autre forme d'écriture des conditions. Cette forme est
+        dite « ternaire » et revêt diverses appellations : condition ternaire,
+        forme ternaire, écriture ternaire ou encore opérateur (ternaire)
+        conditionnel.
+      </p>
+      <p>Une condition ternaire s'écrit sous cette forme :</p>
+      <pre><code class="hljs language-javascript">(<span class="hljs-keyword">condition</span>) ? instruction <span class="hljs-number">1</span> : instruction <span class="hljs-number">2</span> </code></pre>
+      <p>Fonctionnement :</p>
+      <ul>
+        <li>
+          Si la condition entre parenthèses est vraie, l'instruction 1 est
+          exécutée,
+        </li>
+        <li>
+          sinon (condition entre parenthèses est vraie (évaluée à TRUE), sinon
+          - condition entre parenthèses évaluée à FALSE - c'est l'instruction
+          2 qui est exécutée.
+        </li>
+      </ul>
+      <p><strong>Exemple :</strong></p>
+      <pre><code class="hljs language-javascript"><span class="hljs-keyword">let</span> age = <span class="hljs-number">19</span>;
+
+(age &gt;= <span class="hljs-number">18</span>) ? <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Vous êtes majeur"</span>) : <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Vous êtes mineur"</span>);</code></pre>
+      <p>
+        Bien que l'on puisse rencontrer parfois cette forme d'écriture, son
+        utilisation est en général déconseillée pour des raisons de lisibilité
+        du code.
+      </p>
+      <h2 id="85">Exercices</h2>
+      <h3 id="86">Exercice 1 - Parité</h3>
+      <p>
+        Ecrivez un programme qui demande un nombre à l'utilisateur puis qui
+        teste si ce nombre est pair. Le programme doit afficher le résultat
+        <em>nombre pair</em> ou <em>nombre impair</em>. Vous devez utiliser
+        l'opérateur modulo <code>%</code> qui donne le reste d'une division.
+        <code>a%2</code> donne le reste de la division de <code>a</code> par
+        2, si ce reste est égal à zéro, <code>a</code> est divisible par 2.
+      </p>
+      <h3 id="88">Exercice 2 - Age</h3>
+      <p>
+        Ecrivez un programme qui demande l'année de naissance à l'utilisateur.
+        En réponse votre programme doit afficher l'âge de l'utilisateur et
+        indiquer si l'utilisateur est majeur ou mineur.
+      </p>
+      <h3 id="90">Exercice 3 - Calculette</h3>
+      <p>
+        Faire la saisie de 2 nombres entiers, puis la saisie d'un opérateur
+        <code>+</code>, <code>-</code>, <code>*</code> ou <code>/</code>.
+      </p>
+      <p>
+        Si l'utilisateur entre un opérateur erroné, le programme affichera un
+        message d'erreur.
+      </p>
+      <p>
+        Dans le cas contraire, le programme effectuera l'opération demandée
+        (en prévoyant le cas d'erreur <em>division par 0</em>), puis affichera
+        le résultat.
+      </p>
+    </div>
+  </div>
+  <script>
+    hljs.highlightAll();
+  </script>
+
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>

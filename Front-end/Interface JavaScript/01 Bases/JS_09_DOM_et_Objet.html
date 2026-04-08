@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>09 Le DOM et l'objet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/github-markdown.css" />
+  <link rel="stylesheet" href="assets/css/stackoverflow-dark.min.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+
+  <script src="assets/js/jquery-3.4.1.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/highlight.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-0" id="jsnav">
+    <div class="container">
+      <a class="navbar-brand py-0 my-0" href="JS_01_Structure_Programme.html" style="font-size: 14px">JS Cours</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jsNavbar"
+        aria-controls="jsNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="jsNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-1" href="#" id="chaptersDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Chapitres
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chaptersDropdown">
+              <a class="dropdown-item" href="JS_01_Structure_Programme.html">
+                01 - Structure du programme
+              </a>
+              <a class="dropdown-item" href="JS_02_Variables.html">
+                02 - Variables
+              </a>
+              <a class="dropdown-item" href="JS_03_Affichage_Texte.html">
+                03 - Affichage / Texte
+              </a>
+              <a class="dropdown-item" href="JS_04_Operateurs.html">
+                04 - Opérateurs
+              </a>
+              <a class="dropdown-item" href="JS_05_Conditions.html">
+                05 - Conditions
+              </a>
+              <a class="dropdown-item" href="JS_06_Boucles.html">
+                06 - Boucles
+              </a>
+              <a class="dropdown-item" href="JS_07_Fonctions.html">
+                07 - Fonctions
+              </a>
+              <a class="dropdown-item" href="JS_08_Tableaux.html">
+                08 - Tableaux
+              </a>
+              <a class="dropdown-item" href="JS_09_DOM_et_Objet.html">
+                09 - DOM et objets
+              </a>
+              <a class="dropdown-item" href="JS_10_Objets_Natifs.html">
+                10 - Objets natifs
+              </a>
+              <a class="dropdown-item" href="JS_11_Integration_JS.html">
+                11 - Intégration JS
+              </a>
+              <a class="dropdown-item" href="JS_12_Evenements.html">
+                12 - Événements
+              </a>
+              <a class="dropdown-item" href="JS_13_Expressions_Regulieres.html">
+                13 - Expressions régulières
+              </a>
+              <a class="dropdown-item" href="JS_14_Formulaires.html">
+                14 - Formulaires
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="markdown-body">
+      <h1 id="1">09 Le DOM et l'objet</h1>
+
+      <h2 id="2">Présentation</h2>
+      <p>JavaScript est un langage basé sur les objets*.</p>
+      <p>
+        Pour JavaScript, une page web est un « document » et chaque élément
+        (balises et attributs HTML, mais aussi la fenêtre du navigateur) de ce
+        document est représenté sous forme d’objet.
+      </p>
+      <p>
+        Cette représentation objet est appelée le
+        <strong>Document Object Model</strong>, en abrégé
+        <strong>DOM</strong>.
+      </p>
+      <p>
+        Le DOM représente l’arborescence d’une page web : une hiérarchie de
+        nœuds (noeuds parents et enfants) qui correspondent aux différents
+        éléments du document.
+      </p>
+      <p>
+        L’objet racine (le parent de tous les autres éléments) est l’objet
+        <code>document</code>.
+      </p>
+      <p>Ensuite, presque tout est un objet, par exemple :</p>
+      <ul>
+        <li>
+          <p>
+            Les chaînes de caractères, nombres et booléens (valeurs
+            primitives, mais utilisables comme objets)
+          </p>
+        </li>
+        <li>
+          <p>Les fonctions</p>
+        </li>
+        <li>
+          <p>Les tableaux</p>
+        </li>
+        <li>
+          <p>Les dates</p>
+        </li>
+        <li>
+          <p>Le navigateur (objet <code>navigator</code>)</p>
+        </li>
+        <li>
+          <p>La fenêtre (objet <code>window</code>)</p>
+        </li>
+        <li>
+          <p>L'écran (objet <code>screen</code>)</p>
+        </li>
+        <li>
+          <p>L’URL de la page (objet <code>location</code>)</p>
+        </li>
+        <li>
+          <p>L'historique de navigation (objet <code>history</code>)</p>
+        </li>
+        <li>
+          <p>Les expressions régulières (objet <code>RegExp</code>)</p>
+        </li>
+      </ul>
+      <blockquote>
+        <p>
+          * pour les puristes, JavaScript n'est pas à proprement parler un
+          langage orienté objet comme C++ ou Java. On dira plutôt que
+          JavaScript est un langage basé sur les objets et sur le prototypage.
+        </p>
+      </blockquote>
+
+      <h2 id="11">Les objets et leur hiérarchie</h2>
+      <p>
+        JavaScript découpe une page web en objets issus des éléments HTML, et
+        vous permet d'accéder à ces objets, d'en récupérer des informations et
+        de les modifier.
+      </p>
+      <p>
+        Voyons d'abord une illustration des différents objets qu'une page peut
+        contenir.
+      </p>
+      <p>Vous avez chargé la page suivante :</p>
+      <p>
+        <img src="assets/img/js_12_img_1.png" alt="Fenêtre du navigateur" />
+      </p>
+      <p>
+        Cette page s'affiche dans une fenêtre : c'est l'objet
+        <code>window</code>.
+      </p>
+      <p>
+        <img src="assets/img/js_12_img_2.png" alt="Objet document" />
+      </p>
+      <p>
+        Dans cette fenêtre, il y a un document HTML : il s'agit de l'objet
+        <code>document</code>.
+      </p>
+      <p>
+        Autrement dit, l'objet <code>window</code> contient l'objet
+        <code>document</code>.
+      </p>
+      <p>
+        <img src="assets/img/js_12_img_3.png" alt="Objet form" />
+      </p>
+      <p>
+        Dans ce document, on trouve un formulaire HTML : c'est l'objet
+        <code>HTMLFormElement</code>, que l'on appellera simplement
+        <code>form</code>.
+      </p>
+      <p>
+        L'objet <code>window</code> contient l'objet <code>document</code> qui
+        contient un objet <code>form</code>.
+      </p>
+      <p>
+        <img src="assets/img/js_12_img_4.png" alt="Champs du formulaire" />
+      </p>
+      <p>
+        Dans ce formulaire, on trouve plusieurs champs : boutons radio,
+        bouton, champ texte. Ce sont des objets distincts (<code>input</code>,
+        <code>button</code>, etc.).
+      </p>
+      <p>
+        L'objet <code>window</code> contient l'objet <code>document</code> qui
+        contient l'objet <code>form</code> qui contient à son tour des objets
+        <code>input</code>, <code>button</code>, etc.
+      </p>
+      <p>
+        <img src="assets/img/js_12_img_5.png" alt="Hiérarchie des objets" />
+      </p>
+      <p>La hiérarchie des objets de cet exemple est donc :</p>
+      <p>
+        <img src="assets/img/js_12_img_6.png" alt="Arborescence DOM" />
+      </p>
+      <p>
+        Pour accéder à un objet, on décrit en général un chemin depuis un
+        objet connu (souvent <code>document</code>) jusqu'à l’élément
+        souhaité.
+      </p>
+      <p>
+        Dans un formulaire, les champs sont accessibles via la collection
+        <code>elements</code>.
+      </p>
+      <p>Par exemple, pour accéder au premier champ texte :</p>
+      <pre><code class="language-js">const form = document.querySelector("form");
+const premierChamp = form.elements[0];</code></pre>
+
+      <h3 id="form-exemple">Exemple : accéder aux champs d’un formulaire</h3>
+      <p>Testez l'exemple ci-dessous :</p>
+      <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Formulaire et DOM&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;form id="user-form" name="user-form"&gt;
+      &lt;label&gt;
+        Nom :
+        &lt;input type="text" name="nom" value="Mozart" /&gt;
+      &lt;/label&gt;
+      &lt;br /&gt;
+      &lt;label&gt;
+        Prénom :
+        &lt;input type="text" name="prenom" value="Ella" /&gt;
+      &lt;/label&gt;
+      &lt;br /&gt;
+      &lt;input
+        type="submit"
+        id="submit-user-form"
+        name="submitUserForm"
+        value="Connexion"
+      /&gt;
+    &lt;/form&gt;
+
+    &lt;script&gt;
+      const form = document.querySelector("#user-form");
+
+      console.log("La 2e zone de texte a pour nom :");
+      console.log(form.elements[1].name);
+
+      console.log("La 1re zone de texte a pour valeur :");
+      console.log(form.elements["nom"].value);
+
+      const submitBtn = document.querySelector("#submit-user-form");
+      console.log("Le bouton de validation a pour identifiant unique :");
+      console.log(submitBtn.id);
+
+      console.log("Le bouton de validation a pour valeur :");
+      console.log(submitBtn.value);
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3 id="queryselector">Sélection avec <code>querySelector</code></h3>
+      <p>
+        Vous pouvez aussi utiliser la méthode
+        <code>querySelector</code>. Elle retourne le premier élément HTML qui
+        correspond au sélecteur CSS donné.
+      </p>
+      <p>
+        Par exemple, pour récupérer le premier élément qui porte la classe
+        <code>.example</code> :
+      </p>
+      <pre><code class="language-js">const elt1 = document.querySelector(".example");</code></pre>
+
+      <p>Pour récupérer l’élément <code>&lt;body&gt;</code> :</p>
+      <pre><code class="language-js">const content = document.querySelector("body");</code></pre>
+
+      <p>
+        La méthode <code>querySelector</code> utilise la même syntaxe que le
+        CSS pour sélectionner les éléments HTML. Pour récupérer plusieurs
+        éléments, on utilise <code>querySelectorAll</code> qui retourne une
+        liste (NodeList).
+      </p>
+
+      <h2 id="45">Les propriétés des objets</h2>
+      <p>
+        Une propriété décrit une caractéristique d'un objet : une couleur, une
+        taille, un texte, un état, etc.
+      </p>
+      <p>
+        L'objet « volant » d'une voiture pourrait par exemple avoir une
+        propriété <em>matière</em> (bois, cuir…).
+      </p>
+      <p>
+        L'objet « livre » pourrait avoir des propriétés comme l’auteur,
+        l’éditeur, le titre, l’ISBN, etc.
+      </p>
+      <p>
+        De la même façon, les objets JavaScript ont des propriétés. Pour un
+        bouton radio, une des propriétés importantes est
+        <code>checked</code>, qui indique s’il est sélectionné ou non.
+      </p>
+      <p>
+        En JavaScript, on accède aux propriétés avec la syntaxe
+        <code>objet.propriete</code>.
+      </p>
+      <blockquote>
+        <p><code>nomObjet.nomPropriete</code></p>
+      </blockquote>
+      <p>
+        Dans le cas du bouton radio « semaine », pour tester la propriété de
+        sélection, on écrira par exemple :
+      </p>
+      <pre><code class="language-js">const semaineRadio = document.querySelector('input[name="btnRadChoix"][value="semaine"]');
+console.log(semaineRadio.checked);</code></pre>
+
+      <h3 id="53">La propriété <code>innerHTML</code></h3>
+      <p>
+        La propriété <code>innerHTML</code> permet de récupérer ou modifier le
+        contenu HTML d’un élément.
+      </p>
+      <p>
+        Par exemple, pour modifier le contenu d’une balise
+        <code>&lt;div&gt;</code> :
+      </p>
+      <pre><code class="language-html">&lt;div id="message"&gt;
+  &lt;p&gt;Je suis un paragraphe dans une div.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  const div = document.querySelector("#message");
+  div.innerHTML = "&lt;h3&gt;Nouveau titre&lt;/h3&gt;&lt;p&gt;Nouveau contenu.&lt;/p&gt;";
+&lt;/script&gt;</code></pre>
+
+      <h3 id="57">La propriété <code>value</code></h3>
+      <p>
+        La propriété <code>value</code> permet de récupérer ou modifier le
+        contenu d'un champ de formulaire (input, textarea, select…).
+      </p>
+      <pre><code class="language-html">&lt;input type="text" id="txtBox" /&gt;
+
+&lt;script&gt;
+  const input = document.querySelector("#txtBox");
+  input.value = 53; // on change la valeur du champ texte
+&lt;/script&gt;</code></pre>
+
+      <h2 id="60">Le DOM</h2>
+      <p>
+        Le DOM (Document Object Model) est le modèle standard utilisé par les
+        navigateurs pour représenter et manipuler les documents HTML.
+      </p>
+      <p>
+        Les navigateurs offrent un ensemble de méthodes pour permettre à
+        JavaScript d'accéder aux éléments du DOM. JavaScript sert d'interface
+        vers les objets internes du navigateur.
+      </p>
+
+      <h2 id="65">Le modèle objet du navigateur</h2>
+      <p>
+        <img src="assets/img/js_12_img_7.png" alt="Modèle objet du navigateur" />
+      </p>
+      <ul>
+        <li>
+          <code>anchors</code> : tableau des ancres (balises
+          <code>&lt;a&gt;</code> avec un attribut <code>name</code>)
+        </li>
+        <li>
+          <code>links</code> : tableau des liens (balises
+          <code>&lt;a&gt;</code> et <code>&lt;area&gt;</code> qui ont un
+          attribut <code>href</code>)
+        </li>
+        <li>
+          <code>embeds</code> : tableau des objets multimédia (balises
+          <code>&lt;embed&gt;</code>)
+        </li>
+      </ul>
+
+      <h3 id="exemple-radio">Exemple : boutons radio et DOM</h3>
+      <p>Testez l'exemple ci-dessous :</p>
+      <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Exemple DOM&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;form name="frmChoix"&gt;
+      &lt;label&gt;
+        &lt;input
+          type="radio"
+          name="btnRadChoix"
+          value="semaine"
+          checked
+        /&gt;
+        Semaine
+      &lt;/label&gt;
+      &lt;br /&gt;
+
+      &lt;label&gt;
+        &lt;input
+          type="radio"
+          name="btnRadChoix"
+          value="week-end"
+        /&gt;
+        Week-end
+      &lt;/label&gt;
+      &lt;br /&gt;
+
+      &lt;button type="button" id="btn-choix"&gt;Choix&lt;/button&gt;
+      &lt;br /&gt;
+
+      &lt;input
+        id="txtBox1"
+        type="text"
+        name="txtChoix"
+        value=""
+      /&gt;
+    &lt;/form&gt;
+
+    &lt;script&gt;
+      const button = document.querySelector("#btn-choix");
+      const output = document.querySelector("#txtBox1");
+
+      button.addEventListener("click", () =&gt; {
+        const radios = document.querySelectorAll('input[name="btnRadChoix"]');
+        for (const radio of radios) {
+          if (radio.checked) {
+            output.value = radio.value;
+          }
+        }
+      });
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h2 id="70">L'objet <code>window</code></h2>
+      <p>
+        L'objet <code>window</code> représente la fenêtre (ou l’onglet) du
+        navigateur. Dans un script exécuté dans une page, l’objet global
+        <code>window</code> est implicite : <code>alert("Salut")</code> est
+        équivalent à <code>window.alert("Salut")</code>.
+      </p>
+
+      <h3 id="window-open">
+        Ouvrir une nouvelle fenêtre avec <code>window.open</code>
+      </h3>
+      <p>
+        On peut ouvrir une nouvelle fenêtre (ou un nouvel onglet) avec la
+        méthode
+        <code>window.open()</code> :
+      </p>
+      <pre><code class="language-js">const maFenetre = window.open("https://example.com", "maFenetre");</code></pre>
+      <p>
+        Historiquement, on pouvait passer un troisième paramètre pour suggérer
+        des caractéristiques d’affichage de la nouvelle fenêtre :
+      </p>
+      <pre><code class="language-js">const maFenetre = window.open(
+  "https://example.com",
+  "maFenetre",
+  "toolbar=no,location=no,scrollbars=yes,resizable=yes,width=800,height=600"
+);</code></pre>
+      <p>
+        Les navigateurs modernes ignorent souvent une grande partie de ces
+        options pour des raisons de sécurité et d’ergonomie. Il faut donc les
+        considérer comme <em>indicatives</em> et non garanties.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Caractéristique (chaîne)</th>
+            <th>Description (historique)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>toolbar=yes|no</code></td>
+            <td>Affichage de la barre d'outils du navigateur.</td>
+          </tr>
+          <tr>
+            <td><code>location=yes|no</code></td>
+            <td>Affichage du champ d'adresse (barre d’URL).</td>
+          </tr>
+          <tr>
+            <td><code>directories=yes|no</code></td>
+            <td>Affichage de certains boutons d'accès rapide (obsolète).</td>
+          </tr>
+          <tr>
+            <td><code>status=yes|no</code></td>
+            <td>Affichage de la barre d'état (souvent ignoré).</td>
+          </tr>
+          <tr>
+            <td><code>menubar=yes|no</code></td>
+            <td>Affichage de la barre de menus.</td>
+          </tr>
+          <tr>
+            <td><code>scrollbars=yes|no</code></td>
+            <td>Affichage des barres de défilement.</td>
+          </tr>
+          <tr>
+            <td><code>resizable=yes|no</code></td>
+            <td>Autorise ou non le redimensionnement de la fenêtre.</td>
+          </tr>
+          <tr>
+            <td><code>width=x</code> (pixels)</td>
+            <td>Largeur de la fenêtre demandée.</td>
+          </tr>
+          <tr>
+            <td><code>height=y</code> (pixels)</td>
+            <td>Hauteur de la fenêtre demandée.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>Remarque :</strong> ces paramètres sont <em>options</em>, pas
+        des garanties. Pour les interfaces modernes, on privilégie des pages
+        responsives plutôt que la multiplication de fenêtres.
+      </p>
+
+      <p>
+        On peut fermer une fenêtre ouverte par script avec la méthode
+        <code>close()</code> :
+      </p>
+      <pre><code class="language-js">maFenetre.close();</code></pre>
+
+      <h3 id="window-proprietes">
+        Quelques propriétés et méthodes de <code>window</code>
+      </h3>
+      <p>
+        Voici une sélection de propriétés et méthodes de l’objet
+        <code>window</code> qu’il est utile de connaître. Certaines autres
+        existent mais sont obsolètes ou très peu utilisées.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété / Méthode</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>closed</code></td>
+            <td>
+              Propriété booléenne indiquant si la fenêtre (ouverte par script)
+              est fermée.
+            </td>
+          </tr>
+          <tr>
+            <td><code>opener</code></td>
+            <td>
+              Référence à la fenêtre qui a ouvert la fenêtre courante (le «
+              parent »).
+            </td>
+          </tr>
+          <tr>
+            <td><code>self</code></td>
+            <td>
+              Référence à la fenêtre courante (équivalent de
+              <code>window</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>top</code></td>
+            <td>
+              Référence à la fenêtre au sommet de la hiérarchie (utile avec
+              les iframes).
+            </td>
+          </tr>
+          <tr>
+            <td><code>alert(message)</code></td>
+            <td>Affiche une boîte de dialogue d’alerte.</td>
+          </tr>
+          <tr>
+            <td><code>confirm(message)</code></td>
+            <td>
+              Affiche une boîte de confirmation (OK / Annuler) et retourne
+              <code>true</code> ou <code>false</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>prompt(message[, defaut])</code></td>
+            <td>
+              Affiche une boîte de saisie et retourne la chaîne saisie, ou
+              <code>null</code> si l’utilisateur annule.
+            </td>
+          </tr>
+          <tr>
+            <td><code>print()</code></td>
+            <td>Lance l’impression de la page en cours.</td>
+          </tr>
+          <tr>
+            <td><code>focus()</code></td>
+            <td>
+              Demande au navigateur de donner le focus à la fenêtre courante.
+            </td>
+          </tr>
+          <tr>
+            <td><code>blur()</code></td>
+            <td>Retire le focus de la fenêtre courante.</td>
+          </tr>
+          <tr>
+            <td><code>moveTo(x, y)</code></td>
+            <td>
+              Tente de déplacer la fenêtre à la position (x, y).
+              <br /><em>Souvent restreint ou ignoré pour des raisons de sécurité.</em>
+            </td>
+          </tr>
+          <tr>
+            <td><code>resizeTo(x, y)</code></td>
+            <td>
+              Tente de redimensionner la fenêtre.
+              <br /><em>Souvent restreint ou ignoré.</em>
+            </td>
+          </tr>
+          <tr>
+            <td><code>scrollTo(x, y)</code></td>
+            <td>
+              Fait défiler le contenu de la page jusqu’à la position (x, y).
+            </td>
+          </tr>
+          <tr>
+            <td><code>setTimeout(fonction, délai)</code></td>
+            <td>Appelle une fonction après un délai (en millisecondes).</td>
+          </tr>
+          <tr>
+            <td><code>clearTimeout(id)</code></td>
+            <td>Annule un temporisateur créé par <code>setTimeout</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="86">Une minuterie</h3>
+      <p>
+        L'objet <code>window</code> possède la méthode
+        <code>setTimeout</code> qui permet de déclencher une fonction après un
+        certain délai.
+      </p>
+      <p>Exemple :</p>
+      <pre><code class="language-js">function demarrer() {
+  console.log("Cinq secondes se sont écoulées.");
+}
+
+const idCompteur = setTimeout(demarrer, 5000); // 5000 ms = 5 secondes
+
+// Si besoin, on peut annuler avant la fin :
+clearTimeout(idCompteur);</code></pre>
+      <p>
+        Dans le code moderne, on passe une fonction (ou une fonction fléchée)
+        à <code>setTimeout</code>, plutôt qu’une chaîne de caractères.
+      </p>
+
+      <h2 id="94">L'objet <code>navigator</code></h2>
+      <p>
+        L'objet <code>navigator</code> donne des informations sur le
+        navigateur (ou « user agent ») : nom, version, système, etc.
+      </p>
+      <p>
+        Ces informations sont surtout utiles pour de la détection de
+        plateforme ou pour des statistiques, mais il est déconseillé de
+        construire toute la logique de votre application uniquement sur
+        l’identification du navigateur.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>appCodeName</code></td>
+            <td>Nom de code du navigateur.</td>
+          </tr>
+          <tr>
+            <td><code>appName</code></td>
+            <td>Nom (marque) du navigateur.</td>
+          </tr>
+          <tr>
+            <td><code>appVersion</code></td>
+            <td>
+              Informations sur la version, le système d’exploitation, etc.
+            </td>
+          </tr>
+          <tr>
+            <td><code>userAgent</code></td>
+            <td>
+              Chaîne complète envoyée dans l’en-tête HTTP
+              <code>User-Agent</code>.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Exemple d’affichage d’informations dans la console :</p>
+      <pre><code class="language-js">console.log("Code name :", navigator.appCodeName);
+console.log("Nom du navigateur :", navigator.appName);
+console.log("Version / OS :", navigator.appVersion);
+console.log("User-Agent :", navigator.userAgent);</code></pre>
+
+      <p>
+        Exemple (simplifié) pour tester si la chaîne contient « Win »
+        (Windows) :
+      </p>
+      <pre><code class="language-js">if (navigator.appVersion.includes("Win")) {
+  console.log("Vous semblez utiliser Windows.");
+}</code></pre>
+      <p>
+        En pratique, on préfère aujourd’hui la « détection de fonctionnalités
+        » (feature detection) plutôt que la détection du navigateur.
+      </p>
+
+      <h2 id="104">L'objet <code>location</code></h2>
+      <p>
+        L'objet <code>location</code> fournit des informations sur l’URL de la
+        page en cours de visualisation et permet de changer de page.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Propriété / Méthode</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>href</code></td>
+            <td>URL complète de la page.</td>
+          </tr>
+          <tr>
+            <td><code>hostname</code></td>
+            <td>Nom d’hôte (ex : <code>www.example.com</code>).</td>
+          </tr>
+          <tr>
+            <td><code>pathname</code></td>
+            <td>
+              Chemin de la ressource (ex : <code>/cours/dom.html</code>).
+            </td>
+          </tr>
+          <tr>
+            <td><code>protocol</code></td>
+            <td>Protocole (ex : <code>https:</code>).</td>
+          </tr>
+          <tr>
+            <td><code>reload()</code></td>
+            <td>Recharge la page courante.</td>
+          </tr>
+          <tr>
+            <td><code>replace(url)</code></td>
+            <td>
+              Remplace la page actuelle par une nouvelle, sans l’ajouter dans
+              l’historique.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Exemples :</p>
+      <pre><code class="language-js">console.log(location.href);
+console.log(location.hostname);
+console.log(location.pathname);
+
+// Recharger la page
+// location.reload();
+
+// Aller vers une autre page
+// location.href = "https://www.example.com";</code></pre>
+
+      <h2 id="108">L'objet <code>history</code></h2>
+      <p>
+        L'objet <code>history</code> permet de manipuler l’historique des
+        pages visitées dans l’onglet courant.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Méthode</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>back()</code></td>
+            <td>
+              Charge la page précédente (équivalent du bouton « Retour »).
+            </td>
+          </tr>
+          <tr>
+            <td><code>forward()</code></td>
+            <td>
+              Charge la page suivante (équivalent du bouton « Suivant »).
+            </td>
+          </tr>
+          <tr>
+            <td><code>go(x)</code></td>
+            <td>
+              Va à la page située à l’index <code>x</code> par rapport à la
+              page actuelle (<code>-1</code> = page précédente,
+              <code>1</code> = page suivante…).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pre><code class="language-js">// history.back();
+// history.forward();
+// history.go(-1); // équivaut à history.back();</code></pre>
+
+      <h2 id="111">L'objet <code>screen</code></h2>
+      <p>
+        L'objet <code>screen</code> fournit des informations sur l'écran de
+        l’utilisateur (taille, profondeur de couleur, etc.).
+      </p>
+      <p>Quelques propriétés utiles :</p>
+      <ul>
+        <li><code>width</code> : largeur totale de l’écran.</li>
+        <li><code>height</code> : hauteur totale de l’écran.</li>
+        <li>
+          <code>availWidth</code> : largeur disponible (hors barres système).
+        </li>
+        <li>
+          <code>availHeight</code> : hauteur disponible (hors barres système).
+        </li>
+        <li><code>colorDepth</code> : profondeur de couleur (en bits).</li>
+      </ul>
+      <pre><code class="language-js">console.log("Largeur écran :", screen.width);
+console.log("Hauteur écran :", screen.height);
+console.log("Largeur disponible :", screen.availWidth);
+console.log("Hauteur disponible :", screen.availHeight);
+console.log("Profondeur de couleur :", screen.colorDepth);</code></pre>
+    </div>
+  </div>
+
+  <script>
+    hljs.highlightAll();
+  </script>
+  <script>
+    document.title = document.querySelector("h1").textContent;
+  </script>
+</body>
+
+</html>
