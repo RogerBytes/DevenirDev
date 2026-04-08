@@ -10,18 +10,24 @@ Rechercher les icônes sur
 [icones.JS Collections](https://icones.js.org/settings)
 [icon-sets.iconify](https://icon-sets.iconify.design)
 
-## Installation
+## Installation via node
+
+Basé sur [la page de l'outil](https://iconify.design/docs/libraries/utils/).
 
 A la racine du projet, lancer
 
 ```bash
-npm install @iconify/iconify
+npm install @iconify/utils --save
 ```
 
 Ne pas oublier de mettre le script dans le head
 
 ```html
-<script src="./node_modules/@iconify/iconify/dist/iconify.min.js" defer type="module"></script>
+<script
+  src="./node_modules/@iconify/iconify/dist/iconify.min.js"
+  defer
+  type="module"
+></script>
 ```
 
 ## Utilisation dans le HTML
@@ -33,7 +39,11 @@ Par exemple pour cette icône :
 Insérez `eva:people-outline` dans l'attribut `data-icon`, comme ceci :
 
 ```html
-<i class="iconify" data-icon="eva:people-outline" style="font-size: 1.9em; color: #d9d9d9"></i>
+<i
+  class="iconify"
+  data-icon="eva:people-outline"
+  style="font-size: 1.9em; color: #d9d9d9"
+></i>
 ```
 
 Ici c'est dans un `<i>` (mais ça marche avec n'importe quel type de balise), avec pour le style une taille (1em par défaut) et couleur personnalisées.
