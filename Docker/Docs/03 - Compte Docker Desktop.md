@@ -80,17 +80,16 @@ Maintenant il ne vous reste plus qu'à cliquer sur le bouton "Sign in", il vous 
 
 ## Diminuer les demandes de mdm de gnupg
 
-Pour lui mettre une durée de 8 heures.
+Avec ceci, la clef reste active tant qu'on ne verrouille ou ne déconnecte pas.
 
 ```bash
-echo -e "default-cache-ttl 28800\nmax-cache-ttl 28800" > ~/.gnupg/gpg-agent.conf
+echo -e "default-cache-ttl 3600\nmax-cache-ttl 34560000" > ~/.gnupg/gpg-agent.conf
 ```
 
-Les modifications seront prises en compte au redémarrage.
-
-Sinon pour éviter d'attendre un reboot pour appliquer les changements :
+On relance le service avec
 
 ```bash
-gpgconf --kill gpg-agent && gpgconf --launch gpg-agent
+gpg-connect-agent reloadagent /bye
 ```
 
+On remet son mdp, les modifications sont actives.
