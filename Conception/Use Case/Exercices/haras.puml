@@ -1,0 +1,36 @@
+@startuml haras-vente
+skinparam PackageStyle rectangle
+
+actor Client as CLI
+actor Éleveur as ELV
+
+package "Haras" {
+  (Préparation Achat cheval) as ACH
+  (Vérifier maternité) as MAT
+  (Vérifier si poulain) as POUL
+  (Vérifier état vaccinal) as VAC
+  (Vérifier caractère du cheval) as CAR
+  (Vérifier robe du cheval) as ROB
+  (Affiliation du cheval) as AFF
+  (acheter jument) as JUM
+  (acheter étalon) as ETA
+}
+
+CLI -> ACH
+ELV -> AFF
+
+ACH ..> VAC : includes
+
+
+AFF ..> ROB : extends
+AFF ..> CAR : extends
+
+ACH <|-- ETA
+ACH <|-- JUM
+
+JUM ..> MAT : includes
+POUL ..> JUM : extends
+
+AFF ..> ACH : extends
+
+@enduml

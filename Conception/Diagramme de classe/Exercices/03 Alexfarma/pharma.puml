@@ -1,0 +1,25 @@
+@startuml pharma
+title Alex Pharma
+
+class Medicine {
+    - name : string
+    - description : string
+    - latin_name : string
+    - pack_size : int
+}
+
+class Contraindication {
+    - name : string
+    - description : string
+    - severity : int
+}
+
+class Ingredient {
+    - unique_code : string
+    - name : string
+}
+
+Medicine "1" *--> "1..*" Contraindication : content
+Medicine "0..*" *--> "1..*" Ingredient : content
+
+@enduml

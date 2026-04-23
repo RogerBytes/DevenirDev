@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant SDGD as Système de Gestion des Stocks
+  participant CD as Centre d'autorisation
+  participant TLV as Traiter la vente
+  participant EA as Enregistrer article
+  participant GLC as Gérer les coupons
+  participant ELP as Effectuer le paiement
+  participant PL as Paiement Liquide
+  participant PC as Paiement Chèque
+  participant PC1 as Paiement Carte
+  participant ILC as Initialiser la caisse
+  participant MÀJL as Mettre à jour les stocks
+  C->TLV:
+  R->ILC:
+  TLV->EA: <<include>>
+  TLV->ELP: <<include>>
+  GLC->TLV: <<extend>>
+  PC1->CD:
+  TLV->SDGD: après paiement

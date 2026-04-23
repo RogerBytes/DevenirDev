@@ -1,0 +1,19 @@
+@startuml station-essence
+skinparam PackageStyle rectangle
+
+actor Client
+actor Pompiste
+actor Reparateur
+Pompiste <-- Reparateur
+
+package "Station-service" {
+  (Se servir)
+  (Remplir les cuves)
+  (Réparer les pompes)
+}
+
+Client --> (Se servir)
+Pompiste --> (Remplir les cuves)
+Reparateur --> (Réparer les pompes)
+
+@enduml

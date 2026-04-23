@@ -1,0 +1,39 @@
+# Test borne en mermaid
+
+```mermaid
+flowchart LR
+
+CON[Conducteur]
+TEC[Technicien]
+SYS[Système]
+
+subgraph Borne
+
+USE((Utiliser la borne))
+CHRG((Lancer recharge))
+CMPL((Vérifier état de charge))
+AUTH((S'authentifier))
+MNT((Maintenir le système))
+CHK((Relever les compteurs))
+DIAG((Diagnostiquer le système))
+SMS((Envoyer un SMS))
+AUTH_VAL((Valider auth monétique))
+end
+
+CON --> USE
+CON --> AUTH
+TEC --> MNT
+TEC --> AUTH
+SYS --> AUTH_VAL
+SYS --> SMS
+
+USE --> AUTH
+AUTH --> AUTH_VAL
+
+USE -.-> CHRG
+USE -.-> CMPL
+
+MNT -.-> CHK
+MNT -.-> DIAG
+```
+

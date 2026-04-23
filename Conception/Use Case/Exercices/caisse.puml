@@ -1,0 +1,76 @@
+@startuml caisse
+skinparam PackageStyle rectangle
+skinparam actorStyle awesome
+left to right direction
+
+:Client: as CUS
+:Caissier: as SEL
+:Système de caisse: as SYS
+:Gestionnaire de stock: as STKMAN
+:Responsable de magasin: as MAN
+
+package "Caisse" {
+  (Facturer) as BILL
+  (Ajouter au panier) as ADD
+  (Afficher prix et libellé) as SHOW
+  (Déclarer que le panier est complet) as ADD_END
+  (Donner la somme totale du panier) as SUM
+  (Enregistrer la vente) as SAVE_SALE
+  (Imprimer le ticket) as PRINT_RECPT
+  (Donner le ticket au client) as GIVE_RECPT
+  (Enregistrer l'identité du client) as SAVE_CUS_INFO
+
+  (Payer) as PAY
+  (Payer en liquide) as CASHPAY
+  (Payer en chèque) as CHEQUEPAY
+  (Payer en CB) as CARDPAY
+  (Imprimer le chèque) as PRINT_CHQ
+  (Valider le paiement via le terminal CB) as POS_CHECK
+  (Utiliser un bon de réduction) as DISCOUNT
+
+  (Gérer stocks)  as STOCK_OP
+  (Envoyer les infos de vente au gestionnaire de stock) as SEND_TO_STKMAN
+  (Calculer les stocks) as CALC_STOCK
+  (Envoyer les stocks au système) as SEND_TO_SYS
+
+  (Initialiser les caisses) as INIT_CHECKREG
+}
+
+SEL -> BILL
+SYS -> BILL
+
+CUS -> PAY
+SYS -> PAY
+
+STKMAN -> STOCK_OP
+SYS -> STOCK_OP
+
+MAN -> INIT_CHECKREG
+
+BILL ..> SHOW : extends
+BILL ..> ADD : includes
+BILL ..> ADD_END : includes
+BILL ..> SUM : includes
+BILL ..> SAVE_SALE : includes
+BILL ..> PRINT_RECPT : includes
+BILL ..> GIVE_RECPT : includes
+BILL ..> SAVE_CUS_INFO : includes
+
+CASHPAY <|-- PAY
+CHEQUEPAY <|-- PAY
+CARDPAY <|-- PAY
+
+
+PRINT_RECPT ..> PAY : includes
+GIVE_RECPT ..> PAY : includes
+
+CHEQUEPAY ..> PRINT_CHQ : includes
+CARDPAY ..> POS_CHECK : includes
+PAY ..> DISCOUNT : extends
+
+
+STOCK_OP ..> SEND_TO_STKMAN : includes
+STOCK_OP ..> CALC_STOCK : includes
+STOCK_OP ..> SEND_TO_SYS : includes
+
+@enduml

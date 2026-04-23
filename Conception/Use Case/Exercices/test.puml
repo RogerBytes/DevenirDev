@@ -1,0 +1,5 @@
+@startuml diagramme-d-etat
+[*] --> Idle
+Idle --> Processing : Nouveau document
+Processing --> Idle : Terminé
+@enduml

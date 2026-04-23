@@ -1,0 +1,13 @@
+@startuml approche
+title Petite Approche pratique
+class Book {
+    # title : string
+    # author : string
+}
+class Library {
+    # name : string
+}
+
+Library --> Book : content
+
+@enduml

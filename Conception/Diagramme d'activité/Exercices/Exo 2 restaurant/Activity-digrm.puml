@@ -1,0 +1,63 @@
+@startuml dinner
+Title Dinner
+
+|#LightBlue|Customer|
+:Enter the restaurant;
+
+|#LightGreen|Server|
+:Welcome Customer;
+:Seat Customer;
+:Give menu;
+
+repeat
+  :Ask for order;
+  |Customer|
+repeat while (order chosen?) is (no)
+
+|Server|
+:Take order;
+:Send order to Kitchen;
+
+fork
+  if (drink in order?) then (yes)
+    :Bring drink;
+  endif
+  :Bring bread & cutlery;
+fork again
+  |#LightSalmon|Kitchen|
+  :Prepare order;
+end fork
+
+|Kitchen|
+:Notify order is ready;
+
+|Server|
+:Bring order;
+
+|Customer|
+
+
+while (needs more cooking?) is (yes)
+  |Server|
+  :Bring order back to kitchen;
+  |Kitchen|
+  :Cook a bit longer;
+  :Notify order is ready;
+  |Server|
+  :Bring order;
+endwhile
+
+|Customer|
+:Eat;
+
+|Server|
+:Bring bill;
+
+|Customer|
+:Pay the bill;
+:Quit the dinner;
+
+|Server|
+:Clean the table;
+
+@enduml

@@ -1,0 +1,71 @@
+@startuml hotel
+title Hotel Deluxe
+
+class Hotel {
+    - name : string
+    - address : string
+    + getNbRooms(): int
+    + getTotalRentBetween(start: Date, end: Date): double
+
+}
+
+class Room {
+    - bed : int
+    - price : float
+    - number : int
+    + getRent(day: Date): double
+}
+
+class Bathroom {
+    - type : Bathtype
+}
+
+enum Bathtype {
+    shower
+    bathtub
+}
+
+enum Role {
+    director
+    hotel_worker
+}
+
+abstract class Human {
+    # firstname : string
+    # lastname : string
+    # age : int
+}
+
+class Employee extends Human {
+    - role : Role
+    + invoice()
+}
+
+class Customer extends Human {
+    + is_adult(): boolean
+}
+
+class Bill {
+    - customer_id : int
+    - occupant : int
+    - total : float
+}
+
+class Occupy {
+    - startDate: date
+    - endDate: date
+}
+
+Bathroom --> Bathtype
+Employee --> Role
+Room "1" *--> "1" Bathroom : content
+
+Hotel "1" *--> "2..*" Room : content
+Hotel "1" o--> "2..*" Employee : employ
+Employee "1" --> "1..*" Employee : manages
+Employee "1" --> "0..*" Bill : generates
+Bill "0..*" --> "1" Customer : is issued to
+(Room, Customer) <.. Occupy
+
+
+@enduml

@@ -1,0 +1,20 @@
+@startuml animal
+title Animals
+
+class Animal {
+    # age : int
+    # manger(): void
+}
+class Cat {
+    + name : string
+    + meow(): void
+}
+class Dog {
+    + name : string
+    + bark(): void
+}
+
+Animal <|-- Cat
+Animal <|-- Dog
+
+@enduml

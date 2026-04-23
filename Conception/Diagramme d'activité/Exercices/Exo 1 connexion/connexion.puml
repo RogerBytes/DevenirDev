@@ -1,0 +1,51 @@
+@startuml Connexion
+
+|Client|
+start
+:Arrive page de connexion;
+
+|Telnet|
+repeat
+  :Demande de mot de passe;
+
+  |Client|
+  :Saisi mot de passe;
+
+  |Telnet|
+  :Vérifie mot de passe;
+
+  if (mot de passe valide ?) then (oui)
+    :Connexion réussie;
+    :Ouverture du terminal;
+
+    |Client|
+    repeat
+      :Saisi une commande;
+
+      |Telnet|
+      :Analyse la commande;
+
+      |Serveur|
+      :Exécute la commande;
+
+      |Telnet|
+
+    repeat while (commande != exit)
+    :Affiche "Sortie du programme";
+
+    stop
+  else (non)
+    |Serveur|
+    :$tentatives ++;
+
+  endif
+
+repeat while (tentatives < 3) is (oui)
+
+|Telnet|
+:IP bloquée;
+:Message "Vous êtes bloqué";
+
+end
+
+@enduml

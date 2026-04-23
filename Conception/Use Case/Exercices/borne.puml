@@ -1,0 +1,41 @@
+@startuml borne-recharge
+skinparam PackageStyle rectangle
+skinparam actorStyle awesome
+
+:Conducteur: as CON
+:Technicien: as TEC
+:Système: as SYS
+
+package "Borne" {
+  (Utiliser la borne) as USE
+  (Lancer recharge) as CHRG
+  (Vérifier état de charge) as CMPL
+
+  (s'authentifier) as AUTH
+
+  (Maintenir le système) as MNT
+  (Relever les compteurs) as CHK
+  (Diagnostiquer le système) as DIAG
+
+  (Envoyer un SMS) as SMS
+
+  (Valider auth avec serveur monétique) as AUTH_VAL
+}
+
+CON -> USE
+CON -> AUTH
+TEC -> MNT
+TEC -> AUTH
+SYS -> AUTH_VAL
+SYS -> SMS
+
+USE ..> AUTH : includes
+AUTH ..> AUTH_VAL : includes
+
+USE ..> CHRG : extends
+USE ..> CMPL : extends
+
+MNT ..> CHK : extends
+MNT ..> DIAG : extends
+
+@enduml

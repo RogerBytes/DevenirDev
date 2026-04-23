@@ -1,0 +1,9 @@
+sequenceDiagram
+actor Caissier as C
+actor Responsable as R
+actor "Systeme de Gestion des Stocks" as SGS
+actor "Centre d'autorisation" as CA
+C ->> UC1
+R ->> UC5
+UC4c ->> CA
+UC1 ->> SGS : après paiement

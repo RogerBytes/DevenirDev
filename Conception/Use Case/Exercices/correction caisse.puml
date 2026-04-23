@@ -1,0 +1,35 @@
+@startuml caisse
+left to right direction
+
+actor Caissier as C
+actor Responsable as R
+actor "Système de Gestion des Stocks" as SGS
+actor "Centre d'autorisation" as CA
+
+rectangle "Système de Caisse Enregistreuse" {
+    usecase "Traiter la vente" as UC1
+    usecase "Enregistrer article" as UC2
+    usecase "Gérer les coupons" as UC3
+    usecase "Effectuer le paiement" as UC4
+    usecase "Paiement Liquide" as UC4a
+    usecase "Paiement Chèque" as UC4b
+    usecase "Paiement Carte" as UC4c
+    usecase "Initialiser la caisse" as UC5
+    usecase "Mettre à jour les stocks" as UC6
+}
+
+C --> UC1
+R --> UC5
+
+UC1 ..> UC2 : <<include>>
+UC1 ..> UC4 : <<include>>
+UC3 ..> UC1 : <<extend>>
+
+UC4a --|> UC4
+UC4b --|> UC4
+UC4c --|> UC4
+
+UC4c --> CA
+UC1 --> SGS : après paiement
+
+@enduml
