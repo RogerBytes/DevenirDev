@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- background-color: #d9d9d9; -->
+    <title>Dictionnaire Fil Rouge</title>
+
+    <style>
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            border-style: ridge;
+            border-width: 5px;
+            border-color: #801f1f;
+
+        }
+
+        th {
+            border: 2px solid #095484;
+        }
+
+        td {
+            border: 2px groove #1c87c9;
+        }
+
+        .trEntete {
+            background-color: #BDC4D6;
+        }
+
+        .trAdresse {
+            background-color: #CCC266;
+        }
+
+        .trFournisseur {
+            background-color: #9DCB62;
+        }
+
+        .trService {
+            background-color: #66CC7E;
+        }
+
+        .trCommercial {
+            background-color: #66CCB6;
+        }
+
+        .trGestion_client {
+            background-color: #66B6CC;
+        }
+
+        .trClient {
+            background-color: #668BCC;
+        }
+
+        .trAdministre {
+            background-color: #7066CC;
+        }
+
+        .trProduit {
+            background-color: #9B66CC;
+        }
+
+        .trRubrique {
+            background-color: #AD66CC;
+        }
+
+        .trDetail_commande {
+            background-color: #CB62C5;
+        }
+
+        .trCommande {
+            background-color: #CB62A4;
+        }
+
+        .trBl {
+            background-color: #CB628A;
+        }
+
+        .trFacture {
+            background-color: #C14476;
+        }
+
+        #montitre {
+            background-color: #9fc6f3;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: ridge;
+        }
+    </style>
+
+</head>
+
+<body>
+    <br>
+    <center>
+        <h1 id="montitre">Dictionnaire de données <b>Green Village</b></h1><br>
+    </center>
+    <table>
+        <tbody>
+            <tr class="trEntete">
+                <th>&ensp;Nom Conceptuel&ensp;</th>
+                <th>&ensp;Code&ensp;</th>
+                <th>&ensp;Descriptif&ensp;</th>
+                <th>&ensp;Type,longueur&ensp;</th>
+                <th>&ensp;Table&ensp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trAdresse">
+                <th>&nbsp; Id_Adresse &nbsp;</th>
+                <th>&nbsp; adr_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; adresse &nbsp;</th>
+            </tr>
+            <tr class="trAdresse">
+                <th>&nbsp; Adresse &nbsp;</th>
+                <th>&nbsp; adr_adresse &nbsp;</th>
+                <th>&nbsp; adresse postale, rue, lieu-dit etc... &nbsp;</th>
+                <th>&nbsp; VARCHAR(200) &nbsp;</th>
+                <th>&nbsp; adresse &nbsp;</th>
+            </tr>
+            <tr class="trAdresse">
+                <th>&nbsp; Code postal &nbsp;</th>
+                <th>&nbsp; adr_cp &nbsp;</th>
+                <th>&nbsp; code postal &nbsp;</th>
+                <th>&nbsp; VARCHAR(5) &nbsp;</th>
+                <th>&nbsp; adresse &nbsp;</th>
+            </tr>
+            <tr class="trAdresse">
+                <th>&nbsp; Ville &nbsp;</th>
+                <th>&nbsp; adr_ville &nbsp;</th>
+                <th>&nbsp; ville &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; adresse &nbsp;</th>
+            </tr>
+            <tr class="trAdresse">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; fourni_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur fournisseur &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; adresse &nbsp;</th>
+            </tr>
+            <tr class="trAdresse">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; cli_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur client &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; adresse &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trFournisseur">
+                <th>&nbsp; Id_Fournisseur &nbsp;</th>
+                <th>&nbsp; fourni_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <tr class="trFournisseur">
+                <th>&nbsp; Nom &nbsp;</th>
+                <th>&nbsp; fourni_nom &nbsp;</th>
+                <th>&nbsp; nom du fournisseur &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <tr class="trFournisseur">
+                <th>&nbsp; Telephone &nbsp;</th>
+                <th>&nbsp; fourni_telephone &nbsp;</th>
+                <th>&nbsp; téléphone du fournisseur &nbsp;</th>
+                <th>&nbsp; VARCHAR(20) &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <tr class="trFournisseur">
+                <th>&nbsp; Email &nbsp;</th>
+                <th>&nbsp; fourni_mail &nbsp;</th>
+                <th>&nbsp; mail du fournisseur &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <tr class="trFournisseur">
+                <th>&nbsp; Constructeur &nbsp;</th>
+                <th>&nbsp; fourni_constructeur &nbsp;</th>
+                <th>&nbsp; le fournisseur est-il constructeur &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <tr class="trFournisseur">
+                <th>&nbsp; Importateur &nbsp;</th>
+                <th>&nbsp; fourni_importateur &nbsp;</th>
+                <th>&nbsp; le fournisseur est-il importateur &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <tr class="trFournisseur">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; serv_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur service &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; fournisseur &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trService">
+                <th>&nbsp; Id_Service &nbsp;</th>
+                <th>&nbsp; serv_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; service &nbsp;</th>
+            </tr>
+            <tr class="trService">
+                <th>&nbsp; Nom &nbsp;</th>
+                <th>&nbsp; serv_nom &nbsp;</th>
+                <th>&nbsp; nom du service &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; service &nbsp;</th>
+            </tr>
+            <tr class="trService">
+                <th>&nbsp; Telephone &nbsp;</th>
+                <th>&nbsp; serv_telephone &nbsp;</th>
+                <th>&nbsp; téléphone du service &nbsp;</th>
+                <th>&nbsp; VARCHAR(20) &nbsp;</th>
+                <th>&nbsp; service &nbsp;</th>
+            </tr>
+            <tr class="trService">
+                <th>&nbsp; Email &nbsp;</th>
+                <th>&nbsp; serv_mail &nbsp;</th>
+                <th>&nbsp; mail du service &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; service &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trCommercial">
+                <th>&nbsp; Id_Commercial &nbsp;</th>
+                <th>&nbsp; com_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; commercial &nbsp;</th>
+            </tr>
+            <tr class="trCommercial">
+                <th>&nbsp; Nom &nbsp;</th>
+                <th>&nbsp; com_nom &nbsp;</th>
+                <th>&nbsp; nom du commercial &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; commercial &nbsp;</th>
+            </tr>
+            <tr class="trCommercial">
+                <th>&nbsp; Telephone &nbsp;</th>
+                <th>&nbsp; com_telephone &nbsp;</th>
+                <th>&nbsp; téléphone du commercial &nbsp;</th>
+                <th>&nbsp; VARCHAR(20) &nbsp;</th>
+                <th>&nbsp; commercial &nbsp;</th>
+            </tr>
+            <tr class="trCommercial">
+                <th>&nbsp; Email &nbsp;</th>
+                <th>&nbsp; com_mail &nbsp;</th>
+                <th>&nbsp; mail du commercial &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; commercial &nbsp;</th>
+            </tr>
+            <tr class="trCommercial">
+                <th>&nbsp; Gestion_Particulier &nbsp;</th>
+                <th>&nbsp; com_particulier &nbsp;</th>
+                <th>&nbsp; le commercial gère-t-il les particuliers &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commercial &nbsp;</th>
+            </tr>
+            <tr class="trCommercial">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; serv_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur service &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; commercial &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trGestion_client">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; cli_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur client &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; gestion_client &nbsp;</th>
+            </tr>
+            <tr class="trGestion_client">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; com_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur commercial &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; gestion_client &nbsp;</th>
+            </tr>
+            <tr class="trGestion_client">
+                <th>&nbsp; date_evenement &nbsp;</th>
+                <th>&nbsp; gest_event_date &nbsp;</th>
+                <th>&nbsp; date d'un échange client-commercial &nbsp;</th>
+                <th>&nbsp; DATE &nbsp;</th>
+                <th>&nbsp; gestion_client &nbsp;</th>
+            </tr>
+            <tr class="trGestion_client">
+                <th>&nbsp; sujet &nbsp;</th>
+                <th>&nbsp; gest_event_sujet &nbsp;</th>
+                <th>&nbsp; initulé de l'échange &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; gestion_client &nbsp;</th>
+            </tr>
+            <tr class="trGestion_client">
+                <th>&nbsp; description &nbsp;</th>
+                <th>&nbsp; gest_event_description &nbsp;</th>
+                <th>&nbsp; description de l'échange &nbsp;</th>
+                <th>&nbsp; VARCHAR(255) &nbsp;</th>
+                <th>&nbsp; gestion_client &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trClient">
+                <th>&nbsp; Id_Client &nbsp;</th>
+                <th>&nbsp; cli_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; client &nbsp;</th>
+            </tr>
+            <tr class="trClient">
+                <th>&nbsp; Nom &nbsp;</th>
+                <th>&nbsp; cli_nom &nbsp;</th>
+                <th>&nbsp; nom du client &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; client &nbsp;</th>
+            </tr>
+            <tr class="trClient">
+                <th>&nbsp; Siret &nbsp;</th>
+                <th>&nbsp; cli_siret &nbsp;</th>
+                <th>&nbsp; siret du client &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; client &nbsp;</th>
+            </tr>
+            <tr class="trClient">
+                <th>&nbsp; Reference &nbsp;</th>
+                <th>&nbsp; cli_reference &nbsp;</th>
+                <th>&nbsp; référence du client &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; client &nbsp;</th>
+            </tr>
+            <tr class="trClient">
+                <th>&nbsp; Coefficient &nbsp;</th>
+                <th>&nbsp; cli_coefficient &nbsp;</th>
+                <th>&nbsp; coefficient du client &nbsp;</th>
+                <th>&nbsp; REAL &nbsp;</th>
+                <th>&nbsp; client &nbsp;</th>
+            </tr>
+            <tr class="trClient">
+                <th>&nbsp; Reduction &nbsp;</th>
+                <th>&nbsp; cli_reduction &nbsp;</th>
+                <th>&nbsp; réduction du client &nbsp;</th>
+                <th>&nbsp; REAL &nbsp;</th>
+                <th>&nbsp; client &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trAdministre">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; prod_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur produit &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; administre &nbsp;</th>
+            </tr>
+            <tr class="trAdministre">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; serv_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur service &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; administre &nbsp;</th>
+            </tr>
+            <tr class="trAdministre">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; rubriq_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur  rubrique &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; administre &nbsp;</th>
+            </tr>
+            <tr class="trAdministre">
+                <th>&nbsp; Droits_Admin &nbsp;</th>
+                <th>&nbsp; admin_droit &nbsp;</th>
+                <th>&nbsp; le service possède-t-il des droits d'admin &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; administre &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trProduit">
+                <th>&nbsp; Id_Produit &nbsp;</th>
+                <th>&nbsp; prod_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <tr class="trProduit">
+                <th>&nbsp; Libelle_Court &nbsp;</th>
+                <th>&nbsp; prod_lib_court &nbsp;</th>
+                <th>&nbsp; description courte du produit &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <tr class="trProduit">
+                <th>&nbsp; Libelle_Long &nbsp;</th>
+                <th>&nbsp; prod_lib_long &nbsp;</th>
+                <th>&nbsp; description détaillée du produit &nbsp;</th>
+                <th>&nbsp; VARCHAR(255) &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <tr class="trProduit">
+                <th>&nbsp; Prix_Achat &nbsp;</th>
+                <th>&nbsp; prod_prix &nbsp;</th>
+                <th>&nbsp; prix d'achat du produit &nbsp;</th>
+                <th>&nbsp; DECIMAL(7,2) &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <tr class="trProduit">
+                <th>&nbsp; Photo &nbsp;</th>
+                <th>&nbsp; prod_photo &nbsp;</th>
+                <th>&nbsp; adresse de stockage de la photo &nbsp;</th>
+                <th>&nbsp; VARCHAR(255) &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <tr class="trProduit">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; rubriq_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur rubrique &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <tr class="trProduit">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; fourni_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur fournisseur &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; produit &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trRubrique">
+                <th>&nbsp; Id_Rubrique &nbsp;</th>
+                <th>&nbsp; rubriq_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; rubrique &nbsp;</th>
+            </tr>
+            <tr class="trRubrique">
+                <th>&nbsp; Nom_Rubrique &nbsp;</th>
+                <th>&nbsp; rubriq_nom &nbsp;</th>
+                <th>&nbsp; nom de la rubrique de produits &nbsp;</th>
+                <th>&nbsp; VARCHAR(50) &nbsp;</th>
+                <th>&nbsp; rubrique &nbsp;</th>
+            </tr>
+            <tr class="trRubrique">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; rubrique_id_1 &nbsp;</th>
+                <th>&nbsp; id de la rubrique mère &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; rubrique &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trDetail_commande">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; prod_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur produit &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; detail_commande &nbsp;</th>
+            </tr>
+            <tr class="trDetail_commande">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; commande_id &nbsp;</th>
+                <th>&nbsp; clef primaire, clef étrangère sur commande &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; detail_commande &nbsp;</th>
+            </tr>
+            <tr class="trDetail_commande">
+                <th>&nbsp; Quantite &nbsp;</th>
+                <th>&nbsp; detail_qte &nbsp;</th>
+                <th>&nbsp; quantite de produits dans le détail de commande &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; detail_commande &nbsp;</th>
+            </tr>
+            <tr class="trDetail_commande">
+                <th>&nbsp; prix_produit &nbsp;</th>
+                <th>&nbsp; detail_prix &nbsp;</th>
+                <th>&nbsp; prix du produit au moment de la commande &nbsp;</th>
+                <th>&nbsp; DECIMAL(7,2) &nbsp;</th>
+                <th>&nbsp; detail_commande &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trCommande">
+                <th>&nbsp; Id_Commande &nbsp;</th>
+                <th>&nbsp; commande_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Expedition_Partielle &nbsp;</th>
+                <th>&nbsp; commande_partielle &nbsp;</th>
+                <th>&nbsp; la commande est-elle expediée partiellement &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Expediee &nbsp;</th>
+                <th>&nbsp; commande_expediee &nbsp;</th>
+                <th>&nbsp; la commande a-t-elle été intégralement expédiée &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Date_Paiement &nbsp;</th>
+                <th>&nbsp; commande_dt_paiement&nbsp;</th>
+                <th>&nbsp; date du paiement de la commande &nbsp;</th>
+                <th>&nbsp; DATE &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Date_Expedition &nbsp;</th>
+                <th>&nbsp; commande_dt_expedition &nbsp;</th>
+                <th>&nbsp; date de la dernière expédition &nbsp;</th>
+                <th>&nbsp; DATE &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Paiement_Virement &nbsp;</th>
+                <th>&nbsp; commande_virement &nbsp;</th>
+                <th>&nbsp; le client a-t-il payé par virement &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Paiement_Cheque &nbsp;</th>
+                <th>&nbsp; commande_cheque &nbsp;</th>
+                <th>&nbsp; le client a-t-il payé par chèque &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Validation &nbsp;</th>
+                <th>&nbsp; commande_valide &nbsp;</th>
+                <th>&nbsp; passage du statut panier à commande &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; Archive &nbsp;</th>
+                <th>&nbsp; commande_archive &nbsp;</th>
+                <th>&nbsp; archivage d'une commande après trois années &nbsp;</th>
+                <th>&nbsp; BOOLEAN &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <tr class="trCommande">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; cli_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur client &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; commande &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trBl">
+                <th>&nbsp; Id_Bon_Livraison &nbsp;</th>
+                <th>&nbsp; bl_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; bl &nbsp;</th>
+            </tr>
+            <tr class="trBl">
+                <th>&nbsp; Date_Edition &nbsp;</th>
+                <th>&nbsp; bl_date &nbsp;</th>
+                <th>&nbsp; date d'édition du bon de livraison &nbsp;</th>
+                <th>&nbsp; DATE &nbsp;</th>
+                <th>&nbsp; bl &nbsp;</th>
+            </tr>
+            <tr class="trBl">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; commande_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur commande &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; bl &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+            <tr class="trFacture">
+                <th>&nbsp; Id_Facture &nbsp;</th>
+                <th>&nbsp; fact_id &nbsp;</th>
+                <th>&nbsp; Id, clef primaire &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; facture &nbsp;</th>
+            </tr>
+            <tr class="trFacture">
+                <th>&nbsp; Date_Facture &nbsp;</th>
+                <th>&nbsp; fact_dt &nbsp;</th>
+                <th>&nbsp; date d'édition de la facture &nbsp;</th>
+                <th>&nbsp; DATE &nbsp;</th>
+                <th>&nbsp; facture &nbsp;</th>
+            </tr>
+            <tr class="trFacture">
+                <th>&nbsp; - &nbsp;</th>
+                <th>&nbsp; commande_id &nbsp;</th>
+                <th>&nbsp; clef étrangère sur commande &nbsp;</th>
+                <th>&nbsp; INT &nbsp;</th>
+                <th>&nbsp; facture &nbsp;</th>
+            </tr>
+            <!-------------------------------------------------------------------------------------------->
+        </tbody>
+    </table>
+</body>
+
+</html>
