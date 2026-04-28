@@ -86,6 +86,8 @@ Ici pour créer une branche nommée `dev`
 git branch dev
 ```
 
+Pour la convention de nommage de branches et de commit <https://codeheroes.fr/blog/git-comment-nommer-ses-branches-et-ses-commits/>
+
 #### Lier ma branche au dépôt distant (créé la branche distante)
 
 ```bash

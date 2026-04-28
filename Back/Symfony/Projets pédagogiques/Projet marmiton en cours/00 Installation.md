@@ -145,6 +145,19 @@ Your system is ready to run Symfony projects
 
 </div></details>
 
+## Mettre à jour
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Il suffit de refaire l'installation :
+
+```bash
+curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
+sudo nala install -y symfony-cli
+```
+
+</div></details>
+
 ## Extensions de VsCodium
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">

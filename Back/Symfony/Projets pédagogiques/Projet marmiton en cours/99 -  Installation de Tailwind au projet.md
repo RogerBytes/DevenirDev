@@ -16,7 +16,8 @@ npm install tailwindcss @tailwindcss/postcss postcss postcss-loader
 Dans `webpack.config.js`, juste en dessous du bloc `Encore`, on ajoute `.enablePostCssLoader()` ainsi
 
 ```javascript
-Encore.enablePostCssLoader();
+Encore
+  .enablePostCssLoader()
 ```
 
 On créé `postcss.config.mjs`
