@@ -154,7 +154,7 @@ git branch -a
 git fetch
 ```
 
-On utilse `checkout` qui se base sur les distantes référencées par fetch
+On utilise `checkout` qui se base sur les distantes référencées par fetch
 
 ```bash
 git checkout nom-branche
