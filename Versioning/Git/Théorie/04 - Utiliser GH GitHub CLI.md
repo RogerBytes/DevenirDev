@@ -45,6 +45,12 @@ Par exemple :
 gh pr create --base dev --head feature/harry-section --title "Test de PR avec REVIEW" --body "Coucou Yassine" --reviewer YassineDev01
 ```
 
+## Faire une PR vers un repo distant depuis fork
+
+```bash
+gh pr create --repo owner/original-repo --head ton-user:ta-branche --base main
+```
+
 ---
 
 ### Pour transférer un dépôt distant sur GitHub
