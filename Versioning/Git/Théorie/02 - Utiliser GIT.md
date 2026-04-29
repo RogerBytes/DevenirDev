@@ -148,6 +148,20 @@ git branch -r
 git branch -a
 ```
 
+### Récupérer une branche distante
+
+```bash
+git fetch
+```
+
+On utilse `checkout` qui se base sur les distantes référencées par fetch
+
+```bash
+git checkout nom-branche
+```
+
+Ca marche si `nom-branche` est une branche distante, elle est automatiquement liée à la distante.
+
 ### Réinitialiser le remote
 
 Si vous vous trompez dans le nom d'org de dépôt (ou autre) faites :
