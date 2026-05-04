@@ -6,7 +6,6 @@ class Hotel {
     - address : string
     + getNbRooms(): int
     + getTotalRentBetween(start: Date, end: Date): double
-
 }
 
 class Room {
