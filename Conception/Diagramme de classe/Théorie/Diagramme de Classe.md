@@ -1,12 +1,12 @@
-# DIAGRAMME DE CLASS
+# Diagramme de Classe
 
-## PRÉSENTATION
+## Présentation
 
 Il sert à décrire la structure et les liens entre les composants du système
 
 Il représente les différentes briques du logiciel.
 
-## LES CLASSES
+## Les classes
 
 Décrit un ensemble d’objets qui ont en commun :
 
@@ -37,9 +37,9 @@ class Machin {
 @enduml
 ```
 
-Une class se compose donc d’un nom, d’attributs et de méthodes.
+Une classe se compose donc d’un nom, d’attributs et de méthodes.
 
-## LES ATTRIBUTS
+## Les Attributs
 
 ```code
 @startuml
@@ -65,7 +65,7 @@ class Machin {
 
 Les attributs  définissent les paramètres de notre Objet/Classe
 
-## PORTÉE DES ATTRIBUTS
+## Portée Des Attributs
 
 ```code
 @startuml exemple
@@ -96,17 +96,19 @@ class Humain {
 ```
 
 Les attributs peuvent avoir une portée :
-● Private : -
-● Public : +
-● Protected : #
 
-## TYPAGE DES ATTRIBUTS
+- Private : -
+- Public : +
+- Protected : #
+
+## Typage des Attributs
 
 On peut également indiquer le typage des attributs :
-● String
-● Integer
-● []
-● Boolean…
+
+- String
+- Integer
+- []
+- Boolean…
 
 ## LES OPÉRATIONS / MÉTHODES
 
@@ -116,13 +118,14 @@ méthode entraîne un retour, on peut préciser son type ou les paramètres dont
 ## LES TYPES DE RELATIONS
 
 On distingue plusieurs types de relations :
-● Association
-● Héritage
-● Dépendance
-● Agrégation
-● Réflexive
 
-## CARACTÉRISTIQUE D’UNE RELATION
+- Association
+- Héritage
+- Dépendance
+- Agrégation
+- Réflexive
+
+## Caractéristique d'une Relation
 
 ```code
 @startuml relation
@@ -170,7 +173,8 @@ Un nombre / étoile correspond à une cardinalité
 On va représenter le type d’association (apparence de la flèche)
 Que pouvons nous comprendre de la connexion ci-dessus ?
 Nous avons ici une personne peut travailler pour un employeur
-● Caractérisé par le ‘1’ à côté de Entreprise
+
+- Caractérisé par le ‘1’ à côté de Entreprise
 Un employeur peut employer plusieurs personnes
 
 - Caractérisé par le « * » à côté de la classe Personne
@@ -182,20 +186,20 @@ Nous indiquons que ‘Personne ‘ est ‘employé’ de ‘Entreprise’
 De même , un employeur aura un attribut ‘employés’ qui contiendra une liste de
 personnes.
 On peut aussi préciser la valeur minimale d’une cardinalité comme suit : « 1..* »
-Ce qui signifie que l’on peut avoir entre 1 et * éléments dans la liste.
+Ce qui signifie que l’on peut avoir entre 1 et `*` éléments dans la liste.
 
-## LA RELATION D'HÉRITAGE
+## La relation d'Héritage
 
 ```code
 @startuml exemple
 title exemple d'héritage
-class ARTICLE {
+class Article {
     # designation : string
     # prix : double
     # quantite : int
     acheter() : void
 }
-class LIVRE {
+class Livre {
     # ISBN : string
     # auteur : string
     # nbPages : int
@@ -204,21 +208,21 @@ Class Disque {
     # labelMusique : string
     ecouter() : void
 }
-ARTICLE <|-- Disque
-ARTICLE <|-- LIVRE
+Article <|-- Disque
+Article <|-- Livre
 @enduml
 ```
 
 ```puml
 @startuml exemple
 title exemple d'héritage
-class ARTICLE {
+class Article {
     # designation : string
     # prix : double
     # quantite : int
     acheter() : void
 }
-class LIVRE {
+class Livre {
     # ISBN : string
     # auteur : string
     # nbPages : int
@@ -227,20 +231,55 @@ Class Disque {
     # labelMusique : string
     ecouter() : void
 }
-ARTICLE <|-- Disque
-ARTICLE <|-- LIVRE
+Article <|-- Disque
+Article <|-- Livre
 @enduml
 ```
 
 Lorsqu’une classe hérite d’une autre, on dit qu’elle étend de cette dernière.
-En programmation orientée Objet on utilisera le mot ‘extends’ :
+En programmation orientée Objet on utilisera le mot `extends` :
 Exemple :
 
-```php
-class Livre extends Article
-{
-    
+```code
+@startuml exemple
+title exemple d'héritage
+class Article {
+    # designation : string
+    # prix : double
+    # quantite : int
+    + acheter() : void
 }
+class Livre extends Article {
+    - ISBN : string
+    - auteur : string
+    - nbPages : int
+}
+class Disque extends Article {
+    - labelMusique : string
+    + ecouter() : void
+}
+@enduml
+```
+
+```puml
+@startuml exemple
+title exemple d'héritage
+class Article {
+    # designation : string
+    # prix : double
+    # quantite : int
+    + acheter() : void
+}
+class Livre extends Article {
+    - ISBN : string
+    - auteur : string
+    - nbPages : int
+}
+class Disque extends Article {
+    - labelMusique : string
+    + ecouter() : void
+}
+@enduml
 ```
 
 Quels seront donc les attributs de la classe ‘livre’ ?
