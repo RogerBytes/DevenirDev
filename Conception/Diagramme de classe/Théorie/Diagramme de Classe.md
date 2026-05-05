@@ -8,7 +8,7 @@ Il représente les différentes briques du logiciel.
 
 ## Les classes
 
-Décrit un ensemble d’objets qui ont en commun :
+Décrit un ensemble d'objets qui ont en commun :
 
 - Une sémantique
 - Des attributs
@@ -37,7 +37,7 @@ class Machin {
 @enduml
 ```
 
-Une classe se compose donc d’un nom, d’attributs et de méthodes.
+Une classe se compose donc d'un nom, d'attributs et de méthodes.
 
 ## Les Attributs
 
@@ -110,12 +110,12 @@ On peut également indiquer le typage des attributs :
 - []
 - Boolean…
 
-## LES OPÉRATIONS / MÉTHODES
+## Les opérations / Méthodes
 
 On précise en bas du bloc les opérations que peuvent réaliser les objets de cette classe. Si la
 méthode entraîne un retour, on peut préciser son type ou les paramètres dont il a besoin.
 
-## LES TYPES DE RELATIONS
+## Les types de relations
 
 On distingue plusieurs types de relations :
 
@@ -167,26 +167,26 @@ Personne "employé *" --> "employeur 1" Entreprise : travailler pour
 @enduml
 ```
 
-Les caractéristiques sont applicables à n’importe quel type de relation
+Les caractéristiques sont applicables à n`importe quel type de relation
 On retrouve de chaque côté un intitulé (rôle)
 Un nombre / étoile correspond à une cardinalité
-On va représenter le type d’association (apparence de la flèche)
+On va représenter le type d'association (apparence de la flèche)
 Que pouvons nous comprendre de la connexion ci-dessus ?
 Nous avons ici une personne peut travailler pour un employeur
 
-- Caractérisé par le ‘1’ à côté de Entreprise
+- Caractérisé par le `1` à côté de Entreprise
 Un employeur peut employer plusieurs personnes
 
 - Caractérisé par le « * » à côté de la classe Personne
 
-Nous indiquons que ‘Entreprise’ est ‘employeur’ de ‘Personne’.
-Lorsqu’on constitue notre BDD à partir du diagramme, on sous-entend que
-‘Personne ‘ aura un attribut ‘Employeur’.
-Nous indiquons que ‘Personne ‘ est ‘employé’ de ‘Entreprise’
-De même , un employeur aura un attribut ‘employés’ qui contiendra une liste de
+Nous indiquons que `Entreprise` est `employeur` de `Personne`.
+Lorsqu'on constitue notre BDD à partir du diagramme, on sous-entend que
+`Personne` aura un attribut `Employeur`.
+Nous indiquons que `Personne` est `employé` de `Entreprise`
+De même , un employeur aura un attribut `employés` qui contiendra une liste de
 personnes.
-On peut aussi préciser la valeur minimale d’une cardinalité comme suit : « 1..* »
-Ce qui signifie que l’on peut avoir entre 1 et `*` éléments dans la liste.
+On peut aussi préciser la valeur minimale d'une cardinalité comme suit : « 1..* »
+Ce qui signifie que l'on peut avoir entre 1 et `*` éléments dans la liste.
 
 ## La relation d'Héritage
 
@@ -236,8 +236,8 @@ Article <|-- Livre
 @enduml
 ```
 
-Lorsqu’une classe hérite d’une autre, on dit qu’elle étend de cette dernière.
-En programmation orientée Objet on utilisera le mot `extends` :
+Lorsqu'une classe hérite d'une autre, on dit qu'elle étend de cette dernière.
+En programmation orientée Objet on utilisera `extends` :
 Exemple :
 
 ```code
@@ -282,7 +282,7 @@ class Disque extends Article {
 @enduml
 ```
 
-Quels seront donc les attributs de la classe ‘livre’ ?
+Quels seront donc les attributs de la classe `livre` ?
 
 - designation
 - prix
@@ -291,19 +291,19 @@ Quels seront donc les attributs de la classe ‘livre’ ?
 - auteur
 - nbPages
 
-C’est ici que la portée des attributs aura une importance : Déterminant ce qui pourra être
+C`est ici que la portée des attributs aura une importance : Déterminant ce qui pourra être
 hérité ou non.
 
-## LA RELATION DE DÉPENDANCE
+## La relation de Dépendance
 
 ```code
 @startuml
 title notion de dépendance
 class "Boite de reception" as BoiteDeReception {
-    +methodeA() : void
+    + methodeA() : void
 }
 class Document {
-    +methodeB() : void
+    + methodeB() : void
 }
 BoiteDeReception ..> Document : utilise
 
@@ -314,10 +314,10 @@ BoiteDeReception ..> Document : utilise
 @startuml
 title notion de dépendance
 class "Boite de reception" as BoiteDeReception {
-    +methodeA() : void
+    + methodeA() : void
 }
 class Document {
-    +methodeB() : void
+    + methodeB() : void
 }
 BoiteDeReception ..> Document : utilise
 
@@ -325,12 +325,12 @@ BoiteDeReception ..> Document : utilise
 ```
 
 Elle est exprimée par une flèche pointillée.
-Elle indique une dépendance d’un objet par rapport à l’autre.
-Elle représente quel type d’objet une classe peut contenir
+Elle indique une dépendance d'un objet par rapport à l'autre.
+Elle représente quel type d'objet une classe peut contenir
 Nous avons dans le diagramme de classe ci-dessus, la boite de réception contiendra des
-objets ‘document’(mails)
+objets `document`(mails)
 
-## LA RELATION D'AGRÉGATION / COMPOSITION
+## La relation d'agrégation / Composition
 
 ```code
 @startuml AgregationComposition
@@ -386,28 +386,50 @@ Voiture o--> "1" Entreprise : appartient à
 
 Dans le diagramme, la différence se voit directement sur le type de losange de la relation.
 
-1. Composition (losange plein `--`)
+### 1. Composition (losange plein `--`)
+
 - Relations :
-    - Voiture *-- Moteur : contient
-    - Voiture *-- "4" Roues : contient
-- Sens :
-    - Le tout (Voiture) possède fortement ses parties (Moteur, Roues).
-    - Les parties n’ont pas de sens seules dans ce modèle.
-    - Si la Voiture “disparaît”, on considère que ses parties disparaissent avec elle (cycle de vie lié).
-1. Agrégation (losange vide `o--`)
+
+```code
+Voiture *-- Moteur : contient
+Voiture *-- "4" Roues : contient
+```
+
+```puml
+Voiture *-- Moteur : contient
+Voiture *-- "4" Roues : contient
+```
+
+Sens :
+
+- Le tout (Voiture) possède fortement ses parties (Moteur, Roues).
+- Les parties n`ont pas de sens seules dans ce modèle.
+- Si la Voiture “disparaît”, on considère que ses parties disparaissent avec elle (cycle de vie lié).
+
+### 2. Agrégation (losange vide `o--`)
+
 - Relation :
-    - Voiture o-- "1" Entreprise : appartient à
-- Sens :
-    - Lien plus faible entre objets.
-    - Entreprise existe indépendamment de Voiture.
-    - Une Voiture peut changer d’Entreprise sans “détruire” l’Entreprise (cycle de vie indépendant).
+
+```code
+Voiture o-- "1" Entreprise : appartient à
+```
+
+```puml
+Voiture o-- "1" Entreprise : appartient à
+```
+
+Sens :
+
+- Lien plus faible entre objets.
+- Entreprise existe indépendamment de Voiture.
+- Une Voiture peut changer d'Entreprise sans “détruire” l'Entreprise (cycle de vie indépendant).
 
 Lecture rapide du modèle :
 
 - Voiture est composée de 1 Moteur et 4 Roues.
-- Voiture est agrégée à 1 Entreprise (propriétaire/gestionnaire), mais Entreprise ne dépend pas de l’existence d’une Voiture.
+- Voiture est agrégée à 1 Entreprise (propriétaire/gestionnaire), mais Entreprise ne dépend pas de l'existence d'une Voiture.
 
-## RELATION RÉFLEXIVE :
+## Relation Réflexion
 
 ```code
 @startuml
@@ -437,9 +459,9 @@ Employe "1" -- "0..*" Employe : supervise
 
 Elle indique que la classe peut / a une relation avec elle-même.
 Ici nous avons un employé qui supervise des employés.
-On s’en sert pour désigner les classes où chaque objet ne joue pas le même rôle.
+On s`en sert pour désigner les classes où chaque objet ne joue pas le même rôle.
 
-## LA RELATION DE CLASSE ASSOCIATION :
+## La relation de classe association
 
 Elle sert à indiquer des informations propres à la relation entre les classes.
 
@@ -448,20 +470,20 @@ Elle sert à indiquer des informations propres à la relation entre les classes.
 title Classe d'association
 
 class Etudiant {
-	-id : int
-	-nom : string
+    -id : int
+    -nom : string
 }
 
 class Cours {
-	-code : string
-	-intitule : string
+    -code : string
+    -intitule : string
 }
 
 Etudiant "1" -- "0..*" Cours : suit
 
 class Inscription {
-	-dateInscription : Date
-	-noteFinale : float
+    -dateInscription : Date
+    -noteFinale : float
 }
 
 (Etudiant, Cours) .. Inscription
@@ -474,20 +496,20 @@ class Inscription {
 title Classe d'association
 
 class Etudiant {
-	-id : int
-	-nom : string
+    -id : int
+    -nom : string
 }
 
 class Cours {
-	-code : string
-	-intitule : string
+    -code : string
+    -intitule : string
 }
 
 Etudiant "1" -- "0..*" Cours : suit
 
 class Inscription {
-	-dateInscription : Date
-	-noteFinale : float
+    -dateInscription : Date
+    -noteFinale : float
 }
 
 (Etudiant, Cours) .. Inscription
@@ -495,19 +517,23 @@ class Inscription {
 @enduml
 ```
 
-1. Les classes principales
+### 1. Les classes principales
+
 - Etudiant les attributs id et nom.
 - Cours avec les attributs code et intitule.
 - Inscription qui stocke les informations de la relation (dateInscription, noteFinale).
 
-1. L’association Etudiant-Cours
+### 2. l'association Etudiant-Cours
+
 - Sens métier: un Etudiant suit des Cours.
 
-1. La classe d’association
+### 3. La classe d'association
+
 - (Etudiant, Cours) .. Inscription signifie que Inscription appartient à la relation entre Etudiant et Cours, pas à une seule classe.
 - Donc dateInscription et noteFinale décrivent le lien Etudiant-Cours.
 
-1. Point important sur les multiplicités
+### 4. Point important sur les multiplicités
+
 - Avec Etudiant "1" -- "0..*" Cours:
 - Un Etudiant peut avoir 0 à plusieurs Cours.
 - Un Cours est lié à exactement 1 Etudiant.
