@@ -1,6 +1,4 @@
-# Installation Plant UML dans vs code
-
-# Documentation : Utiliser PlantUML dans VS Code
+# Utiliser PlantUML dans VS Code
 
 ## 1. Prérequis
 
@@ -18,12 +16,14 @@ Vérifiez si Java est installé en tapant `java -version` dans votre terminal. S
 
 ### Étape 2 : Installer Graphviz
 
-- **Windows :** `winget install graphviz`
-- **macOS :** `brew install graphviz`
-- **Linux :** 
+```bash
+sudo nala install -y graphviz
+```
+
+Et on installe `plantuml`
 
 ```bash
-sudo nala install -y graphviz plantuml
+sudo bash -c "curl -L https://raw.githubusercontent.com/metanorma/plantuml-install/main/ubuntu.sh | bash"
 ```
 
 Dans le `settings.json` de VSC
@@ -67,17 +67,15 @@ Serveur --> Utilisateur : 200 OK (HTML)
 
 ## 4. Raccourcis et Astuces
 
-| **Action** | **Raccourci** |
-| --- | --- |
-| **Aperçu du diagramme** | `Alt + D` |
-| **Exporter le diagramme** | `Ctrl + Shift + P` > `PlantUML: Export Current Diagram` |
-| **Choisir le format d'export** | (PNG, SVG, PDF) dans les paramètres de l'extension |
+| **Action**                     | **Raccourci**                                           |
+| ------------------------------ | ------------------------------------------------------- |
+| **Aperçu du diagramme**        | `Alt + D`                                               |
+| **Exporter le diagramme**      | `Ctrl + Shift + P` > `PlantUML: Export Current Diagram` |
+| **Choisir le format d'export** | (PNG, SVG, PDF) dans les paramètres de l'extension      |
 
 > [!TIP]
-> 
-> 
+>
 > **Le serveur de rendu :** Si vous ne voulez pas installer Java ou Graphviz localement, vous pouvez configurer l'extension pour utiliser un serveur public. Allez dans les réglages de l'extension et remplacez `Local` par `PlantUMLServer` dans l'option **Render**.
-> 
 
 ---
 
