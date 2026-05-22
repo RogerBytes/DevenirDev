@@ -446,7 +446,7 @@ Faites le test et cela par moment peut vous aider à réaliser des choses dans d
 
 </div></details>
 
-## Lancement du serveur
+## Lancement du serveur `symfony serve`
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
@@ -464,58 +464,9 @@ La barre de debug en bas s’appelle le profiler, très utile pour déboguer.
 
 Nous voyons en bas à gauche que nous avons une erreur 404. Au début d’un projet c’est normal car nous n’avons encore rien configuré au niveau des routes.
 
-</div></details>
-
-## Extensions de VsCodium
+### Les erreurs de symfony serve
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
-
-Pour optimiser notre utilisation de l'IDE avec Symfony
-
-```bash
-codium --install-extension cvergne.vscode-php-getters-setters-cv
-codium --install-extension bmewburn.vscode-intelephense-client
-codium --install-extension nadim-vscode.symfony-code-snippets
-codium --install-extension TheNouillet.symfony-vscode
-codium --install-extension mikestead.dotenv
-codium --install-extension redhat.vscode-yaml
-codium --install-extension mblode.twig-language
-codium --install-extension tmrdh.symfony-helper
-codium --install-extension DEVSENSE.phptools-vscode
-codium --install-extension DEVSENSE.composer-php-vscode
-codium --install-extension DEVSENSE.intelli-php-vscode
-codium --install-extension DEVSENSE.profiler-php-vscode
-codium --install-extension MehediDracula.php-namespace-resolver
-codium --install-extension neilbrayfield.php-docblocker
-codium --install-extension SonarSource.sonarlint-vscode
-codium --install-extension zobo.php-intellisense
-vsix-dl klesun.deep-assoc-completion-vscode
-vsix-dl bradlc.vscode-tailwindcss
-```
-
-Et dans `~/.config/VSCodium/User/settings.json` (<kbd>Ctrl</kbd> + <kbd>,</kbd>) :
-
-```json
-  "symfonyHelper.phpParser.phpPath": "/usr/bin/php",
-  "[php]": {
-    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
-  },
-  "[twig]": {
-    "editor.defaultFormatter": "mblode.twig-language-2",
-  },
-  "emmet.includeLanguages": {
-    "twig": "html",
-  },
-  "php.suggest.basic": false,
-  "emmet.excludeLanguages": ["markdown", "php"],
-  "php.executables": {
-    "php": "/usr/bin/php",
-  },
-```
-
-</div></details>
-
-## Les erreurs de symfony serve
 
 Ces erreurs peuvent être retord à corriger, quand on bute sur une erreur inconnue dont on ne comprends pas l'origine il est bon de virer le repertoire `var`.
 
@@ -569,6 +520,59 @@ Et de le régénérer avec serve derrière
 ```bash
 symfony serve
 ```
+
+</div></details>
+
+</div></details>
+
+## Extensions de VsCodium
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Pour optimiser notre utilisation de l'IDE avec Symfony
+
+```bash
+codium --install-extension cvergne.vscode-php-getters-setters-cv
+codium --install-extension bmewburn.vscode-intelephense-client
+codium --install-extension nadim-vscode.symfony-code-snippets
+codium --install-extension TheNouillet.symfony-vscode
+codium --install-extension mikestead.dotenv
+codium --install-extension redhat.vscode-yaml
+codium --install-extension mblode.twig-language
+codium --install-extension tmrdh.symfony-helper
+codium --install-extension DEVSENSE.phptools-vscode
+codium --install-extension DEVSENSE.composer-php-vscode
+codium --install-extension DEVSENSE.intelli-php-vscode
+codium --install-extension DEVSENSE.profiler-php-vscode
+codium --install-extension MehediDracula.php-namespace-resolver
+codium --install-extension neilbrayfield.php-docblocker
+codium --install-extension SonarSource.sonarlint-vscode
+codium --install-extension zobo.php-intellisense
+vsix-dl klesun.deep-assoc-completion-vscode
+vsix-dl bradlc.vscode-tailwindcss
+```
+
+Et dans `~/.config/VSCodium/User/settings.json` (<kbd>Ctrl</kbd> + <kbd>,</kbd>) :
+
+```json
+  "symfonyHelper.phpParser.phpPath": "/usr/bin/php",
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+  },
+  "[twig]": {
+    "editor.defaultFormatter": "mblode.twig-language-2",
+  },
+  "emmet.includeLanguages": {
+    "twig": "html",
+  },
+  "php.suggest.basic": false,
+  "emmet.excludeLanguages": ["markdown", "php"],
+  "php.executables": {
+    "php": "/usr/bin/php",
+  },
+```
+
+</div></details>
 
 ---
 
