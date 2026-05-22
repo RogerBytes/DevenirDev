@@ -1,4 +1,4 @@
-# Installer Docker Engine sur LM 22.2
+# Installer Docker Engine sur LM
 
 [Documentation d'installation de Docker](https://docs.docker.com/desktop/setup/install/linux)
 [Documentation Post Install de Docker](https://docs.docker.com/engine/install/linux-postinstall)

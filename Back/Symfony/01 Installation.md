@@ -490,6 +490,7 @@ codium --install-extension neilbrayfield.php-docblocker
 codium --install-extension SonarSource.sonarlint-vscode
 codium --install-extension zobo.php-intellisense
 vsix-dl klesun.deep-assoc-completion-vscode
+vsix-dl bradlc.vscode-tailwindcss
 ```
 
 Et dans `~/.config/VSCodium/User/settings.json` (<kbd>Ctrl</kbd> + <kbd>,</kbd>) :
@@ -516,7 +517,7 @@ Et dans `~/.config/VSCodium/User/settings.json` (<kbd>Ctrl</kbd> + <kbd>,</kbd>)
 
 ## Les erreurs de symfony serve
 
-Ces erreurs peuvent être retord à corriger, quand on bute sur une erreur inconnue dont on ne comprends pas l'origine il est bon de virer le repertoire `var`
+Ces erreurs peuvent être retord à corriger, quand on bute sur une erreur inconnue dont on ne comprends pas l'origine il est bon de virer le repertoire `var`.
 
 ```bash
 rm -rf var/*
