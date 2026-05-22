@@ -63,10 +63,9 @@ Voilà, **Docker Desktop est correctement installé**.
 
 Je conseille un petit reboot qui ne mange pas de pain
 
-```
+```bash
 sudo reboot now
 ```
-
 
 ## Retirer la sources 32bit
 
