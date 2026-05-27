@@ -547,6 +547,7 @@ codium --install-extension DEVSENSE.profiler-php-vscode
 codium --install-extension MehediDracula.php-namespace-resolver
 codium --install-extension neilbrayfield.php-docblocker
 codium --install-extension SonarSource.sonarlint-vscode
+codium --install-extension bradlc.vscode-tailwindcss
 codium --install-extension zobo.php-intellisense
 vsix-dl klesun.deep-assoc-completion-vscode
 vsix-dl bradlc.vscode-tailwindcss
