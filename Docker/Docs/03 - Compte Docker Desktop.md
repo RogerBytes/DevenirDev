@@ -93,3 +93,7 @@ gpg-connect-agent reloadagent /bye
 ```
 
 On remet son mdp, les modifications sont actives.
+
+### Bug de Docker Desktop
+
+En revanche il y a un bug qui fait que le mdp est demandé toutes les heures, pour l'instant pas de correction ni de workaround, ça ne sert à rien de s'acharner à tout essayer, voir [ce fil d'issue](https://github.com/docker/desktop-feedback/issues/104).
