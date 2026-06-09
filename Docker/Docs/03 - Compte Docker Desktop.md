@@ -36,8 +36,7 @@ sub  rsa3072 2023-11-22 [E] [expire : 2025-11-21]
 
 Copiez l'info à la place (chez vous) de `5BB54DF1XXXXXXXXF87XXXXXXXXXXXXXX945A`, il s'agit de votre clef gpg.
 
-Les fichiers seront générés dans :
-`~/.gnupg``
+Les fichiers seront générés dans `~/.gnupg`
 
 ```debug
 openpgp-revocs.d : Ce répertoire contient les révocations de clés GPG. Lorsqu'une clé GPG est révoquée, une entrée correspondante est créée dans ce répertoire pour indiquer qu'elle n'est plus valide.
@@ -58,7 +57,7 @@ En cas de souci avec gpg, utilisez la commande pour lister vos clefs :
 gpg --list-keys
 ```
 
-Si jamais vou avez effacé le dossier ça générera les fichiers requis pour pouvoir générer une clef normalement
+Si jamais vous avez effacé le dossier ça générera les fichiers requis pour pouvoir générer une clef normalement
 
 ### Initialiser pass
 
