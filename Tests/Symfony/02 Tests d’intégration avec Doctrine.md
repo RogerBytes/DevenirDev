@@ -213,6 +213,17 @@ cp .env.dev.local .env.test.local
 
 ### Création de la BDD de test
 
+En une fois, détail après
+
+```bash
+cp .env.dev.local .env.test.local
+symfony console do:da:dr --force --if-exists --env=test
+symfony console do:da:cr --env=test
+symfony console do:mi:mi -n --env=test
+symfony console do:fi:lo -n --env=test
+```
+
+
 Supprime la BDD si elle existe
 
 ```bash
