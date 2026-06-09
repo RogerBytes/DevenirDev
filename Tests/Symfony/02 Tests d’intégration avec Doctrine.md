@@ -16,12 +16,21 @@ Un **test d’intégration** vérifie que plusieurs composants fonctionnent ense
 
 ## ⚖️ 2. Différence avec les tests unitaires
 
-| Tests unitaires | Tests d’intégration |
-| --- | --- |
-| pas de base de données | utilisent la base |
-| rapides | plus lents |
+| Tests unitaires           | Tests d’intégration       |
+| ------------------------- | ------------------------- |
+| pas de base de données    | utilisent la base         |
+| rapides                   | plus lents                |
 | testent une classe isolée | testent plusieurs couches |
-| pas de container Symfony | utilisent le container |
+| pas de container Symfony  | utilisent le container    |
+
+## Création d'un fichier de test
+
+Pour plus de praticité, on s'inspire de l'arborescence de fichier du projet, ici par exemple, pour faire un test unitaire sur `src/Entity/Market.php` on va faire `tests/Unit/MarketTest.php`.
+
+```bash
+mkdir -p tests/Functional/
+touch tests/Functional/MarketTest.php
+```
 
 ### Création de la BDD de test
 
@@ -60,8 +69,6 @@ Execute les test fonctionnel
 ```bash
 php bin/phpunit --testdox tests/Functional/
 ```
-
-
 
 ## 3. Classe de base : KernelTestCase
 

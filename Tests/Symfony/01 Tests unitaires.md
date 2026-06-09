@@ -427,6 +427,12 @@ On pourrait aussi préciser quel fichier on veut tester
 php bin/phpunit tests/Unit/MarketTest.php --testdox
 ```
 
+On pourrait aussi préciser le répertoire `Unit` pour executer seulement les tests unitaires
+
+```bash
+php bin/phpunit tests/Unit/ --testdox
+```
+
 ou par classe
 
 ```bash
