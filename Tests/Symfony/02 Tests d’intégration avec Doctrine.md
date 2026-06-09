@@ -25,22 +25,43 @@ Un **test d’intégration** vérifie que plusieurs composants fonctionnent ense
 
 ### Création de la BDD de test
 
+Supprime la BDD si elle existe
+
 ```bash
-Supprime la BDD si elle existe    
-php bin/console d:d:d --force --if-exists --env=test
-Créer une BDD
-    php bin/console d:d:c --env=test
-Créer les migrations
-    php bin/console d:m:m --no-interaction --env=test
-Créer les fixtures
-    php bin/console d:f:l --no-interaction --env=test
-Execute les test unitaire
-    php bin/phpunit --testdox tests/Unit/
-Execute les test fonctionnel
-    php bin/phpunit --testdox tests/Functional/
+symfony console do:da:dr --force --if-exists --env=test
 ```
 
----
+On créé la bdd
+
+```bash
+symfony console do:da:cr --env=test
+```
+
+Créer les migrations
+
+```bash
+symfony console do:mi:mi -n --env=test
+```
+
+Créer les fixtures
+
+```bash
+symfony console do:fi:lo -n --env=test
+```
+
+Execute les test unitaire
+
+```bash
+symfony console do:fi:lo -n --env=test
+```
+
+Execute les test fonctionnel
+
+```bash
+php bin/phpunit --testdox tests/Functional/
+```
+
+
 
 ## 3. Classe de base : KernelTestCase
 

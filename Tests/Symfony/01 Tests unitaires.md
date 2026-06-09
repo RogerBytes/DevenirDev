@@ -228,19 +228,19 @@ Donc ici on va tester
 
 ## Création d'un fichier de test
 
-Pour plus de praticité, on s'inspire de l'arborescence de fichier du projet, ici par exemple, pour faire un test unitaire sur `src/Entity/Market.php` on va faire `tests/Entity/MarketTest.php`.
+Pour plus de praticité, on s'inspire de l'arborescence de fichier du projet, ici par exemple, pour faire un test unitaire sur `src/Entity/Market.php` on va faire `tests/Unit/MarketTest.php`.
 
 ```bash
-mkdir -p tests/Entity/
-touch tests/Entity/MarketTest.php
+mkdir -p tests/Unit/
+touch tests/Unit/MarketTest.php
 ```
 
 ## Namespace et TestCase
 
-On pense à mettre namespace `namespace App\Tests\Entity;` et à mettre l'héritage de la classe `TestCase`.
+On pense à mettre namespace `namespace App\Tests\Unit;` et à mettre l'héritage de la classe `TestCase`.
 
 ```php
-namespace App\Tests\Entity;
+namespace App\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 ```
 
@@ -302,7 +302,7 @@ Voici un petit exemple pour une classe `MarketTest`, ici c'est sur un getter/set
 ```php
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Unit;
 
 use App\Entity\Market;
 use PHPUnit\Framework\TestCase;
@@ -333,7 +333,7 @@ Voici le test unitaire pour `src/Entity/Market.php`
 ```php
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Unit;
 
 use App\Entity\Market;
 use App\Entity\MarketSlot;
@@ -416,25 +416,27 @@ Dans une application Symfony :
 On lance les test avec
 
 ```bash
-php bin/phpunit
+php bin/phpunit --testdox
 ```
+
+`--testdox` est utilise pour avoir un beau rendu de test.
 
 On pourrait aussi préciser quel fichier on veut tester
 
 ```bash
-php bin/phpunit tests/Entity/MarketTest.php
+php bin/phpunit tests/Unit/MarketTest.php --testdox
 ```
 
 ou par classe
 
 ```bash
-php bin/phpunit --filter MarketTest
+php bin/phpunit --filter MarketTest --testdox
 ```
 
 ou par méthode
 
 ```bash
-php bin/phpunit --filter testAddShop
+php bin/phpunit --filter testAddShop --testdox
 ```
 
 ## Exercices
