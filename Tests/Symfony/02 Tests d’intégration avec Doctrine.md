@@ -223,7 +223,6 @@ symfony console do:mi:mi -n --env=test
 symfony console do:fi:lo -n --env=test
 ```
 
-
 Supprime la BDD si elle existe
 
 ```bash
