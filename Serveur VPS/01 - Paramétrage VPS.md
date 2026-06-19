@@ -1,4 +1,4 @@
-# Paramétrage VPS
+# 01 - Paramétrage VPS
 
 Le VPS permet d'installer docker (son installation sera décrite dans une autre documentation) et d'y déployer des images et des piles de conteneurs.
 
