@@ -1,9 +1,9 @@
 # 03 - Caddy Reverse Proxy
 
-Depuis [Page docker hub](https://hub.docker.com/_/caddy)
-Depuis [Page GitHub](https://github.com/caddyserver/caddy)
-Depuis [Le compose](https://caddyserver.com/docs/running#docker-compose)
-Depuis [La commande Docker](https://caddyserver.com/docs/install#docker)
+- Depuis [Page docker hub](https://hub.docker.com/_/caddy)
+- Depuis [Page GitHub](https://github.com/caddyserver/caddy)
+- Depuis [Le compose](https://caddyserver.com/docs/running#docker-compose)
+- Depuis [La commande Docker](https://caddyserver.com/docs/install#docker)
 
 ## Prérequis
 

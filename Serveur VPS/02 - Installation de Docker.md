@@ -175,3 +175,5 @@ Cette commande crée un conteneur de test éphémère et extrait instantanément
 S'il retourne `{"Type":"json-file","Config":{"compress":"true","max-file":"3","max-size":"10m"}}`, c'est la preuve que les options s'appliquent automatiquement.
 
 Voilà, Docker Engine est correctement installé sur le VPS.
+
+Allez faire la partie `Serveur VPS/03 - Caddy Reverse Proxy.md`, c'est ce qui va permettre à Docker de fonctionner correctement.
