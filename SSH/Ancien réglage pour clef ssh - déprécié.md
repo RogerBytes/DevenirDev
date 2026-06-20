@@ -1,5 +1,4 @@
-
-JE GARDE LE TEMPS D'ETRE SUR QUE LA NOUVELLE MANIERE FONCTIONNE CORRECTEMENT
+# A garder tant que je suis sûr que l'IDE supporte AddKeysToAgent yes
 
 ## Lier sa connexion à sa session
 
@@ -36,6 +35,4 @@ source ~/.zshrc
 - Active et démarre le service
 - Ajoute la ligne magique au .zshrc si elle n'y est pas et recharge
 
-Ainsi, le trousseau reste actif tant que l'on ne vérouille/déconnecte pas le poste ou que l'on redémmare.
-
-
+Ainsi, le trousseau reste actif tant que l'on ne verrouille/déconnecte pas le poste ou que l'on redémarre.
