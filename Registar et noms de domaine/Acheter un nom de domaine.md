@@ -1,16 +1,12 @@
 # Acheter un Nom de Domaine
 
-noms de domaine à acheter
-rogerbytes.com
-rogerbytes-softworks.com
+Ici j'explique comment vérifier l'existence d'un nom de domaine
 
+## Verifier disponibilité NDD
 
-rogerbytes.com domaine principal
-rogerbytes-softworks.com qui redirige verse rogerbytes.com
+Il suffit d'aller utiliser le [vérificateur de l'icann](https://lookup.icann.org/fr/lookup), si rien n'est retourné, le NDD est disponible.
 
-verifier disponibilité NDD sur 
-https://lookup.icann.org/fr/lookup
-
+## Verifier disponibilité d'une marque
 
 verifier disponibilité marque "RogerBytes Softworks" (via le nom de marque seulement) sur
 https://data.inpi.fr/recherche_avancee/marques
@@ -25,12 +21,8 @@ Acheter le nom de domaine via registrar
 
 Un registrar est une entreprise autorisée à enregistrer et gérer des noms de domaine
 https://www.ovhcloud.com/fr/domains/
-https://www.gandi.net/fr/domain
-https://www.ionos.fr/domaine/noms-de-domaine
-https://www.namecheap.com/
-https://www.godaddy.com/
 
-On peut ainsi louer le ndd sans prendre un hebergement, le plus simple et moins cher et OVHcloud audenière nouvelles
+On peut ainsi louer le ndd sans prendre un hébergement, le plus simple et moins cher et OVHcloud au dernières nouvelles
 en .com 129,40 € (155,28 €TTC) pour 10 ans, prix constaté au moment de la recherche
 
 Pour le renouvvelement au bout des 10 ans, Le plus simple est d’activer le renouvellement automatique et de mettre une carte valide, puis de la mettre à jour si elle expire (vous recevrez un rappel avant).
