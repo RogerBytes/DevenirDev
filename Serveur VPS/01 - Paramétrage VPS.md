@@ -12,8 +12,8 @@ Pour ce qui est du choix de l'OS, j'utilise Debian. Le générateur du mot de pa
 
 La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/dedicated-servers/firewall-network) n'est pas encore abordée, c'est une étape à faire après déploiement.
 
-A plusieurs moment le port utilisé pour SSH est `49152`, prenez garde à bien le changer par le votre, en passant `49152` n'est pas un bon port, il est uniquement là à titre d'exemple.
-A plusieurs moment l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide, elle est uniquement là à titre d'exemple.
+- A plusieurs moments le port utilisé pour SSH est `49152`, prenez garde à bien le changer par le votre, en passant `49152` n'est pas un bon port, il est uniquement là à titre d'exemple.
+- A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide, elle est uniquement là à titre d'exemple.
 
 ## Première connexion
 
@@ -798,7 +798,7 @@ ATTENTION, RESET LE VPS FAIT TOUT PERDRE CE QU'IL CONTIENT !
 Attention à virer le host (sinon votre système va bugger lors de la connexion à la machine resetée)
 
 ```bash
-ssh-keygen -f $HOME/.ssh/known_hosts -R '[ADRESSE_IP]'
+ssh-keygen -f $HOME/.ssh/known_hosts -R 192.0.2.1
 ```
 
 </div></details>
