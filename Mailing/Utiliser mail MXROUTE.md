@@ -10,9 +10,9 @@ Les différent menus du panel
 - Email Forwarders : Permet de faire des redirection de mails
 - Email Clients : C'est les infos pour se connecter sur un client mail type Thunderbird
 - Spam Filters : Réglage du filtrage de spam
-- DNS : Les infos pour faire les réglages DNS du registar
-- Calendar & Contacts : C'est pour se connecter au service caldav, il y en a un pas boite mail
-- SSL Certificates : Les infos pour faire les réglages SSL du registar et ensuite demander le certificat SSL
+- DNS : Les infos pour faire les réglages DNS du registrar
+- Calendar & Contacts : C'est pour se connecter au service CalDAV, il y en a un par boite mail
+- SSL Certificates : Les infos pour faire les réglages SSL du registrar et ensuite demander le certificat SSL
 - Advanced : Options avancées
 
 ## Ajouter un domaine à mxroute
@@ -57,8 +57,7 @@ En bas il affiche
 
 Vous pouvez cliquez sur `Suivant`, sur l'étape 3, c'est juste un récapitulatif, cliquez sur `Valider`.
 
-L'ownership est bien réglé, il peut il y a avoir un cerain délai, le temps que les DNS soit mis à jour.
-
+L'ownership est bien réglé, il peut il y a avoir un certain délai, le temps que les DNS soit mis à jour.
 
 ### Vérification de l'ownership
 
@@ -85,7 +84,7 @@ Par exemple
 ;_da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx.nimportequoiquoi.com. IN TXT
 
 ;; ANSWER SECTION:
-_da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx.nimportequoiquoi.com. 3600 IN TXT	"domain-verified"
+_da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx.nimportequoiquoi.com. 3600 IN TXT "domain-verified"
 
 ;; Query time: 49 msec
 ;; SERVER: xxx.x.x.xx#xx(xx.xx.xx.xx) (UDP)
@@ -115,31 +114,26 @@ Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`,
 
 Allez dans le menu `DNS`, les entrées présentes doivent être ajoutées auprès du registrar/DNS (ici OVH)
 
-dans une autre fenêtre
-
+Dans une autre fenêtre
 
 - Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR)
 et allez dans la partie `Web Cloud/Zone DNS` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`
 
 S'il y a plus de deux entrées `MX` (c'est pout Mail Exchanger), supprimez les pour qu'il n'y en ait plus que deux.
 S'il y a une entrée `SPF`, il faut la supprimer.
-Ajouter les entrées dans le registar en se basant sur les indications de mxroute.com
-
+Ajouter les entrées dans le registrar en se basant sur les indications de mxroute.com
 
 Sous domaine on met rien si c'est @ dans le NAME ! C'est une convention en informatique.
 
 Il faut être patient pour les modifications de type MX et SPF, car elles sont gardées en cache, ça peut prendre entre 30 minutes et 2 heures.
 
-OVH précise que 
+OVH précise que
 
-```info
-L’entrée a été ajoutée dans la zone DNS, mais veuillez prendre en compte le temps de propagation (maximum 24h).
-```
+>[!Note] L’entrée a été ajoutée dans la zone DNS, mais veuillez prendre en compte le temps de propagation (maximum 24h).
 
 Ce coup-ci, cela a pris environ une heure.
 
 ## Ajout du certificat SSL
-
 
 Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`,
 
@@ -147,15 +141,11 @@ Allez dans le menu `SSL Certificates`, les entrées présentes doivent être ajo
 
 dans une autre fenêtre
 
-
 - Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR)
 et allez dans la partie `Web Cloud/Zone DNS` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`
 
 Pareil faire les entrées en suivant les indications de mxroutes.com
 
-
-Rafraichir la page, séléectionner les deux soudomaines et cliquer sur `Request Certificates`
+Rafraîchir la page, sélectionner les deux sous-domaines et cliquer sur `Request Certificates`
 
 Voilà la sécurité SSL est mise en place.
-
-
