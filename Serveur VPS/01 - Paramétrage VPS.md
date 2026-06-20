@@ -403,7 +403,10 @@ sudo nano /etc/fail2ban/jail.local
 
 Pour information, Les paramètres [DEFAULT] sont les réglages dont héritent tous les services.
 
-Il faut aller configurer la section [sshd] (c'est le premier qui apparaît en vert)'. Voici la section par défaut
+Il faut aller configurer la section [sshd] (c'est le premier qui apparaît en vert)'.
+
+- Pour rechercher `sshd` faire `CTRL + W`, et pour aller au prochain résultat faire `Alt + W`
+- Voici la section par défaut
 
 ```conf
 [sshd]
@@ -481,7 +484,7 @@ sudo fail2ban-client ping
 
 Le serveur doit répondre `pong`
 
-- Fail2Ban a ici pour mission principale de protéger l'accès SSH de la machine.
+- Fail2Ban a ici pour mission de protéger l'accès SSH de la machine, ensuite on le réglera également pour suivre les logs de Caddy (qui redirigera les connexions entrantes vers les conteneurs docker).
 - L'usage du VPS est dédié à Docker, une image de `Caddy` sera configurée pour gérer les accès et le trafic Web.
 
 </div></details>
