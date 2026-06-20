@@ -1,4 +1,4 @@
-# 03 - Caddy Reverse Proxy
+# 03 - Installation de Caddy
 
 - Depuis [Page docker hub](https://hub.docker.com/_/caddy)
 - Depuis [Page GitHub](https://github.com/caddyserver/caddy)
