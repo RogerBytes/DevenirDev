@@ -109,7 +109,7 @@ pour bloquer les inscriptions
 
 PUIS
 
-2. Configurer les e-mails (Optionnel)
+Configurer les e-mails (Optionnel)
 Si tu veux que ton Vaultwarden puisse t'envoyer des invitations ou des alertes de sécurité par mail, il faudra lui ajouter les identifiants d'un serveur SMTP (comme une adresse Gmail, OVH ou autre dédiée aux envois automatique).
 
 Pour l'instant, profite de ton installation : tu as mérité de tester ton coffre-fort de mots de passe ! Tout est prêt.
