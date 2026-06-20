@@ -205,3 +205,5 @@ Puis on relance le service (on peut pas faire `reload` ou `restart`, il garderai
 ```bash
 sudo docker compose up -d
 ```
+
+Voilà, notre **VaultWarden** est correctement déployé et paramétré !
