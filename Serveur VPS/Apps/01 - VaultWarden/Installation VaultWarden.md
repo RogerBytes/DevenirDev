@@ -3,7 +3,11 @@
 Depuis [Page docker hub](https://hub.docker.com/r/vaultwarden/server)
 Depuis [Page GitHub](https://github.com/dani-garcia/vaultwarden)
 
-## Partie A
+- A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` est une IP de test réservée aux exemples, elle ne fonctionnera pas pour votre serveur.
+
+## Prérequis
+
+### Création du répertoire
 
 On prépare un répertoire dans `opt/docker`
 
@@ -11,6 +15,40 @@ On prépare un répertoire dans `opt/docker`
 sudo mkdir -p /opt/docker/vaultwarden
 cd /opt/docker/vaultwarden
 ```
+
+### Préparation de la boite mail chez MXROUTE.com
+
+A faire
+
+### Création du .env
+
+On créé le fichier d'environment (il contiendra les variables d'auth)
+
+```bash
+sudo nano .env
+```
+
+Et on y ajoute ce qui suit
+
+```ini
+VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123!
+MX_SERVER=TON_SERVEUR.mxrouting.net
+MX_EMAIL=vaultwarden@rogerbytes.com
+MX_PASSWORD=LeMotDePasseDeCetteBoiteMail
+```
+
+Pour information
+
+```ini
+VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123!
+MX_SERVER=TON_SERVEUR.mxrouting.net # <--- À remplacer par le serveur mxroute
+MX_EMAIL=vaultwarden@rogerbytes.com # <--- adresse email d'envoi
+MX_PASSWORD=LeMotDePasseDeCetteBoiteMail # <--- Le mot de passe de la boite mail
+```
+
+Avant d’enregistrer, on change correctement les valeurs des différentes variables
+
+### Création du `compose.yml`
 
 On créé le `compose.yml`
 
@@ -26,11 +64,25 @@ services:
     image: vaultwarden/server:latest
     container_name: vaultwarden
     restart: unless-stopped
+    environment:
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=true
+      - ADMIN_TOKEN=${VW_ADMIN_TOKEN}
+      - SMTP_HOST=${MX_SERVER}
+      - SMTP_FROM=${MX_EMAIL}
+      - SMTP_PORT=465
+      - SMTP_SECURITY=force_tls
+      - SMTP_USERNAME=${MX_EMAIL}
+      - SMTP_PASSWORD=${MX_PASSWORD}
     volumes:
       - ./vw-data:/data
     ports:
       - 127.0.0.1:8000:80
 ```
+
+Et enregistrer le fichier.
+
+## Création du conteneur
 
 Et on lance le `compose up`
 
@@ -54,11 +106,11 @@ il retourne
 
 ```bash
 total 8
--rw-r--r-- 1 root root  196 Jun 19 22:15 docker-compose.yml
-drwxr-xr-x 3 root root 4096 Jun 19 22:16 vw-data
+-rw-r--r-- 1 root root  196 Jun 20 19:05 compose.yml
+drwxr-xr-x 3 root root 4096 Jun 20 19:06 vw-data
 ```
 
-## Partie B
+## Gestion du domaine / sous-domaine
 
 Se connecter sur le [Hub d'OVH](https://manager.eu.ovhcloud.com/#/hub/), et aller sur `Web Cloud/Zones DNS`, cliquer sur le nom de domaine souhaité pour aller sur son menu.
 
@@ -70,12 +122,14 @@ vw
 TTL:
 (Laisser par défaut)
 Cible*:
-51.210.47.245
+192.0.2.1
 ```
 
-Cible l'ip de la machine.
+Remplacer `192.0.2.1` par l'ipv4 du VPS.
 
-## Le réglage de Caddy
+## Configurer un reverse proxy avec Caddy
+
+Il suffit de modifier le `Caddyfile` comme on l'a déjà fait.
 
 ```bash
 sudo nano /opt/docker/caddy/Caddyfile
@@ -95,21 +149,19 @@ vw.rogerbytes.com {
 On enregistre le fichier puis on actualise la configuration de Caddy
 
 ```bash
-sudo docker compose exec -w /etc/caddy caddy caddy reload
+sudo docker compose -f /opt/docker/caddy/compose.yml restart caddy
 ```
 
----
+Si ce n'était pas le premier reverse proxy, on aurait fait
 
-IL RESTE A FAIRE
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
 
-environment:
-      - SIGNUPS_ALLOWED=false
+Si `Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies    {"adapter": "caddyfile", "file": "Caddyfile", "line": 2}`
 
-pour bloquer les inscriptions
+Il suffit de lancer la commande pour reformater le fichier automatiquement
 
-PUIS
-
-Configurer les e-mails (Optionnel)
-Si tu veux que ton Vaultwarden puisse t'envoyer des invitations ou des alertes de sécurité par mail, il faudra lui ajouter les identifiants d'un serveur SMTP (comme une adresse Gmail, OVH ou autre dédiée aux envois automatique).
-
-Pour l'instant, profite de ton installation : tu as mérité de tester ton coffre-fort de mots de passe ! Tout est prêt.
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```

@@ -1,6 +1,6 @@
 # 01 - Utilisation de Caddy
 
-## Ajouter des routages de domaines/sous-domaines
+## Configurer un reverse proxy
 
 Il suffit de modifier le `Caddyfile` comme on l'a déjà fait.
 
