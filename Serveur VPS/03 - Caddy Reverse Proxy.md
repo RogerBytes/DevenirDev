@@ -44,6 +44,13 @@ failregex = ^.*"status":401.*"remote_ip":"<ADDR>".*$
 ignoreregex =
 ```
 
+On génère le log
+
+```bash
+sudo mkdir -p /opt/docker/caddy/logs/
+sudo touch /opt/docker/caddy/logs/caddy.log
+```
+
 On enregistre la configuration, et on relance `Fail2ban`
 
 ```bash
