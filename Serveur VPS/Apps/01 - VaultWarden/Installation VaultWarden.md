@@ -24,10 +24,18 @@ Une fois que l'on a paramétré correctement MXROUTE.com avec le nom de domaine 
 
 Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
 
-Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`, et allez sur le menu `Email Accounts`.
+- Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`, et allez sur le menu `Email Accounts`.
+- Cliquer sur `+ Create New Email Account`, entrer `vault` comme username et lui générer un mdp (garder précieusement les identifiants) et cliquer sur `Create Account`.
+- La mail généré est `vault@votrenomdedomaine.com`
 
-Cliquer sur `+ Create New Email Account`, entrer `vault` comme username et lui générer un mdp (garder précieusement les identifiants) et cliquer sur `Create Account`.
-Une modale s'ouvre, nous demandant d'ajouter l'ownership sur notre domaine, avec deux valeurs importantes dans le tas.
+#### Récupérer le serveur MX de MXROUTE
+
+Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
+
+- Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`, et allez sur le menu `DNS`.
+- Dans l'encadré `MX Records` prendre la `VALUE` de celui avec la `PRIORITY` 10 (l'autre est un serveur de secours si le premier est en rade).
+
+Si le compte MXROUTE est bien réglé, et pareil du côté du registrar, il n'y a rien d'autre à faire pour le mailing.
 
 ### Création du .env
 
