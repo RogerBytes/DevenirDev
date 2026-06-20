@@ -8,7 +8,7 @@ Ce repo contient l’intégralité de mes notes, recherche et supports pédagogi
 
 ## Auteur
 
-[<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes) 
+[<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes)
 [**RogerBytes (Harry Richmond)**](https://github.com/RogerBytes)
 
 <span hidden>
