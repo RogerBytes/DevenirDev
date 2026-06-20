@@ -18,7 +18,14 @@ cd /opt/docker/vaultwarden
 
 ### Préparation de la boite mail chez MXROUTE.com
 
-A faire
+Une fois que l'on a paramétré correctement MXROUTE.com avec le nom de domaine (voir `Mailing/Utiliser mail MXROUTE.md`), il suffit de créer un compte mail.
+
+Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
+
+Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`, et allez sur le menu `Email Accounts`.
+
+Cliquer sur `+ Create New Email Account`, entrer `vault` comme username, ce qui donne `vault@nimportequoiquoi.com`.
+Une modale s'ouvre, nous demandant d'ajouter l'ownership sur notre domaine, avec deux valeurs importantes dans le tas.
 
 ### Création du .env
 
