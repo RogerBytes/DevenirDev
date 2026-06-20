@@ -13,6 +13,7 @@ Pour ce qui est du choix de l'OS, j'utilise Debian. Le générateur du mot de pa
 La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/dedicated-servers/firewall-network) n'est pas encore abordée, c'est une étape à faire après déploiement.
 
 A plusieurs moment le port utilisé pour SSH est `49152`, prenez garde à bien le changer par le votre, en passant `49152` n'est pas un bon port, il est uniquement là à titre d'exemple.
+A plusieurs moment l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide, elle est uniquement là à titre d'exemple.
 
 ## Première connexion
 
@@ -23,7 +24,7 @@ Pour se connecter sur ma machine vierge, on récupère l'`IPv4` de la machine su
 Le générateur du mot de passe est envoyé par mail, il faut utiliser le "secret" comme mdp de première connexion, ici on se connecte à l'user `debian` (par défaut chez OVH).
 
 ```bash
-ssh debian@SON_IPv4
+ssh debian@192.0.2.1
 ```
 
 `Are you sure you want to continue connecting (yes/no/[fingerprint])?` confirmer avec `yes`
@@ -35,7 +36,7 @@ Entrer le "secret" généré via le mail pour se connecter. Suivre ce qui est de
 On se connecte via
 
 ```bash
-ssh debian@SON_IPv4
+ssh debian@192.0.2.1
 ```
 
 On donne le nouveau mdp que l'on vient de régler pour se connecter.
@@ -147,7 +148,7 @@ Donnez le mot de passe de votre clef de récupération et ça y est, votre clef 
 On se connecte maintenant au serveur
 
 ```bash
-ssh debian@SON_IPv4
+ssh debian@192.0.2.1
 ```
 
 Les tentatives de hack visent le port SSH par défaut, c'est à dire le port 22. Donc on le remplace.
@@ -194,7 +195,7 @@ sudo ss -tlnp | grep ssh
 On ne se déconnecte pas de la session, on teste dans un autre shell de se connecter, en précisant le port.
 
 ```bash
-ssh -p 49152 debian@SON_IPv4
+ssh -p 49152 debian@192.0.2.1
 ```
 
 Voilà, on va fini de régler le port !
@@ -224,7 +225,7 @@ sudo usermod -aG sudo username
 Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraichement créé.
 
 ```bash
-ssh -p VOTRE_RANDOM_PORT NOUVEL_USER@SON_IPv4
+ssh -p VOTRE_RANDOM_PORT NOUVEL_USER@192.0.2.1
 ```
 
 Gardez précieusement votre commande de connexion, c'est celle-ci que vous utiliserez.
