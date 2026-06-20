@@ -116,14 +116,14 @@ On déplace les deux clefs dans `~/Documents/Sécurité/Clefs` (ou ailleurs), il
 On l'ajoute la clef publique de récupération au VPS avec
 
 ```bash
-ssh-copy-id -i ~/Documents/Sécurité/Clefs/la-recovery-key.pub debian@TON_IPV4
+ssh-copy-id -i ~/Documents/Sécurité/Clefs/la-recovery-key.pub debian@192.0.2.1
 ```
 
 Et on tape le mot de passe de l'user `debian`
 
-Il faut absolument conserver la clef de récupèration !
+Il faut absolument conserver la clef de récupération !
 
-### Génerer une clef locale
+### Générer une clef locale
 
 Si l'on a pas déjà une clef locale, on en crée une avec
 
@@ -134,7 +134,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com your_machine"
 On l'ajoute la clef publique locale (quelle soit neuve ou pas), on prend toute suite la bonne habitude de l'ajouter via la clef de récupération
 
 ```bash
-ssh -i ~/Documents/Sécurité/Clefs/la-recovery-key debian@TON_IPV4 "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_ed25519.pub
+ssh -i ~/Documents/Sécurité/Clefs/la-recovery-key debian@192.0.2.1 "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_ed25519.pub
 ```
 
 Donnez le mot de passe de votre clef de récupération et ça y est, votre clef locale est ajoutée !
@@ -222,7 +222,7 @@ et on lui donne l'accès sudo, étant le vrai compte du VPS
 sudo usermod -aG sudo username
 ```
 
-Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraichement créé.
+Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraîchement créé.
 
 ```bash
 ssh -p VOTRE_RANDOM_PORT NOUVEL_USER@192.0.2.1
@@ -238,7 +238,7 @@ Pour les comptes non admin, ne donnez pas d'accès sudo !
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-Modifiez les variables au besoin, ce script permet d'ajouter la clef de récupèration au nouvel utilisateur (il ne faudra jamais la retirer sous peine de perdre tout accès), la connexion par mot de passe étant à bannir.
+Modifiez les variables au besoin, ce script permet d'ajouter la clef de récupération au nouvel utilisateur (il ne faudra jamais la retirer sous peine de perdre tout accès), la connexion par mot de passe étant à bannir.
 
 ```bash
 username=paul
@@ -253,11 +253,11 @@ public_key=$(cat $public_key_path)
 ssh -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
 ```
 
-`$public_key_path` et `$recovery_path` sont les chemins de la clef publique et de la clef de récupération, il faut faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera vérouillé par la suite).
+`$public_key_path` et `$recovery_path` sont les chemins de la clef publique et de la clef de récupération, il faut faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera verrouillé par la suite).
 
 ## Script de sysadmin pour ajouter des clefs publiques
 
-Voici l'outil final d'admin pour l'user, ici c'est pour un user `robert`, mais on peut s'en servir pour ajouter la clef locale au compte que l'on vient de créer (en remplacant `robert` par `paul` et en changeant le chemin de la clef publique par `~/.ssh/id_ed25519.pub`).
+Voici l'outil final d'admin pour l'user, ici c'est pour un user `robert`, mais on peut s'en servir pour ajouter la clef locale au compte que l'on vient de créer (en remplaçant `robert` par `paul` et en changeant le chemin de la clef publique par `~/.ssh/id_ed25519.pub`).
 
 ```bash
 username=robert
@@ -286,7 +286,7 @@ Pour être sûr qu'il a bien la clef de récupération dans ses connexions SSH.
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le parefeu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
+Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le pare-feu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
 
 - Pour information, la règle de sécurité est de laisser le flux sortant ouverts, et de verrouiller par défaut le flux entrant (en laissant ouverts seulement les port SSH, http et https).
 - C'est `Caddy` qui gérera le flux entrant en réceptionnant les requêtes du web pour les rediriger vers les conteneurs Docker.
@@ -437,7 +437,7 @@ bantime  = 1h
 ```
 
 - Le `enabled=true` permet d'écraser l'héritage de `[DEFAULT]`, permettant ainsi d'activer le service.
-- Le mode passe en `aggressive`, en gros Fail2Ban va lui même appliquer des régles UFW sévères aux IP qui tentent de trop nombreuses connexions
+- Le mode passe en `aggressive`, en gros Fail2Ban va lui même appliquer des règles UFW sévères aux IP qui tentent de trop nombreuses connexions
 - `systemd` est le gestionnaire central du système sur debian, c'est lui qui fournit les logs par exemple
 - `maxretry` c'est le nombre de tentatives et `bantime` c'est le timeout
 - `findtime` c'est pour la période (ici c'est 3 essaie dans une durée de 5mn)
@@ -516,7 +516,7 @@ On vérifie la présence de "passwordauthentication yes" dans "/etc/ssh/sshd_con
 sudo grep -R --line-number "PasswordAuthentication" /etc/ssh/sshd_config.d/
 ```
 
-S'il retourne "passwordauthentication yes" il faut editer le fichier retourné ("50-cloud-init.conf" dans mon cas) avec nano
+S'il retourne "passwordauthentication yes" il faut éditer le fichier retourné ("50-cloud-init.conf" dans mon cas) avec nano
 
 ```bash
 sudo nano /etc/ssh/sshd_config.d/50-cloud-init.conf
@@ -546,7 +546,7 @@ A partir de maintenant, on ne peut plus se connecter qu'avec une clef SSH, ce qu
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-On empêche la connexion et on enlève les droits sudo à `debian`, pour des raisons de paramètrages internes, on ne supprime jamais l'utilisateur initial d'un serveur, on le vérouille, et par acquis de conscience, on révoque les clefs publiques qu'il a enregistré.
+On empêche la connexion et on enlève les droits sudo à `debian`, pour des raisons de paramétrages internes, on ne supprime jamais l'utilisateur initial d'un serveur, on le verrouille, et par acquis de conscience, on révoque les clefs publiques qu'il a enregistré.
 
 On cherche le fichier qui lui donne un accès `NO_PASSWORD`
 
@@ -583,7 +583,7 @@ sudo passwd debian
 
 On met une énorme entropie et on jette le mdp, on ne veut pas qu'on puisse s'y connecter.
 
-Voilà, l'utilisateur `debian` est proprement vérouillé.
+Voilà, l'utilisateur `debian` est proprement verrouillé.
 
 </div></details>
 
@@ -595,7 +595,7 @@ Voilà, l'utilisateur `debian` est proprement vérouillé.
 sudo nano /etc/ssh/sshd_config
 ```
 
-Avec `CTRL + W` on cherche `PermitRootLogin` on décommente transforme en `PermitRootLogin no`
+Avec `CTRL + W` on cherche `PermitRootLogin` on dé-commente/transforme en `PermitRootLogin no`
 
 On vérifie que tout est bon avec
 
@@ -748,7 +748,7 @@ Il retourne `Automatically download and install stable updates`, choisir `Yes`
 sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
 ```
 
-On peut faire une recherche avec `Ctrl + W` pour décommenter/modifier ces lignes comme ce qui suit :
+On peut faire une recherche avec `Ctrl + W` pour dé-commenter/modifier ces lignes comme ce qui suit :
 
 ```text
 Unattended-Upgrade::Remove-Unused-Dependencies "true";
@@ -795,7 +795,7 @@ ATTENTION, RESET LE VPS FAIT TOUT PERDRE CE QU'IL CONTIENT !
 - Dans l'encart `Votre VPS` on clique sur le bouton rond `...` sur la ligne `OS / Distribution` et `Réinstaller mon système`
 - Une fois l'OS choisi et le reset fini (5 secondes), OVH renvoie un mail avec le mot de passe
 
-Attention à virer le host (sinon votre système va bugger lors de la connexion à la machine resetée)
+Attention à virer le host (sinon votre système va bugger lors de la connexion à la machine remise à zéro)
 
 ```bash
 ssh-keygen -f $HOME/.ssh/known_hosts -R 192.0.2.1
