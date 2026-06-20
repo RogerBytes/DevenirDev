@@ -4,7 +4,7 @@ Ici j'explique comment vérifier l'existence d'un nom de domaine et l'acheter.
 
 ## Verifier disponibilité NDD
 
-Il suffit d'aller utiliser le [vérificateur de l'icann](https://lookup.icann.org/fr/lookup), si rien n'est retourné, le NDD est disponible.
+Il suffit d'aller utiliser le [vérificateur de l'ICANN](https://lookup.icann.org/fr/lookup), si rien n'est retourné, le NDD est disponible.
 
 ## Verifier disponibilité d'une marque
 
