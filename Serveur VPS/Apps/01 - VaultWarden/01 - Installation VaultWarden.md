@@ -1,4 +1,4 @@
-# Installation VaultWarden
+# 01 - Installation VaultWarden
 
 Depuis [Page docker hub](https://hub.docker.com/r/vaultwarden/server)
 Depuis [Page GitHub](https://github.com/dani-garcia/vaultwarden)
@@ -49,7 +49,7 @@ sudo nano .env
 Et on y ajoute ce qui suit
 
 ```ini
-VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123!
+ADMIN_TOKEN=MonSuperMotDePasseSecret123!
 MX_SERVER=machin.mxrouting.net
 MX_EMAIL=vault@votrenomdedomaine.com
 MX_PASSWORD=LeMotDePasseDeCetteBoiteMail
@@ -58,7 +58,7 @@ MX_PASSWORD=LeMotDePasseDeCetteBoiteMail
 Voici les explications du `.env`, à ne pas utiliser tel quel (c'est juste pour savoir quelles données modifier dans le template au-dessus)
 
 ```ini
-VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123! # <--- À remplacer par votre token
+ADMIN_TOKEN=MonSuperMotDePasseSecret123! # <--- À remplacer par votre token
 MX_SERVER=machin.mxrouting.net # <--- À remplacer par le serveur mxroute
 MX_EMAIL=vault@votrenomdedomaine.com # <--- À remplacer par l'email d'envoi
 MX_PASSWORD=LeMotDePasseDeCetteBoiteMail # <--- À remplacer par le mot de passe de la boite mail
@@ -85,7 +85,7 @@ services:
     environment:
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=true
-      - ADMIN_TOKEN=${VW_ADMIN_TOKEN}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
       - SMTP_HOST=${MX_SERVER}
       - SMTP_FROM=${MX_EMAIL}
       - SMTP_PORT=465
@@ -182,4 +182,26 @@ Il suffit de lancer la commande pour reformater le fichier automatiquement
 
 ```bash
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+### Hasher le Token pour VaultWarden
+
+Au lieu de laisser le token en clair sur le .env, on peut utiliser un hash `Argon2id PHC` du mot de passe
+
+```bash
+sudo docker exec -it vaultwarden /vaultwarden hash
+```
+
+puis on édite le `.env`
+
+```bash
+sudo nano .env
+```
+
+Pour y mettre son hash à la place du mot de passe.
+
+Puis on relance le service (on peut pas faire `reload` ou `restart`, il garderait en mémoire l'ancien `.env`)
+
+```bash
+sudo docker compose up -d
 ```
