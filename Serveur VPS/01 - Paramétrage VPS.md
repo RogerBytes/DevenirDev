@@ -701,11 +701,7 @@ Installation, depuis [le site officiel](https://zellij.dev)
 curl -L "https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz" | tar -xzvf - && sudo mv zellij /usr/local/bin/
 ```
 
-</div></details>
-
-## Quelques commandes basiques
-
-<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+### Quelques commandes basiques
 
 Juste quelque commandes de bases, voir doc dédiée, ce n'est pas le sujet ici.
 
