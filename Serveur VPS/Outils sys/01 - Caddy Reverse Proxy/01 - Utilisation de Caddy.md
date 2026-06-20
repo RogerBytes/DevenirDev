@@ -29,18 +29,12 @@ autre.rogerbytes.com {
 Au besoin, on peut formater/améliorer l'indentation du `Caddyfile` avec
 
 ```bash
-sudo docker compose exec -w /etc/caddy caddy caddy fmt --overwrite
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
 ```
 
 **Très important** : Après chaque modification du `Caddyfile`, il faut recharger la configuration de Caddy pour qu'elle soit prise en compte, sans pour autant couper le service
 
-On va dans le répertoire de  `Caddy`
-
 ```bash
-sudo docker compose exec -w /etc/caddy caddy caddy reload
-
-# ou
-
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
 ```
 
@@ -81,3 +75,63 @@ Voici la lecture
 
 - `hôte` **(8000)** C'est la prise sur laquelle le service est disponible uniquement au sein du VPS (grâce au 127.0.0.1). C'est pour cela que Caddy doit pointer vers cette prise locale
 - `conteneur` **(80)** C'est le port interne du conteneur Docker, en général on s'abstient de le modifier, car les services interagissent les uns les autres via ce port
+
+## Voir les logs de Caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml logs -f caddy
+```
+
+## Voir si le fichier Caddyfile est correctement formaté
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy validate
+```
+
+S'il ne retourne que des `INFO` et se termine par `Valid configuration`, c'est que tout est bon.
+
+En cas de `WARN` il suffit de lancer le formateur intégré de Caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+Ah, d'accord ! Tu parles du routing par **sous-dossier** (ou _path routing_) au lieu d'utiliser des sous-domaines. C'est-à-dire faire pointer `rogerbytes.com/caca` vers un service et `rogerbytes.com/autre` vers un autre.
+
+Voici comment on fait ça proprement et simplement avec Caddy :
+
+## Le Path Routing
+
+Dans ton `Caddyfile`, au lieu de créer plusieurs blocs avec des sous-domaines, tu utilises le domaine principal et tu définis des règles selon le chemin (le _path_) avec l'instruction `handle`.
+
+>[!CAUTION] Ce type de routing par chemin (`/truc`) peut casser l'affichage de ton site si ton code (tes fichiers CSS ou tes liens) s'attend à être uniquement sur le domaine principal tout court.
+
+### 1. Exemple de configuration dans le Caddyfile
+
+```plaintext
+rogerbytes.com {
+        # Tout ce qui commence par /truc va vers le service sur le port 8000
+        handle /truc* {
+                log {
+                output file /var/log/caddy/caddy.log
+                }
+                reverse_proxy 127.0.0.1:8000
+        }
+
+        # Tout ce qui commence par /machin va vers le service sur le port 9000
+        handle /machin* {
+                log {
+                output file /var/log/caddy/caddy.log
+                }
+                reverse_proxy 127.0.0.1:9000
+        }
+
+        # Le reste du site (la racine /) va vers ton site principal
+        handle {
+                log {
+                output file /var/log/caddy/caddy.log
+                }
+                reverse_proxy 127.0.0.1:3000
+        }
+}
+```
