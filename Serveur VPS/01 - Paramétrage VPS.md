@@ -16,6 +16,8 @@ A plusieurs moment le port utilisé pour SSH est `49152`, prenez garde à bien l
 
 ## Première connexion
 
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
 Pour se connecter sur ma machine vierge, on récupère l'`IPv4` de la machine sur son tableau de bord OVH dans `Bare Metal Cloud/Serveurs Privés Virtuels` et on clique sur le nom du VPS, l'`IPv4` se trouve dans l'encadré `IP` sur la droite.
 
 Le générateur du mot de passe est envoyé par mail, il faut utiliser le "secret" comme mdp de première connexion, ici on se connecte à l'user `debian` (par défaut chez OVH).
@@ -44,7 +46,11 @@ On va installer `nala` (surcouche visuelle d'apt), `kitty-terminfo` (support pou
 sudo apt install -y nala kitty-terminfo fastfetch
 ```
 
+</div></details>
+
 ## Mise à jour du système
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo nala update && sudo nala upgrade -y
@@ -80,7 +86,11 @@ sudo reboot
 
 On est déconnecté, c'est normal, ne pas se reconnecter, on va d'abord gérer les clefs SSH sur notre machine hôte (locale).
 
+</div></details>
+
 ## Gestion de clefs SSH
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ### Créer une clef SSH de récupération
 
@@ -128,7 +138,11 @@ ssh -i ~/Documents/Sécurité/Clefs/la-recovery-key debian@TON_IPV4 "cat >> ~/.s
 
 Donnez le mot de passe de votre clef de récupération et ça y est, votre clef locale est ajoutée !
 
+</div></details>
+
 ## Changer le port par défaut de SSH
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On se connecte maintenant au serveur
 
@@ -187,7 +201,11 @@ Voilà, on va fini de régler le port !
 
 Pour Ubuntu 24.04 et ultérieures (**pas Debian, attention**), il faut voir [cette doc](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/virtual-private-servers/secure-your-vps#modifier-le-port-d%C3%A9coute-ssh-par-d%C3%A9faut), il y a eu des changements dans le fonctionnement de SSH.
 
+</div></details>
+
 ## Créer un utilisateur non privilégié
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On ne va plus utiliser l'utilisateur `debian` (qui les privilèges `root`) pour des raisons de sécurité, on va créer un utilisateur principal.
 
@@ -213,7 +231,11 @@ Gardez précieusement votre commande de connexion, c'est celle-ci que vous utili
 
 Pour les comptes non admin, ne donnez pas d'accès sudo !
 
-## Ajouter la clef de récupèration au nouveau user
+</div></details>
+
+## Ajouter la clef de récupération au nouveau user
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Modifiez les variables au besoin, ce script permet d'ajouter la clef de récupèration au nouvel utilisateur (il ne faudra jamais la retirer sous peine de perdre tout accès), la connexion par mot de passe étant à bannir.
 
@@ -255,9 +277,13 @@ Il faut se connecter sur l'user et faire
 cat ~/.ssh/authorized_keys
 ```
 
-Pour être sûr qu'il a bien la clef de récupèration dans ses connexions SSH.
+Pour être sûr qu'il a bien la clef de récupération dans ses connexions SSH.
+
+</div></details>
 
 ## Le Pare-feu
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le parefeu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
 
@@ -342,7 +368,11 @@ sudo ufw reload
 
 On limite ainsi grandement la surface d'attaque. Il n'y a seulement 3 ports ouverts (1 pour se connecter en SSH, et 2 pour https et http).
 
+</div></details>
+
 ## Fail2Ban
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Fail2Ban est un outil très pratique qui va automatiquement bannir les IP échouant dans leurs tentatives d'authentification au serveur. Il protège le serveur des attaques de type Brute Force ou Denial of Service (DoS).
 
@@ -453,7 +483,11 @@ Le serveur doit répondre `pong`
 - Fail2Ban a ici pour mission principale de protéger l'accès SSH de la machine.
 - L'usage du VPS est dédié à Docker, une image de `Caddy` sera configurée pour gérer les accès et le trafic Web.
 
+</div></details>
+
 ## Retirer une clef SSH du serveur
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ATTENTION : veillez à ne JAMAIS retirer la CLEF de RECUPERATION, sous peine de perdre tout accès à la machine et de devoir reset le VPS.
 
@@ -469,7 +503,11 @@ Et on retire via l'id avec
 grep -v 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxx' ~/.ssh/authorized_keys > ~/.ssh/tmp && mv ~/.ssh/tmp ~/.ssh/authorized_keys
 ```
 
+</div></details>
+
 ## Retirer la connexion par mot de passe
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On vérifie la présence de "passwordauthentication yes" dans "/etc/ssh/sshd_config.d"
 
@@ -501,7 +539,11 @@ sudo systemctl restart ssh
 
 A partir de maintenant, on ne peut plus se connecter qu'avec une clef SSH, ce qui est la meilleure pratique pour protéger les connexions SSH sur mon VPS.
 
+</div></details>
+
 ## Verrouillage de l'user initial `debian`
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On empêche la connexion et on enlève les droits sudo à `debian`, pour des raisons de paramètrages internes, on ne supprime jamais l'utilisateur initial d'un serveur, on le vérouille, et par acquis de conscience, on révoque les clefs publiques qu'il a enregistré.
 
@@ -542,7 +584,11 @@ On met une énorme entropie et on jette le mdp, on ne veut pas qu'on puisse s'y 
 
 Voilà, l'utilisateur `debian` est proprement vérouillé.
 
-## Verouillage de la connexion SSH de root
+</div></details>
+
+## Verrouillage de la connexion SSH de root
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo nano /etc/ssh/sshd_config
@@ -570,7 +616,11 @@ S'il ne retourne rien, c'est impeccable, on applique les changements
 sudo systemctl restart sshd
 ```
 
+</div></details>
+
 ## Gestion des logs (Logrotate)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Le pare-feu (UFW) et Fail2Ban génèrent en continu des lignes de texte (logs) pour surveiller le serveur. Sans nettoyage, ces fichiers finissent par saturer l'espace disque du VPS, ce qui peut faire planter la machine. On utilise `logrotate` pour archiver, compresser et supprimer automatiquement les vieux logs.
 
@@ -588,7 +638,11 @@ sudo systemctl status logrotate.timer
 
 Il doit retourner `active (waiting)`. Rien de plus à faire, le système gère l'espace disque tout seul à partir de maintenant !
 
+</div></details>
+
 ## Monitoring basique BTOP
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On l'installe avec
 
@@ -598,7 +652,11 @@ sudo nala install -y btop
 
 C'est un outil léger et moderne pour monitorer le serveur, il suffit de taper `btop` pour le lancer.
 
+</div></details>
+
 ## Réglage du shell
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Afin que ce soit plus confortable, on va customiser le shell du VPS
 
@@ -623,7 +681,11 @@ exit
 
 On se reconnecte, normalement tout devrait être configuré.
 
+</div></details>
+
 ## Multiplexeur Zellij
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Zellij est un multiplexeur de terminal. Il permet de séparer son écran en plusieurs terminaux, mais surtout, il garde ses sessions actives en arrière-plan. Si la connexion internet coupe au milieu d'une grosse commande Docker, la session reste vivante sur le VPS. Il suffit de se reconnecter et relancer la session du multiplexeur.
 
@@ -635,7 +697,11 @@ Installation, depuis [le site officiel](https://zellij.dev)
 curl -L "https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz" | tar -xzvf - && sudo mv zellij /usr/local/bin/
 ```
 
+</div></details>
+
 ## Quelques commandes basiques
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Juste quelque commandes de bases, voir doc dédiée, ce n'est pas le sujet ici.
 
@@ -659,7 +725,11 @@ zellij kill-session ma-session
 zellij kill-all-sessions
 ```
 
+</div></details>
+
 ## Mises à jour de sécurité auto unattended-upgrades
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 C'est déjà installé par défaut (paquets `unattended-upgrades` et `apt-listchanges`)
 
@@ -710,7 +780,11 @@ ls: cannot access '/var/run/reboot-required': No such file or directory
 
 C'est qu'aucun reboot n'est requis.
 
+</div></details>
+
 ## Le reset de mon VPS
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ATTENTION, RESET LE VPS FAIT TOUT PERDRE CE QU'IL CONTIENT !
 
@@ -725,3 +799,17 @@ Attention à virer le host (sinon votre système va bugger lors de la connexion 
 ```bash
 ssh-keygen -f $HOME/.ssh/known_hosts -R '[ADRESSE_IP]'
 ```
+
+</div></details>
+
+## Auteur
+
+[<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes)  
+[**RogerBytes (Harry Richmond)**](https://github.com/RogerBytes)
+
+<span hidden>
+<details><summary></summary>
+<style>.spoiler{border-left:4px solid #1abc9c;border-bottom-left-radius:3px;padding-left:10px;padding-top:15px;margin-top:-10px;margin-bottom:15px}.button{cursor:pointer;padding:5px 10px;background-color:#3498db;color:white;border-radius:3px;margin-bottom:5px;display:inline-block;transition:background-color 0.2s}.button:hover{background-color:#217dbb}details[open] .button{background-color:#1abc9c}</style>
+</details></span>
+
+<p align="right"><a href="#">🔝 Retour en haut</a></p>
