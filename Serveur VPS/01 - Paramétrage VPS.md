@@ -429,12 +429,12 @@ Il retourne
 $ sudo fail2ban-client status sshd
 Status for the jail: sshd
 |- Filter
-|  |- Currently failed:	0
-|  |- Total failed:	0
-|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+|  |- Currently failed: 0
+|  |- Total failed: 0
+|  `- Journal matches: _SYSTEMD_UNIT=ssh.service + _COMM=sshd
 `- Actions
-   |- Currently banned:	0
-   |- Total banned:	0
+   |- Currently banned: 0
+   |- Total banned: 0
    `- Banned IP list:
 ```
 
