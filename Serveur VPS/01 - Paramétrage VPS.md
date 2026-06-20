@@ -261,6 +261,9 @@ Pour être sûr qu'il a bien la clef de récupèration dans ses connexions SSH.
 
 Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le parefeu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
 
+- Pour information, la règle de sécurité est de laisser le flux sortant ouverts, et de verrouiller par défaut le flux entrant (en laissant ouverts seulement le port SSH, le port http, et le port https).
+- C'est `Caddy` qui gérera le flux entrant en réceptionnant les requêtes du web pour les rediriger vers les conteneurs Docker.
+
 ```bash
 sudo nala install -y ufw
 ```
@@ -288,7 +291,7 @@ Modifiez la commande suivante pour y mettre votre port
 sudo ufw allow 49152/tcp
 ```
 
-On ajoute aussi le localhost
+On ajoute aussi le localhost (totalement indispensable, tout le fonctionnement interne du système repose sur les communications internes du localhost)
 
 ```bash
 sudo ufw allow in on lo
@@ -323,6 +326,21 @@ Anywhere on lo             ALLOW IN    Anywhere
 49152/tcp (v6)             ALLOW IN    Anywhere (v6)
 Anywhere (v6) on lo        ALLOW IN    Anywhere (v6)
 ```
+
+### Ajouter les ports http et https pour le Caddy (le Reverse Proxy)
+
+- Caddy va recevoir le trafic venant d'Internet sur les ports http (80) et https (443) de la machine, puis redirige vers les conteneurs Docker, y ajoute nom de domaine et certificat TLS.
+- Vu que le reverse proxy n'utilise pas `ports:` dans son `compose.yml` (il utilise `network_mode: "host"`), Docker ne gère pas les ports avec `iptables` mais redirige sur les vrais ports de la machine.
+- Cette configuration en mode `host` permettra également à Fail2Ban de lire les logs de Caddy pour bloquer directement les attaquants au niveau d'UFW.
+- Même si Caddy (notre futur reverse proxy) sera installé via Docker, il se comporte comme un logiciel classique du serveur au niveau du pare-feu, il faut donc absolument activer ces ports.
+
+```bash
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw reload
+```
+
+On limite ainsi grandement la surface d'attaque. Il n'y a seulement 3 ports ouverts (1 pour se connecter en SSH, et 2 pour https et http).
 
 ## Fail2Ban
 
@@ -393,12 +411,10 @@ bantime  = 1h
 - `maxretry` c'est le nombre de tentatives et `bantime` c'est le timeout
 - `findtime` c'est pour la période (ici c'est 3 essaie dans une durée de 5mn)
 
-On enregistre le fichier, puis on lance le service
+On enregistre le fichier, puis on active et lance le service
 
 ```bash
-sudo systemctl enable fail2ban
-sudo systemctl restart fail2ban
-sudo systemctl start fail2ban
+sudo systemctl enable --now fail2ban
 ```
 
 Puis on vérifie que le réglage est pris en compte
@@ -432,11 +448,10 @@ et aussi via un test de ping
 sudo fail2ban-client ping
 ```
 
-Il doit répondre `pong`
+Le serveur doit répondre `pong`
 
 - Fail2Ban a ici pour mission principale de protéger l'accès SSH de la machine.
-- L'usage du VPS est dédié à Docker, une image de `Nginx Proxy Manager` sera configurée pour gérer les accès et le trafic Web.
-- En plus une image Docker `Fail2Ban` sera également déployée (sans jamais retoucher au fichier `jail.local` du VPS)
+- L'usage du VPS est dédié à Docker, une image de `Caddy` sera configurée pour gérer les accès et le trafic Web.
 
 ## Retirer une clef SSH du serveur
 
@@ -454,7 +469,7 @@ Et on retire via l'id avec
 grep -v 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxx' ~/.ssh/authorized_keys > ~/.ssh/tmp && mv ~/.ssh/tmp ~/.ssh/authorized_keys
 ```
 
-## Retirer la connnexion par mot de passe
+## Retirer la connexion par mot de passe
 
 On vérifie la présence de "passwordauthentication yes" dans "/etc/ssh/sshd_config.d"
 

@@ -7,20 +7,6 @@ Depuis [La commande Docker](https://caddyserver.com/docs/install#docker)
 
 ## Prérequis
 
-### Réglage pare-feu
-
-On dit à `UFW` d'ouvrir les ports, car ils passent par `network_mode: "host"` et non par `ports:`.  
-Donc Docker ne crée pas de boîte réseau isolée et n'ouvre pas automatiquement les ports via iptables.  
-Caddy se comporte comme un logiciel classique du serveur, il faut donc ouvrir le pare-feu du VPS.
-
-```bash
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw reload
-```
-
-Le port 80 est le port http, et le port 443 est le port https.
-
 ### Réglage Fail2Ban Système
 
 Maintenant on paramètre `Fail2Ban` système
