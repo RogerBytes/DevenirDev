@@ -59,9 +59,9 @@ sudo fail2ban-client reload
 
 Voilà, nos deux ports d'entrées sont protégés des attaques BruteForce et DoS.
 
-## Installation
+### Préparation du répertoire et Caddyfile
 
-On prépare un répertoire dans `opt/docker`
+On prépare un répertoire dans `opt/docker` et on s'y rend
 
 ```bash
 sudo mkdir -p /opt/docker/caddy/logs
@@ -71,36 +71,10 @@ cd /opt/docker/caddy
 On créé le `Caddyfile`
 
 ```bash
-sudo nano Caddyfile
+sudo touch Caddyfile
 ```
 
-On y colle (ici l'exemple pour `VaultWarden`)
-
-```plaintext
-vw.rogerbytes.com {
-        log {
-                output file /var/log/caddy/caddy.log
-        }
-        reverse_proxy 127.0.0.1:8000
-}
-```
-
-Pour la ligne `reverse_proxy 127.0.0.1:8000`
-
-Il faut lire cet extrait du `compose.yml` de `VaultWarden` pour comprendre
-
-```yml
-ports:
-  - 127.0.0.1:8000:80
-```
-
-Voici la lecture
-
-- `127.0.0.1:8000:80`
-- `localhost:hôte:conteneur`
-
-- `hôte` **(8000)** C'est la prise sur laquelle le service est disponible uniquement au sein du VPS (grâce au 127.0.0.1). C'est pour cela que Caddy doit pointer vers cette prise locale
-- `conteneur` **(80)** C'est le port interne du conteneur Docker, en général on s'abstient de le modifier, car les services interagissent les uns les autres via ce port
+### Création du `compose.yml`
 
 Maintenant on fait le `compose.yml`
 
@@ -127,6 +101,22 @@ volumes:
   caddy_config:
 ```
 
+#### Explication des volumes dans le `compose.yml`
+
+##### Pour `./logs:/var/log/caddy`
+
+- **Avant les `:` (`./logs`) :** C'est le dossier **réel** sur ton VPS (visible sous nos yeux, si on supprime le conteneur ou la pile de conteneur, il reste).
+- **Après les `:` (`/var/log/caddy`) :** C'est le dossier **virtuel** tout au fond du conteneur Docker (ici pour le conteneur Caddy).
+- **Explication courte :** On branche le dossier de logs interne de Caddy sur un dossier réel du VPS pour que Fail2Ban puisse lire les lignes en direct depuis l'extérieur.
+
+##### Pour `caddy_data:/data`
+
+- **Avant les `:` (`caddy_data`) :** C'est un coffre-fort **virtuel** géré et caché par Docker (il est dans le système de fichier du VPS, si on supprime le conteneur ou la pile de conteneur, il reste).
+- **Après les `:` (`/data`) :** C'est le dossier **virtuel** tout au fond du conteneur Docker (ici pour le conteneur Caddy).
+- **Explication courte :** On connecte une boîte de stockage privée gérée par Docker pour garder tes certificats SSL à l'abri des regards et sécurisés, même si tu supprimes le conteneur.
+
+## Création du conteneur
+
 Et on lance le `compose up`
 
 ```bash
@@ -138,6 +128,42 @@ On vérifie le statut du conteneur
 ```bash
 sudo docker compose logs -f
 ```
+
+`caddy-1  | Error: adapting config using caddyfile: EOF` est normal, notre `Caddyfile` est pour l'instant vide.
+
+Voilà, tout est prêt, il faudra à chaque fois ajouter les réglages dans le `Caddyfile`.
+
+Maintenant que `Caddy` est correctement installé, il est temps de déployer des conteneurs Docker sur le serveur, commencez par `Serveur VPS/Apps/01 - VaultWarden/Installation VaultWarden.md`
+
+## Exemple
+
+Ici l'exemple pour `VaultWarden`
+
+```plaintext
+vw.rogerbytes.com {
+        log {
+                output file /var/log/caddy/caddy.log
+        }
+        reverse_proxy 127.0.0.1:8000
+}
+```
+
+Pour la ligne `reverse_proxy 127.0.0.1:8000`
+
+Il faut lire cet extrait du `compose.yml` de `VaultWarden` pour comprendre
+
+```yml
+ports:
+  - 127.0.0.1:8000:80
+```
+
+Voici la lecture
+
+- `127.0.0.1:8000:80`
+- `localhost:hôte:conteneur`
+
+- `hôte` **(8000)** C'est la prise sur laquelle le service est disponible uniquement au sein du VPS (grâce au 127.0.0.1). C'est pour cela que Caddy doit pointer vers cette prise locale
+- `conteneur` **(80)** C'est le port interne du conteneur Docker, en général on s'abstient de le modifier, car les services interagissent les uns les autres via ce port
 
 ## Pour ajouter d'autres domaines/sous-domaines
 
