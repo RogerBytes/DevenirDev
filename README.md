@@ -1,55 +1,19 @@
-# Exo SQL avec les dep
+# DevenirDev
 
-> [!WARNING]
-> Je dois refaire cette doc, c'est un repo ayant vertu à devenir ma source pour mes docs
+<table><tr><td>
 
-## Import du script sql
+Ce repo contient l’intégralité de mes notes, recherche et supports pédagogiques.
 
-```bash
-mariadb -u harry -p < dep_ville.sql
-```
+</td></tr></table>
 
-et je me connecte à mariadb
+## Auteur
 
-```bash
-mariadb -u harry -p
-```
+[<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes) 
+[**RogerBytes (Harry Richmond)**](https://github.com/RogerBytes)
 
-Et je cherche dans mes BDD
+<span hidden>
+<details><summary></summary>
+<style>.spoiler{border-left:4px solid #1abc9c;border-bottom-left-radius:3px;padding-left:10px;padding-top:15px;margin-top:-10px;margin-bottom:15px}.button{cursor:pointer;padding:5px 10px;background-color:#3498db;color:white;border-radius:3px;margin-bottom:5px;display:inline-block;transition:background-color 0.2s}.button:hover{background-color:#217dbb}details[open] .button{background-color:#1abc9c}</style>
+</details></span>
 
-```mariadb
-SHOW DATABASES;
-```
-
-Et je choisis la bonne
-
-```mariadb
-USE dep_ville
-```
-
-## Obtenir la liste des 10 villes les plus peuplées en 2012
-
-On commance par chercher les tables présentes
-
-```mariadb
-USE dep_ville
-```
-
-## Obtenir la liste des 50 villes ayant la plus faible superficie
-
-## Obtenir la liste des départements d’outres-mer, c’est-à-dire ceux dont le numéro de département commencent par “97”
-
-## Obtenir le nom des 10 villes les plus peuplées en 2012, ainsi que le nom du département associé
-
-## Obtenir la liste du nom de chaque département, associé à son code et du nombre de commune au sein de ces département, en triant afin d’obtenir en
-
-## priorité les départements qui possèdent le plus de communes
-
-## Obtenir la liste des 10 plus grands départements, en terme de superficie
-
-## Compter le nombre de villes dont le nom commence par “Saint”
-
-## Obtenir la liste des villes qui ont un nom existants plusieurs fois, et trier afin d’obtenir en premier celles dont le nom est le plus souvent utilisé par plusieurs communes
-
-## Obtenir en une seule requête SQL la liste des villes dont la superficie est supérieur à la superficie moyenne
-Premier commit effectué
+<p align="right"><a href="#">🔝 Retour en haut</a></p>
