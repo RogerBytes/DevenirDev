@@ -40,7 +40,7 @@ ssh debian@SON_IPv4
 
 On donne le nouveau mdp que l'on vient de régler pour se connecter.
 
-On va installer `nala` (surcouche visuelle d'apt), `kitty-terminfo` (support pour mon émulateur de terminal) et `fastfetch` (affiche les infos de la machine)z
+On va installer `nala` (surcouche visuelle d'apt), `kitty-terminfo` (support pour mon émulateur de terminal) et `fastfetch` (affiche les infos de la machine)
 
 ```bash
 sudo apt install -y nala kitty-terminfo fastfetch
@@ -159,7 +159,7 @@ RANDOM_PORT=$((RANDOM % (65535 - 49152 + 1) + 49152))
 echo "Port SSH 100% tranquille : $RANDOM_PORT"
 ```
 
-Gardez ce port de côté et servez vous en pour le reste de la documentation, ici j'utilise le port `49152` dans cette documentation (vous devais le remplacer par le votre).
+Gardez ce port de côté et servez vous en pour le reste de la documentation, ici j'utilise le port `49152` dans cette documentation (vous devez le remplacer par le votre).
 
 Puis on utilise
 
@@ -252,7 +252,7 @@ public_key=$(cat $public_key_path)
 ssh -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
 ```
 
-`$pubic_key_path` et `$recovery_path` sont les chemins de la clef publique et de la clef de récupération, il faut faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera vérouillé par la suite).
+`$public_key_path` et `$recovery_path` sont les chemins de la clef publique et de la clef de récupération, il faut faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera vérouillé par la suite).
 
 ## Script de sysadmin pour ajouter des clefs publiques
 
@@ -287,7 +287,7 @@ Pour être sûr qu'il a bien la clef de récupération dans ses connexions SSH.
 
 Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le parefeu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
 
-- Pour information, la règle de sécurité est de laisser le flux sortant ouverts, et de verrouiller par défaut le flux entrant (en laissant ouverts seulement le port SSH, le port http, et le port https).
+- Pour information, la règle de sécurité est de laisser le flux sortant ouverts, et de verrouiller par défaut le flux entrant (en laissant ouverts seulement les port SSH, http et https).
 - C'est `Caddy` qui gérera le flux entrant en réceptionnant les requêtes du web pour les rediriger vers les conteneurs Docker.
 
 ```bash
@@ -378,7 +378,7 @@ Fail2Ban est un outil très pratique qui va automatiquement bannir les IP échou
 
 Pour les attaques Distributed Denial of Service (DDoS), OVH intègre déjà VAC, un outil de protection Anti-DDoS activé par défaut. Le VAC filtre le trafic en amont et bloque les requêtes malveillantes simultanées (en identifiant les schémas et comportements suspects du trafic) avant qu'elles n'atteignent le VPS.
 
-- Il lit les les logs en continu, il prends note de toutes les tentatives de connexion
+- Il lit les logs en continu, il prends note de toutes les tentatives de connexion
 - Compte les tentatives par IP et les flag
 - Il envoie à UFW une requête pour chaque suspect, afin de bloquer son IP avec un timer
 
