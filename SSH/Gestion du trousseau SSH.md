@@ -6,7 +6,7 @@
 mkdir -p ~/.ssh && touch ~/.ssh/config && grep -qxF "  AddKeysToAgent yes" ~/.ssh/config || echo -e "Host *\n  AddKeysToAgent yes" >> ~/.ssh/config
 ```
 
-Cette option `AddKeysToAgent yes` élimine la nécessité d'ajouter manuellement les clef à l'agent via `ssh-add` avant chaque connexion. 
+Cette option `AddKeysToAgent yes` élimine la nécessité d'ajouter manuellement les clef à l'agent via `ssh-add` avant chaque connexion.
 En plus, il n'y a besoin d'entrer son mdp qu'une seule fois par session (ou par clé), lors du premier accès nécessitant l'authentification.
 
 Toute clef placée dans `~/.ssh/` est automatiquement ajoutée.
@@ -52,4 +52,3 @@ The key's randomart image is:
 La clef est automatiquement ajouté à SSH Agent, graĉe à l'option `AddKeysToAgent yes` !
 
 Sinon on aurait du faire `ssh-add ~/.ssh/*clefSSH*`
-
