@@ -34,8 +34,9 @@ Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
 
 - Dans le menu `dashboard` (par défaut), cliquer sur le bouton `Login to Panel`, et allez sur le menu `DNS`.
 - Dans l'encadré `MX Records` prendre la `VALUE` de celui avec la `PRIORITY` 10 (l'autre est un serveur de secours si le premier est en rade).
+- Vous aurez une adresse serveur du genre `machin.mxrouting.net`
 
-Si le compte MXROUTE est bien réglé, et pareil du côté du registrar, il n'y a rien d'autre à faire pour le mailing.
+Si le compte MXROUTE est bien réglé, et pareil du côté du registrar lors de l'ajout du NDD, il n'y a rien d'autre à faire pour le mailing.
 
 ### Création du .env
 
@@ -49,18 +50,18 @@ Et on y ajoute ce qui suit
 
 ```ini
 VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123!
-MX_SERVER=TON_SERVEUR.mxrouting.net
-MX_EMAIL=vaultwarden@rogerbytes.com
+MX_SERVER=machin.mxrouting.net
+MX_EMAIL=vault@votrenomdedomaine.com
 MX_PASSWORD=LeMotDePasseDeCetteBoiteMail
 ```
 
-Pour information
+Voici les explications du `.env`, à ne pas utiliser tel quel (c'est juste pour savoir quelles données modifier dans le template au-dessus)
 
 ```ini
-VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123!
-MX_SERVER=TON_SERVEUR.mxrouting.net # <--- À remplacer par le serveur mxroute
-MX_EMAIL=vaultwarden@rogerbytes.com # <--- adresse email d'envoi
-MX_PASSWORD=LeMotDePasseDeCetteBoiteMail # <--- Le mot de passe de la boite mail
+VW_ADMIN_TOKEN=MonSuperMotDePasseSecret123! # <--- À remplacer par votre token
+MX_SERVER=machin.mxrouting.net # <--- À remplacer par le serveur mxroute
+MX_EMAIL=vault@votrenomdedomaine.com # <--- À remplacer par l'email d'envoi
+MX_PASSWORD=LeMotDePasseDeCetteBoiteMail # <--- À remplacer par le mot de passe de la boite mail
 ```
 
 Avant d’enregistrer, on change correctement les valeurs des différentes variables
