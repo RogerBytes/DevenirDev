@@ -131,13 +131,7 @@ Il retourne bien `active (running)`, c'est parfait !
 Pour éviter de saturer le disque du VPS, on configure Docker pour qu'il limite la taille des fichiers de logs de chaque conteneur.
 On doit éditer le fichier de configuration `/etc/docker/daemon.json`, info [sur cette doc](https://docs.docker.com/reference/cli/dockerd/#on-linux), nous utilisons bien le `regular setup` et non `rootless`
 
-On crée le fichier (par défaut il n'existe pas, c'est normal)
-
-```bash
-sudo touch /etc/docker/daemon.json
-```
-
-et on l'ouvre avec `nano`
+On crée le fichier (par défaut il n'existe pas, c'est normal) et on l'ouvre avec `nano`
 
 ```bash
 sudo nano /etc/docker/daemon.json
@@ -181,5 +175,3 @@ Cette commande crée un conteneur de test éphémère et extrait instantanément
 S'il retourne `{"Type":"json-file","Config":{"compress":"true","max-file":"3","max-size":"10m"}}`, c'est la preuve que les options s'appliquent automatiquement.
 
 Voilà, Docker Engine est correctement installé sur le VPS.
-
-Pour voir comment installer des applications, il suffit d'aller dans `Serveur VPS/Apps`, tout est prêt pour le faire !

@@ -1,4 +1,4 @@
-# 01 - Caddy Reverse Proxy
+# 03 - Caddy Reverse Proxy
 
 Depuis [Page docker hub](https://hub.docker.com/_/caddy)
 Depuis [Page GitHub](https://github.com/caddyserver/caddy)
@@ -171,3 +171,5 @@ sudo docker compose exec -w /etc/caddy caddy caddy reload
 ```
 
 Et voilà, la nouvelle configuration est prise en compte.
+
+Pour voir comment installer des applications, il suffit d'aller dans `Serveur VPS/Apps`, tout est prêt pour le faire !
