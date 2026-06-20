@@ -312,7 +312,7 @@ sudo ufw default allow outgoing
 
 ET ATTENTION A FAIRE CE QUI SUIT DANS LA FOULÉE (sinon on ne pourra plus se connecter en SSH)
 
-Modifiez la commande suivante pour y mettre votre port
+Modifiez la commande suivante pour y mettre votre port **ATTENTION A BIEN FAIRE LA MODIFICATION DU PORT**
 
 ```bash
 sudo ufw allow 49152/tcp
@@ -367,7 +367,7 @@ sudo ufw allow https
 sudo ufw reload
 ```
 
-On limite ainsi grandement la surface d'attaque. Il n'y a seulement 3 ports ouverts (1 pour se connecter en SSH, et 2 pour https et http).
+On limite ainsi grandement la surface d'attaque. Il n'y a seulement que 3 ports ouverts depuis l'extérieur (1 pour se connecter en SSH, et 2 pour https et http).
 
 </div></details>
 
