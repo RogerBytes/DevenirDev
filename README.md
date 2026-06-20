@@ -2,7 +2,7 @@
 
 <table><tr><td>
 
-Ce repo contient l’intégralité de mes notes, recherche et supports pédagogiques.
+Ce repo contient l’intégralité de mes notes, recherches et supports pédagogiques.
 
 </td></tr></table>
 
