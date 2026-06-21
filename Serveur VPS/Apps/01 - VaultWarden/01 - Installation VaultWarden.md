@@ -53,6 +53,7 @@ ADMIN_TOKEN=MonSuperMotDePasseSecret123!
 MX_SERVER=machin.mxrouting.net
 MX_EMAIL=vault@votrenomdedomaine.com
 MX_PASSWORD='LeMotDePasseDeCetteBoiteMail'
+DOMAIN=https://ton-domaine.com
 ```
 
 Voici les explications du `.env`, à ne pas utiliser tel quel (c'est juste pour savoir quelles données modifier dans le template au-dessus)
@@ -62,6 +63,7 @@ ADMIN_TOKEN=MonSuperMotDePasseSecret123! # <--- À remplacer par votre token
 MX_SERVER=machin.mxrouting.net # <--- À remplacer par le serveur mxroute
 MX_EMAIL=vault@votrenomdedomaine.com # <--- À remplacer par l'email d'envoi
 MX_PASSWORD='LeMotDePasseDeCetteBoiteMail' # <--- À remplacer par le mot de passe de la boite mail
+DOMAIN=https://ton-domaine.com # <--- À remplacer par le domaine / sous-domaine
 ```
 
 Créer un token avec une bonne entropie est indispensable, il faut conserver ce token précieusement.
@@ -85,7 +87,7 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     environment:
-      - DOMAIN=https://ton-domaine.com
+      - DOMAIN=${DOMAIN}
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=true
       - ADMIN_TOKEN=${ADMIN_TOKEN}
