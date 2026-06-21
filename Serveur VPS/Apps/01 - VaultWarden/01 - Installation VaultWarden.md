@@ -64,6 +64,8 @@ MX_EMAIL=vault@votrenomdedomaine.com # <--- À remplacer par l'email d'envoi
 MX_PASSWORD=LeMotDePasseDeCetteBoiteMail # <--- À remplacer par le mot de passe de la boite mail
 ```
 
+Créer un token avec une bonne entropie est indispensable, il faut conserver ce token précieusement.
+
 Avant d’enregistrer, on change correctement les valeurs des différentes variables
 
 ### Création du `compose.yml`
@@ -88,7 +90,7 @@ services:
       - ADMIN_TOKEN=${ADMIN_TOKEN}
       - SMTP_HOST=${MX_SERVER}
       - SMTP_FROM=${MX_EMAIL}
-      - SMTP_PORT=465
+      - SMTP_PORT=wrapper
       - SMTP_SECURITY=force_tls
       - SMTP_USERNAME=${MX_EMAIL}
       - SMTP_PASSWORD=${MX_PASSWORD}
