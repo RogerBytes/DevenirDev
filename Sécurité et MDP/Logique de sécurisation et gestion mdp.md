@@ -119,7 +119,7 @@ Il faut appuyer sur `Entrée` pour passer à chaque session suivante.
 - `Checking for suspicious (large) shared memory segments [ Warning ]` est normal, c'est un faux-positif, la règle de mémoire partagée de RKHunter est rigide sur ce qui dépasse 1mo.
 - `Checking for passwd file changes [ Warning ]` au premier scan, Rkhunter n'a pas d'historique pour comparer ces fichiers d'utilisateurs. Il signale simplement qu'il les découvre.
 - `Checking for group file changes [ Warning ]` au premier scan, Rkhunter n'a pas d'historique pour comparer ces fichiers d'utilisateurs. Il signale simplement qu'il les découvre.
-- `Checking /dev for suspicious file types [ Warning ]` faux-positif : les Linux modernes créent des fichiers temporaires légitimes dans /dev pour le matériel, ce qui active les vieilles alertes de Rkhunter.
+- `Checking /dev for suspicious file types [ Warning ]` est un faux-positif : les Linux modernes créent des fichiers temporaires légitimes dans /dev pour le matériel, ce qui active les vieilles alertes de Rkhunter.
 - `Checking for hidden files and directories [ Warning ]` est normal. Linux utilise par défaut des tonnes de fichiers et dossiers cachés (commençant par un point) pour stocker les configurations de ses applications.
 
 A la fin, il retourne les différents cumulés à `Possible rootkits: 6`, c'est donc normal.
