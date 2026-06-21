@@ -85,6 +85,7 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     environment:
+      - DOMAIN=https://ton-domaine.com
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=true
       - ADMIN_TOKEN=${ADMIN_TOKEN}
