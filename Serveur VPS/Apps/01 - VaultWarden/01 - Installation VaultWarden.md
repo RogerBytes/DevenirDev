@@ -49,7 +49,7 @@ sudo nano .env
 Et on y ajoute ce qui suit
 
 ```ini
-ADMIN_TOKEN=MonSuperMotDePasseSecret123!
+ADMIN_TOKEN='MonSuperMotDePasseSecret123!'
 MX_SERVER=machin.mxrouting.net
 MX_EMAIL=vault@votrenomdedomaine.com
 MX_PASSWORD='LeMotDePasseDeCetteBoiteMail'
