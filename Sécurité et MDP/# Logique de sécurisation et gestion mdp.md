@@ -3,12 +3,12 @@
 Il est important d'avoir de bonnes pratiques dans la gestion des mots de passe.
 
 - Pour tester l'entropie des mots de passe, il suffit d'installer et utiliser `KeepassXC`.
-- Dans `KeepassXC`, utiliser l'option `Générateur de mots de passe`, on peut y tester nos mots de passe, l'entropie sera affichée.
+- Dans `KeePassXC`, utiliser l'option `Générateur de mots de passe`, on peut y tester nos mots de passe, l'entropie sera affichée.
 
 Il y a 4 mots différents de passe à créer et à apprendre pour être bien protégé.
 
 - Mot de passe : sudo user local (sur ordinateur) / sudo user distant (type vps/serveur) [+40 bits d'entropie]
-- Mot de passe : Keypass [+100 bits d'entropie]
+- Mot de passe : KeePass [+100 bits d'entropie]
 - Mot de passe : VaultWarden [+100 bits d'entropie]
 - Mot de passe : Service Cloud [+100 bits d'entropie]
 
@@ -18,9 +18,9 @@ Ces mots de passe **ne doivent avoir aucune corrélation entre les uns les autre
 
 Afin de ne pas se retrouver complètement verrouillé hors de ses bases de données, il faut écrire ses 4 mots de passe sur un papier physique et ranger le papier chez soi, dans un coffre ou une pièce sécurisée.
 
-## Client KeypassXC
+## Client KeePassXC
 
-On va utiliser [KeyPassXC](https://keepassxc.org/download/#linux) dans notre optique de backup.
+On va utiliser [KeePassXC](https://keepassxc.org/download/#linux) dans notre optique de backup.
 
 Il faut l'installer depuis [sa page Flathub](https://flathub.org/fr/apps/org.keepassxc.KeePassXC)
 
@@ -38,7 +38,7 @@ Le compte VaultWarden **contient**
 Le compte VaultWarden **ne contient pas**
 
 - Mot de passe : user local/user distant (type vps/serveur)
-- Mot de passe : Keypass
+- Mot de passe : KeyPass
 
 ### Clients pour VaultWarden
 
@@ -80,7 +80,7 @@ Nous avons ainsi 2 endroits différents pour notre backup
 
 ### ClamUI
 
-ClamUI est un client pour ClamAv, un antivirus qui va analyser les fichiers pour voir si certains sont connus comme étant des virus.
+ClamUI est un client pour ClamAv, un antivirus qui va analyser les fichiers pour voir si certains sont connus comme étant des virus (par exemple c'est lui qui détectera un keylogger).
 
 On l'installe sur son poste personnel (pas le VPS, on utilisera un conteneur clamav avec docker sur le VPS) depuis [sa page Flathub](https://flathub.org/en/apps/io.github.linx_systems.ClamUI)
 
@@ -88,9 +88,49 @@ Pour le scan, on utilise le profil d'analyse `Full Scan` et on choisir le réper
 
 ### RKHunter
 
-RKHunter (ou RootKit Hunter) est un outil open source conçu pour détecter des rootkits, des backdoors et d’autres types de menaces qui pourraient compromettre votre système.
+RKHunter (ou RootKit Hunter) va détecter des backdoors, des rootkits et autre menaces pour le système.
 
+On l'installe avec
 
+```bash
+sudo nala install -y rkhunter
+```
+
+Quand est demandé `General mail configuration type`, on choisit `Local uniquement`, sur le prompt suivant, il suffit de laisser le nom de la machine par défaut ou de le modifier au besoin.
+
+On va créer un index des fichiers système
+
+```bash
+sudo rkhunter --propupd
+```
+
+Cette commande fera une espèce de hash du système, par la suite il servira de modèle de base pour détecter des modifications malveillantes typique d'un rootkit
+
+#### Lancer la première vérification des fichiers système
+
+```bash
+sudo rkhunter --check
+```
+
+Quand c'est vert, c'est que c'est valide/safe.
+Il faut appuyer sur `Entrée` pour passer à chaque session suivante.
+
+- `/usr/bin/lwp-request [ Warning ]` est normal, c'est un faux-positif de Perl.
+- `Checking for suspicious (large) shared memory segments [ Warning ]` est normal, c'est un faux-positif, la règle de mémoire partagée de RKHunter est rigide sur ce qui dépasse 1mo.
+- `Checking for passwd file changes [ Warning ]` au premier scan, Rkhunter n'a pas d'historique pour comparer ces fichiers d'utilisateurs. Il signale simplement qu'il les découvre.
+- `Checking for group file changes [ Warning ]` au premier scan, Rkhunter n'a pas d'historique pour comparer ces fichiers d'utilisateurs. Il signale simplement qu'il les découvre.
+- `Checking /dev for suspicious file types [ Warning ]` faux-positif : les Linux modernes créent des fichiers temporaires légitimes dans /dev pour le matériel, ce qui active les vieilles alertes de Rkhunter.
+- `Checking for hidden files and directories [ Warning ]` est normal. Linux utilise par défaut des tonnes de fichiers et dossiers cachés (commençant par un point) pour stocker les configurations de ses applications.
+
+A la fin, il retourne les différents cumulés à `Possible rootkits: 6`, c'est donc normal.
+
+On sauvegarde cet état avec
+
+```bash
+sudo rkhunter --propupd
+```
+
+Ces `Warnings` n'apparaîtront plus lors des prochains scans !
 
 ## Bonnes pratiques
 
