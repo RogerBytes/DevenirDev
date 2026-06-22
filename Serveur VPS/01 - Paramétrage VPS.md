@@ -8,7 +8,7 @@ Et un [guide de démarrage VPS](https://docs.ovhcloud.com/fr/guides/bare-metal-c
 
 Et plus sympa, un [guide de gestion d'utilisateurs](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/dedicated-servers/changing-root-password-linux-ds)
 
-Pour ce qui est du choix de l'OS, j'utilise Debian. Le générateur du mot de passe est envoyé par mail (et ré-envoyé à chaque reset si on n'ajoute pas une clef SSS lors du reset).
+Pour ce qui est du choix de l'OS, j'utilise Debian. Le générateur du mot de passe est envoyé par mail (et ré-envoyé à chaque reset si on n'ajoute pas une clef SSH lors du reset).
 
 La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/dedicated-servers/firewall-network) n'est pas encore abordée, c'est une étape à faire après déploiement.
 
@@ -86,6 +86,163 @@ sudo reboot
 ```
 
 On est déconnecté, c'est normal, ne pas se reconnecter, on va d'abord gérer les clefs SSH sur notre machine hôte (locale).
+
+</div></details>
+
+## RKHunter
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+RKHunter (ou RootKit Hunter) va détecter des backdoors, des rootkits et autre menaces pour le système. Infos depuis [ce site](https://homepages.lcc-toulouse.fr/colombet/rkhunter-detection-de-rootkit-sur-linux-debian/)
+
+Notre installation de debian étant vierge, c'est maintenant que l'on installe le détecteur de rootkit.
+
+### Installation
+
+On l'installe (on privilégie les paquets officiels de la Distribution, le paquet est préconfiguré pour le système)
+
+```bash
+sudo nala install -y rkhunter
+```
+
+### Configuration initiale
+
+On modifie `/etc/default/rkhunter` (indispensable pour les vérifications automatisées la nuit)
+
+```bash
+sudo nano /etc/default/rkhunter
+```
+
+Modifiez les variables comme ceci
+
+```bash
+CRON_DAILY_RUN="yes"
+CRON_DB_UPDATE="yes"
+DB_UPDATE_EMAIL="false"
+REPORT_EMAIL="root"
+APT_AUTOGEN="yes"
+NICE="0"
+RUN_CHECK_ON_BATTERY="true"
+```
+
+On enregistre et on ferme nano.
+
+Maintenant on édite `/etc/rkhunter.conf`  (indispensable pour activer les mises à jour de RKHunter)
+
+```bash
+sudo nano /etc/rkhunter.conf
+```
+
+On va à la fin du fichier (`ALT + /`, en passant le `M` signifie `ALT` et `^` signifie `CTRL`) et on colle
+
+```conf
+# Activer les mises à jour
+UPDATE_MIRRORS=1
+MIRRORS_MODE=0
+WEB_CMD=""
+
+# Configuration pour le cron de RKHunter
+CRON_DAILY_RUN="yes"
+CRON_DB_UPDATE="yes"
+DB_UPDATE_EMAIL="false"
+REPORT_EMAIL="root"
+APT_AUTOGEN="yes"
+NICE="0"
+RUN_CHECK_ON_BATTERY="true"
+```
+
+On enregistre et on ferme nano.
+
+On applique les changements en lançant un indexation avec
+
+```bash
+sudo rkhunter --propupd
+```
+
+### Mise à jour de RKHunter
+
+Maintenant que nos réglages initiaux sont faits, on lance la mise à jour
+
+```bash
+sudo rkhunter --update
+```
+
+### Premier scan
+
+On lance le premier scan avec
+
+```bash
+sudo rkhunter --check --sk
+```
+
+Les `Skipped` en jaune n'ont aucune importance, maintenant ou va étudier les logs pour voir quels sont les `Warnings`
+
+```bash
+sudo grep -i "warning" /var/log/rkhunter.log
+```
+
+```text
+*[11:00:35] Info: No mail-on-warning address configured
+[11:00:36] Info: Using syslog for some logging - facility/priority level is 'authpriv.warning'.
+[11:02:36]   Checking if SSH root access is allowed          [ Warning ]
+[11:02:36] Warning: The SSH configuration option 'PermitRootLogin' has not been set.
+[11:02:39]   Checking for hidden files and directories       [ Warning ]
+[11:02:39] Warning: Hidden file found: /etc/.resolv.conf.systemd-resolved.bak: ASCII text
+[11:02:39] Warning: Hidden file found: /etc/.updated: ASCII text
+```
+
+Le `Warning` pour `PermitRootLogin` est à ignorer, on fera ça dans [Verrouillage de la connexion SSH de root](#verrouillage-de-la-connexion-ssh-de-root)
+
+Et la liste des fichiers cachés
+
+- `/etc/.resolv.conf.systemd-resolved.bak`
+- `/etc/.updated`
+
+Maintenant on édite `/etc/rkhunter.conf`, on va autoriser ces deux fichiers cachés
+
+```bash
+sudo nano /etc/rkhunter.conf
+```
+
+On va à la fin du fichier (`ALT + /`, en passant le `M` signifie `ALT` et `^` signifie `CTRL`) et on colle
+
+```conf
+# Autoriser les fichiers cachés créés par le système et systemd
+ALLOWHIDDENFILE=/etc/.resolv.conf.systemd-resolved.bak
+ALLOWHIDDENFILE=/etc/.updated
+```
+
+On enregistre et on ferme nano.
+
+On ré-indexe le système
+
+```bash
+sudo rkhunter --propupd
+```
+
+Pour tester le scan automatique, on peut faire `sudo /etc/cron.daily/rkhunter`, si la commande met du temps à se terminer, c'est que le check se fait bien en arrière plan.
+
+RKHunter est désormais correctement configuré, il s’exécutera toutes les nuits pour lancer des vérifications système.
+
+### Lancer une vérification RKHunter
+
+```bash
+sudo rkhunter --check -sk
+```
+
+### Lire le résultat de la dernière vérification
+
+Pour lire le résultat
+
+```bash
+sudo tail -n 50 /var/log/rkhunter.log | grep -A 17 "System checks summary"
+```
+
+Pour voir les `Warnings` (je conseille grandement de les corriger s'il y en a)
+
+```bash
+sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
+```
 
 </div></details>
 
@@ -541,7 +698,7 @@ On va relancer le service SSH du VPS avec
 sudo systemctl restart ssh
 ```
 
-A partir de maintenant, on ne peut plus se connecter qu'avec une clef SSH, ce qui est la meilleure pratique pour protéger les connexions SSH sur mon VPS.
+A partir de maintenant, on ne peut plus se connecter qu'avec une clef SSH, ce qui est la meilleure pratique pour protéger les connexions SSH sur un VPS.
 
 </div></details>
 

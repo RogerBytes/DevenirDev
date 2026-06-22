@@ -84,53 +84,10 @@ ClamUI est un client pour ClamAv, un antivirus qui va analyser les fichiers pour
 
 On l'installe sur son poste personnel (pas le VPS, on utilisera un conteneur clamav avec docker sur le VPS) depuis [sa page Flathub](https://flathub.org/en/apps/io.github.linx_systems.ClamUI)
 
-Pour le scan, on utilise le profil d'analyse `Full Scan` et on choisir le répertoire racine `/` dans la cible à analyser (le scan est long). On ignore les alertes pour `/proc` ou `/sys`
+Pour le scan :
 
-### RKHunter
-
-RKHunter (ou RootKit Hunter) va détecter des backdoors, des rootkits et autre menaces pour le système.
-
-On l'installe avec
-
-```bash
-sudo nala install -y rkhunter
-```
-
-Quand est demandé `General mail configuration type`, on choisit `Local uniquement`, sur le prompt suivant, il suffit de laisser le nom de la machine par défaut ou de le modifier au besoin.
-
-On va créer un index des fichiers système
-
-```bash
-sudo rkhunter --propupd
-```
-
-Cette commande fera une espèce de hash du système, par la suite il servira de modèle de base pour détecter des modifications malveillantes typique d'un rootkit
-
-#### Lancer la première vérification des fichiers système
-
-```bash
-sudo rkhunter --check
-```
-
-Quand c'est vert, c'est que c'est valide/safe.
-Il faut appuyer sur `Entrée` pour passer à chaque session suivante.
-
-- `/usr/bin/lwp-request [ Warning ]` est normal, c'est un faux-positif de Perl.
-- `Checking for suspicious (large) shared memory segments [ Warning ]` est normal, c'est un faux-positif, la règle de mémoire partagée de RKHunter est rigide sur ce qui dépasse 1mo.
-- `Checking for passwd file changes [ Warning ]` au premier scan, Rkhunter n'a pas d'historique pour comparer ces fichiers d'utilisateurs. Il signale simplement qu'il les découvre.
-- `Checking for group file changes [ Warning ]` au premier scan, Rkhunter n'a pas d'historique pour comparer ces fichiers d'utilisateurs. Il signale simplement qu'il les découvre.
-- `Checking /dev for suspicious file types [ Warning ]` est un faux-positif : les Linux modernes créent des fichiers temporaires légitimes dans /dev pour le matériel, ce qui active les vieilles alertes de Rkhunter.
-- `Checking for hidden files and directories [ Warning ]` est normal. Linux utilise par défaut des tonnes de fichiers et dossiers cachés (commençant par un point) pour stocker les configurations de ses applications.
-
-A la fin, il retourne les différents cumulés à `Possible rootkits: 6`, c'est donc normal.
-
-On sauvegarde cet état avec
-
-```bash
-sudo rkhunter --propupd
-```
-
-Ces `Warnings` n'apparaîtront plus lors des prochains scans !
+- On clique sur `Base virale` et `Mettre à jour la base virale` et on revient sur l'onglet `Analyse`
+- on utilise le profil d'analyse `Full Scan` et on choisir le répertoire racine `/` dans la cible à analyser (le scan est long). On ignore les alertes pour `/proc` ou `/sys`
 
 ## Bonnes pratiques
 
@@ -139,7 +96,6 @@ Ces `Warnings` n'apparaîtront plus lors des prochains scans !
 - Dans les mail, toujours vérifier l’expéditeur, et ne pas cliquer sur les liens, il vaut mieux se connecter soi-même au site pour éviter le pishing
 - Verrouiller son ordinateur dès que l'on est plus devant l'écran
 - N'utiliser que des mots de passe unique avec VaultWarden (il est fait pour), ainsi toute brèche est limitée
-- Vérifier les expéditeurs des mails (le phishing fait toujours autant de ravages)
 - Se connecter au VPS uniquement via clef SSH et **désactiver la connexion SSH par mot de passe au VPS**
 - Se servir du client BitWarden pour l'auto remplissage des identifiants (évitant ainsi le problème d'un KeyLogger)
 
