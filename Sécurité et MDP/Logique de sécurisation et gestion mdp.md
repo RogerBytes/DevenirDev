@@ -89,6 +89,26 @@ Pour le scan :
 - On clique sur `Base virale` et `Mettre à jour la base virale` et on revient sur l'onglet `Analyse`
 - on utilise le profil d'analyse `Full Scan` et on choisir le répertoire racine `/` dans la cible à analyser (le scan est long). On ignore les alertes pour `/proc` ou `/sys`
 
+### Consulter les résultats de RKHunter sur nos serveurs
+
+RKHunter est un détecteur de rootkit, c'est utile sur serveur VPS.
+
+Pour lire le résultat
+
+```bash
+sudo tail -n 50 /var/log/rkhunter.log | grep -A 17 "System checks summary"
+```
+
+Il faut aussi vérifier les `Warnings` (je conseille grandement de les corriger s'il y en a)
+
+```bash
+sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
+```
+
+- On vérifie chacun des fichier qui ont un flag `Warnings`
+- Si les fichiers/modifications sont légitimes, on lance une indexation pour les valider.
+- Si ce sont des fichiers cachés légitimes, on réutilise `ALLOWHIDDENFILE` dans le fichier de configuration
+
 ## Bonnes pratiques
 
 - Suivre cette documentation à la lettre
@@ -98,6 +118,7 @@ Pour le scan :
 - N'utiliser que des mots de passe unique avec VaultWarden (il est fait pour), ainsi toute brèche est limitée
 - Se connecter au VPS uniquement via clef SSH et **désactiver la connexion SSH par mot de passe au VPS**
 - Se servir du client BitWarden pour l'auto remplissage des identifiants (évitant ainsi le problème d'un KeyLogger)
+- Vérifier les logs de RKHunter de temps en temps
 
 ## Mauvaises (très mauvaises) pratiques
 
@@ -113,3 +134,4 @@ Voici les comportements à **bannir absolument**
 - Ne pas vérifier les expéditeurs des mails
 - Ne pas mettre de mot de passe sur une session
 - Se connecter en SSH avec mot de passe (il faut désactiver l'option)
+- Ne jamais vérifier les logs de RKHunter
