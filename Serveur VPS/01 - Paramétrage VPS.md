@@ -256,7 +256,7 @@ sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 
 ### Créer une clef SSH de récupération
 
-On crée une clef de récupération, c'est une clef que l'on conserve précieusement, ce sera notre accès pour ajouter des clefs locales sur d'autres machines.
+On crée une clef de récupération (sur notre machine locale), c'est une clef que l'on conserve précieusement, ce sera notre accès pour ajouter des clefs locales sur d'autres machines.
 
 Dans l'exemple, on crée le repertoire `~/Documents/Sécurité/Clefs/`
 
@@ -267,17 +267,17 @@ mkdir -p ~/Documents/Sécurité/Clefs/
 On crée la clef
 
 ```bash
-ssh-keygen -t ed25519 -f ~/Documents/Sécurité/Clefs/la-recovery-key -C "Clef de récupération - OVH - NOM DU VPS"
+ssh-keygen -t ed25519 -f ~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key -C "Clef de récupération - OVH - Nom du VPS"
 ```
 
-Attention, mettez un mot de passe avec une très forte entropie (40 chars par exemple) et enregistre le précieusement. Étant une clef de récupération, il faut en protéger l'accès.
+Attention, mettez un mot de passe avec une très forte entropie (100 bits d'entropie minimum) et enregistrer le fichier précieusement. Étant une clef de récupération, il faut en protéger l'accès.
 
-On déplace les deux clefs dans `~/Documents/Sécurité/Clefs` (ou ailleurs), il faudra absolument garder ces clefs.
+Il faudra absolument garder ces clefs.
 
 On l'ajoute la clef publique de récupération au VPS avec
 
 ```bash
-ssh-copy-id -i ~/Documents/Sécurité/Clefs/la-recovery-key.pub debian@192.0.2.1
+ssh-copy-id -i ~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key.pub debian@192.0.2.1
 ```
 
 Et on tape le mot de passe de l'user `debian`
@@ -295,7 +295,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com your_machine"
 On l'ajoute la clef publique locale (quelle soit neuve ou pas), on prend toute suite la bonne habitude de l'ajouter via la clef de récupération
 
 ```bash
-ssh -i ~/Documents/Sécurité/Clefs/la-recovery-key debian@192.0.2.1 "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_ed25519.pub
+ssh -i ~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key debian@192.0.2.1 "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_ed25519.pub
 ```
 
 Donnez le mot de passe de votre clef de récupération et ça y est, votre clef locale est ajoutée !
@@ -381,6 +381,12 @@ et on lui donne l'accès sudo, étant le vrai compte du VPS
 
 ```bash
 sudo usermod -aG sudo username
+```
+
+On peut maintenant se déconnecter
+
+```bash
+exit
 ```
 
 Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraîchement créé.
