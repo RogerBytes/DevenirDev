@@ -238,11 +238,15 @@ Pour lire le résultat
 sudo tail -n 50 /var/log/rkhunter.log | grep -A 17 "System checks summary"
 ```
 
-Pour voir les `Warnings` (je conseille grandement de les corriger s'il y en a)
+Il faut aussi vérifier les `Warnings` (je conseille grandement de les corriger s'il y en a)
 
 ```bash
 sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 ```
+
+- On vérifie chacun des fichier qui ont un flag `Warnings`
+- Si les fichiers/modifications sont légitimes, on lance une indexation pour les valider.
+- Si ce sont des fichiers cachés légitimes, on réutilise `ALLOWHIDDENFILE` dans le fichier de configuration
 
 </div></details>
 
