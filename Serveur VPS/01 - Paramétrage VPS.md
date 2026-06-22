@@ -15,6 +15,8 @@ La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-meta
 - A plusieurs moments le port utilisé pour SSH est `49152`, prenez garde à bien le changer par le votre, en passant `49152` n'est pas un bon port, il est uniquement là à titre d'exemple.
 - A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide, elle est uniquement là à titre d'exemple.
 
+Dans cette documentation, le principe du moindre privilège est rigoureusement appliqué.
+
 ## Première connexion
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
