@@ -267,7 +267,7 @@ mkdir -p ~/Documents/Sécurité/Clefs/
 On crée la clef
 
 ```bash
-ssh-keygen -t ed25519 -f ~/Documents/Sécurité/Clefs/la-recovery-key -C "Clef de récupération VPS OVH RogerBytes"
+ssh-keygen -t ed25519 -f ~/Documents/Sécurité/Clefs/la-recovery-key -C "Clef de récupération - OVH - NOM DU VPS"
 ```
 
 Attention, mettez un mot de passe avec une très forte entropie (40 chars par exemple) et enregistre le précieusement. Étant une clef de récupération, il faut en protéger l'accès.
