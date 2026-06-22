@@ -127,7 +127,7 @@ RUN_CHECK_ON_BATTERY="true"
 
 On enregistre et on ferme nano.
 
-Maintenant on édite `/etc/rkhunter.conf`  (indispensable pour activer les mises à jour de RKHunter)
+Maintenant on édite `/etc/rkhunter.conf` (indispensable pour activer les mises à jour de RKHunter)
 
 ```bash
 sudo nano /etc/rkhunter.conf
@@ -765,7 +765,7 @@ Voilà, l'utilisateur `debian` est proprement verrouillé.
 sudo nano /etc/ssh/sshd_config
 ```
 
-Avec `CTRL + W` on cherche `PermitRootLogin` on dé-commente/transforme en `PermitRootLogin no`
+Avec `CTRL + W` on cherche `PermitRootLogin` on dé-commente/transforme en `PermitRootLogin no`, on enregistre et on ferme nano.
 
 On vérifie que tout est bon avec
 

@@ -109,6 +109,12 @@ sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 - Si les fichiers/modifications sont légitimes, on lance une indexation pour les valider.
 - Si ce sont des fichiers cachés légitimes, on réutilise `ALLOWHIDDENFILE` dans le fichier de configuration
 
+## Vérifier si reboot requis sur VPS
+
+```bash
+ls -l /var/run/reboot-required
+```
+
 ## Bonnes pratiques
 
 - Suivre cette documentation à la lettre
