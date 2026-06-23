@@ -12,8 +12,8 @@ Depuis [Page GitHub](https://github.com/dani-garcia/vaultwarden)
 On prépare un répertoire dans `opt/docker`
 
 ```bash
-sudo mkdir -p /opt/docker/vaultwarden
-cd /opt/docker/vaultwarden
+sudo mkdir -p /opt/docker/apps/vaultwarden
+cd /opt/docker/apps/vaultwarden
 ```
 
 ### Préparation de la boite mail chez MXROUTE.com

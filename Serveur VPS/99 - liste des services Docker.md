@@ -2,11 +2,10 @@
 
 Conteneurs Docker de base (pour chacun de mes VPS)
 
-1. Caddie
-2. ClamAv
-3. Watchtower
-4. Uptime Kuma
-5. Offen Docker Volume Backup (pour envoyer au webdav : Infomaniak kDrive)
+1. ClamAv
+2. Watchtower
+3. Uptime Kuma
+4. Offen Docker Volume Backup (pour envoyer au webdav : Infomaniak kDrive)
 
 Conteneurs Perso
 
