@@ -1,42 +1,83 @@
 # 03 - CloudFlare
 
-Cloudflare est un service de proxy sécurisé, les DNS vont rediriger le nom de domaine vers l'adresse ip de CloudFlare et non la vraie adresse ip de la machines.
+Cloudflare est un service de proxy sécurisé. Les DNS vont rediriger le nom de domaine vers l'adresse IP de Cloudflare et non la vraie adresse IP de la machine.
 
 ## Les offres
 
-- l'offre gratuite propose la protection DDoS ainsi que la dissimulation d'IP.
-- l'offre payante protège aussi contre des requêtes malveillantes (en analysant justement les requêtes)
+- **L'offre gratuite :** Propose la protection DDoS ainsi que la dissimulation d'IP (Cloudflare joue le rôle de proxy).
+- **L'offre payante :** Protège également contre les requêtes malveillantes en analysant le trafic applicatif.
 
-## Truc
+## Réglage DNS
 
-On se connecte [au dashboard de Cloudflare](https://dash.cloudflare.com), puis l'on va sur `Domaines/Vue d'ensemble`.
+1. Se connecter [au dashboard de Cloudflare](https://dash.cloudflare.com), puis aller dans `Domaines > Vue d'ensemble`.
+2. Cliquer sur `Ajouter un domaine` et choisir `Connecter un domaine`.
+3. Entrer le nom de domaine (la configuration s'appliquera également aux sous-domaines).
+4. Laisser l'option `Importer automatiquement les enregistrements DNS` cochée.
+5. Gestion des bots : pour un projet professionnel, les autoriser. Pour un domaine personnel/privé, les bloquer pour limiter la visibilité.
+6. Laisser coché `Orienter le trafic des bots IA avec robots.txt`.
+7. Cliquer sur `Continuer` et choisir l'offre (gratuite ou payante, gratuit c'est très bien de base).
 
-On clique sur `Ajouter un domaine` et choisir `Connecter un domaine`, et
+### Vérification et avertissements
 
-- Entrer son nom de domaine (il prendra les sous domaines également)
-- on laisse l'option `Importer automatiquement les enregistrements DNS`
-- pour les robots, si c'est un projet pro, on les autorise, si c'est un domaines avec service pro perso, on les bloque (pas besoin de visibilité)
-- On laisse coché `Orienter le trafic des bots IA avec robots.txt`
-- On clique sur `Continuer`
-- On choisit son offre
+Pour des entrées de type :
 
-On clique sur `Ajouter un domaine` et choisir `Connecter un domaine`, et
+```text
+A - mondomaine - xxx.xxx.xx.x
+A - www - xxx.xxx.xx.x
+CNAME - ftp - mondomaine.com
+```
 
-On va sur `Domaines/Vue d'ensemble` on clique sur le domaine en question, il faut vérifier que les entrées sont les mêmes que celle du fournisseur.
+L'avertissement `Nom d'hôte n'est pas couvert par un certificat` peut apparaître. S'il s'agit des anciennes configurations par défaut d'OVH inutilisées, cet avertissement peut être ignoré.
 
-## Vérifier avec OVH
+On peut cliquer sur `Passer à l'activation`.
 
-CORRIGER A A PARTIR D'ICI
+### Régler la zone DNS d'OVH
 
-- Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR)
-et allez dans la partie `Web Cloud/Zone DNS` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`
+1. Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR).
+2. Aller dans la section `Web Cloud > Noms de domaine` et sélectionner le domaine concerné (`mondomaine.com`).
+3. Dans l'onglet **Informations générales**, désactiver la ligne **Délégation sécurisée (DNSSEC)**. *Note : Maintenir la "Protection contre le transfert" activée.*
+4. Aller dans l'onglet **Serveurs DNS**.
+5. Cliquer sur le bouton `Modifier les DNS`.
+6. Cocher le choix `Utiliser mes propres DNS`.
+7. Renseigner les serveurs de noms fournis par Cloudflare :
+   - `renan.ns.cloudflare.com`
+   - `veda.ns.cloudflare.com`
+8. Cliquer sur `Appliquer la configuration`.
 
-S'il y a plus de deux entrées `MX` (c'est pout Mail Exchanger), supprimez les pour qu'il n'y en ait plus que deux.
-S'il y a une entrée `SPF`, il faut la supprimer.
-Ajouter les entrées dans le registrar en se basant sur les indications de mxroute.com
+Et on attends que les nouveaux serveurs DNS soient actifs (5 minutes chez moi).
 
-Sous domaine on met rien si c'est @ dans le NAME ! C'est une convention en informatique.
+### Validation et finalisation sur Cloudflare
 
-Il faut être patient pour les modifications de type MX et SPF, car elles sont gardées en cache, ça peut prendre entre 30 minutes et 2 heures.
+1. Retourner sur le tableau de bord Cloudflare, sur la page du domaine en attente (la page `Mettez à jour vos serveurs de noms pour activer Cloudflare.`).
+2. En bas de page, cliquer sur le bouton `J'ai modifié mes serveurs DNS`.
 
-OVH précise que
+**Délai de propagation :**
+Le message `En attente que votre serveur d’inscription propage vos nouveaux serveurs de noms` s'affiche. Bien que le système indique un délai potentiel de 1h à 2h, la détection peut être effective en quelques minutes (environ 2 minutes après un rafraîchissement de la page).
+
+La validation finale est confirmée par le message :
+
+- `Votre domaine est désormais protégé par Cloudflare.`
+
+Ça y est, c'est fini.
+
+## Options de CloudFlare à activer
+
+Dans la vue d'ensemble, il faut activer les Options
+
+- Page Shield
+- Mode Bot Fight
+- Détection des informations d'identification divulguées
+
+## Option `Mode Under Attack`
+
+Si jamais une attaque DDoS a lieu contre mon site/app !
+
+Dans la vue d'ensemble, dans le panel latérale de droite, activer l'option `Mode Under Attack`
+
+## Résumé
+
+- **Objectif :** Migration de la gestion de la zone DNS d'OVH vers Cloudflare.
+- **Modification des serveurs DNS :** Accès à l'onglet `Serveurs DNS` dans l'espace client OVH. Sélection de l'option `Utiliser mes propres DNS` pour y renseigner les serveurs de noms Cloudflare fournis.
+- **Ajustement de la sécurité :** Désactivation de la délégation sécurisée (`DNSSEC`) chez le registraire pour permettre la validation par Cloudflare. Maintien de la `Protection contre le transfert` active pour sécuriser le domaine.
+- **Statut final :** Détection automatique validée par Cloudflare. Le domaine est désormais actif et sécurisé sur la nouvelle infrastructure.
+- **Gestion future :** Toute l'administration et la configuration de la zone DNS (ajouts ou modifications d'entrées) s'effectuent désormais exclusivement depuis le compte Cloudflare, et plus depuis l'interface d'OVH.
