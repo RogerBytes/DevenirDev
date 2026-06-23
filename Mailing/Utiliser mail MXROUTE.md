@@ -38,18 +38,18 @@ domain-verified
 
 Et il dit qu'on peut vérifier en faisant `dig TXT _da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx.nimportequoiquoi.com`
 
-Mais d'abord il faut paramétrer l'ownership du domaine (sur OVH ici), ce qui permettra de rediriger sur MXROUTE.com.
+Mais d'abord il faut paramétrer l'ownership du domaine (sur CloudFlare attention), ce qui permettra de rediriger sur MXROUTE.com.
 
 ### Ajouter l'ownership sur le domaine chez OVH
 
-- Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR)
-et allez dans la partie `Web Cloud/Zone DNS` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`
+- Se connecter [au compte CloudFlare](https://dash.cloudflare.com/)
+et allez dans la partie `Domaines/Vue d'ensemble` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`, puis aller dans `DNS/Enregistrements`
 
-- Cliquez (à droite) sur `Ajouter une entrée`, choisir `TXT` (dans champs étendus)
+- Cliquez (à droite) sur `Ajouter un enregistrement`, choisir Type `TXT`
 
-- Dans **sous-domaine**, ajoutez donc `_da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx`
+- Dans **Nom**, ajoutez donc `_da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx`
 - Dans **TTL**, laissez le réglage par défaut
-- Dans **Valeur**, ajoutez donc `domain-verified`
+- Dans **Contenu**, ajoutez donc `domain-verified`
 
 En bas il affiche
 
@@ -93,7 +93,7 @@ _da-verify-xxxxxebbcxxxxxa4f162xxxxx853dxxx.nimportequoiquoi.com. 3600 IN TXT "d
 ```
 
 Le retour de `ANSWER SECTION` confirme que le réglage est pris en compte, on peut terminer le réglage.
-Tant que le réglage n'est pas pris en compte, on ne pourra pas l'ajouter dans MXROUTE, ça prend en général 15 à 30 minutes, mais peut prendre plusieurs heures.
+Tant que le réglage n'est pas pris en compte, on ne pourra pas l'ajouter dans MXROUTE, avec CloudFlare, c'est instantané.
 
 ### Finalisation de l'ajout de domaine sur MXROUTE.com
 
@@ -116,22 +116,14 @@ Allez dans le menu `DNS`, les entrées présentes doivent être ajoutées auprè
 
 Dans une autre fenêtre
 
-- Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR)
-et allez dans la partie `Web Cloud/Zone DNS` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`
+- Se connecter [au compte CloudFlare](https://dash.cloudflare.com/)
+et allez dans la partie `Domaines/Vue d'ensemble` et cliquer sur le nom de domaine, ici `nimportequoiquoi.com`, puis aller dans `DNS/Enregistrements`
 
 S'il y a plus de deux entrées `MX` (c'est pout Mail Exchanger), supprimez les pour qu'il n'y en ait plus que deux.
-S'il y a une entrée `SPF`, il faut la supprimer.
+S'il y a une entrée `SPF`, il faut la supprimer (**quand on la copie colle, il faut retirer les guillemets, sinon ça ne marchera pas**).
 Ajouter les entrées dans le registrar en se basant sur les indications de mxroute.com
 
-Sous domaine on met rien si c'est @ dans le NAME ! C'est une convention en informatique.
-
-Il faut être patient pour les modifications de type MX et SPF, car elles sont gardées en cache, ça peut prendre entre 30 minutes et 2 heures.
-
-OVH précise que
-
->[!Note] L’entrée a été ajoutée dans la zone DNS, mais veuillez prendre en compte le temps de propagation (maximum 24h).
-
-Ce coup-ci, cela a pris environ une heure.
+Avec CloudFlare les changements sont instantanés
 
 ## Ajout du certificat SSL
 

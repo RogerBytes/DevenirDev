@@ -1,6 +1,6 @@
 # 03 - CloudFlare
 
-Cloudflare est un service de proxy sécurisé. Les DNS vont rediriger le nom de domaine vers l'adresse IP de Cloudflare et non la vraie adresse IP de la machine.
+Cloudflare gère le DNS et sert de proxy entre les visiteurs et le serveur.
 
 ## Les offres
 
@@ -35,7 +35,7 @@ On peut cliquer sur `Passer à l'activation`.
 
 1. Se connecter [au compte OVH](https://www.ovh.com/auth/?onsuccess=https%3A//manager.eu.ovhcloud.com&ovhSubsidiary=FR).
 2. Aller dans la section `Web Cloud > Noms de domaine` et sélectionner le domaine concerné (`mondomaine.com`).
-3. Dans l'onglet **Informations générales**, désactiver la ligne **Délégation sécurisée (DNSSEC)**. *Note : Maintenir la "Protection contre le transfert" activée.*
+3. Dans l'onglet **Informations générales**, désactiver la ligne **Délégation sécurisée (DNSSEC)**. _Note : Maintenir la "Protection contre le transfert" activée._
 4. Aller dans l'onglet **Serveurs DNS**.
 5. Cliquer sur le bouton `Modifier les DNS`.
 6. Cocher le choix `Utiliser mes propres DNS`.
@@ -73,6 +73,14 @@ Dans la vue d'ensemble, il faut activer les Options
 Si jamais une attaque DDoS a lieu contre mon site/app !
 
 Dans la vue d'ensemble, dans le panel latérale de droite, activer l'option `Mode Under Attack`
+
+## Régler la vraie IP du VPS
+
+Cloudflare a importé la zone DNS depuis OVH, mais il faut vérifier et corriger les enregistrements A pour qu’ils pointent vers l’IP du VPS (sinon rien ne fonctionnera).
+
+- Aller sur [le dashboard CloudFlare](https://dash.cloudflare.com) dans le menu de gauche et aller dans `Domaine/Vue d'ensemble`, cliquer sur le domaine.
+- Dans le menu de gauche, aller dans `DNS/Enregistrements`
+- Pour les entrées `A` avec `mondomaine` `www.mondomaine`, cliquer sur `Modifier` et mettre l'IP de votre VPS
 
 ## Résumé
 

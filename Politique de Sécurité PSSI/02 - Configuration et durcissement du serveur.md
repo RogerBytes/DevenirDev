@@ -21,12 +21,12 @@ Voici les 4 piliers de sécurité à respecter
 - [x] verrouillage de la connexion ssh à root
 - [x] gestion des logs
 - [x] màj auto avec unattended-upgrades
-
+- [x] la pare-feu bloque tous les ports, sauf le local host et le port ssh
+- [x] le pare-feu a une liste blanche d'ip de CloudFlare, seules ces ip peuvent acceder à http et https
+- [x] fail2ban contrôle le pare-feu de CloudFlare via API, bloquant automatiquement les IP malveillantes
 - [x] docker installé en mode standard, nécessitant sudo (pour éviter un hack depuis un conteneur)
 - [x] gestion des logs docker
-
 - [x] mise en place de reverse proxy avec caddy (avec CloudFlare) + paramétrage de fail2ban sur caddy
-
 - [x] déploiements via conteneurs docker (c'est caddy qui prend en charge la redirection des connexion entrantes vers les localhost des différents conteneurs)
 
 ## Représentation du flux entrant
@@ -34,23 +34,39 @@ Voici les 4 piliers de sécurité à respecter
 Seules les connexions entrantes sont filtrées, toutes les connexions sortantes sont traitées par les conteneurs Docker (qui gèrent nativement iptables sur Debian).
 
 ```mermaid
-graph LR
+graph TD
   %% Définition des styles
   classDef internet fill:#eceff1,stroke:#37474f,stroke-width:2px,color:#000;
   classDef cloudflare fill:#f57c00,stroke:#e65100,stroke-width:2px,color:#fff;
+  classDef ufw fill:#d32f2f,stroke:#c62828,stroke-width:2px,color:#fff;
   classDef caddy fill:#00acc1,stroke:#006064,stroke-width:2px,color:#fff;
   classDef docker fill:#1e88e5,stroke:#0d47a1,stroke-width:2px,color:#fff;
+  classDef f2b fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:#fff;
 
-  %% Flux de données
-  A([🌐 Visiteur Web]) -->|Requête HTTPS| B[☁️ CloudFlare]
-  B -->|Proxy Sécurisé| C[🔀 Caddy <br> Reverse Proxy]
-  C -->|Redirection Localhost| D[🐳 Conteneurs Docker <br> Applications]
+  %% Flux Légitime via CloudFlare
+  A([🌐 Visiteur Web Légitime]) -->|1. Requête domaine.com| B{☁️ Pare-feu CloudFlare}
+  B -->|2. ALLOW: Trafic via IP CloudFlare| C{🛡️ Pare-feu UFW}
+  C -->|3. ALLOW: Ports 80 et 443| D[🔀 Caddy Reverse Proxy]
+
+  %% Flux Malveillant (Tentative de contournement direct)
+  E([🥷 Attaquant / Robot Scan]) -.->|Tentative IP directe du serveur| C
+  C -.->|DENY: Pas une IP CloudFlare| X((❌ Connexion rejetée Timeout))
+
+  %% Interne au Serveur et Boucle Fail2Ban
+  D -->|4. Redirection Localhost| F[🐳 Conteneurs Docker Applications]
+  D -.->|5. Analyse des logs de Caddy| G[🔒 Fail2Ban]
+  G -.->|6. Action de blocage via API| B
+
+  %% Blocage au niveau de Cloudflare pour les récidivistes
+  B -.->|DENY: IP bannie par Fail2Ban| Y((❌ Bloqué par CloudFlare))
 
   %% Application des styles
-  class A internet;
+  class A,E internet;
   class B cloudflare;
-  class C caddy;
-  class D docker;
+  class C ufw;
+  class D caddy;
+  class F docker;
+  class G f2b;
 ```
 
 ## Perspectives : Sécurité Applicative (Symfony & Docker)

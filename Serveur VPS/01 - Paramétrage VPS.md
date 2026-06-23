@@ -457,7 +457,7 @@ Pour être sûr qu'il a bien la clef de récupération dans ses connexions SSH.
 
 Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le pare-feu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
 
-- Pour information, la règle de sécurité est de laisser le flux sortant ouverts, et de verrouiller par défaut le flux entrant (en laissant ouverts seulement les port SSH, http et https).
+- Pour information, la règle de sécurité est de laisser le flux sortant ouvert, et de verrouiller par défaut le flux entrant (en laissant ouvert seulement le port SSH).
 - C'est `Caddy` qui gérera le flux entrant en réceptionnant les requêtes du web pour les rediriger vers les conteneurs Docker.
 
 ```bash
@@ -523,20 +523,21 @@ Anywhere on lo             ALLOW IN    Anywhere
 Anywhere (v6) on lo        ALLOW IN    Anywhere (v6)
 ```
 
-### Ajouter les ports http et https pour le Caddy (le Reverse Proxy)
+### Ne pas ajouter les ports http et https pour le Caddy (le Reverse Proxy)
 
 - Caddy va recevoir le trafic venant d'Internet sur les ports http (80) et https (443) de la machine, puis redirige vers les conteneurs Docker, y ajoute nom de domaine et certificat TLS.
 - Vu que le reverse proxy n'utilise pas `ports:` dans son `compose.yml` (il utilise `network_mode: "host"`), Docker ne gère pas les ports avec `iptables` mais redirige sur les vrais ports de la machine.
 - Cette configuration en mode `host` permettra également à Fail2Ban de lire les logs de Caddy pour bloquer directement les attaquants au niveau d'UFW.
-- Même si Caddy (notre futur reverse proxy) sera installé via Docker, il se comporte comme un logiciel classique du serveur au niveau du pare-feu, il faut donc absolument activer ces ports.
+- Même si Caddy (notre futur reverse proxy) sera installé via Docker, il se comporte comme un logiciel classique du serveur au niveau du pare-feu, par la suite, on donnera à UFW une liste blanche d'ip pouvant se connecter en http et https.
+- **On laisse verrouillé les ports http et https**, car on aura une liste blanche d'ip de CloudFlare (dans la partie `04 - Installation de Caddy`), ça permettra de bloquer les connexions malveillantes sur ces deux ports
+
+On relance UFW pour activer les réglages.
 
 ```bash
-sudo ufw allow http
-sudo ufw allow https
 sudo ufw reload
 ```
 
-On limite ainsi grandement la surface d'attaque. Il n'y a seulement que 3 ports ouverts depuis l'extérieur (1 pour se connecter en SSH, et 2 pour https et http).
+On limite ainsi grandement la surface d'attaque. Il n'y a qu'un port totalement ouvert (le SSH) depuis l'extérieur, et les ports http et https fonctionnent sur le principe d'une liste blanche (empêchant même quelqu'un ayant l'ip de tenter de se connecter sans passer par CloudFlare).
 
 </div></details>
 

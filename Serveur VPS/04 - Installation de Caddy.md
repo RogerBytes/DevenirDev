@@ -15,19 +15,47 @@ Maintenant on paramètre `Fail2Ban` système
 sudo nano /etc/fail2ban/jail.local
 ```
 
-On l'ajoute `caddy-auth` (tout à la fin) `CTRL + W` puis `CTRL + V` pour aller à la fin du fichier
+On l'ajoute `caddy-auth` (tout à la fin) `ALT + /` puis `CTRL + V` pour aller à la fin du fichier
 
 ```plaintext
 [caddy-auth]
 enabled  = true
 port     = 80,443
 filter   = caddy-auth
-logpath  = /opt/docker/caddy/logs/caddy.log
+logpath  = /opt/docker/caddy/logs/access.log
 backend  = auto
 findtime = 10m
 maxretry = 5
 bantime  = 1h
+action   = cloudflare
 ```
+
+#### Donner la clef à fail2ban
+
+On ajoute son token de cloudflare dans
+
+```bash
+sudo nano /etc/fail2ban/action.d/cloudflare.conf
+```
+
+En bas (`ALT + /`) on voit
+
+```text
+cftoken =
+
+cfuser =
+
+cftarget = ip
+
+[Init?family=inet6]
+cftarget = ip6
+
+```
+
+Les infos de  `cftoken` et `cfuser`
+
+- `cftoken` - [cette page](https://dash.cloudflare.com/profile/api-tokens)(ignorer l'alerte `Clé CA Origine`, c'est caddy qui s'occupe de ça et non CloudFlare), faire `Afficher`.
+- `cfuser` - C'est tout simplement l'adresse email avec laquelle on se connectes au compte Cloudflare.
 
 On créé le fichier de filtre
 
@@ -57,7 +85,7 @@ On enregistre la configuration, et on relance `Fail2ban`
 sudo fail2ban-client reload
 ```
 
-Voilà, nos deux ports d'entrées sont protégés des attaques BruteForce et DoS.
+Voilà, nos deux ports d'entrées sont protégés des attaques BruteForce et DoS, et Fail2Ban modifiera les réglages du pare-feu CloudFlare via l'API.
 
 ### Préparation du répertoire et Caddyfile
 
@@ -71,7 +99,50 @@ cd /opt/docker/caddy
 On créé le `Caddyfile`
 
 ```bash
-sudo touch Caddyfile
+sudo nano Caddyfile
+```
+
+On y colle
+
+```text
+# ==========================================================
+# 1. BLOC GLOBAL
+# ==========================================================
+{
+        servers {
+                # Dit à Caddy de faire confiance aux en-têtes de Cloudflare
+                # (Nécessite que les IPs de Cloudflare soient déclarées ou gérées)
+                trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22
+        }
+}
+
+# ==========================================================
+# 2. LE MODÈLE DE LOGS POUR FAIL2BAN (Snippet)
+# ==========================================================
+(fail2ban_logs) {
+        log {
+                output file /var/log/caddy/caddy.log
+                format json
+        }
+}
+
+# ==========================================================
+# 3. SITES
+# ==========================================================
+```
+
+Les ipv4 listées proviennent [de la page dédiée aux ip de CloudFlare](https://www.cloudflare.com/ips-v4)
+
+On enregistre et on utilise le formateur intégré avec
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+et on relance caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
 ```
 
 ### Création du `compose.yml`
@@ -123,14 +194,48 @@ Et on lance le `compose up`
 sudo docker compose up -d
 ```
 
+On wipe les logs (vu que c'est notre installation, on peut le faire)
+
+```bash
+sudo truncate -s 0 $(sudo docker inspect --format='{{.LogPath}}' $(sudo docker compose ps -q caddy))
+```
+
+On relance
+
+et on relance caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
+
 On vérifie le statut du conteneur
 
 ```bash
 sudo docker compose logs -f
 ```
 
-`caddy-1  | Error: adapting config using caddyfile: EOF` est normal, notre `Caddyfile` est pour l'instant vide.
+Retourne
 
-Voilà, tout est prêt, il faudra à chaque fois ajouter les réglages dans le `Caddyfile`.
+```text
+caddy-1  | {"level":"info","ts":1782226246.2882688,"logger":"admin.api","msg":"received request","method":"POST","host":"localhost:2019","uri":"/load","remote_ip":"127.0.0.1","remote_port":"41222","headers":{"User-Agent":["Go-http-client/1.1"],"Content-Length":["2"],"Caddy-Config-Source-Adapter":["caddyfile"],"Caddy-Config-Source-File":["Caddyfile"],"Content-Type":["application/json"],"Origin":["http://localhost:2019"],"Accept-Encoding":["gzip"]}}
+caddy-1  | {"level":"info","ts":1782226246.2888181,"msg":"config is unchanged"}
+caddy-1  | {"level":"info","ts":1782226246.2890744,"logger":"admin.api","msg":"load complete"}
+```
 
-Maintenant que `Caddy` est correctement installé, il est temps de déployer des conteneurs Docker sur le serveur, commencez par `Serveur VPS/Apps/01 - VaultWarden/Installation VaultWarden.md`
+Voilà, tout est prêt, il faudra à chaque fois ajouter les nouveaux réglages (pour chaque domaine) dans le `Caddyfile`, à la fin du fichier.
+
+Maintenant que `Caddy` est correctement installé, on va terminer la section par un dernier réglage de pare-feu.
+
+## UFW réglage final
+
+On donne la liste blanche d'ip de CloudFlare
+
+```bash
+for ip in 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22; do
+  sudo ufw allow from $ip to any port 80,443 proto tcp
+done
+```
+
+Les ipv4 listées proviennent [de la page dédiée aux ip de CloudFlare](https://www.cloudflare.com/ips-v4)
+
+Pour tester
