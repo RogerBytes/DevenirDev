@@ -1,9 +1,9 @@
-# Logique de sécurisation et gestion mdp
+# 01 - Gestion des mots de passe et des accès
 
 Il est important d'avoir de bonnes pratiques dans la gestion des mots de passe.
 
 - Pour tester l'entropie des mots de passe, il suffit d'installer et utiliser `KeepassXC`.
-- Dans `KeePassXC`, utiliser l'option `Générateur de mots de passe`, on peut y tester nos mots de passe, l'entropie sera affichée.
+- Dans `Bitwarden`, utiliser l'option `Générateur de mots de passe`, on peut y tester nos mots de passe, l'entropie sera affichée.
 
 Il y a 4 mots différents de passe à créer et à apprendre pour être bien protégé.
 
@@ -30,7 +30,7 @@ Il faut l'installer depuis [sa page Flathub](https://flathub.org/fr/apps/org.kee
 
 Le compte VaultWarden **contient**
 
-- Mot de passe : VaultWarden (uniquement pour qu'il soit présent dans les backup de KeyPassXC)
+- Mot de passe : VaultWarden (uniquement pour qu'il soit présent dans les backup de KeePassXC)
 - Mot de passe : Service Cloud
 
 ### Mot de passe non enregistrés
@@ -38,7 +38,7 @@ Le compte VaultWarden **contient**
 Le compte VaultWarden **ne contient pas**
 
 - Mot de passe : user local/user distant (type vps/serveur)
-- Mot de passe : KeyPass
+- Mot de passe : KeePassXC
 
 ### Clients pour VaultWarden
 
@@ -51,6 +51,7 @@ Il faut utiliser [les clients Bitwarden](https://bitwarden.com/fr-fr/download/) 
 - Application Android : [Page Google Play Store](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden) ou activer le dépôt `Bitwarden F-Droid` sur `Droid-ify` pour pouvoir le télécharger
 
 Il faut éviter au maximum d'utiliser le copié-collé des mots de passe, partant du principe qu'un keylogger peut se trouver sur la machine.
+Il faut privilégier le raccourci clavier de remplissage automatique de l'extension (ex: Ctrl + Shift + L sur Bitwarden) qui injecte directement les identifiants dans les champs sans passer par le presse-papiers de la machine.
 
 ### Usage
 
@@ -63,9 +64,9 @@ L'usage de VaultWarden est assez simple
 
 Tous les trimestre il faut faire un backup de VaultWarden, il faut lui faire générer un fichier `.json`.
 
-- Ouvrir `KeyPassXC`, aller dans `Base de données/Importer...` et dans `Choix du fichier à importer` choisir `Bitwarden (.json)`
+- Ouvrir `KeePassXC`, aller dans `Base de données/Importer...` et dans `Choix du fichier à importer` choisir `Bitwarden (.json)`
   - À côté de `Fichier à importer`, cliquer sur `Parcourir...` et pointez vers le fichier `*.json`
-  - Mettre le mot de passe KeyPassXC habituel (faites attention)
+  - Mettre le mot de passe KeePassXC habituel (faites attention)
   - Laisser l'option `Nouvelle base de données`
   - Cliquer sur `Continuer`
   - Dans la nouvelle fenêtre nommez votre base de données et ajouter au nom la date
@@ -115,10 +116,16 @@ sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 ls -l /var/run/reboot-required
 ```
 
+## Protection anti-phishing native via le gestionnaire de mots de passe (Bitwarden)
+
+L'utilisation d'un gestionnaire de mots de passe comme Bitwarden ne sert pas uniquement à stocker des identifiants forts ; c'est également l'un des remparts les plus efficaces contre le phishing (hameçonnage).
+
+Contrairement à l'œil humain qui peut être trompé par un nom de domaine visuellement proche (ex: `cl0udflare.com` au lieu de `cloudflare.com`), l'extension Bitwarden se base strictement sur l'URL exacte enregistrée dans le coffre-fort. Si un utilisateur ou un salarié clique sur un lien piégé, Bitwarden détectera instantanément que le domaine ne correspond pas et refusera de proposer le remplissage automatique des identifiants. Cette absence d'auto-complétion agit comme une alerte immédiate, bloquant l'attaque à la source avant que la saisie manuelle ne soit effectuée. L'usage de Bitwarden est donc impératif pour l'ensemble des accès critiques et des collaborateurs.
+
 ## Bonnes pratiques
 
 - Suivre cette documentation à la lettre
-- Faire des backups trimestriels (en important le JSON dans KeyPassXC) depuis un client BitWarden et sauver le `*.kdbx` sur clef USB et Cloud
+- Faire des backups trimestriels (en important le JSON dans KeePassXC) depuis un client BitWarden et sauver le `*.kdbx` sur clef USB et Cloud
 - Dans les mail, toujours vérifier l’expéditeur, et ne pas cliquer sur les liens, il vaut mieux se connecter soi-même au site pour éviter le pishing
 - Verrouiller son ordinateur dès que l'on est plus devant l'écran
 - N'utiliser que des mots de passe unique avec VaultWarden (il est fait pour), ainsi toute brèche est limitée
