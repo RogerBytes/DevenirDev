@@ -2,17 +2,19 @@
 
 Il est important d'avoir de bonnes pratiques dans la gestion des mots de passe.
 
-- Pour tester l'entropie des mots de passe, il suffit d'installer et utiliser `KeepassXC`.
-- Dans `Bitwarden`, utiliser l'option `Générateur de mots de passe`, on peut y tester nos mots de passe, l'entropie sera affichée.
+- Pour tester l'entropie des mots de passe, il suffit d'installer et utiliser un client `Bitwarden`.
+- Dans le client `Bitwarden`, utiliser l'option `Générateur de mots de passe`, on peut y tester nos mots de passe, l'entropie sera affichée.
 
 Il y a 4 mots différents de passe à créer et à apprendre pour être bien protégé.
 
-- Mot de passe : sudo user local (sur ordinateur) / sudo user distant (type vps/serveur) [+40 bits d'entropie]
+- Mot de passe : sudo user local (sur ordinateur) / sudo user distant (type vps/serveur) / local ssh key passphrase [+40 bits d'entropie]
 - Mot de passe : KeePass [+100 bits d'entropie]
 - Mot de passe : VaultWarden [+100 bits d'entropie]
 - Mot de passe : Service Cloud [+100 bits d'entropie]
 
 Ces mots de passe **ne doivent avoir aucune corrélation entre les uns les autres**.
+
+Il doivent être vérifiés sur [HIBP](https://haveibeenpwned.com/Passwords), les mdp ne sont pas envoyés, c'est une vérification anonyme via hash.
 
 ## Sauvegarder les mots de passe en physique
 
@@ -37,7 +39,7 @@ Le compte VaultWarden **contient**
 
 Le compte VaultWarden **ne contient pas**
 
-- Mot de passe : user local/user distant (type vps/serveur)
+- Mot de passe : user local/user distant/ssh key passphrase (type vps/serveur)
 - Mot de passe : KeePassXC
 
 ### Clients pour VaultWarden
@@ -73,7 +75,7 @@ Tous les trimestre il faut faire un backup de VaultWarden, il faut lui faire gé
   - Cliquer sur `Continuer`
   - Laisser les options par défaut et cliquer sur `Terminer`
 - Stocker le fichier `*.kdbx` sur la clef USB dédiée et sur votre Cloud personnel
-- Supprimer le fichier `*.json` de BitWarden (**indispensable, le fichier est en clair**)
+- Supprimer le fichier `*.json` de BitWarden, et vider la corbeille immédiatement (**indispensable, le fichier est en clair**)
 
 Nous avons ainsi 2 endroits différents pour notre backup
 
@@ -126,7 +128,7 @@ Contrairement à l'œil humain qui peut être trompé par un nom de domaine visu
 
 - Suivre cette documentation à la lettre
 - Faire des backups trimestriels (en important le JSON dans KeePassXC) depuis un client BitWarden et sauver le `*.kdbx` sur clef USB et Cloud
-- Dans les mail, toujours vérifier l’expéditeur, et ne pas cliquer sur les liens, il vaut mieux se connecter soi-même au site pour éviter le pishing
+- Dans les mail, toujours vérifier l’expéditeur, et ne pas cliquer sur les liens, il vaut mieux se connecter soi-même au site pour éviter le phishing
 - Verrouiller son ordinateur dès que l'on est plus devant l'écran
 - N'utiliser que des mots de passe unique avec VaultWarden (il est fait pour), ainsi toute brèche est limitée
 - Se connecter au VPS uniquement via clef SSH et **désactiver la connexion SSH par mot de passe au VPS**
