@@ -15,7 +15,7 @@ Maintenant on paramètre `Fail2Ban` système
 sudo nano /etc/fail2ban/jail.local
 ```
 
-On l'ajoute `caddy-auth` (tout à la fin) `ALT + /` puis `CTRL + V` pour aller à la fin du fichier
+On l'ajoute `caddy-auth` (tout à la fin) `ALT + /`
 
 ```plaintext
 [caddy-auth]
@@ -49,13 +49,12 @@ cftarget = ip
 
 [Init?family=inet6]
 cftarget = ip6
-
 ```
 
 Les infos de  `cftoken` et `cfuser`
 
 - `cftoken` - [cette page](https://dash.cloudflare.com/profile/api-tokens)(ignorer l'alerte `Clé CA Origine`, c'est caddy qui s'occupe de ça et non CloudFlare), faire `Afficher`.
-- `cfuser` - C'est tout simplement l'adresse email avec laquelle on se connectes au compte Cloudflare.
+- `cfuser` - C'est tout simplement l'adresse email avec laquelle on se connecte au compte Cloudflare.
 
 On créé le fichier de filtre
 
@@ -67,16 +66,17 @@ Et on y met
 
 ```plaintext
 [Definition]
-failregex = ^.*"status":401.*"remote_ip":"<ADDR>".*$
-            ^.*"status":403.*"remote_ip":"<ADDR>".*$
-ignoreregex =
+failregex = ^\{.*"client_ip":"<ADDR>".*"status":(401|403).*\}
+            ^\{.*"status":(401|403).*"client_ip":"<ADDR>".*\}
+
+datepattern = ,Epoch
 ```
 
 On génère le log
 
 ```bash
 sudo mkdir -p /opt/docker/caddy/logs/
-sudo touch /opt/docker/caddy/logs/caddy.log
+sudo touch /opt/docker/caddy/logs/access.log
 ```
 
 On enregistre la configuration, et on relance `Fail2ban`
@@ -105,45 +105,28 @@ sudo nano Caddyfile
 On y colle
 
 ```text
-# ==========================================================
-# 1. BLOC GLOBAL
-# ==========================================================
+# --------------- Réglages globaux --------------- #
 {
         servers {
-                # Dit à Caddy de faire confiance aux en-têtes de Cloudflare
-                # (Nécessite que les IPs de Cloudflare soient déclarées ou gérées)
-                trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22
+                # Permet à Caddy de reconnaître la vraie IP du visiteur derrière Cloudflare.
+                trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
         }
 }
 
-# ==========================================================
-# 2. LE MODÈLE DE LOGS POUR FAIL2BAN (Snippet)
-# ==========================================================
 (fail2ban_logs) {
         log {
-                output file /var/log/caddy/caddy.log
+                output file /var/log/caddy/access.log
                 format json
         }
 }
 
-# ==========================================================
-# 3. SITES
-# ==========================================================
+# ----------- Redirection de domaines ------------ #
+
 ```
 
 Les ipv4 listées proviennent [de la page dédiée aux ip de CloudFlare](https://www.cloudflare.com/ips-v4)
 
-On enregistre et on utilise le formateur intégré avec
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-et on relance caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-```
+On enregistre.
 
 ### Création du `compose.yml`
 
@@ -200,7 +183,11 @@ On wipe les logs (vu que c'est notre installation, on peut le faire)
 sudo truncate -s 0 $(sudo docker inspect --format='{{.LogPath}}' $(sudo docker compose ps -q caddy))
 ```
 
-On relance
+et on utilise (pour notre fichier Caddyfile de toute à l'heure) le formateur intégré avec
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
 
 et on relance caddy
 
@@ -222,7 +209,7 @@ caddy-1  | {"level":"info","ts":1782226246.2888181,"msg":"config is unchanged"}
 caddy-1  | {"level":"info","ts":1782226246.2890744,"logger":"admin.api","msg":"load complete"}
 ```
 
-Voilà, tout est prêt, il faudra à chaque fois ajouter les nouveaux réglages (pour chaque domaine) dans le `Caddyfile`, à la fin du fichier.
+Voilà, tout est prêt, il faudra à chaque fois ajouter les nouveaux réglages (pour chaque domaine) dans le `Caddyfile`, à la fin du fichier dans la partie `Redirection de domaines`.
 
 Maintenant que `Caddy` est correctement installé, on va terminer la section par un dernier réglage de pare-feu.
 
@@ -231,11 +218,178 @@ Maintenant que `Caddy` est correctement installé, on va terminer la section pa
 On donne la liste blanche d'ip de CloudFlare
 
 ```bash
-for ip in 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22; do
+for ip in 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32; do
   sudo ufw allow from $ip to any port 80,443 proto tcp
 done
 ```
 
-Les ipv4 listées proviennent [de la page dédiée aux ip de CloudFlare](https://www.cloudflare.com/ips-v4)
+- Les ipv4 listées proviennent [de la page dédiée aux ipv4 de CloudFlare](https://www.cloudflare.com/ips-v4)
+- Les ipv6 listées proviennent [de la page dédiée aux ipv6 de CloudFlare](https://www.cloudflare.com/ips-v6)
 
-Pour tester
+Pour tout récupérer d'un coup
+
+```bash
+echo $(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)
+```
+
+Puis on relance UFW
+
+```bash
+sudo ufw reload
+```
+
+## Test
+
+Il y a énormément de tests à effectuer pour être sûr que l’infrastructure fonctionne comme désiré.
+
+### Tester une requête http/https
+
+En premier on crée un redirection de test, ça nous servira pour les autres tests aussi
+
+```bash
+sudo nano /opt/docker/caddy/Caddyfile
+```
+
+Ajoutez cette redirection à la fin, dans la partie `Redirection de domaines`
+
+```text
+http://mondomaine.com, http://www.mondomaine.com {
+        import fail2ban_logs
+        respond "Caddy fonctionne avec Cloudflare !"
+}
+```
+
+on utilise le formateur intégré avec
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+et on relance caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
+
+Tester votre domaines avec `curl https://mondomaine.com` il doit renvoyer `Caddy fonctionne avec Cloudflare !`
+
+### Connexion directe interdite
+
+Vérifier que les requêtes directes ne passent pas (seule l'ip de CloudFlare est en liste blanche), mettre la vraie IP du VPS ci-dessous
+
+```bash
+curl -I http://192.0.2.1
+curl -I https://192.0.2.1
+```
+
+### Bannir une ip
+
+on teste fail2ban avec un ban manuel
+
+```bash
+sudo fail2ban-client set caddy-auth banip 1.2.3.4
+```
+
+L'IP doit apparaître ici
+
+```bash
+sudo fail2ban-client status caddy-auth
+```
+
+Attention, un ban manuel n'a pas de timer, l'ip restera en prison, et le pare-feu CloudFlare applique la règle immédiatement.
+
+### Verifier le ban automatique des IP malveillante
+
+On simuler une requête malveillante depuis le shell du VPS
+
+```bash
+echo '{"level":"info","ts":1782246668.0,"logger":"http.log.access.log0","msg":"handled request","request":{"remote_ip":"172.69.176.43","remote_port":"9513","client_ip":"99.99.99.99","proto":"HTTP/1.1","method":"GET","host":"rogerbytes.com","uri":"/wp-admin/","headers":{}},"status":403}' | sudo tee -a /opt/docker/caddy/logs/access.log
+```
+
+On la fait plein de fois et vite pour être sûr du ban, et on vérifie la cellule des prisoners de Jail2Ban.
+
+```bash
+sudo fail2ban-client status caddy-auth
+```
+
+Si on voit son ip `99.99.99.99` en bas comme ce qui suit, c'est bon !
+
+```text
+Status for the jail: caddy-auth
+|- Filter
+|  |- Currently failed: 2
+|  |- Total failed:     40
+|  `- File list:        /opt/docker/caddy/logs/access.log
+`- Actions
+   |- Currently banned: 1
+   |- Total banned:     4
+   `- Banned IP list:   99.99.99.99 1.2.3.4
+```
+
+### Vérifier que l'api CloudFlare fonctionne correctement
+
+Maintenant que nous avons au moins deux IP bannie, on vérifie le bon fonctionnement de l'API CloudFlare utilisée par Fail2Ban
+
+- On peut aller voir [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Domaines/Vue d'ensemble` on clique sur le domaine concerné
+- dans le menu de gauche `Sécurité/Règles de sécurité` et dans l'encart `Règles d’accès IP` on voit bien l'IP `99.99.99.99` et l'IP `1.2.3.4`
+
+Pour infos, le warning à côté de `Règles de contrôle du volume de requêtes` c'est juste un popup pour inciter à prendre l'offre payante `Vous avez utilisé toutes les règles disponibles pour votre Offre gratuite. Effectuez une mise à niveau pour obtenir plus de règles afin de renforcer votre niveau de sécurité.`, il faut ignorer ce message, ça ne vaut rien.
+
+### Lever un ban d'IP
+
+On retire un ban
+
+```bash
+sudo fail2ban-client set caddy-auth unbanip 1.2.3.4
+```
+
+puis le second
+
+```bash
+sudo fail2ban-client set caddy-auth unbanip 99.99.99.99
+```
+
+Automatiquement les IP seront retirées de la prison du pare-feu CloudFlare.
+
+### Connaître son IP
+
+```bash
+# IPV4
+curl https://api.ipify.org
+
+# IPV6
+curl https://api6.ipify.org
+```
+
+### Retirer notre redirection de test
+
+Nos tests étant finis, on retire notre redirection factice.
+
+```bash
+sudo nano /opt/docker/caddy/Caddyfile
+```
+
+A la fin du document, dans la partie `Redirection de domaines`, retirer cette redirection
+
+```text
+http://mondomaine.com, http://www.mondomaine.com {
+        import fail2ban_logs
+        respond "Caddy fonctionne avec Cloudflare !"
+}
+```
+
+on utilise le formateur intégré avec
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+et on relance caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
+
+Tester une dernière fois votre domaine avec `curl https://mondomaine.com`. Le message de test ne doit plus apparaître.
+
+Voilà, votre Caddy est officiellement prêt pour la production !
