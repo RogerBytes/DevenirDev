@@ -2,7 +2,7 @@
 
 - Depuis [Page docker hub](https://hub.docker.com/hardened-images/catalog/dhi/uptime-kuma)
 
-Ce document détaille l'installation et la configuration de Watchtower pour automatiser la mise à jour invisible et quotidienne de tous les conteneurs Docker.
+Ce document détaille l'installation et la configuration d'Uptime Kuma pour surveiller la disponibilité des sites et applications.
 
 ## Prérequis
 
@@ -48,15 +48,15 @@ Et on lance le `compose up`
 sudo docker compose up -d
 ```
 
-Voilà, il va mettre les conteneurs Docker à jour automatiquement tous les 24 heures.
+Voilà, le conteneur Uptime Kuma est démarré et tourne en arrière-plan.
 
-## Redirection Caddie
+## Redirection Caddy
 
 Pour pouvoir consulter `Uptime Kuma`, on passe par un sous domaine
 
 ### Créer un sous domaine avec CloudFlare
 
-Maintenant que nous avons au moins deux IP bannie, on vérifie le bon fonctionnement de l'API CloudFlare utilisée par Fail2Ban
+On crée un enregistrement DNS pour faire pointer notre sous-domaine vers le VPS.
 
 - On peut aller voir [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Domaines/Vue d'ensemble` on clique sur le domaine concerné
 - Dans le menu de gauche `DNS/Enregistrements` et cliquer sur `+ Ajouter un enregistrement`
@@ -74,7 +74,7 @@ sudo nano /opt/docker/caddy/Caddyfile
 A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
 
 ```text
-http://uptime.mondomaine.com {
+uptime.mondomaine.com {
     import fail2ban_logs
     reverse_proxy 127.0.0.1:3001
 }
@@ -104,10 +104,23 @@ On s'inscrit normalement.
 
 ### Notifications
 
-JE FINIS CA DEMAIN, LA J'EN AI PLEIN LE CUL
+#### Installer NTFY sur le téléphone
+
+Voici le [site de ntfy](https://ntfy.sh), il y a les liens de téléchargements.
+
+- Ouvrir l'application mobile et cliquer sur le `+` (et on choisi un nom particulier et unique, pour qu'il n'y ait que moi qui y ait accès)
+  - `mondomaine-kuma-alertes-1111`
+  - on cliquer sur `Créer`
+
+Maintenant on va sur Uptime Kuma
 
 - Cliquer sur son profil (en haut à droite) et `Paramètres`
 - Aller dans l'onglet `Notification` et `Créer une notification`
+  - Type de notification `Apprise`
+  - Nom d'affichage `mondomaine Kuma`
+  - URL d'Apprise `ntfy://mondomaine-kuma-alertes-1111`
+  - Titre `Alerte Uptime Kuma`
+  - cocher `Activé par défaut` et `Appliquer sur toutes les sondes existantes`
 
 ### Ajout de sonde
 
@@ -115,3 +128,55 @@ JE FINIS CA DEMAIN, LA J'EN AI PLEIN LE CUL
 - Type de sonde `HTTP(s)`
 - Nom d'affichage `mondomaine.com`
 - Cliquer sur `Enregistrer`
+
+Voilà, si un site est hors ligne, une notification est envoyée dans la minute
+
+## Ajouter une IP en liste blanche
+
+### Récupérer son ip
+
+```bash
+curl -4 ifconfig.me
+
+curl -6 ifconfig.me
+```
+
+### Liste blanche Fail2Ban
+
+```bash
+sudo nano /etc/fail2ban/jail.local
+```
+
+Et on fait ainsi, en espaçant les ip avec un espace, on le met en dessous de `[DEFAULT]` (`CTRL + W` pour faire la recherche)
+
+```text
+[DEFAULT]
+ignoreip = 127.0.0.1/8 ::1 2001:861:34c0:1330:e67f:72fd:9f4e:664b 128.78.58.115
+```
+
+On y met l'IPv4 locale et l'IPv6 locale en premier,
+
+et on relance fail2ban
+
+```bash
+sudo systemctl restart fail2ban
+```
+
+### Liste blanche CloudFlare
+
+Fail2Ban ne peut pas donner ses listes blanches à CloudFlare, on va voir comment faire ici.
+
+On va sur [dashboard de CloudFlare](https://dash.cloudflare.com)
+
+- puis `Domaine / Vue d'ensemble` cliquer sur le domaine
+- puis `Sécurité / Règles de sécurité`
+- en haut à droite, cliquer sur `Ajouter une règle de sécurité`
+  - Nom de la règle `IP blanche 1`
+  - Champs `Adresse Source de l'adresse IP`
+  - Opérateur `est égal à`
+  - Valeur `mettre l'IPv4 ici`
+  - Effectuer l'action `Ignorer`
+  - Cliquer sur `OU` et refaire la même pour l'adresse IPv6
+  - Dans `Composants du pare-feu WAF à ignorer`
+    - cocher `Toutes les autres règles personnalisées`, `Toutes les règles de contrôle du volume de requêtes` et `Toutes les règles gérées`
+  - Et appliquer en cliquant sur le bouton `Déployer` en bas à droite

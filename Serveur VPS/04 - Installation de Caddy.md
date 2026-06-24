@@ -238,6 +238,18 @@ Puis on relance UFW
 sudo ufw reload
 ```
 
+## Réglage CloudFlare SSL/TLS
+
+On va sur [dashboard de CloudFlare](dash.cloudflare.com)
+
+- puis `Domaine / Vue d'ensemble` cliquer sur le domaine
+- puis `SSL/TLS / Vue d'ensemble`
+- cliquer sur le bouton `Configurer`
+- choisir `Full (Strict)`
+- cliquer sur `Enregistrer`
+
+Ce réglage utilise deux certificats (un créé par Cloudflare pour le visiteur, et un créé par Caddy pour Cloudflare) afin de sécuriser entièrement la connexion de bout en bout et d'éliminer les erreurs.
+
 ## Test
 
 Il y a énormément de tests à effectuer pour être sûr que l’infrastructure fonctionne comme désiré.
@@ -253,7 +265,7 @@ sudo nano /opt/docker/caddy/Caddyfile
 Ajoutez cette redirection à la fin, dans la partie `Redirection de domaines`
 
 ```text
-http://mondomaine.com, http://www.mondomaine.com {
+mondomaine.com {
         import fail2ban_logs
         respond "Caddy fonctionne avec Cloudflare !"
 }
