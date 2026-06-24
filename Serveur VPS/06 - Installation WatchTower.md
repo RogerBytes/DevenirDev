@@ -56,3 +56,22 @@ Voilà, il va mettre les conteneurs Docker à jour automatiquement tous les 24 h
 ```bash
 sudo docker compose logs --tail=50
 ```
+
+## A FINIR FONCTIONNEMENT LISTE BLANCHE
+
+```yaml
+environment:
+  - WATCHTOWER_CLEANUP=true
+  - WATCHTOWER_POLL_INTERVAL=86400
+  - DOCKER_API_VERSION=1.40
+  - WATCHTOWER_LABEL_ENABLE=true
+```
+
+sur **chaque conteneur autorisé à se mettre à jour**, ajouter ce label dans son `compose.yml` :
+
+```yaml
+labels:
+  - "com.centurylinklabs.watchtower.enable=true"
+```
+
+S'il n'y a pas ce label, pas de màj auto.
