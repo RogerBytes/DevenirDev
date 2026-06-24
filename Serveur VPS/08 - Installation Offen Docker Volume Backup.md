@@ -7,6 +7,47 @@ Ce document détaille l'installation et la configuration d'Uptime Kuma pour surv
 
 ## Prérequis
 
+### CloudFlare R2
+
+#### Ouvrir un compte R2
+
+- On va sur [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`
+- Le plan gratuit consiste à un disque dur virtuel gratuit de 10 Go.
+  - C'est 0.015$ cent par Go supplémentaire
+  - On a 1 millions d'operation classe A (envoi) gratuites et 4.5$ par million en plus
+  - On a 10 millions d'operation classe B (lecture) gratuites et 0.36$ par million en plus
+- On valide l'inscription `Ajouter un abonnement R2 à mon compte`
+- Continuer l'inscription (nécessite CB en cas de dépassement, c'est le service le plus attractif)
+- Terminer l'inscription
+
+#### Créer un compartiment R2
+
+- On va sur [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`
+- cliquer sur `Créer un compartiment`
+  - nom du compartiment `mon_entreprise-backups`
+  - Emplacement `Automatique`
+  - Classe de stockage par défaut `Standard`
+  - Cliquer sur `Créer le conteneur`
+
+#### Récupérer le jeton du compartiment
+
+- On va sur [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`
+- En bas à droite, aller dans l'encadré `Détails du compte`, et à droite de `Jetons API` cliquer sur `Gérer`
+- Cliquer sur le bouton `Créer un jeton d'API de type Account`
+  - Nom du jeton `R2 Account Token` (par défaut)
+  - Autorisations `Lecture/écriture administrateur`
+  - TTL `Indéfiniment`
+  - Filtrage d'adresse IP client : on laisse les champs vide, pas besoin
+  - Cliquer sur `Créer un jeton d'API de type Account`
+
+Dans la nouvelle page qui s'ouvre, il faut **faire très attention** à ce qui suit
+
+- ne pas fermer la page, et enregistrer dans une note (ou coffre fort VaultWarden) les valeurs des labels suivants
+  - Valeur du jeton
+  - ID de clé d’accès
+  - Clé d’accès secrète
+  - Utilisez des points de terminaison spécifiques à la juridiction pour les clients S3 : [par défaut]
+
 ### Création du répertoire
 
 On prépare un répertoire dans `opt/docker`
@@ -196,3 +237,13 @@ scp -P 22 user@IP_DE_TON_VPS:/opt/docker/backups/ton_fichier.tar.gz /chemin/doss
 ```
 
 Voilà je verra ce merdier après, il faudra ensuite que je vois pour que ça récupère que celui du jour etc, et voir pour que la commande s'execute une fois par jour (après que le backup soit fait) et qu'il en garde seulement 7 (si gemini trouve que c'est une bonne idée)
+
+et expliquer que si on a un vps de backup, qu'on ne fait plus le backup seulement sur le vps de backup dédié
+
+en gros, quand j'aurais un peu plus d'argent, j'aurais ce délire
+
+- 1 VPS d'entreprise dédié, avec mes services perso dessous
+- n* VPS de production (selon le nombre que je peux mettre dessus pour faire des économies)
+- 1 VPS de preprod
+- 1 VPS de backup
+
