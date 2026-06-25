@@ -4,6 +4,8 @@
 
 Ce document détaille l'installation et la configuration de Watchtower pour automatiser la mise à jour invisible et quotidienne de tous les conteneurs Docker.
 
+C'est à installer sur un VPS de PreProd, pas en prod.
+
 ## Prérequis
 
 ### Création du répertoire
