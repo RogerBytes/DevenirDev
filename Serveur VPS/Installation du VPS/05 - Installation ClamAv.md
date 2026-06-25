@@ -33,7 +33,7 @@ services:
     container_name: clamav
     restart: unless-stopped
     volumes:
-      - clamav_data:/var/lib/clamav
+      - data:/var/lib/clamav
       - /:/vps:ro
 
 volumes:
