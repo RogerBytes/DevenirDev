@@ -110,4 +110,6 @@ et on fait inscrit son compte de merde
 
 ## Réglage sur site
 
-Choisir `Gest Started` et 
+Choisir `Gest Started` et voilà
+
+Ca y est toutes les étapes d'installation de l'infrastructure du serveur sont terminées, on peut installer des applications depuis `Serveur VPS/Apps`.
