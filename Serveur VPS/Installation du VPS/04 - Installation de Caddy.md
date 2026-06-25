@@ -179,12 +179,14 @@ C'est le même raisonnement pour `./logs:/var/log/caddy`, à part que `logs` est
 
 ##### Compréhension du Named Volume
 
+Ces deux Bind Mount
+
 ```yml
       - data:/data
       - config:/config
 ```
 
-et
+Sont liés à ces deux Named Volume
 
 ```yml
 volumes:
