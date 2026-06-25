@@ -32,13 +32,13 @@ services:
     image: portainer/portainer-ce:latest
     container_name: portainer
     restart: always
-    security_opt:
-      - no-new-privileges:true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - data:/data
     ports:
       - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:/data
+    command:
+      - "--trusted-origins=docker.rogerbytes.com"
 
 volumes:
   data:
@@ -94,7 +94,20 @@ et on relance caddy
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
 ```
 
+## Inscription sur site
 
 et on accès à la saloperie avec
 
 docker.rogerbytes.com
+
+et on récupère le token de merde avec
+
+```bash
+sudo docker logs portainer 2>&1 | grep "setup_token=" | awk -F "setup_token=" '{print $2}' | cut -d' ' -f1
+```
+
+et on fait inscrit son compte de merde
+
+## Réglage sur site
+
+Choisir `Gest Started` et 
