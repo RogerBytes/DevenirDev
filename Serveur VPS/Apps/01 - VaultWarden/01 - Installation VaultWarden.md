@@ -16,11 +16,21 @@ sudo mkdir -p /opt/docker/apps/vaultwarden
 cd /opt/docker/apps/vaultwarden
 ```
 
-### Préparation de la boite mail chez MXROUTE.com
+### Gestion  domaine / sous domaine CloudFlare
 
-Une fois que l'on a paramétré correctement MXROUTE.com avec le nom de domaine (voir `Mailing/Utiliser mail MXROUTE.md`), il suffit de créer un compte mail.
+On va sur [dashboard de CloudFlare](dash.cloudflare.com)
 
-#### Créer nouveau compte mail MXROUTE
+- puis `Domaine / Vue d'ensemble` cliquer sur le domaine
+- puis `DNS / Enregistrements`
+- cliquer sur le bouton `+ Ajouter un enregistrement`
+- Type `A`
+- Nom `sous.domaine.com`
+- Adresse IPv4 `192.0.2.1`
+- cliquer sur `Enregistrer`
+
+Remplacer `192.0.2.1` par l'ipv4 du VPS.
+
+### Créer nouveau compte mail MXROUTE
 
 Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
 
@@ -28,7 +38,19 @@ Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
 - Cliquer sur `+ Create New Email Account`, entrer `vault` comme username et lui générer un mdp (garder précieusement les identifiants) et cliquer sur `Create Account`.
 - La mail généré est `vault@votrenomdedomaine.com`
 
-#### Récupérer le serveur MX de MXROUTE
+### Créer un token
+
+Créer un token avec une bonne entropie est indispensable (utiliser le générateur de mdo de KeePassXC par exemple), il faut conserver ce token précieusement dans `KeePassXC`.
+
+Au lieu de laisser le token en clair sur le .env, on peut utiliser un hash `Argon2id PHC` du mot de passe
+
+```bash
+sudo docker run --rm -it vaultwarden/server /vaultwarden hash
+```
+
+Garder la ligne retournée, on va s'en servir juste après.
+
+### Récupérer le serveur MX de MXROUTE
 
 Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
 
@@ -49,10 +71,10 @@ sudo nano .env
 Et on y ajoute ce qui suit
 
 ```ini
-ADMIN_TOKEN='MonSuperMotDePasseSecret123!'
+ADMIN_TOKEN="ici le hash qu'on a créé, on remplace toute la ligne"
 MX_SERVER=machin.mxrouting.net
 MX_EMAIL=vault@votrenomdedomaine.com
-MX_PASSWORD='LeMotDePasseDeCetteBoiteMail'
+MX_PASSWORD="LeMotDePasseDeCetteBoiteMail"
 DOMAIN=https://ton-domaine.com
 ```
 
@@ -63,12 +85,37 @@ ADMIN_TOKEN=MonSuperMotDePasseSecret123! # <--- À remplacer par votre token
 MX_SERVER=machin.mxrouting.net # <--- À remplacer par le serveur mxroute
 MX_EMAIL=vault@votrenomdedomaine.com # <--- À remplacer par l'email d'envoi
 MX_PASSWORD='LeMotDePasseDeCetteBoiteMail' # <--- À remplacer par le mot de passe de la boite mail
-DOMAIN=https://ton-domaine.com # <--- À remplacer par le domaine / sous-domaine
+DOMAIN=https://sous.domaine.com # <--- À remplacer `sous.domaine.com` par le domaine / sous-domaine
 ```
 
-Créer un token avec une bonne entropie est indispensable, il faut conserver ce token précieusement.
+Avant d’enregistrer, on change correctement les valeurs des différentes variables.
 
-Avant d’enregistrer, on change correctement les valeurs des différentes variables
+### Caddyfile
+
+```bash
+sudo nano /opt/docker/caddy/Caddyfile
+```
+
+A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
+
+```text
+sous.domaine.com {
+        import fail2ban_logs
+        reverse_proxy 127.0.0.1:8000
+}
+```
+
+on utilise le formateur intégré avec
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+et on relance caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
 
 ### Création du `compose.yml`
 
@@ -108,104 +155,6 @@ Et enregistrer le fichier.
 ## Création du conteneur
 
 Et on lance le `compose up`
-
-```bash
-sudo docker compose up -d
-```
-
-On vérifie le statut du conteneur
-
-```bash
-sudo docker compose ps
-```
-
-Et on vérifie s'il a bien crée le dossier de stockage
-
-```bash
-ls -l
-```
-
-il retourne
-
-```bash
-total 8
--rw-r--r-- 1 root root  196 Jun 20 19:05 compose.yml
-drwxr-xr-x 3 root root 4096 Jun 20 19:06 vw-data
-```
-
-## Gestion du domaine / sous-domaine
-
-Se connecter sur le [Hub d'OVH](https://manager.eu.ovhcloud.com/#/hub/), et aller sur `Web Cloud/Zones DNS`, cliquer sur le nom de domaine souhaité pour aller sur son menu.
-
-Cliquer sur `Ajouter une entrée` et, dans `Champs de pointage` prendre `A`, remplir comme cela :
-
-```text
-Sous-domaine:
-vw
-TTL:
-(Laisser par défaut)
-Cible*:
-192.0.2.1
-```
-
-Remplacer `192.0.2.1` par l'ipv4 du VPS.
-
-## Configurer un reverse proxy avec Caddy
-
-Il suffit de modifier le `Caddyfile` comme on l'a déjà fait.
-
-```bash
-sudo nano /opt/docker/caddy/Caddyfile
-```
-
-On y ajoute
-
-```plaintext
-vw.rogerbytes.com {
-        log {
-                output file /var/log/caddy/caddy.log
-        }
-        reverse_proxy 127.0.0.1:8000
-}
-```
-
-On enregistre le fichier puis on actualise la configuration de Caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml restart caddy
-```
-
-Si ce n'était pas le premier reverse proxy, on aurait fait
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-```
-
-Si `Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies    {"adapter": "caddyfile", "file": "Caddyfile", "line": 2}`
-
-Il suffit de lancer la commande pour reformater le fichier automatiquement
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-### Hasher le Token pour VaultWarden
-
-Au lieu de laisser le token en clair sur le .env, on peut utiliser un hash `Argon2id PHC` du mot de passe
-
-```bash
-sudo docker exec -it vaultwarden /vaultwarden hash
-```
-
-puis on édite le `.env`
-
-```bash
-sudo nano .env
-```
-
-Pour y mettre son hash à la place du mot de passe.
-
-Puis on relance le service (on peut pas faire `reload` ou `restart`, il garderait en mémoire l'ancien `.env`)
 
 ```bash
 sudo docker compose up -d
