@@ -146,28 +146,62 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./logs:/var/log/caddy
-      - caddy_data:/data
-      - caddy_config:/config
+      - data:/data
+      - config:/config
     network_mode: "host"
 
 volumes:
-  caddy_data:
-  caddy_config:
+  data:
+  config:
 ```
 
-#### Explication des volumes dans le `compose.yml`
+#### Explication du Mappage de volumes
 
-##### Pour `./logs:/var/log/caddy`
+Un conteneur se base sur une image Docker. En gros, c'est une mini-distribution Linux, stockée comme une sorte d'*.iso (une image immuable en lecture seule).
 
-- **Avant les `:` (`./logs`) :** C'est le dossier **réel** sur ton VPS (visible sous nos yeux, si on supprime le conteneur ou la pile de conteneur, il reste).
-- **Après les `:` (`/var/log/caddy`) :** C'est le dossier **virtuel** tout au fond du conteneur Docker (ici pour le conteneur Caddy).
-- **Explication courte :** On branche le dossier de logs interne de Caddy sur un dossier réel du VPS pour que Fail2Ban puisse lire les lignes en direct depuis l'extérieur.
+Docker, afin que ces "mini-distrib" puissent fonctionner correctement, gère (entre autres) le mappage de volumes, permettant aux mini-Linux de voir des fichiers et répertoires en dehors de leur image et d’interagir avec l'hôte.
 
-##### Pour `caddy_data:/data`
+##### Compréhension du Bind Mount
 
-- **Avant les `:` (`caddy_data`) :** C'est un coffre-fort **virtuel** géré et caché par Docker (il est dans le système de fichier du VPS, si on supprime le conteneur ou la pile de conteneur, il reste).
-- **Après les `:` (`/data`) :** C'est le dossier **virtuel** tout au fond du conteneur Docker (ici pour le conteneur Caddy).
-- **Explication courte :** On connecte une boîte de stockage privée gérée par Docker pour garder tes certificats SSL à l'abri des regards et sécurisés, même si tu supprimes le conteneur.
+On observe ici
+
+```yml
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./logs:/var/log/caddy
+```
+
+- `./Caddyfile:/etc/caddy/Caddyfile`
+  - `./Caddyfile` est le chemin hôte (donc sur la machine qui fait tourner Docker)
+  - `/etc/caddy/Caddyfile` est le chemin présent sur l'image.
+  - Quand le linux du conteneur pensera interagir avec `/etc/caddy/Caddyfile` il sera en fait en train d’interagir avec `./Caddyfile`
+
+C'est le même raisonnement pour `./logs:/var/log/caddy`, à part que `logs` est un répertoire (la syntaxe ne permet pas de faire la distinction dans le path)
+
+##### Compréhension du Named Volume
+
+```yml
+      - data:/data
+      - config:/config
+```
+
+et
+
+```yml
+volumes:
+  data:
+  config:
+```
+
+La partie du bas sert à déclarer des volumes nommés (créant des espaces de stockage). Cela permet d'avoir un point de montage nommé qui sera séparé du conteneur. Si on supprime le conteneur, ce qui a été écrit sur ce volume n'est pas supprimé, il reste.
+
+Seulement, si on n'associe pas ce volume au service avec la ligne `- config:/config`, le volume du bas reste juste "existant" mais vide.
+
+C'est pour ça qu'il est mis dans les volumes du service
+
+- `data:/data`
+  - `data` (de gauche) est le nom du volume déclaré en bas.
+  - `data` (de droite) est le chemin présent sur l'image.
+  - Quand le linux du conteneur pensera interagir avec `/data` il sera en fait en train d’interagir avec le volume `data`.
 
 ## Création du conteneur
 

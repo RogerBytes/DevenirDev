@@ -74,18 +74,29 @@ services:
     container_name: docker-volume-backup
     restart: unless-stopped
     environment:
-      # Exécute la sauvegarde tous les jours à minuit (syntaxe Cron)
+      # --- CONFIGURATION CLOUDFLARE R2 ---
+      AWS_ENDPOINT: "points de terminaison"
+      AWS_S3_BUCKET_NAME: "Nom du compartiment"
+      AWS_ACCESS_KEY_ID: "ID de clé d’accès"
+      AWS_SECRET_ACCESS_KEY: "Clé d’accès secrète"
+
+      # Configuration de la planification (tous les soirs à minuit)
       BACKUP_CRON_EXPRESSION: "0 0 * * *"
-      # Nom du fichier de sauvegarde
-      BACKUP_FILENAME: "backup-vps-%Y-%m-%d_%H-%M-%S.tar.gz"
-      # Garde seulement les 7 dernières sauvegardes
-      BACKUP_RETENTION_DAYS: 7
+
     volumes:
-      # Permet à Offen d'accéder aux volumes des autres conteneurs
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # Le dossier local où seront stockées tes sauvegardes sur le VPS
-      - /opt/docker/backups:/archive
+      # Tes volumes Caddy à sauvegarder :
+      - caddy_config:/backup/caddy_config:ro
+      - caddy_data:/backup/caddy_data:ro
+
+volumes:
+  caddy_config:
+    external: true
+  caddy_data:
+    external: true
 ```
+
+Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il faisait `sudo docker volume ls` pour lister les volumes), qui permet au node `backup` de comprendre ce qu'est `vaultwarden-data`
 
 Et enregistrer le fichier.
 
@@ -97,153 +108,80 @@ Et on lance le `compose up`
 sudo docker compose up -d
 ```
 
-Voilà, le conteneur Uptime Kuma est démarré et tourne en arrière-plan.
-
-## Redirection Caddy
-
-Pour pouvoir consulter `Uptime Kuma`, on passe par un sous domaine
-
-### Créer un sous domaine avec CloudFlare
-
-On crée un enregistrement DNS pour faire pointer notre sous-domaine vers le VPS.
-
-- On peut aller voir [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Domaines/Vue d'ensemble` on clique sur le domaine concerné
-- Dans le menu de gauche `DNS/Enregistrements` et cliquer sur `+ Ajouter un enregistrement`
-  - Type = `A`
-  - Nom = `uptime.mondomaine.com`
-  - Adresse IPv4 = `192.0.2.1`
-  - Cliquer sur `Enregistrer`
-
-### Caddyfile
+## Forcer un backup pour tester
 
 ```bash
-sudo nano /opt/docker/caddy/Caddyfile
+sudo docker exec docker-volume-backup backup
 ```
 
-A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
+## Restorer un backup distant
 
-```text
-uptime.mondomaine.com {
-    import fail2ban_logs
-    reverse_proxy 127.0.0.1:3001
-}
-```
-
-on utilise le formateur intégré avec
+On liste les backup (ceux sur le stockage d'objet R2) avec
 
 ```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+sudo docker run --rm \
+  -e AWS_ENDPOINT="https://5733c92e6925460128afab9af86fe3e6.r2.cloudflarestorage.com" \
+  -e BUCKET_NAME="rogerbytes-backups" \
+  -e AWS_ACCESS_KEY_ID="dc66ede22c00199159161da0b20501d8" \
+  -e AWS_SECRET_ACCESS_KEY="aea3e00629b1763cc0533508830572fd3d2733d640c1cabd19c16385d218b893" \
+  --entrypoint sh minio/mc -c "
+    mc alias set r2 \$AWS_ENDPOINT \$AWS_ACCESS_KEY_ID \$AWS_SECRET_ACCESS_KEY && \
+    mc ls r2/\$BUCKET_NAME/
+  "
 ```
 
-et on relance caddy
+On télécharge le fichier que l'ou souhaite avec :
 
 ```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+sudo docker run --rm -v "$PWD":/data \
+  -e AWS_ENDPOINT="https://5733c92e6925460128afab9af86fe3e6.r2.cloudflarestorage.com" \
+  -e BUCKET_NAME="rogerbytes-backups" \
+  -e FICHIER="backup-2026-06-24T19-00-00.tar.gz" \
+  -e AWS_ACCESS_KEY_ID="dc66ede22c00199159161da0b20501d8" \
+  -e AWS_SECRET_ACCESS_KEY="aea3e00629b1763cc0533508830572fd3d2733d640c1cabd19c16385d218b893" \
+  --entrypoint sh minio/mc -c "
+    mc alias set r2 \$AWS_ENDPOINT \$AWS_ACCESS_KEY_ID \$AWS_SECRET_ACCESS_KEY && \
+    mc cp r2/\$BUCKET_NAME/\$FICHIER /data/
+  "
 ```
 
-## Configurer Uptime Kuma via le navigateur
-
-### Choix de DB
-
-On va sur <https://uptime.mondomaine.com>, on choisi `Embedded MariaDB`
-
-### Création du compte admin
-
-On s'inscrit normalement.
-
-### Notifications
-
-#### Installer NTFY sur le téléphone
-
-Voici le [site de ntfy](https://ntfy.sh), il y a les liens de téléchargements.
-
-- Ouvrir l'application mobile et cliquer sur le `+` (et on choisi un nom particulier et unique, pour qu'il n'y ait que moi qui y ait accès)
-  - `mondomaine-kuma-alertes-1111`
-  - on cliquer sur `Créer`
-
-Maintenant on va sur Uptime Kuma
-
-- Cliquer sur son profil (en haut à droite) et `Paramètres`
-- Aller dans l'onglet `Notification` et `Créer une notification`
-  - Type de notification `Apprise`
-  - Nom d'affichage `mondomaine Kuma`
-  - URL d'Apprise `ntfy://mondomaine-kuma-alertes-1111`
-  - Titre `Alerte Uptime Kuma`
-  - cocher `Activé par défaut` et `Appliquer sur toutes les sondes existantes`
-
-### Ajout de sonde
-
-- Cliquer sur le bouton `+ Ajouter une nouvelle sonde`
-- Type de sonde `HTTP(s)`
-- Nom d'affichage `mondomaine.com`
-- Cliquer sur `Enregistrer`
-
-Voilà, si un site est hors ligne, une notification est envoyée dans la minute
-
-## Ajouter une IP en liste blanche
-
-### Récupérer son ip
+et on sélectionne
 
 ```bash
-curl -4 ifconfig.me
-
-curl -6 ifconfig.me
+sudo docker exec docker-volume-backup restore <NOM_DU_FICHIER.tar.gz>
 ```
 
-### Liste blanche Fail2Ban
+## Restaurer un backup
+
+### Supprimer les volumes existantes
 
 ```bash
-sudo nano /etc/fail2ban/jail.local
+sudo docker run --rm \
+  -v caddy_caddy_config:/backup/caddy_caddy_config \
+  -v caddy_caddy_data:/backup/caddy_caddy_data \
+  alpine sh -c "rm -rf /backup/caddy_caddy_config/* /backup/caddy_caddy_data/*"
 ```
 
-Et on fait ainsi, en espaçant les ip avec un espace, on le met en dessous de `[DEFAULT]` (`CTRL + W` pour faire la recherche)
+Parfait mon ami, on y va pas à pas.
 
-```text
-[DEFAULT]
-ignoreip = 127.0.0.1/8 ::1 2001:861:34c0:1330:e67f:72fd:9f4e:664b 128.78.58.115
-```
+La **première étape**, c'est donc de faire place nette (la "feuille blanche") dans tes volumes Caddy pour qu'aucun fichier parasite ne vienne perturber la restauration.
 
-On y met l'IPv4 locale et l'IPv6 locale en premier,
+Puisqu'on manipule des volumes Docker, on va à nouveau utiliser notre conteneur temporaire `alpine` pour aller vider l'intérieur de ces volumes en toute sécurité.
 
-et on relance fail2ban
+Voici la commande pour tout vider :
 
 ```bash
-sudo systemctl restart fail2ban
+sudo docker run --rm \
+  -v caddy_data:/backup/caddy_data \
+  -v caddy_config:/backup/caddy_config \
+  alpine sh -c "rm -rf /backup/caddy_data/* /backup/caddy_config/*"
 ```
 
-### Liste blanche CloudFlare
+#### Détail de la commande
 
-Fail2Ban ne peut pas donner ses listes blanches à CloudFlare, on va voir comment faire ici.
+- **`sudo docker run --rm`** : Lance le conteneur et le détruira juste après le nettoyage.
+- **`-v caddy_caddy_config:...`** et **`-v caddy_caddy_data:...`** : On connecte tes deux volumes Caddy au conteneur (avec le chemin temporaire qui commence par `backup`).
+- **`alpine`** : L'image Linux ultra-légère qui va exécuter l'ordre.
+- **`sh -c "rm -rf .../*"`** : C'est l'ordre de nettoyage. Le `rm -rf` dit à Linux de "supprimer de force et de manière récursive" tout ce qui se trouve à l'intérieur des dossiers, mais le `/*` à la fin est crucial : il dit de vider le *contenu* sans supprimer les volumes eux-mêmes.
 
-On va sur [dashboard de CloudFlare](https://dash.cloudflare.com)
-
-- puis `Domaine / Vue d'ensemble` cliquer sur le domaine
-- puis `Sécurité / Règles de sécurité`
-- en haut à droite, cliquer sur `Ajouter une règle de sécurité`
-  - Nom de la règle `IP blanche 1`
-  - Champs `Adresse Source de l'adresse IP`
-  - Opérateur `est égal à`
-  - Valeur `mettre l'IPv4 ici`
-  - Effectuer l'action `Ignorer`
-  - Cliquer sur `OU` et refaire la même pour l'adresse IPv6
-  - Dans `Composants du pare-feu WAF à ignorer`
-    - cocher `Toutes les autres règles personnalisées`, `Toutes les règles de contrôle du volume de requêtes` et `Toutes les règles gérées`
-  - Et appliquer en cliquant sur le bouton `Déployer` en bas à droite
-
-## Commande de téléchargement du backup
-
-```bash
-scp -P 22 user@IP_DE_TON_VPS:/opt/docker/backups/ton_fichier.tar.gz /chemin/dossier/local/
-```
-
-Voilà je verra ce merdier après, il faudra ensuite que je vois pour que ça récupère que celui du jour etc, et voir pour que la commande s'execute une fois par jour (après que le backup soit fait) et qu'il en garde seulement 7 (si gemini trouve que c'est une bonne idée)
-
-et expliquer que si on a un vps de backup, qu'on ne fait plus le backup seulement sur le vps de backup dédié
-
-en gros, quand j'aurais un peu plus d'argent, j'aurais ce délire
-
-- 1 VPS d'entreprise dédié, avec mes services perso dessous
-- n* VPS de production (selon le nombre que je peux mettre dessus pour faire des économies)
-- 1 VPS de preprod
-- 1 VPS de backup
-
+Une fois que tu as exécuté cette commande, tes volumes Caddy existent toujours, mais ils sont **totalement vides**, comme neufs.
