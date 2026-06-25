@@ -24,8 +24,8 @@ port     = 80,443
 filter   = caddy-auth
 logpath  = /opt/docker/caddy/logs/access.log
 backend  = auto
-findtime = 10m
-maxretry = 5
+findtime = 10
+maxretry = 100
 bantime  = 1h
 action   = cloudflare
 ```

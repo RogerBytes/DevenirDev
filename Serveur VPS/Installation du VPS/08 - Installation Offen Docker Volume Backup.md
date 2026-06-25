@@ -114,7 +114,7 @@ sudo docker compose up -d
 sudo docker exec docker-volume-backup backup
 ```
 
-## Restorer un backup distant
+## Lister les backups distants
 
 On liste les backup (ceux sur le stockage d'objet R2) avec
 
@@ -129,6 +129,8 @@ sudo docker run --rm \
     mc ls r2/\$BUCKET_NAME/
   "
 ```
+
+## Télécharger un backup
 
 On télécharge le fichier que l'ou souhaite avec :
 
@@ -145,43 +147,73 @@ sudo docker run --rm -v "$PWD":/data \
   "
 ```
 
-et on sélectionne
-
-```bash
-sudo docker exec docker-volume-backup restore <NOM_DU_FICHIER.tar.gz>
-```
-
 ## Restaurer un backup
 
-### Supprimer les volumes existantes
+### Arrêt des conteneurs
+
+On commence par arrêter tout
+
+```bash
+sudo docker stop $(sudo docker ps -q)
+```
+
+### vérifier le contenu des volumes
 
 ```bash
 sudo docker run --rm \
-  -v caddy_caddy_config:/backup/caddy_caddy_config \
-  -v caddy_caddy_data:/backup/caddy_caddy_data \
-  alpine sh -c "rm -rf /backup/caddy_caddy_config/* /backup/caddy_caddy_data/*"
+  -v caddy_config:/config \
+  -v caddy_data:/data \
+  alpine sh -c "echo '=== CONTENU CONFIG ===' && ls -la /config && echo '=== CONTENU DATA ===' && ls -la /data"
 ```
 
-Parfait mon ami, on y va pas à pas.
-
-La **première étape**, c'est donc de faire place nette (la "feuille blanche") dans tes volumes Caddy pour qu'aucun fichier parasite ne vienne perturber la restauration.
-
-Puisqu'on manipule des volumes Docker, on va à nouveau utiliser notre conteneur temporaire `alpine` pour aller vider l'intérieur de ces volumes en toute sécurité.
-
-Voici la commande pour tout vider :
+### On vide les volumes à Restaurer
 
 ```bash
 sudo docker run --rm \
-  -v caddy_data:/backup/caddy_data \
-  -v caddy_config:/backup/caddy_config \
-  alpine sh -c "rm -rf /backup/caddy_data/* /backup/caddy_config/*"
+  -v caddy_config:/config \
+  -v caddy_data:/data \
+  alpine sh -c "rm -rf /config/* /data/*"
 ```
 
-#### Détail de la commande
+On peut vérifier avec
 
-- **`sudo docker run --rm`** : Lance le conteneur et le détruira juste après le nettoyage.
-- **`-v caddy_caddy_config:...`** et **`-v caddy_caddy_data:...`** : On connecte tes deux volumes Caddy au conteneur (avec le chemin temporaire qui commence par `backup`).
-- **`alpine`** : L'image Linux ultra-légère qui va exécuter l'ordre.
-- **`sh -c "rm -rf .../*"`** : C'est l'ordre de nettoyage. Le `rm -rf` dit à Linux de "supprimer de force et de manière récursive" tout ce qui se trouve à l'intérieur des dossiers, mais le `/*` à la fin est crucial : il dit de vider le *contenu* sans supprimer les volumes eux-mêmes.
+```bash
+sudo docker run --rm -v caddy_config:/check alpine ls -la /check
+```
 
-Une fois que tu as exécuté cette commande, tes volumes Caddy existent toujours, mais ils sont **totalement vides**, comme neufs.
+S'il retourne
+
+```text
+total 8
+drwxr-xr-x    2 root     root          4096 Jun 25 14:06 .
+drwxr-xr-x    1 root     root          4096 Jun 25 14:07 ..
+```
+
+Comme ceci, sans lister de fichier ou de repertoire, c'est que le volume a bien été vidé.
+
+### On restaure
+
+#### Vérifier le contenu
+
+```bash
+FICHIER="backup-2026-06-25T15-07-03.tar.gz"
+sudo tar -tf $FICHIER | head -n 15
+```
+
+#### Restaurer
+
+```bash
+FICHIER="backup-2026-06-25T15-07-03.tar.gz"
+
+sudo docker run --rm \
+  -v "$PWD":/backup_dir \
+  -v caddy_config:/target/caddy_config \
+  -v caddy_data:/target/caddy_data \
+  alpine tar -xzf /backup_dir/$FICHIER -C /target/ --strip-components=1
+```
+
+#### Relancer tous les conteneurs
+
+```bash
+for compose_file in $(sudo find /opt/docker -type f \( -name "docker-compose.yml" -o -name "compose.yml" \)); do sudo docker compose -f "$compose_file" up -d --build --force-recreate; done
+```

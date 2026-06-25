@@ -37,7 +37,7 @@ services:
       - /:/vps:ro
 
 volumes:
-  clamav_data:
+  data:
 ```
 
 Et enregistrer le fichier.
@@ -67,19 +67,19 @@ sudo docker exec -it clamav clamscan -r --infected /vps -l /var/lib/clamav/rappo
 ### Dossiers utilisateurs
 
 ```bash
-sudo docker exec -it clamav clamscan -r --infected /vps/home -l /var/lib/clamav/rapport.log --append 2>/dev/null
+sudo docker exec -it clamav clamscan -r --infected /vps/home -l /var/lib/clamav/rapport.log -a 2>/dev/null
 ```
 
 ### Fichiers temporaires
 
 ```bash
-sudo docker exec -it clamav clamscan -r --infected /vps/tmp -l /var/lib/clamav/rapport.log --append 2>/dev/null
+sudo docker exec -it clamav clamscan -r --infected /vps/tmp -l /var/lib/clamav/rapport.log -a 2>/dev/null
 ```
 
 ### Conteneurs Docker
 
 ```bash
-sudo docker exec -it clamav clamscan -r --infected /vps/opt/docker -l /var/lib/clamav/rapport.log --append 2>/dev/null
+sudo docker exec -it clamav clamscan -r --infected /vps/opt/docker -l /var/lib/clamav/rapport.log -a 2>/dev/null
 ```
 
 ## Vérifier les rapport
