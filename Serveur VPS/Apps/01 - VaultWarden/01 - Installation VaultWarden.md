@@ -60,6 +60,8 @@ Se connecter au [site de mxroute.com](https://management.mxroute.com/dashboard)
 
 Si le compte MXROUTE est bien réglé, et pareil du côté du registrar lors de l'ajout du NDD, il n'y a rien d'autre à faire pour le mailing.
 
+On en profite pour créer une boite mail `vault@votrenomdedomaine.com`, attention à ne pas avoir de `$` dans le mot de passe.
+
 ### Création du .env
 
 On créé le fichier d'environment (il contiendra les variables d'auth)
@@ -99,9 +101,9 @@ sudo nano /opt/docker/caddy/Caddyfile
 A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
 
 ```text
-sous.domaine.com {
-        import fail2ban_logs
-        reverse_proxy 127.0.0.1:8000
+vw.mondomaine.com {
+        import crowdsec_bouncer
+        reverse_proxy vaultwarden:80
 }
 ```
 
@@ -145,9 +147,18 @@ services:
       - SMTP_USERNAME=${MX_EMAIL}
       - SMTP_PASSWORD=${MX_PASSWORD}
     volumes:
-      - ./vw-data:/data
-    ports:
-      - 127.0.0.1:8000:80
+      - ./data:/data
+    networks:
+      - caddy_network
+
+networks:
+  caddy_network:
+    external: true
+```
+
+```yaml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 ```
 
 Et enregistrer le fichier.
