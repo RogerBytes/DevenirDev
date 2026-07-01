@@ -1,4 +1,4 @@
-# 09 - Installation Portainer CE
+# 11 - Installation Portainer CE
 
 - Depuis [Page docker hub](https://hub.docker.com/r/portainer/portainer-ce)
 - Depuis [Page github](https://github.com/portainer/portainer)
@@ -32,16 +32,20 @@ services:
     image: portainer/portainer-ce:latest
     container_name: portainer
     restart: always
-    ports:
-      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - data:/data
     command:
       - "--trusted-origins=docker.rogerbytes.com"
+    networks:
+      - caddy_network
 
 volumes:
   data:
+
+networks:
+  caddy_network:
+    external: true
 ```
 
 Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il faisait `sudo docker volume ls` pour lister les volumes), qui permet au node `backup` de comprendre ce qu'est `vaultwarden-data`
@@ -78,7 +82,7 @@ A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` colle
 ```text
 docker.rogerbytes.com {
         import fail2ban_logs
-        reverse_proxy 127.0.0.1:9000
+        reverse_proxy portainer:9000
 }
 ```
 

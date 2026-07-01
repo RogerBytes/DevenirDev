@@ -104,7 +104,57 @@ Notre installation de debian étant vierge, c'est maintenant que l'on installe l
 On l'installe (on privilégie les paquets officiels de la Distribution, le paquet est préconfiguré pour le système)
 
 ```bash
-sudo nala install -y rkhunter
+sudo apt install -y rkhunter mailutils msmtp msmtp-mta
+```
+
+### Configurer mailutils pour permettre l'envoi de mail depuis la machine
+
+```bash
+sudo nano /etc/msmtprc
+```
+
+```conf
+# Configuration globale
+defaults
+auth             on
+tls              on
+tls_starttls     on
+tls_trust_file   /etc/ssl/certs/ca-certificates.crt
+# logfile          /var/log/msmtp/msmtp.log
+
+# Ton compte d'envoi
+account          default
+host             smtp.ton-fournisseur.com
+port             587
+from             ton-adresse-d-envoi@domaine.com
+user             ton-adresse-d-envoi@domaine.com
+password         ton_mot_de_passe_de-mail
+```
+
+Pour `host` on met l'adresse de son serveur mxroute.com, `from` et `user` on met son adresse dédié, et pour `password` on met le mdp du mail
+
+On change les droits d'accès pour protéger le fichier
+
+```bash
+sudo chmod 600 /etc/msmtprc
+```
+
+On paramètre `Maiutils`
+
+```bash
+sudo nano /etc/mail.rc
+```
+
+On ajoute à la fin
+
+```bash
+set sendmail=/usr/bin/msmtp
+```
+
+et on test mailtutils
+
+```bash
+echo "Rkhunter est pret gadjo !" | sudo mail -s "Test VPS Rkhunter final" harry.richmond@rogerbytes.com
 ```
 
 ### Configuration initiale
@@ -153,6 +203,8 @@ NICE="0"
 RUN_CHECK_ON_BATTERY="true"
 ```
 
+On fait aussi la recherche `CTRL + W` pour trouver `MAIL-ON-WARNING=root` et dé-commente et on y met son mail (on vérifie `MAIL-ON-WARNING_LEVEL=2` est bien présent)
+
 On enregistre et on ferme nano.
 
 On applique les changements en lançant un indexation avec
@@ -177,6 +229,8 @@ On lance le premier scan avec
 sudo rkhunter --check --sk
 ```
 
+### Vérifier les warnings de RKHunter
+
 Les `Skipped` en jaune n'ont aucune importance, maintenant ou va étudier les logs pour voir quels sont les `Warnings`
 
 ```bash
@@ -184,7 +238,7 @@ sudo grep -i "warning" /var/log/rkhunter.log
 ```
 
 ```text
-*[11:00:35] Info: No mail-on-warning address configured
+[11:00:35] Info: Emailing warnings to 'harry.richmond@rogerbytes.com' using command '/usr/bin/mail -s "[rkhunter] Warnings found for ${HOST_NAME}"'
 [11:00:36] Info: Using syslog for some logging - facility/priority level is 'authpriv.warning'.
 [11:02:36]   Checking if SSH root access is allowed          [ Warning ]
 [11:02:36] Warning: The SSH configuration option 'PermitRootLogin' has not been set.
@@ -192,6 +246,8 @@ sudo grep -i "warning" /var/log/rkhunter.log
 [11:02:39] Warning: Hidden file found: /etc/.resolv.conf.systemd-resolved.bak: ASCII text
 [11:02:39] Warning: Hidden file found: /etc/.updated: ASCII text
 ```
+
+Les deux première sont des information confirmant que c'est bien réglé.
 
 Le `Warning` pour `PermitRootLogin` est à ignorer, on fera ça dans [Verrouillage de la connexion SSH de root](#verrouillage-de-la-connexion-ssh-de-root)
 
@@ -249,6 +305,14 @@ sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 - On vérifie chacun des fichier qui ont un flag `Warnings`
 - Si les fichiers/modifications sont légitimes, on lance une indexation pour les valider.
 - Si ce sont des fichiers cachés légitimes, on réutilise `ALLOWHIDDENFILE` dans le fichier de configuration
+
+On simule un usage de routine automatique avec
+
+```bash
+sudo rkhunter --check --cronjob
+```
+
+Il devrait envoyer un mail avec les warnings.
 
 </div></details>
 
@@ -493,6 +557,23 @@ On ajoute aussi le localhost (totalement indispensable, tout le fonctionnement i
 sudo ufw allow in on lo
 ```
 
+On ajouter les ip de cloudflare en liste blanche pour les ports 80 et 443
+
+```bash
+for ip in 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32; do
+  sudo ufw allow from $ip to any port 80,443 proto tcp
+done
+```
+
+- Les ipv4 listées proviennent [de la page dédiée aux ipv4 de CloudFlare](https://www.cloudflare.com/ips-v4)
+- Les ipv6 listées proviennent [de la page dédiée aux ipv6 de CloudFlare](https://www.cloudflare.com/ips-v6)
+
+Pour tout récupérer d'un coup
+
+```bash
+echo $(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)
+```
+
 Maintenant que le port SSH est en liste blanche, l'on peut activer le UFW.
 
 ```bash
@@ -509,7 +590,7 @@ sudo ufw status verbose
 
 Il retourne
 
-```bash
+```text
 Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), disabled (routed)
@@ -517,19 +598,33 @@ New profiles: skip
 
 To                         Action      From
 --                         ------      ----
-49152/tcp                  ALLOW IN    Anywhere
+61869/tcp                  ALLOW IN    Anywhere
 Anywhere on lo             ALLOW IN    Anywhere
-49152/tcp (v6)             ALLOW IN    Anywhere (v6)
+80,443/tcp                 ALLOW IN    173.245.48.0/20
+80,443/tcp                 ALLOW IN    103.21.244.0/22
+80,443/tcp                 ALLOW IN    103.22.200.0/22
+80,443/tcp                 ALLOW IN    103.31.4.0/22
+80,443/tcp                 ALLOW IN    141.101.64.0/18
+80,443/tcp                 ALLOW IN    108.162.192.0/18
+80,443/tcp                 ALLOW IN    190.93.240.0/20
+80,443/tcp                 ALLOW IN    188.114.96.0/20
+80,443/tcp                 ALLOW IN    197.234.240.0/22
+80,443/tcp                 ALLOW IN    198.41.128.0/17
+80,443/tcp                 ALLOW IN    162.158.0.0/15
+80,443/tcp                 ALLOW IN    104.16.0.0/13
+80,443/tcp                 ALLOW IN    104.24.0.0/14
+80,443/tcp                 ALLOW IN    172.64.0.0/13
+80,443/tcp                 ALLOW IN    131.0.72.0/22
+61869/tcp (v6)             ALLOW IN    Anywhere (v6)
 Anywhere (v6) on lo        ALLOW IN    Anywhere (v6)
+80,443/tcp                 ALLOW IN    2400:cb00::/32
+80,443/tcp                 ALLOW IN    2606:4700::/32
+80,443/tcp                 ALLOW IN    2803:f800::/32
+80,443/tcp                 ALLOW IN    2405:b500::/32
+80,443/tcp                 ALLOW IN    2405:8100::/32
+80,443/tcp                 ALLOW IN    2a06:98c0::/29
+80,443/tcp                 ALLOW IN    2c0f:f248::/32
 ```
-
-### Ne pas ajouter les ports http et https pour le Caddy (le Reverse Proxy)
-
-- Caddy va recevoir le trafic venant d'Internet sur les ports http (80) et https (443) de la machine, puis redirige vers les conteneurs Docker, y ajoute nom de domaine et certificat TLS.
-- Vu que le reverse proxy n'utilise pas `ports:` dans son `compose.yml` (il utilise `network_mode: "host"`), Docker ne gère pas les ports avec `iptables` mais redirige sur les vrais ports de la machine.
-- Cette configuration en mode `host` permettra également à Fail2Ban de lire les logs de Caddy pour bloquer directement les attaquants au niveau d'UFW.
-- Même si Caddy (notre futur reverse proxy) sera installé via Docker, il se comporte comme un logiciel classique du serveur au niveau du pare-feu, par la suite, on donnera à UFW une liste blanche d'ip pouvant se connecter en http et https.
-- **On laisse verrouillé les ports http et https**, car on aura une liste blanche d'ip de CloudFlare (dans la partie `04 - Installation de Caddy`), ça permettra de bloquer les connexions malveillantes sur ces deux ports
 
 On relance UFW pour activer les réglages.
 
@@ -538,124 +633,6 @@ sudo ufw reload
 ```
 
 On limite ainsi grandement la surface d'attaque. Il n'y a qu'un port totalement ouvert (le SSH) depuis l'extérieur, et les ports http et https fonctionnent sur le principe d'une liste blanche (empêchant même quelqu'un ayant l'ip de tenter de se connecter sans passer par CloudFlare).
-
-</div></details>
-
-## Fail2Ban
-
-<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
-
-Fail2Ban est un outil très pratique qui va automatiquement bannir les IP échouant dans leurs tentatives d'authentification au serveur. Il protège le serveur des attaques de type Brute Force ou Denial of Service (DoS).
-
-Pour les attaques Distributed Denial of Service (DDoS), OVH intègre déjà VAC, un outil de protection Anti-DDoS activé par défaut. Le VAC filtre le trafic en amont et bloque les requêtes malveillantes simultanées (en identifiant les schémas et comportements suspects du trafic) avant qu'elles n'atteignent le VPS.
-
-- Il lit les logs en continu, il prends note de toutes les tentatives de connexion
-- Compte les tentatives par IP et les flag
-- Il envoie à UFW une requête pour chaque suspect, afin de bloquer son IP avec un timer
-
-On l'installe avec
-
-```bash
-sudo nala install -y fail2ban
-```
-
-Comme recommandé, on crée un fichier de configuration local de vos services en copiant le fichier "jail".
-
-```bash
-sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-```
-
-On va régler notre SSH personnalisé dedans
-
-```bash
-sudo nano /etc/fail2ban/jail.local
-```
-
-Pour information, Les paramètres [DEFAULT] sont les réglages dont héritent tous les services.
-
-Il faut aller configurer la section [sshd] (c'est le premier qui apparaît en vert)'.
-
-- Pour rechercher `sshd` faire `CTRL + W`, et pour aller au prochain résultat faire `Alt + W`
-- Voici la section par défaut
-
-```conf
-[sshd]
-
-# To use more aggressive sshd modes set filter parameter "mode" in jail.local:
-# normal (default), ddos, extra or aggressive (combines all).
-# See "tests/files/logs/sshd" or "filter.d/sshd.conf" for usage example and details.
-#mode   = normal
-port    = ssh
-logpath = %(sshd_log)s
-backend = %(sshd_backend)s
-```
-
-Et voici à quoi ça doit ressembler à la fin, dans le port, on met le nouveau port SSH `49152`, changez le port pour le votre !
-
-```bash
-[sshd]
-
-# To use more aggressive sshd modes set filter parameter "mode" in jail.local:
-# normal (default), ddos, extra or aggressive (combines all).
-# See "tests/files/logs/sshd" or "filter.d/sshd.conf" for usage example and details.
-mode     = aggressive
-enabled  = true
-port     = 49152
-filter   = sshd
-logpath  = %(sshd_log)s
-backend  = systemd
-findtime = 5m
-maxretry = 3
-bantime  = 1h
-```
-
-- Le `enabled=true` permet d'écraser l'héritage de `[DEFAULT]`, permettant ainsi d'activer le service.
-- Le mode passe en `aggressive`, en gros Fail2Ban va lui même appliquer des règles UFW sévères aux IP qui tentent de trop nombreuses connexions
-- `systemd` est le gestionnaire central du système sur debian, c'est lui qui fournit les logs par exemple
-- `maxretry` c'est le nombre de tentatives et `bantime` c'est le timeout
-- `findtime` c'est pour la période (ici c'est 3 essaie dans une durée de 5mn)
-
-On enregistre le fichier, puis on active et lance le service
-
-```bash
-sudo systemctl enable --now fail2ban
-```
-
-Puis on vérifie que le réglage est pris en compte
-
-```bash
-sudo fail2ban-client status sshd
-```
-
-Il retourne
-
-```bash
-$ sudo fail2ban-client status sshd
-Status for the jail: sshd
-|- Filter
-|  |- Currently failed: 0
-|  |- Total failed: 0
-|  `- Journal matches: _SYSTEMD_UNIT=ssh.service + _COMM=sshd
-`- Actions
-   |- Currently banned: 0
-   |- Total banned: 0
-   `- Banned IP list:
-```
-
-La prison `Status for the jail: sshd` est bien existante, c'est parfait.
-
-On test un ping
-
-et aussi via un test de ping
-
-```bash
-sudo fail2ban-client ping
-```
-
-Le serveur doit répondre `pong`
-
-- Fail2Ban a ici pour mission de protéger l'accès SSH de la machine, ensuite on le réglera également pour suivre les logs de Caddy (qui redirigera les connexions entrantes vers les conteneurs docker).
-- L'usage du VPS est dédié à Docker, une image de `Caddy` sera configurée pour gérer les accès et le trafic Web.
 
 </div></details>
 
@@ -756,6 +733,12 @@ sudo passwd debian
 
 On met une énorme entropie et on jette le mdp, on ne veut pas qu'on puisse s'y connecter.
 
+On valide les changements de mdp du côté de RKHunter avec
+
+```bash
+sudo rkhunter --propupd
+```
+
 Voilà, l'utilisateur `debian` est proprement verrouillé.
 
 </div></details>
@@ -796,7 +779,7 @@ sudo systemctl restart sshd
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-Le pare-feu (UFW) et Fail2Ban génèrent en continu des lignes de texte (logs) pour surveiller le serveur. Sans nettoyage, ces fichiers finissent par saturer l'espace disque du VPS, ce qui peut faire planter la machine. On utilise `logrotate` pour archiver, compresser et supprimer automatiquement les vieux logs.
+Le pare-feu (UFW) génère en continu des lignes de texte (logs) pour surveiller le serveur. Sans nettoyage, ces fichiers finissent par saturer l'espace disque du VPS, ce qui peut faire planter la machine. On utilise `logrotate` pour archiver, compresser et supprimer automatiquement les vieux logs.
 
 On l'installe
 
@@ -825,6 +808,12 @@ sudo nala install -y btop
 ```
 
 C'est un outil léger et moderne pour monitorer le serveur, il suffit de taper `btop` pour le lancer.
+
+On peut afficher l'état de la machine avec cette commande (pensez à modifier `49152`, `192.0.2.1` et `paul`)
+
+```bash
+ssh -t -p 49152 paul@192.0.2.1 "btop"
+```
 
 </div></details>
 
@@ -920,9 +909,13 @@ sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
 On peut faire une recherche avec `Ctrl + W` pour dé-commenter/modifier ces lignes comme ce qui suit :
 
 ```text
-Unattended-Upgrade::Remove-Unused-Dependencies "true";
-Unattended-Upgrade::Automatic-Reboot "false";
+//Unattended-Upgrade::Remove-Unused-Dependencies "false";
+//Unattended-Upgrade::Automatic-Reboot "false";
 ```
+
+et Pour
+
+`//Unattended-Upgrade::Mail "";` décommenter et mettre le mail sur lequel on veut l'alerte d'erreur de màj.
 
 On a activé et configuré les **mises à jour de sécurité automatiques** pour que le VPS se protège tout seul des failles (en installant les màj) en arrière-plan, tout en nettoyant ses fichiers inutiles et en lui interdisant de redémarrer sans ton autorisation.
 
@@ -930,6 +923,7 @@ On vérifie que tout est bon
 
 ```bash
 sudo systemctl status unattended-upgrades
+sudo systemctl status apt-daily-upgrade.timer
 ```
 
 Si on voit `Active: active (running)`, alors tout est bon.

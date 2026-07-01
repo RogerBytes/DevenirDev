@@ -52,7 +52,7 @@ sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyring
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
 
-On ajoute le repository au source d'apt
+On ajoute le repository aux sources d'apt
 
 ```bash
 sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
@@ -176,4 +176,4 @@ S'il retourne `{"Type":"json-file","Config":{"compress":"true","max-file":"3","m
 
 Voilà, Docker Engine est correctement installé sur le VPS.
 
-Allez faire la partie `Serveur VPS/03 - Caddy Reverse Proxy.md`, c'est ce qui va permettre à Docker de fonctionner correctement.
+Allez faire la partie `Serveur VPS/03 - Crowdsec.md`, c'est ce qui va permettre à Docker de fonctionner correctement.

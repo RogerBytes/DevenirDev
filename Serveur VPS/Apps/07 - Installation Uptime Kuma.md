@@ -11,8 +11,8 @@ Ce document détaille l'installation et la configuration d'Uptime Kuma pour surv
 On prépare un répertoire dans `opt/docker`
 
 ```bash
-sudo mkdir -p /opt/docker/utils/uptime-kuma
-cd /opt/docker/utils/uptime-kuma
+sudo mkdir -p /opt/docker/apps/uptime-kuma
+cd /opt/docker/apps/uptime-kuma
 ```
 
 ### Création du `compose.yml`
@@ -31,11 +31,15 @@ services:
     image: louislam/uptime-kuma:2
     container_name: uptime-kuma
     restart: unless-stopped
-    ports:
-      - "3001:3001"
     volumes:
       - ./data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - caddy_network
+
+networks:
+  caddy_network:
+    external: true
 ```
 
 Et enregistrer le fichier.
@@ -76,7 +80,7 @@ A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` colle
 ```text
 uptime.mondomaine.com {
     import fail2ban_logs
-    reverse_proxy 127.0.0.1:3001
+    reverse_proxy uptime-kuma:3001
 }
 ```
 

@@ -1,10 +1,10 @@
-# 06 - Installation WatchTower
+# 08 - Installation WatchTower
+
+C'est à installer sur un VPS de **PreProd**, ne **pas l'installer en prod**.
 
 - Depuis [Page docker hub](https://hub.docker.com/r/containrrr/watchtower)
 
 Ce document détaille l'installation et la configuration de Watchtower pour automatiser la mise à jour invisible et quotidienne de tous les conteneurs Docker.
-
-C'est à installer sur un VPS de PreProd, pas en prod.
 
 ## Prérequis
 
