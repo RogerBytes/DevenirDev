@@ -14,8 +14,8 @@ Ce document détaille l'installation et la configuration d'Uptime Kuma pour surv
 - On va sur [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`
 - Le plan gratuit consiste à un disque dur virtuel gratuit de 10 Go.
   - C'est 0.015$ cent par Go supplémentaire
-  - On a 1 millions d'operation classe A (envoi) gratuites et 4.5$ par million en plus
-  - On a 10 millions d'operation classe B (lecture) gratuites et 0.36$ par million en plus
+  - On a 1 million d'operations classe A (envoi) gratuites et 4.5$ par million en plus
+  - On a 10 millions d'operations classe B (lecture) gratuites et 0.36$ par million en plus
 - On valide l'inscription `Ajouter un abonnement R2 à mon compte`
 - Continuer l'inscription (nécessite CB en cas de dépassement, c'est le service le plus attractif)
 - Terminer l'inscription
@@ -24,10 +24,10 @@ Ce document détaille l'installation et la configuration d'Uptime Kuma pour surv
 
 - On va sur [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`
 - cliquer sur `Créer un compartiment`
-  - nom du compartiment `mon_entreprise-backups`
+  - nom du compartiment `mon_vps-backups`
   - Emplacement `Automatique`
   - Classe de stockage par défaut `Standard`
-  - Cliquer sur `Créer le conteneur`
+  - Cliquer sur `Créer un compartiment`
 
 #### Récupérer le jeton du compartiment
 
@@ -76,7 +76,7 @@ services:
     environment:
       # --- CONFIGURATION CLOUDFLARE R2 ---
       AWS_ENDPOINT: "points de terminaison"
-      AWS_S3_BUCKET_NAME: "Nom du compartiment"
+      AWS_S3_BUCKET_NAME: "Nom du compartiment (celui dans espace dans la vue d'ensemble R2)"
       AWS_ACCESS_KEY_ID: "ID de clé d’accès"
       AWS_SECRET_ACCESS_KEY: "Clé d’accès secrète"
 
@@ -85,7 +85,7 @@ services:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # Tes volumes Caddy à sauvegarder :
+      # volumes Caddy à sauvegarder (au besoin on rajoute des volumes au backup) :
       - caddy_config:/backup/caddy_config:ro
       - caddy_data:/backup/caddy_data:ro
 
@@ -96,7 +96,9 @@ volumes:
     external: true
 ```
 
-Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il faisait `sudo docker volume ls` pour lister les volumes), qui permet au node `backup` de comprendre ce qu'est `vaultwarden-data`
+**ATTENTION** Il faut impérativement retirer le `https://` du endpoint, sinon ça ne marchera pas, et pour le nom du compartiment, il faut prendre celui sans espace dans `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`.
+
+Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il faisait `sudo docker volume ls` pour lister les volumes), qui permet au node `backup` de comprendre ce qu'est `caddy_config` et `caddy_data`.
 
 Et enregistrer le fichier.
 

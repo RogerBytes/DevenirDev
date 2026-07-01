@@ -67,9 +67,11 @@ On crée un enregistrement DNS pour faire pointer notre sous-domaine vers le VPS
 - On peut aller voir [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Domaines/Vue d'ensemble` on clique sur le domaine concerné
 - Dans le menu de gauche `DNS/Enregistrements` et cliquer sur `+ Ajouter un enregistrement`
   - Type = `A`
-  - Nom = `docker.mondomaine.com`
+  - Nom = `dash.mondomaine.com`
   - Adresse IPv4 = `192.0.2.1`
   - Cliquer sur `Enregistrer`
+
+Mettez la bonne adresse IPv4 et le bon nom.
 
 ### Caddyfile
 
@@ -80,8 +82,8 @@ sudo nano /opt/docker/caddy/Caddyfile
 A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
 
 ```text
-docker.rogerbytes.com {
-        import fail2ban_logs
+dash.rogerbytes.com {
+        import crowdsec_bouncer
         reverse_proxy portainer:9000
 }
 ```
@@ -100,17 +102,19 @@ sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy ca
 
 ## Inscription sur site
 
-et on accès à la saloperie avec
+On se connecte sur <dash.mondomaine.com>
 
-docker.rogerbytes.com
+S'il est trop tard pour s'inscrire, on fait
 
-et on récupère le token de merde avec
+```bash
+sudo docker compose restart portainer
+```
+
+On remplit le formulaire d'inscription, et pour le token, on utilise
 
 ```bash
 sudo docker logs portainer 2>&1 | grep "setup_token=" | awk -F "setup_token=" '{print $2}' | cut -d' ' -f1
 ```
-
-et on fait inscrit son compte de merde
 
 ## Réglage sur site
 
