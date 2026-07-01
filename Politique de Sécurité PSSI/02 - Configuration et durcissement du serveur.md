@@ -33,40 +33,66 @@ Voici les 4 piliers de sécurité à respecter
 
 Seules les connexions entrantes sont filtrées, toutes les connexions sortantes sont traitées par les conteneurs Docker (qui gèrent nativement iptables sur Debian).
 
+Non, je ne l'avais pas pris en compte explicitement dans le diagramme. C'est une info importante car ça change la nature de la menace SSH : un attaquant qui tente un bruteforce de mot de passe va générer des échecs dans `auth.log` (tentatives de connexion avec mdp refusées par le serveur SSH lui-même), et CrowdSec va les détecter et bannir l'IP via le bouncer firewall.
+
+Voici la version corrigée avec cette précision :
+
 ```mermaid
 graph TD
   %% Définition des styles
   classDef internet fill:#eceff1,stroke:#37474f,stroke-width:2px,color:#000;
   classDef cloudflare fill:#f57c00,stroke:#e65100,stroke-width:2px,color:#fff;
+  classDef crowdsec fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:#fff;
   classDef ufw fill:#d32f2f,stroke:#c62828,stroke-width:2px,color:#fff;
   classDef caddy fill:#00acc1,stroke:#006064,stroke-width:2px,color:#fff;
   classDef docker fill:#1e88e5,stroke:#0d47a1,stroke-width:2px,color:#fff;
-  classDef f2b fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:#fff;
+  classDef blocked fill:#b71c1c,stroke:#7f0000,stroke-width:2px,color:#fff;
+  classDef ssh fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#fff;
 
-  %% Flux Légitime via CloudFlare
-  A([🌐 Visiteur Web Légitime]) -->|1. Requête domaine.com| B{☁️ Pare-feu CloudFlare}
-  B -->|2. ALLOW: Trafic via IP CloudFlare| C{🛡️ Pare-feu UFW}
-  C -->|3. ALLOW: Ports 80 et 443| D[🔀 Caddy Reverse Proxy]
+  %% ─── Flux Web Légitime ───
+  A([🌐 Visiteur Web Légitime]) -->|1. Requête domaine.com| B{☁️ Cloudflare Worker Bouncer}
+  B -->|2. ALLOW: IP non bannie| C{🛡️ Pare-feu UFW}
+  C -->|3. ALLOW: Ports 80/443 IPs Cloudflare| D{🔒 CrowdSec Bouncer Firewall}
+  D -->|4. ALLOW: IP non bannie| E[🔀 Caddy + CrowdSec WAF Bouncer]
+  E -->|5. ALLOW: Requête saine| F[🐳 Conteneurs Docker Applications]
 
-  %% Flux Malveillant (Tentative de contournement direct)
-  E([🥷 Attaquant / Robot Scan]) -.->|Tentative IP directe du serveur| C
-  C -.->|DENY: Pas une IP CloudFlare| X((❌ Connexion rejetée Timeout))
+  %% ─── Flux SSH Légitime ───
+  ADM([🧑‍💻 Admin clef SSH uniquement]) -->|Connexion port custom + clef SSH| C
+  D -->|ALLOW: IP non bannie| SSH[🔑 Serveur SSH Mot de passe désactivé]
 
-  %% Interne au Serveur et Boucle Fail2Ban
-  D -->|4. Redirection Localhost| F[🐳 Conteneurs Docker Applications]
-  D -.->|5. Analyse des logs de Caddy| G[🔒 Fail2Ban]
-  G -.->|6. Action de blocage via API| B
+  %% ─── Flux SSH Malveillant ───
+  BOT([🥷 Bruteforce SSH]) -->|Tentative mdp port SSH| C
+  C -->|ALLOW: Port SSH ouvert| D
+  SSH -.->|DENY: Authentification mdp refusée - Échecs loggés dans auth.log| X5((❌ Connexion refusée))
+  SSH -.->|auth.log: accumulation d'échecs| H
+  H -.->|Scénario ssh-bf déclenché Décision de ban| D
 
-  %% Blocage au niveau de Cloudflare pour les récidivistes
-  B -.->|DENY: IP bannie par Fail2Ban| Y((❌ Bloqué par CloudFlare))
+  %% ─── Flux Malveillant Web ───
+  G([🥷 Attaquant / Robot Scan]) -.->|Tentative IP directe| C
+  C -.->|DENY: Pas une IP Cloudflare| X1((❌ Timeout))
+  B -.->|DENY: IP dans blocklist CrowdSec| X2((❌ Bloqué CDN))
+  D -.->|DENY: IP bannie iptables| X3((❌ Bloqué réseau))
+  E -.->|DENY: Injection SQL / CVE / fichier sensible| X4((❌ 403 WAF))
 
-  %% Application des styles
-  class A,E internet;
+  %% ─── CrowdSec Engine ───
+  H[🧠 CrowdSec Engine Docker - auth.log · access.log · AppSec] -.->|Décisions de ban| B
+  H -.->|Décisions de ban iptables| D
+  H -.->|Règles WAF inband| E
+  F -.->|Logs Caddy access.log| H
+
+  %% ─── ClamAV ───
+  F -.->|Scan antivirus fichiers| I[🦠 ClamAV]
+
+  %% ─── Application des styles ───
+  class A,G,BOT internet;
+  class ADM ssh;
   class B cloudflare;
   class C ufw;
-  class D caddy;
-  class F docker;
-  class G f2b;
+  class D,H crowdsec;
+  class E caddy;
+  class SSH ssh;
+  class F,I docker;
+  class X1,X2,X3,X4,X5,X6 blocked;
 ```
 
 ## Perspectives : Sécurité Applicative (Symfony & Docker)
