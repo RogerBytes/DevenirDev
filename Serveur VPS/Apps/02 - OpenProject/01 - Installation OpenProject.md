@@ -168,7 +168,7 @@ Va dans l'Administration globale (via l'icône d'engrenage en haut à droite ou 
 Dans le menu latéral gauche, clique sur Emails et notifications (ou Emails and notifications).
 
 Adresse expéditeur
-mettre le bon expéditeur noreply@mondomaine.com
+mettre le bon expéditeur `noreply@mondomaine.com`
 
 Reste sur le premier onglet principal. Descends tout en bas de cette page.
 
