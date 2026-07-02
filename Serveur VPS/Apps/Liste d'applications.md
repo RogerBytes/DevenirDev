@@ -28,6 +28,7 @@ J'ai pas le temps, c'est la bourre, mais à faire en urgence quand j'aurais ratt
 ## À faire quand j'aurais beaucoup de salariés
 
 - [Outline](https://docs.getoutline.com/s/hosting/doc/docker-7pfeLP5a8t) -> pour très gros projet ou si mon entreprise grossit assez, sinon la partie "document" d'un projet openproject suffit largement
+- HashiCorp Vault - c'est un gestionnaire de mdp de fichier d'environnement, pour centraliser les tokens et tout le bazar
 
 ## À faire sur un serveur à la maison
 
