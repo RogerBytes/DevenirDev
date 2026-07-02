@@ -1,4 +1,4 @@
-# 01 - Installation VaultWarden
+# 01 - Installation OpenProject
 
 Depuis [Page docker hub](https://hub.docker.com/r/openproject/openproject)
 Depuis [la doc All-In-One de déploiement Docker](https://www.openproject.org/docs/installation-and-operations/installation/docker/)
@@ -56,6 +56,14 @@ openssl rand -hex 64
 
 Gardez précieusement la chaîne générée de côté, elle va servir dans le fichier de configuration juste après.
 
+### Générer une clef secrète pour hocuspocus
+
+```bash
+openssl rand -hex 64
+```
+
+Gardez précieusement la chaîne générée de côté, elle va servir dans le fichier de configuration juste après.
+
 ### Générer le compose.yml
 
 ```bash
@@ -64,28 +72,32 @@ sudo nano compose.yml
 
 Et on y colle
 
-```yml
+```yaml
 services:
   openproject:
-    image: openproject/openproject:17
+    image: openproject/openproject:17.6-rc
     container_name: openproject
     restart: unless-stopped
+    extra_hosts:
+      - "op.mondomaine.com:127.0.0.1"
     environment:
+      - OPENPROJECT_URL=http://op.mondomaine.com
       - TZ=Europe/Paris
-      - SECRET_KEY_BASE=METS_TA_CLE_DE_64_OCTETS_ICI
+      - SECRET_KEY_BASE=CLEF_SECRETE_OPENPROJECT
       - OPENPROJECT_HOST__NAME=op.mondomaine.com
       - OPENPROJECT_HTTPS=true
       - OPENPROJECT_DEFAULT__LANGUAGE=fr
-
+      # --- CONFIGURATION HOCUSPOCUS ---
+      - OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL=wss://op.mondomaine.com/hocuspocus
+      - OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET=CLEF_SECRETE_HOCUSPOCUS
       # --- CONFIGURATION EMAIL SMTP (MXROUTE) ---
-      - OPENPROJECT_SMTP__ADDRESS=le-serveur.mxroute.com
+      - OPENPROJECT_SMTP__ADDRESS=NOM_SERVEUR.mxrouting.net
       - OPENPROJECT_SMTP__PORT=587
       - OPENPROJECT_SMTP__DOMAIN=mondomaine.com
       - OPENPROJECT_SMTP__AUTHENTICATION=login
-      - OPENPROJECT_SMTP__USER__NAME=ton-email@mondomaine.com
-      - OPENPROJECT_SMTP__PASSWORD=ton-mot-de-passe-mxroute
+      - OPENPROJECT_SMTP__USER__NAME=noreply@mondomaine.com
+      - OPENPROJECT_SMTP__PASSWORD=MOT_DE_PASSE_DU_MAIL
       - OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO=true
-      - OPENPROJECT_HOCUSPOCUS_URL=http://127.0.0.1:1234
     volumes:
       - openproject_pgdata:/var/openproject/pgdata
       - openproject_assets:/var/openproject/assets
@@ -99,58 +111,6 @@ volumes:
 networks:
   caddy_network:
     external: true
-
-
-
-
-
-services:
-  openproject:
-    image: openproject/openproject:17
-    container_name: openproject
-    restart: unless-stopped
-    environment:
-      - TZ=Europe/Paris
-      - SECRET_KEY_BASE=METS_TA_CLE_DE_64_OCTETS_ICI
-      - OPENPROJECT_HOST__NAME=op.mondomaine.com
-      - OPENPROJECT_HTTPS=true
-      - OPENPROJECT_DEFAULT__LANGUAGE=fr
-      # --- COLLABORATION (HOCUSPOCUS) ---
-      - COLLABORATIVE_SERVER_URL=wss://op.mondomaine.com/hocuspocus
-      - COLLABORATIVE_SERVER_SECRET=UN_SECRET_COMMUN_TRES_LONG_ET_ALEATOIRE
-      
-      # --- CONFIGURATION EMAIL SMTP (MXROUTE) ---
-      - OPENPROJECT_SMTP__ADDRESS=le-serveur.mxroute.com
-      - OPENPROJECT_SMTP__PORT=587
-      - OPENPROJECT_SMTP__DOMAIN=mondomaine.com
-      - OPENPROJECT_SMTP__AUTHENTICATION=login
-      - OPENPROJECT_SMTP__USER__NAME=ton-email@mondomaine.com
-      - OPENPROJECT_SMTP__PASSWORD=ton-mot-de-passe-mxroute
-      - OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO=true
-    volumes:
-      - openproject_pgdata:/var/openproject/pgdata
-      - openproject_assets:/var/openproject/assets
-    networks:
-      - caddy_network
-
-  # --- NOUVEAU SERVICE REQUIS POUR OPENPROJECT 17 ---
-  hocuspocus:
-    image: openproject/hocuspocus:17
-    container_name: openproject-hocuspocus
-    restart: unless-stopped
-    environment:
-      - SECRET=UN_SECRET_COMMUN_TRES_LONG_ET_ALEATOIRE # Doit être IDENTIQUE à COLLABORATIVE_SERVER_SECRET ci-dessus
-      - OPENPROJECT_URL=http://openproject:8080 # URL interne vers le conteneur openproject
-    networks:
-      - caddy_network
-
-volumes:
-  openproject_pgdata:
-  openproject_assets:
-
-networks:
-  caddy_network:
-    external: true   
 ```
 
 ### Redirection avec Caddyfile
@@ -198,14 +158,10 @@ sudo docker compose logs -f openproject
 Et on attends de voir
 
 ```text
-openproject  | [206] * Listening on http://0.0.0.0:8080
-openproject  | [206] Use Ctrl-C to stop
-openproject  | [206] - Worker 0 (PID: 533) booted in 0.02s, phase: 0
-openproject  | [206] - Worker 1 (PID: 536) booted in 0.01s, phase: 0
-openproject  | I, [2026-07-02T09:46:40.054709 #215]  INFO -- : [GoodJob] GoodJob started cron with 17 jobs.
-openproject  | I, [2026-07-02T09:46:40.121529 #215]  INFO -- : [GoodJob] Notifier subscribed with LISTEN
-openproject  | I, [2026-07-02T09:47:45.966281 #536]  INFO -- : [634e5e59-169b-42af-bb74-eecc2051f650] method=GET path=/robots.txt format=text controller=HomescreenController action=robots status=200 allocations=34182 duration=267.57 view=22.92 db=75.94 user=2
+=> Booting Puma
 ```
+
+et ce qui suit
 
 On se connecte sur le navigateur à <https://op.mondomaine.com/>
 
@@ -222,6 +178,8 @@ Dans le menu latéral gauche, clique sur Emails et notifications (ou Emails and 
 
 Adresse expéditeur
 mettre le bon expéditeur `noreply@mondomaine.com`
+
+Changer la timezone dans les options du compte, et mettre paris (sinon l'heure est en retard sur GMT0)
 
 Reste sur le premier onglet principal. Descends tout en bas de cette page.
 
