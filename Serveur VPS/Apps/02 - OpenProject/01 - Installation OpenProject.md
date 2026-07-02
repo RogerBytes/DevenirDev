@@ -85,6 +85,7 @@ services:
       - OPENPROJECT_SMTP__USER__NAME=ton-email@mondomaine.com
       - OPENPROJECT_SMTP__PASSWORD=ton-mot-de-passe-mxroute
       - OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO=true
+      - OPENPROJECT_HOCUSPOCUS_URL=http://127.0.0.1:1234
     volumes:
       - openproject_pgdata:/var/openproject/pgdata
       - openproject_assets:/var/openproject/assets
@@ -136,7 +137,7 @@ cd /opt/docker/apps/openproject
 sudo docker compose up -d
 ```
 
-On peut suivre l'avancement de l'initialisation avec
+On peut suivre l'avancement de l'initialisation (prend plusieurs minutes) avec
 
 ```bash
 sudo docker compose logs -f openproject
