@@ -99,6 +99,58 @@ volumes:
 networks:
   caddy_network:
     external: true
+
+
+
+
+
+services:
+  openproject:
+    image: openproject/openproject:17
+    container_name: openproject
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+      - SECRET_KEY_BASE=METS_TA_CLE_DE_64_OCTETS_ICI
+      - OPENPROJECT_HOST__NAME=op.mondomaine.com
+      - OPENPROJECT_HTTPS=true
+      - OPENPROJECT_DEFAULT__LANGUAGE=fr
+      # --- COLLABORATION (HOCUSPOCUS) ---
+      - COLLABORATIVE_SERVER_URL=wss://op.mondomaine.com/hocuspocus
+      - COLLABORATIVE_SERVER_SECRET=UN_SECRET_COMMUN_TRES_LONG_ET_ALEATOIRE
+      
+      # --- CONFIGURATION EMAIL SMTP (MXROUTE) ---
+      - OPENPROJECT_SMTP__ADDRESS=le-serveur.mxroute.com
+      - OPENPROJECT_SMTP__PORT=587
+      - OPENPROJECT_SMTP__DOMAIN=mondomaine.com
+      - OPENPROJECT_SMTP__AUTHENTICATION=login
+      - OPENPROJECT_SMTP__USER__NAME=ton-email@mondomaine.com
+      - OPENPROJECT_SMTP__PASSWORD=ton-mot-de-passe-mxroute
+      - OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO=true
+    volumes:
+      - openproject_pgdata:/var/openproject/pgdata
+      - openproject_assets:/var/openproject/assets
+    networks:
+      - caddy_network
+
+  # --- NOUVEAU SERVICE REQUIS POUR OPENPROJECT 17 ---
+  hocuspocus:
+    image: openproject/hocuspocus:17
+    container_name: openproject-hocuspocus
+    restart: unless-stopped
+    environment:
+      - SECRET=UN_SECRET_COMMUN_TRES_LONG_ET_ALEATOIRE # Doit être IDENTIQUE à COLLABORATIVE_SERVER_SECRET ci-dessus
+      - OPENPROJECT_URL=http://openproject:8080 # URL interne vers le conteneur openproject
+    networks:
+      - caddy_network
+
+volumes:
+  openproject_pgdata:
+  openproject_assets:
+
+networks:
+  caddy_network:
+    external: true   
 ```
 
 ### Redirection avec Caddyfile
