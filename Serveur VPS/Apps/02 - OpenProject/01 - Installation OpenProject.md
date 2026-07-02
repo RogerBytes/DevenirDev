@@ -172,4 +172,4 @@ mettre le bon expéditeur `noreply@mondomaine.com`
 
 Reste sur le premier onglet principal. Descends tout en bas de cette page.
 
-Dire aux utilisateurs de vérifier le fuseau horaire pour éviter le quiproquo
+Dire aux utilisateurs de vérifier le fuseau horaire pour éviter le quiproquo.
