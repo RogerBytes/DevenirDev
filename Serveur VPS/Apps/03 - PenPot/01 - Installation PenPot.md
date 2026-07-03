@@ -264,7 +264,7 @@ Descendre tout en bas du document (`ALT + /`) et, dans la section dédiée à la
 ```text
 draw.mondomaine.com {
         import crowdsec_bouncer
-        reverse_proxy penpot-frontend:8080
+        reverse_proxy penpot-frontend:80
 }
 ```
 
