@@ -61,8 +61,10 @@ sudo docker compose ps
 ### Scan complet
 
 ```bash
-sudo docker exec -it clamav clamscan -r --infected /vps -l /var/lib/clamav/rapport.log --append 2>/dev/null
+sudo docker exec -it clamav clamscan -r --infected /vps -l /var/lib/clamav/rapport.log -a 2>/dev/null
 ```
+
+Attention, un scan complet est très long (au moins 30 minutes), il scanne l'intégralité des fichiers.
 
 ### Dossiers utilisateurs
 
