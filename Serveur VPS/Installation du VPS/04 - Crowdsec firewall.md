@@ -139,16 +139,6 @@ sudo docker exec crowdsec cscli bouncers list
 
 `firewall-bouncer` doit apparaître dans la liste
 
-## Ouvrir les protection du pare-feu au conteneurs docker
-
-Puis on relance
-
-```bash
-sudo systemctl restart crowdsec-firewall-bouncer
-```
-
-Ainsi on a une couche supplémentaire de protection pare-feu sur nos conteneurs.
-
 ## Test de métrique
 
 Pour faire un test de métrique faire
