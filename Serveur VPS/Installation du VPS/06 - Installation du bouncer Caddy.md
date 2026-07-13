@@ -259,6 +259,8 @@ sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy ca
 
 ### On fait les essais
 
+A voir, pas indispensable, si le reste de la doc marche, c'est pas important.
+
 ```bash
 curl -I --resolve mondomaine.com:80:127.0.0.1 http://mondomaine.com/
 ```
