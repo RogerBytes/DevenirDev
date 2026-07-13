@@ -39,6 +39,7 @@ labels:
 ### Ajout du fichier de log au conteneur crowdsec
 
 ```bash
+sudo rm -f /opt/docker/crowdsec/compose.yml
 sudo nano /opt/docker/crowdsec/compose.yml
 ```
 
