@@ -148,13 +148,13 @@ sudo nano /etc/mail.rc
 On ajoute à la fin
 
 ```bash
-set sendmail=/usr/bin/msmtp
+set sendmail="/usr/bin/msmtp -t"
 ```
 
 et on test mailtutils
 
 ```bash
-echo "Rkhunter est pret gadjo !" | sudo mail -s "Test VPS Rkhunter final" harry.richmond@rogerbytes.com
+echo "Mailing système prêt !" | sudo mail -s "Le mailing système est actif" mon-adresse@mondomaine.com
 ```
 
 ### Configuration initiale
@@ -203,7 +203,7 @@ NICE="0"
 RUN_CHECK_ON_BATTERY="true"
 ```
 
-On fait aussi la recherche `CTRL + W` pour trouver `MAIL-ON-WARNING=root` et dé-commente et on y met son mail (on vérifie `MAIL-ON-WARNING_LEVEL=2` est bien présent)
+**ATTENTION :** on fait aussi la recherche `CTRL + W` pour trouver `MAIL-ON-WARNING=root` et dé-commente et on y met son mail (on vérifie `MAIL-ON-WARNING_LEVEL=2` est bien présent)
 
 On enregistre et on ferme nano.
 
@@ -238,7 +238,7 @@ sudo grep -i "warning" /var/log/rkhunter.log
 ```
 
 ```text
-[11:00:35] Info: Emailing warnings to 'harry.richmond@rogerbytes.com' using command '/usr/bin/mail -s "[rkhunter] Warnings found for ${HOST_NAME}"'
+[11:00:35] Info: Emailing warnings to 'moncompte@mondomaine.com' using command '/usr/bin/mail -s "[rkhunter] Warnings found for ${HOST_NAME}"'
 [11:00:36] Info: Using syslog for some logging - facility/priority level is 'authpriv.warning'.
 [11:02:36]   Checking if SSH root access is allowed          [ Warning ]
 [11:02:36] Warning: The SSH configuration option 'PermitRootLogin' has not been set.
@@ -302,6 +302,15 @@ Il faut aussi vérifier les `Warnings` (je conseille grandement de les corriger 
 sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 ```
 
+Il reste encore deux warnings
+
+- `Checking if SSH root access is allowed`
+- `'PermitRootLogin' has not been set`
+
+Nous allons faire ça par la suite, il s'agit de l'accès root (que l'on va déverrouiller).
+
+Sinon :
+
 - On vérifie chacun des fichier qui ont un flag `Warnings`
 - Si les fichiers/modifications sont légitimes, on lance une indexation pour les valider.
 - Si ce sont des fichiers cachés légitimes, on réutilise `ALLOWHIDDENFILE` dans le fichier de configuration
@@ -312,7 +321,7 @@ On simule un usage de routine automatique avec
 sudo rkhunter --check --cronjob
 ```
 
-Il devrait envoyer un mail avec les warnings.
+Il envoie un mail alertant que la machine est potentiellement compromise.
 
 </div></details>
 
@@ -455,16 +464,6 @@ On peut maintenant se déconnecter
 exit
 ```
 
-Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraîchement créé.
-
-```bash
-ssh -p VOTRE_RANDOM_PORT NOUVEL_USER@192.0.2.1
-```
-
-Gardez précieusement votre commande de connexion, c'est celle-ci que vous utiliserez.
-
-Pour les comptes non admin, ne donnez pas d'accès sudo !
-
 </div></details>
 
 ## Ajouter la clef de récupération au nouveau user
@@ -506,6 +505,16 @@ ssh -t -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.
 ```
 
 Il faut se connecter sur l'user et faire
+
+Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraîchement créé.
+
+```bash
+ssh -p VOTRE_RANDOM_PORT NOUVEL_USER@192.0.2.1
+```
+
+Gardez précieusement votre commande de connexion, c'est celle-ci que vous utiliserez.
+
+Pour les comptes non admin, ne donnez pas d'accès sudo !
 
 ```bash
 cat ~/.ssh/authorized_keys
@@ -926,7 +935,7 @@ sudo systemctl status unattended-upgrades
 sudo systemctl status apt-daily-upgrade.timer
 ```
 
-Si on voit `Active: active (running)`, alors tout est bon.
+Si on voit `Active: active (running)` et `active (waiting)`, alors tout est bon.
 
 ### Quand reboot ?
 
@@ -943,6 +952,36 @@ ls: cannot access '/var/run/reboot-required': No such file or directory
 ```
 
 C'est qu'aucun reboot n'est requis.
+
+</div></details>
+
+## Dernier scan RKHunter
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+On valide nos changements (la création de l'user, les changements des users root et debian)
+
+```bash
+sudo rkhunter --propupd
+```
+
+### Dernière vérification RKHunter
+
+```bash
+sudo rkhunter --check -sk
+```
+
+Pour lire le résultat
+
+```bash
+sudo tail -n 50 /var/log/rkhunter.log | grep -A 17 "System checks summary"
+```
+
+Il faut aussi vérifier les `Warnings` (je conseille grandement de les corriger s'il y en a), maintenant il ne devrait plus y avoir la moindre alerte
+
+```bash
+sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
+```
 
 </div></details>
 
