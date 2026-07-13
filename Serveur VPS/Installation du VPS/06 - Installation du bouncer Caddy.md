@@ -39,7 +39,8 @@ On lui met
 ```bash
 source: appsec
 listen_addr: 0.0.0.0:7422
-appsec_configs: custom/custom-config
+appsec_configs:
+  - custom/custom-config
 labels:
   type: appsec
 ```
@@ -47,6 +48,7 @@ labels:
 #### Mettre à jour les collections crowdsec
 
 ```bash
+sudo rm -f /opt/docker/crowdsec/compose.yml
 sudo nano /opt/docker/crowdsec/compose.yml
 ```
 
@@ -114,10 +116,11 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 ### On met à jour le conteneur Caddy
 
 ```bash
+sudo rm -f /opt/docker/caddy/compose.yml
 sudo nano /opt/docker/caddy/compose.yml
 ```
 
-```bash
+```yml
 services:
   caddy:
     build:
@@ -169,6 +172,7 @@ Bien noter la clef, on va la mettre dans notre Caddyfile
 ### Configuration Caddyfile
 
 ```bash
+sudo rm -f /opt/docker/caddy/Caddyfile
 sudo nano /opt/docker/caddy/Caddyfile
 ```
 
@@ -203,6 +207,7 @@ sudo nano /opt/docker/caddy/Caddyfile
 }
 
 # ----------- Redirection de domaines ------------ #
+
 ```
 
 Exemples pour les conteneurs/services
