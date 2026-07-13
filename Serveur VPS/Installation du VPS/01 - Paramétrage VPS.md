@@ -31,7 +31,7 @@ Avant tout, privilégiez l'ajout d'une clef SSH lors de du déploiement du syst�
 
 Pour se connecter sur ma machine vierge, on récupère l'`IPv4` de la machine sur son tableau de bord OVH dans `Bare Metal Cloud/Serveurs Privés Virtuels` et on clique sur le nom du VPS, l'`IPv4` se trouve dans l'encadré `IP` sur la droite.
 
-Le générateur du mot de passe est envoyé par mail, il faut utiliser le "secret" comme mdp de première connexion, ici on se connecte à l'user `debian` (par défaut chez OVH).
+Le générateur du mot de passe est envoyé par mail (privilégiez la clef SSH), il faut utiliser le "secret" comme mdp de première connexion, ici on se connecte à l'user `debian` (par défaut chez OVH).
 
 ```bash
 ssh debian@192.0.2.1
@@ -115,6 +115,8 @@ On l'installe (on privilégie les paquets officiels de la Distribution, le paque
 sudo apt install -y rkhunter mailutils msmtp msmtp-mta
 ```
 
+Si demandé, activer AppArmor
+
 ### Configurer mailutils pour permettre l'envoi de mail depuis la machine
 
 ```bash
@@ -170,12 +172,13 @@ echo "Mailing système prêt !" | sudo mail -s "Le mailing système est actif" m
 On modifie `/etc/default/rkhunter` (indispensable pour les vérifications automatisées la nuit)
 
 ```bash
+sudo rm -f /etc/default/rkhunter
 sudo nano /etc/default/rkhunter
 ```
 
-Modifiez les variables comme ceci
+Collez
 
-```bash
+```conf
 CRON_DAILY_RUN="yes"
 CRON_DB_UPDATE="yes"
 DB_UPDATE_EMAIL="false"
@@ -200,15 +203,11 @@ On va à la fin du fichier (`ALT + /`, en passant le `M` signifie `ALT` et `^` s
 UPDATE_MIRRORS=1
 MIRRORS_MODE=0
 WEB_CMD=""
+MAIL-ON-WARNING="moncompte@mondomaine.com"
 
-# Configuration pour le cron de RKHunter
-CRON_DAILY_RUN="yes"
-CRON_DB_UPDATE="yes"
-DB_UPDATE_EMAIL="false"
-REPORT_EMAIL="root"
-APT_AUTOGEN="yes"
-NICE="0"
-RUN_CHECK_ON_BATTERY="true"
+# Autoriser les fichiers cachés créés par le système et systemd
+# ALLOWHIDDENFILE=/etc/.resolv.conf.systemd-resolved.bak
+# ALLOWHIDDENFILE=/etc/.updated
 ```
 
 **ATTENTION :** on fait aussi la recherche `CTRL + W` pour trouver `MAIL-ON-WARNING=root` et dé-commente et on y met son mail (on vérifie `MAIL-ON-WARNING_LEVEL=2` est bien présent)
@@ -357,16 +356,6 @@ Attention, mettez un mot de passe avec une très forte entropie (100 bits d'entr
 
 Il faudra absolument garder ces clefs.
 
-On l'ajoute la clef publique de récupération au VPS avec
-
-```bash
-ssh-copy-id -i ~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key.pub debian@192.0.2.1
-```
-
-Et on tape le mot de passe de l'user `debian`
-
-Il faut absolument conserver la clef de récupération !
-
 ### Générer une clef locale
 
 Si l'on a pas déjà une clef locale, on en crée une avec
@@ -375,13 +364,15 @@ Si l'on a pas déjà une clef locale, on en crée une avec
 ssh-keygen -t ed25519 -C "your_email@example.com your_machine"
 ```
 
-On l'ajoute la clef publique locale (quelle soit neuve ou pas), on prend toute suite la bonne habitude de l'ajouter via la clef de récupération
+Si ce n'est pas fait (au déploiement de debian) on l'ajoute la clef publique normale au VPS avec
 
 ```bash
-ssh -i ~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key debian@192.0.2.1 "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_ed25519.pub
+ssh-copy-id -i ~/.ssh/id_ed25519.pub debian@192.0.2.1
 ```
 
-Donnez le mot de passe de votre clef de récupération et ça y est, votre clef locale est ajoutée !
+Et on tape le mot de passe de l'user `debian`
+
+Il faut absolument conserver la clef de récupération !
 
 </div></details>
 
@@ -458,7 +449,7 @@ On ne va plus utiliser l'utilisateur `debian` (qui les privilèges `root`) pour 
 sudo adduser username
 ```
 
--> remplacer `username` par le nom d'user désiré, et entrez votre mdp, le entrées `full name`, `room number` etc peuvent rester vides (çà la fin on valide avec `Y`), dans la suite de la doc, l'username donné est `paul`.
+-> remplacer `username` par le nom d'user désiré, et entrez votre mdp, le entrées `full name`, `room number` etc peuvent rester vides (çà la fin on valide avec `Y` ou `Entrée`), dans la suite de la doc, l'username donné est `paul`.
 
 et on lui donne l'accès sudo, étant le vrai compte du VPS
 
@@ -484,7 +475,7 @@ Modifiez les variables au besoin, ce script permet d'ajouter la clef de récupé
 username=paul
 vps_user=debian
 public_key_path=~/Documents/Sécurité/Clefs/la-recovery-key.pub
-recovery_path=~/Documents/Sécurité/Clefs/la-recovery-key
+recovery_path=~/.ssh/id_ed25519.pub
 port=49152
 ip=192.0.2.1
 
@@ -511,8 +502,6 @@ public_key=$(cat $public_key_path)
 
 ssh -t -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
 ```
-
-Il faut se connecter sur l'user et faire
 
 Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraîchement créé.
 
@@ -742,14 +731,6 @@ sudo usermod -L -s /usr/sbin/nologin debian
 sudo truncate -s 0 /home/debian/.ssh/authorized_keys
 ```
 
-Et on remplace son mdp
-
-```bash
-sudo passwd debian
-```
-
-On met une énorme entropie et on jette le mdp, on ne veut pas qu'on puisse s'y connecter.
-
 On valide les changements de mdp du côté de RKHunter avec
 
 ```bash
@@ -932,7 +913,7 @@ On peut faire une recherche avec `Ctrl + W` pour dé-commenter/modifier ces lign
 
 et Pour
 
-`//Unattended-Upgrade::Mail "";` décommenter et mettre le mail sur lequel on veut l'alerte d'erreur de màj.
+`//Unattended-Upgrade::Mail "";` dé-commenter et mettre le mail sur lequel on veut l'alerte d'erreur de màj.
 
 On a activé et configuré les **mises à jour de sécurité automatiques** pour que le VPS se protège tout seul des failles (en installant les màj) en arrière-plan, tout en nettoyant ses fichiers inutiles et en lui interdisant de redémarrer sans ton autorisation.
 
@@ -967,16 +948,16 @@ C'est qu'aucun reboot n'est requis.
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-On valide nos changements (la création de l'user, les changements des users root et debian)
-
-```bash
-sudo rkhunter --propupd
-```
-
 ### Dernière vérification RKHunter
 
 ```bash
 sudo rkhunter --check -sk
+```
+
+On valide nos changements (la création de l'user, les changements des users root et debian)
+
+```bash
+sudo rkhunter --propupd
 ```
 
 Pour lire le résultat
