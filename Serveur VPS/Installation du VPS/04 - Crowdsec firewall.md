@@ -97,6 +97,8 @@ On garde la clef précieusement er on édite le fichier pour remplacer la valeur
 sudo nano /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
 ```
 
+Dans `/etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml`, dans la partie `iptables_chains:` il faut dé- commenter `#  - DOCKER-USER`
+
 On enregistre et on relance
 
 ```bash
@@ -138,12 +140,6 @@ sudo docker exec crowdsec cscli bouncers list
 `firewall-bouncer` doit apparaître dans la liste
 
 ## Ouvrir les protection du pare-feu au conteneurs docker
-
-Dans `/etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml`, dans la partie `iptables_chains:` il faut dé- commenter `#  - DOCKER-USER`
-
-```bash
-sudo nano /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
-```
 
 Puis on relance
 
