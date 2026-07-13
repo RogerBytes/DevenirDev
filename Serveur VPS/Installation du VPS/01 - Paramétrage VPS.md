@@ -642,7 +642,7 @@ On limite ainsi grandement la surface d'attaque. Il n'y a qu'un port totalement 
 
 </div></details>
 
-## Retirer une clef SSH du serveur
+## Retirer une clef SSH d'un user
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
