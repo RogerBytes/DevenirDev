@@ -14,8 +14,6 @@ sudo mkdir -p /opt/docker/caddy/logs/
 sudo touch /opt/docker/caddy/logs/access.log
 ```
 
-Ok mais il me reste à faire en sorte que crowdsec le surveille...
-
 ### Paramétrage du bouncer de pare-feu de Crowdsec
 
 On va ajouter le fichier de log de caddy
@@ -44,7 +42,7 @@ labels:
 sudo nano /opt/docker/crowdsec/compose.yml
 ```
 
-Il faut lui ajouter `- /opt/docker/caddy/logs:/opt/docker/caddy/logs:ro` comme volume, et `` dans la collection
+Il faut lui ajouter `- /opt/docker/caddy/logs:/opt/docker/caddy/logs:ro` comme volume, et `crowdsecurity/caddy` dans la collection
 
 ```yml
 services:
@@ -72,7 +70,7 @@ sudo docker compose up -d --force-recreate
 
 ### Préparation du répertoire et Caddyfile
 
-On prépare un répertoire dans `opt/docker` et on s'y rend
+On se rend dans `opt/docker`
 
 ```bash
 cd /opt/docker/caddy
@@ -238,12 +236,9 @@ sudo docker compose logs -f
 Retourne
 
 ```text
-caddy-1  | {"level":"info","ts":1782817773.551094,"logger":"admin.api","msg":"received request","method":"POST","host":"localhost:2019","uri":"/load","remote_ip":"127.0.0.1","remote_port":"52192","headers":{"Caddy-Config-Source-File":["Caddyfile"],"Content-Type":["application/json"],"Origin":["http://localhost:2019"],"Accept-Encoding":["gzip"],"User-Agent":["Go-http-client/1.1"],"Content-Length":["2"],"Caddy-Config-Source-Adapter":["caddyfile"]}}
-caddy-1  | {"level":"info","ts":1782817773.5522165,"msg":"config is unchanged"}
-caddy-1  | {"level":"info","ts":1782817773.5522926,"logger":"admin.api","msg":"load complete"}
-caddy-1  | {"level":"info","ts":1782821173.3904107,"logger":"admin.api","msg":"received request","method":"POST","host":"localhost:2019","uri":"/load","remote_ip":"127.0.0.1","remote_port":"32998","headers":{"User-Agent":["Go-http-client/1.1"],"Content-Length":["2"],"Caddy-Config-Source-Adapter":["caddyfile"],"Caddy-Config-Source-File":["Caddyfile"],"Content-Type":["application/json"],"Origin":["http://localhost:2019"],"Accept-Encoding":["gzip"]}}
-caddy-1  | {"level":"info","ts":1782821173.390588,"msg":"config is unchanged"}
-caddy-1  | {"level":"info","ts":1782821173.39069,"logger":"admin.api","msg":"load complete"}
+caddy-1  | {"level":"info","ts":1783967327.517215,"logger":"admin.api","msg":"received request","method":"POST","host":"localhost:2019","uri":"/load","remote_ip":"127.0.0.1","remote_port":"50298","headers":{"Content-Length":["2"],"Caddy-Config-Source-Adapter":["caddyfile"],"Caddy-Config-Source-File":["Caddyfile"],"Content-Type":["application/json"],"Origin":["http://localhost:2019"],"Accept-Encoding":["gzip"],"User-Agent":["Go-http-client/1.1"]}}
+caddy-1  | {"level":"info","ts":1783967327.517482,"msg":"config is unchanged"}
+caddy-1  | {"level":"info","ts":1783967327.5175986,"logger":"admin.api","msg":"load complete"}
 ```
 
 Voilà, tout est prêt, il faudra à chaque fois ajouter les nouveaux réglages (pour chaque domaine) dans le `Caddyfile`, à la fin du fichier dans la partie `Redirection de domaines`.
