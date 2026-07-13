@@ -85,20 +85,6 @@ Puis on installe le paquet
 sudo nala install -y crowdsec-firewall-bouncer-iptables
 ```
 
-On désactive le CrowdSec local (c'est le conteneur qui orchestrera, non la version locale sur la machine)
-
-```bash
-sudo systemctl stop crowdsec
-sudo systemctl disable crowdsec
-```
-
-On peut vérifier qu'il est inactif (ce que l'on veut) avec
-
-```bash
-sudo systemctl status crowdsec
-sudo systemctl is-enabled crowdsec
-```
-
 On crée une clef API pour le bouncer dans le conteneur
 
 ```bash
