@@ -122,10 +122,10 @@ On liste les backup (ceux sur le stockage d'objet R2) avec
 
 ```bash
 sudo docker run --rm \
-  -e AWS_ENDPOINT="https://5733c92e6925460128afab9af86fe3e6.r2.cloudflarestorage.com" \
-  -e BUCKET_NAME="rogerbytes-backups" \
-  -e AWS_ACCESS_KEY_ID="dc66ede22c00199159161da0b20501d8" \
-  -e AWS_SECRET_ACCESS_KEY="aea3e00629b1763cc0533508830572fd3d2733d640c1cabd19c16385d218b893" \
+  -e AWS_ENDPOINT="https://points de terminaison" \
+  -e BUCKET_NAME="Nom du compartiment" \
+  -e AWS_ACCESS_KEY_ID="ID de clé d’accès" \
+  -e AWS_SECRET_ACCESS_KEY="Clé d’accès secrète" \
   --entrypoint sh minio/mc -c "
     mc alias set r2 \$AWS_ENDPOINT \$AWS_ACCESS_KEY_ID \$AWS_SECRET_ACCESS_KEY && \
     mc ls r2/\$BUCKET_NAME/
@@ -138,11 +138,11 @@ On télécharge le fichier que l'ou souhaite avec :
 
 ```bash
 sudo docker run --rm -v "$PWD":/data \
-  -e AWS_ENDPOINT="https://5733c92e6925460128afab9af86fe3e6.r2.cloudflarestorage.com" \
-  -e BUCKET_NAME="rogerbytes-backups" \
-  -e FICHIER="backup-2026-06-24T19-00-00.tar.gz" \
-  -e AWS_ACCESS_KEY_ID="dc66ede22c00199159161da0b20501d8" \
-  -e AWS_SECRET_ACCESS_KEY="aea3e00629b1763cc0533508830572fd3d2733d640c1cabd19c16385d218b893" \
+  -e AWS_ENDPOINT="https://points de terminaison" \
+  -e BUCKET_NAME="Nom du compartiment" \
+  -e FICHIER="archive.tar.gz" \
+  -e AWS_ACCESS_KEY_ID="ID de clé d’accès" \
+  -e AWS_SECRET_ACCESS_KEY="Clé d’accès secrète" \
   --entrypoint sh minio/mc -c "
     mc alias set r2 \$AWS_ENDPOINT \$AWS_ACCESS_KEY_ID \$AWS_SECRET_ACCESS_KEY && \
     mc cp r2/\$BUCKET_NAME/\$FICHIER /data/

@@ -17,9 +17,17 @@ La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-meta
 
 Dans cette documentation, le principe du moindre privilège est rigoureusement appliqué.
 
+## Si reset
+
+```bash
+ssh-keygen -f $HOME/.ssh/known_hosts -R 192.0.2.1
+```
+
 ## Première connexion
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Avant tout, privilégiez l'ajout d'une clef SSH lors de du déploiement du système d'exploitation.
 
 Pour se connecter sur ma machine vierge, on récupère l'`IPv4` de la machine sur son tableau de bord OVH dans `Bare Metal Cloud/Serveurs Privés Virtuels` et on clique sur le nom du VPS, l'`IPv4` se trouve dans l'encadré `IP` sur la droite.
 
