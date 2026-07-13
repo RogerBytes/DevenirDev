@@ -112,7 +112,6 @@ On enregistre.
 Maintenant on fait le `compose.yml`
 
 ```bash
-sudo rm -f compose.yml
 sudo nano compose.yml
 ```
 
