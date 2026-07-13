@@ -70,7 +70,7 @@ sudo docker compose up -d --force-recreate
 
 ### Préparation du répertoire et Caddyfile
 
-On se rend dans `opt/docker`
+On se rend dans `opt/docker`, **ATTENTION À NE PAS RESTER DANS LE REPERTOIRE DE CROWDSEC**
 
 ```bash
 cd /opt/docker/caddy
@@ -111,6 +111,7 @@ On enregistre.
 Maintenant on fait le `compose.yml`
 
 ```bash
+sudo rm -f compose.yml
 sudo nano compose.yml
 ```
 
