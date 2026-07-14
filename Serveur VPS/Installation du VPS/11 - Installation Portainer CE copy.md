@@ -126,12 +126,14 @@ On vire les conteneurs et images inutiles
 
 ```bash
 sudo docker system prune -f
+sudo docker image prune -a
 ```
 
 On vérifie que tout est actif
 
 ```bash
 sudo docker ps -a
+sudo docker ps --format "table {{.Names}}\t{{.Image}}"
 ```
 
 On doit voir `up`
