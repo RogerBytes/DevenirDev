@@ -82,7 +82,7 @@ sudo nano /opt/docker/caddy/Caddyfile
 A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
 
 ```text
-dash.rogerbytes.com {
+dash.mondomaine.com {
         import crowdsec_bouncer
         reverse_proxy portainer:9000
 }
@@ -121,3 +121,44 @@ sudo docker logs portainer 2>&1 | grep "setup_token=" | awk -F "setup_token=" '{
 Choisir `Gest Started` et voilà
 
 Ca y est toutes les étapes d'installation de l'infrastructure du serveur sont terminées, on peut installer des applications depuis `Serveur VPS/Apps`.
+
+## Stack réglée
+
+On vire les conteneurs et images inutiles
+
+```bash
+sudo docker system prune -f
+```
+
+On vérifie que tout est actif
+
+```bash
+sudo docker ps -a
+```
+
+On doit voir `up`
+
+```bash
+portainer/portainer-ce:latest
+offen/docker-volume-backup:v2
+clamav/clamav-debian:stable
+crowdsecurity/cloudflare-worker-bouncer
+caddy-caddy
+crowdsecurity/crowdsec:latest
+```
+
+Vous aurez peut-être en plus watchtower si serveur de test ou de pre-prod.
+
+## Sécurité et CrowdSec
+
+- crowdsec -> moteur de CrowdSec
+- cloudflare-worker-bouncer -> permet de lier CrowdSec au compte CloudFlare
+- caddy -> version recompilée de Caddy qui contient un bouncer serveur spécifique
+
+En plus, sur la machine, on a le bouncer pour le par-feu, nommé `crowdsec-firewall-bouncer`
+
+On peur vérifier son état
+
+```bash
+sudo systemctl status crowdsec-firewall-bouncer
+```
