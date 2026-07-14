@@ -35,4 +35,3 @@ sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy ca
 ```
 
 Et voilà, la nouvelle configuration est prise en compte.
-
