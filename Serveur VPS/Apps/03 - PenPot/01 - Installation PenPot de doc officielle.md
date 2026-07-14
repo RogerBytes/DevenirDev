@@ -322,7 +322,7 @@ sudo docker compose exec penpot-postgres psql -U penpot -d penpot -c "SET rules.
 
 ## Identifier des erreurs de CrowdSec
 
-Ici par exemple avec penpot, si regarder les logs en direct
+Ici par exemple avec penpot, si regarder les logs en direct, par exemple avec une erreur muette, dont on cherche à comprendre d'où elle provient.
 
 ```bash
 sudo docker compose logs -f penpot-backend
@@ -338,13 +338,11 @@ So on veut afficher les mesures AppSec prises en temps réel, à partir de l'ins
 sudo docker compose -f /opt/docker/crowdsec/compose.yml logs -f --tail=0 crowdsec 2>&1 | grep -i appsec
 ```
 
-On essaie de provoquer l'erreur, ça retourne
+On essaie de provoquer l'erreur, ça un heartbeat (pas sûr qu'il apparaisse mais bref)
 
 ```bash
 crowdsec  | time="2026-07-13T11:22:40Z" level=info msg="127.0.0.1 - [Mon, 13 Jul 2026 11:22:40 UTC] \"HEAD /v1/decisions/stream HTTP/1.1 200 759.881µs \"appsec/v1.7.8-63227459-docker\" \"" module=lapi
 ```
-
-Dans cet exemple on voit bien qu'il y a eu un blocage qui est apparu.
 
 ### Lister les alertes
 
@@ -385,7 +383,7 @@ $ sudo docker exec -it crowdsec cscli alerts inspect 840
 ╰───────────────┴──────────────────────────────────────────────────────────────╯
 ```
 
-On voit dans `name` la règle `native_rule:920420`, il y a aussi une autre qui arrive après, la `943120`
+On voit dans `name` la règle `native_rule:920420`, il y a aussi une autre qui arrive après, la `943120` (je passe mais c'est le même procédé, mais avec les cookies de session)
 
 On va l'ajouter en liste blanche à custom-config.yaml
 
@@ -439,4 +437,4 @@ Donc dans CloudFlare, je vais sur mon domaine, puis `Caching/Configuration` et c
 sudo docker compose exec penpot-frontend find / -iname "ui.css" 2>/dev/null
 ```
 
-Inoffensif.
+Semble inoffensif (l'interface fonctionne normalement malgré l'erreur console)
