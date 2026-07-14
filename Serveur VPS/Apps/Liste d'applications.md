@@ -6,6 +6,8 @@
 
 Et éventuellement Loki (sur le central) + grafana (sur le central) + promtail (sur le central et satellites), si j'en chie pas.
 
+**Grafana + Loki (+ Promtail) sert à centraliser, stocker et afficher graphiquement tous les logs de tous tes serveurs au même endroit pour te permettre de trouver instantanément la cause d'une panne.**
+
 ## A faire en premier
 
 J'ai pas le temps, c'est la bourre, mais à faire en urgence quand j'aurais rattrapé le temps perdu
