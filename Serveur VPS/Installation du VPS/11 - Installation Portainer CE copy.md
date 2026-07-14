@@ -3,7 +3,7 @@
 - Depuis [Page docker hub](https://hub.docker.com/r/portainer/portainer-ce)
 - Depuis [Page github](https://github.com/portainer/portainer)
 
-Ce document détaille l'installation et la configuration d'Uptime Kuma pour surveiller la disponibilité des sites et applications.
+Ce document détaille l'installation et la configuration de Portainer CE.
 
 ## Prérequis
 
