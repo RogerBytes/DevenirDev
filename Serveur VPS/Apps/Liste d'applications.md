@@ -4,6 +4,8 @@
 - OpenProject
 - [Penpot](https://help.penpot.app/technical-guide/getting-started/docker/)
 
+Et éventuellement Loki (sur le central) + grafana (sur le central) + promtail (sur le central et satellites), si j'en chie pas.
+
 ## A faire en premier
 
 J'ai pas le temps, c'est la bourre, mais à faire en urgence quand j'aurais rattrapé le temps perdu
