@@ -11,28 +11,24 @@ sudo nano /opt/docker/caddy/Caddyfile
 On y colle une nouvelle entrée (ici l'exemple pour `VaultWarden`)
 
 ```plaintext
-vw.rogerbytes.com {
-        log {
-                output file /var/log/caddy/caddy.log
-        }
-        reverse_proxy 127.0.0.1:8000
+dash.mondomaine.com {
+        import crowdsec_bouncer
+        reverse_proxy portainer:9000
 }
 
-autre.rogerbytes.com {
-        log {
-                output file /var/log/caddy/caddy.log
-        }
-        reverse_proxy 127.0.0.1:9000
+www.mondomaine.com, mondomaine.com {
+        import crowdsec_bouncer
+        reverse_proxy portainer:9000
 }
 ```
 
-Au besoin, on peut formater/améliorer l'indentation du `Caddyfile` avec
+on utilise le formateur intégré avec
 
 ```bash
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
 ```
 
-**Très important** : Après chaque modification du `Caddyfile`, il faut recharger la configuration de Caddy pour qu'elle soit prise en compte, sans pour autant couper le service
+et on relance caddy
 
 ```bash
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
@@ -104,7 +100,7 @@ Voici comment on fait ça proprement et simplement avec Caddy :
 
 Dans ton `Caddyfile`, au lieu de créer plusieurs blocs avec des sous-domaines, tu utilises le domaine principal et tu définis des règles selon le chemin (le _path_) avec l'instruction `handle`.
 
->[!CAUTION] Ce type de routing par chemin (`/truc`) peut casser l'affichage de ton site si ton code (tes fichiers CSS ou tes liens) s'attend à être uniquement sur le domaine principal tout court.
+> [!CAUTION] Ce type de routing par chemin (`/truc`) peut casser l'affichage de ton site si ton code (tes fichiers CSS ou tes liens) s'attend à être uniquement sur le domaine principal tout court.
 
 ### 1. Exemple de configuration dans le Caddyfile
 
