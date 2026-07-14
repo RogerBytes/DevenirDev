@@ -3,7 +3,7 @@
 - Depuis [Page docker hub](https://hub.docker.com/r/portainer/portainer-ce)
 - Depuis [Page github](https://github.com/portainer/portainer)
 
-Ce document détaille l'installation et la configuration de Portainer CE.
+Ce document détaille l'installation et la configuration de Portainer CE, permettant de voir le statut des conteneurs à distance.
 
 ## Prérequis
 
@@ -47,8 +47,6 @@ networks:
   caddy_network:
     external: true
 ```
-
-Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il faisait `sudo docker volume ls` pour lister les volumes), qui permet au node `backup` de comprendre ce qu'est `vaultwarden-data`
 
 Et enregistrer le fichier.
 
