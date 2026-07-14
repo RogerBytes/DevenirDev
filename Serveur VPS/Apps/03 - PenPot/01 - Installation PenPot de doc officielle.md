@@ -58,6 +58,163 @@ sudo nano compose.yml
 
 Chercher `PENPOT_SECRET_KEY: change-this-insecure-key` (avec `CTRL+W`) pour y mettre la clef secrète qu'on vient de générer. Enregistrer.
 
+## Mon yml (en cours)
+
+```yml
+# Flags que je dois enquêter dans mon cas
+# log-emails
+# log-invitation-tokens
+x-flags: &penpot-flags
+  PENPOT_FLAGS: enable-smtp enable-prepl-server enable-mcp
+
+x-uri: &penpot-public-uri
+  PENPOT_PUBLIC_URI: https://draw.mondomaine.com
+
+x-body-size: &penpot-http-body-size
+  PENPOT_HTTP_SERVER_MAX_BODY_SIZE: 367001600
+  PENPOT_HTTP_SERVER_MAX_MULTIPART_BODY_SIZE: 367001600
+
+x-secret-key: &penpot-secret-key
+  PENPOT_SECRET_KEY: 2b14af4615462388c1a72987614ce43a070a3180aff692b9f2345ff9bbecb9b739f57ce3a349b6d46901dacffda27f48255ee467957ab56e9b50b88297086db3
+
+networks:
+  penpot:
+
+volumes:
+  penpot_postgres_v15:
+  penpot_assets:
+  # penpot_traefik: -> voir par la suite si je dois lui mettre mon bridge caddy-network, mais d'abord en vanilla sans bridge
+
+services:
+  # Il y avait un template service pour traefik, à voir si c'est nécessaire de faire un service caddy (je pense que non)
+
+  penpot-frontend:
+    image: "penpotapp/frontend:${PENPOT_VERSION:-2.16}"
+    restart: always
+    ports:
+      - 9001:8080
+
+    volumes:
+      - penpot_assets:/opt/data/assets
+
+    depends_on:
+      - penpot-backend
+      - penpot-exporter
+      - penpot-mcp
+
+    networks:
+      - penpot
+
+    environment:
+      << : [*penpot-flags, *penpot-http-body-size, *penpot-public-uri]
+
+  penpot-backend:
+    image: "penpotapp/backend:${PENPOT_VERSION:-2.16}"
+    restart: always
+
+    volumes:
+      - penpot_assets:/opt/data/assets
+
+    depends_on:
+      penpot-postgres:
+        condition: service_healthy
+      penpot-valkey:
+        condition: service_healthy
+
+    networks:
+      - penpot
+
+    environment:
+      << : [*penpot-flags, *penpot-public-uri, *penpot-http-body-size, *penpot-secret-key]
+
+      PENPOT_DATABASE_URI: postgresql://penpot-postgres/penpot
+      PENPOT_DATABASE_USERNAME: penpot
+      PENPOT_DATABASE_PASSWORD: penpot
+
+      PENPOT_REDIS_URI: redis://penpot-valkey/0
+
+      AWS_ACCESS_KEY_ID: 14d8cd7a09f80c2a23d4656e22058b4c
+      AWS_SECRET_ACCESS_KEY: 4bfb4d836e8196c5d39954b21b1e6fae8a852070861f7be40bfec00bf89fcb04
+      PENPOT_OBJECTS_STORAGE_BACKEND: s3
+      PENPOT_OBJECTS_STORAGE_S3_ENDPOINT: https://5733c92e6925460128afab9af86fe3e6.r2.cloudflarestorage.com
+      PENPOT_OBJECTS_STORAGE_S3_BUCKET: penpot-assets
+
+      PENPOT_TELEMETRY_ENABLED: "false"
+      PENPOT_TELEMETRY_REFERER: compose
+
+      PENPOT_SMTP_DEFAULT_FROM: noreply@rogerbytes.com
+      PENPOT_SMTP_DEFAULT_REPLY_TO: noreply@rogerbytes.com
+      PENPOT_SMTP_HOST: PENPOT_OBJECTS_STORAGE_FS_DIRECTORY
+      PENPOT_SMTP_PORT: 465
+      PENPOT_SMTP_USERNAME: noreply@rogerbytes.com
+      PENPOT_SMTP_PASSWORD: fRp9WmLDFsSziW2@
+      PENPOT_SMTP_TLS: "true"
+      PENPOT_SMTP_SSL: "true"
+
+  penpot-mcp:
+    image: "penpotapp/mcp:${PENPOT_VERSION:-2.16}"
+    restart: always
+    networks:
+      - penpot
+
+  penpot-exporter:
+    image: "penpotapp/exporter:${PENPOT_VERSION:-2.16}"
+    restart: always
+
+    depends_on:
+      penpot-valkey:
+        condition: service_healthy
+
+    networks:
+      - penpot
+
+    environment:
+      << : [*penpot-secret-key, *penpot-public-uri]
+      PENPOT_INTERNAL_URI: http://penpot-frontend:8080
+      PENPOT_REDIS_URI: redis://penpot-valkey/0
+
+  penpot-postgres:
+    image: "postgres:15"
+    restart: always
+    stop_signal: SIGINT
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U penpot"]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+      start_period: 2s
+
+    volumes:
+      - penpot_postgres_v15:/var/lib/postgresql/data
+
+    networks:
+      - penpot
+
+    environment:
+      - POSTGRES_INITDB_ARGS=--data-checksums
+      - POSTGRES_DB=penpot
+      - POSTGRES_USER=penpot
+      - POSTGRES_PASSWORD=penpot
+
+  penpot-valkey:
+    image: valkey/valkey:8.1
+    restart: always
+
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+
+    networks:
+      - penpot
+
+    environment:
+      - VALKEY_EXTRA_FLAGS=--maxmemory 128mb --maxmemory-policy volatile-lfu
+```
+
 ### CloudFlare R2
 
 #### Créer un compartiment R2
