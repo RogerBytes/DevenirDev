@@ -95,7 +95,7 @@ sudo dd if=/dev/urandom of=/boot/keyfile.bin bs=1024 count=4 && sudo chmod 600 /
 On installe `crypsetup`
 
 ```bash
-sudo nala install -y cryptsetup
+sudo nala install -y cryptsetup cryptsetup-initramfs systemd-cryptsetup
 ```
 
 On lance le chiffrement
@@ -138,7 +138,7 @@ sudo pvcreate /dev/mapper/crypt_prod
 
 ## Création des volumes logiques
 
-Vu qu'on a 60 GO, on va laisser 2Go au home, et 8 au repertoire opt, tout le reste ira sur les vrais fichier docker
+Vu qu'on a 60 GO, on va laisser 50Go au lib docker, et 8Go au repertoire opt, tout le reste ira sur home
 
 Au besoin relancer la déclaration si `Volume group "vg_prod" not found`
 
@@ -271,33 +271,54 @@ sudo tee -a /etc/fstab <<EOF
 EOF
 ```
 
-Normalement c'est bon, les montages devraient être effectifs après reboot.
-
-### Vérification du setup
-
-Pour être sûr que cela fonctionne, on va faire manuellement le bouzin
+### Créer un service systemd pour le loop Device
 
 ```bash
-# 1. On coupe Docker (indispensable pour libérer les dossiers)
-sudo systemctl stop docker docker.socket
-
-# 2. On démonte nos partitions
-sudo umount /home /var/lib/docker /opt/docker
-
-# 3. On recharge la configuration de systemd (pour qu'il lise le nouveau fstab)
-sudo systemctl daemon-reload
-
-# 4. On demande à fstab de tout remonter automatiquement
-sudo mount -a
-
-# 5. On relance Docker
-sudo systemctl start docker
+sudo nano /etc/systemd/system/setup-loop-prod.service
 ```
 
-On peut vérifier que le socket de docker est actif avec
+```bash
+[Unit]
+Description=Attach /luks.img to /dev/loop0 before cryptsetup
+DefaultDependencies=no
+Before=cryptsetup.target systemd-cryptsetup@crypt_prod.service
+After=local-fs-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/losetup /dev/loop0 /luks.img
+RemainAfterExit=yes
+
+[Install]
+WantedBy=cryptsetup.target
+```
+
+Notre clef se trouve `/boot/keyfile.bin`
+
+On édite `crypttab`
 
 ```bash
-sudo systemctl status docker.socket
+sudo nano /etc/crypttab
+```
+
+A la fin, on ajoute
+
+```bash
+crypt_prod    /dev/loop0    /boot/keyfile.bin    luks
+```
+
+On recharge initramfs
+
+```bash
+sudo systemctl daemon-reload
+sudo update-initramfs -u -k all
+sudo systemctl daemon-reload
+```
+
+Et activer le service
+
+```bash
+sudo systemctl enable setup-loop-prod.service
 ```
 
 ### On vérifie que les repertoire d'origine sont vides
@@ -332,90 +353,16 @@ drwxr-xr-x 2 root root 4096 Jul 15 20:54 .
 drwxr-xr-x 4 root root 4096 Jul 14 00:51 ..
 ```
 
-Et on néttoie le point de Vérification
+Et on nettoie le point de Vérification
 
 ```bash
 sudo umount /mnt/verif_racine
 sudo rmdir /mnt/verif_racine
 ```
 
-### On paramètre le déverrouillage automatique
-
-On récupère l'UUID de `loop0` avec
-
-```bash
-lsblk -o NAME,FSTYPE,SIZE,UUID
-```
-
-Il retourne
-
-```bash
-NAME                      FSTYPE       SIZE UUID
-loop0                     crypto_LUKS   60G f14812e0-4784-4ce4-85c2-577c57e31356
-└─crypt_prod              LVM2_member   60G vk4IAx-bN5m-4RUh-Ewd4-npsM-LPHf-g68eL3
-  ├─vg_prod-lv_docker_lib ext4          50G fdcbd72d-60dd-4c3d-9688-22fcd94b07e2
-  ├─vg_prod-lv_docker_opt ext4           8G 5bbf0a88-7a9f-485f-a262-1aea2f5fee48
-  └─vg_prod-lv_home       ext4           2G a3855954-65c5-4b15-8362-6737881738a2
-sda                                     75G
-├─sda1                    ext4        74.9G 9b085fa0-4a45-4ee4-8528-4ed80730760d
-├─sda14                                  3M
-└─sda15                   vfat         124M 362E-13F0
-```
-
-Donc l'UUID est `f14812e0-4784-4ce4-85c2-577c57e31356`.
-
-Notre clef se trouve `/boot/keyfile.bin`
-
-On édite `cryttab`
-
-```bash
-sudo nano /etc/crypttab
-```
-
-A la fin, on ajoute
-
-```bash
-crypt_prod    UUID=f14812e0-4784-4ce4-85c2-577c57e31356    /boot/keyfile.bin    luks
-```
-
-Maintenant on régénère l'initamfs
-
-```bash
-sudo update-initramfs -u -k all
-```
-
-Et on lance
-
-```bash
-cd ~
-sudo systemctl daemon-reload
-```
-
-Et on refait
-
-```bash
-sudo update-initramfs -u -k all
-```
-
-Ce coup-ci, il n'y aura plus d'erreurs.
-
-### Redonner les droits SSH
-
-```bash
-# On donne la propriété à harry
-sudo chown -R harry:harry /home/harry/.ssh
-
-# Droits ultra-restreints sur le dossier (uniquement lecture/écriture pour harry)
-chmod 700 /home/harry/.ssh
-
-# Droits ultra-restreints sur le fichier de clés
-chmod 600 /home/harry/.ssh/authorized_keys
-```
-
-
 ### Test final
 
-on fait
+Normalement on peut faire le reboot, si on ne peut plus se co en SSH, c'est que ça ne decrypte pas ou ne monte pas les volumesq
 
 ```bash
 df -h | grep -E "docker|home"
@@ -440,6 +387,8 @@ sudo reboot now
 
 ## Cassé KVM et réparation
 
+Je laisse ici pour info, normalement la doc est bonne, mais la partie est utile en cas de souci
+
 Pour KVM, avant tout on vire les messages toutes les 5 secondes et on passe en azerty
 
 ```bash
@@ -450,7 +399,7 @@ sudo apt install kbd
 # et choisir France/France Azerty
 ```
 
-Ensuite on tape
+Ensuite on débrouille, voici ce que j'utilisais avec l'ancienne erreur
 
 ```bash
 sudo losetup /dev/loop0 /luks.img
@@ -459,28 +408,14 @@ sudo vgchange -ay vg_prod
 sudo mount -a
 ```
 
-Là on peut fermer kvm se co en SSH à nouveau
+Voilà, le KillSwitch faible est paramétré !
 
-On relance Docker
+## KillSwitch Mandos
 
-```bash
-sudo systemctl restart docker
-```
+Maintenat qu'on a les bases, on va passer à la suite.
 
-Maintenant on va tenter de corriger cette merde
+On commence par voir si avant le démmarage de mon vps, il peut ou pas se co au boot
 
 ```bash
-sudo nano /etc/crypttab
-```
-
-on vire l'existant avec l'UUID par
-
-```bash
-crypt_prod    /luks.img    /boot/keyfile.bin    luks,loop
-```
-
-et on relance l'unitrtamfs
-
-```bash
-sudo update-initramfs -u -k all
+cat /etc/network/interfaces.d/50-cloud-init 2>/dev/null || cat /etc/netplan/50-cloud-init.yaml 2>/dev/null
 ```
