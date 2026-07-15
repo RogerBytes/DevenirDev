@@ -30,15 +30,13 @@ Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de 
 
 ## Kill switch simple
 
-Voici les crottes
+Informations principales
 
+- `/var/lib/docker`, `/opt/docker` et `/home/` : Chemins des répertoires que l'on va encrypter
 - `/dev/mapper/crypt_prod` : Conteneur LUKS
 - `vg_prod` : Volume Group LVM
-- `/var/lib/docker`, `/var/lib/docker` et `/var/lib/docker` : Logical Volumes
-- `/dev/mapper/crypt_prod` : Conteneur LUKS
-- `/dev/mapper/crypt_prod` : Conteneur LUKS
-
-Pour que tu puisses copier-coller les commandes les yeux fermés, j'ai juste besoin d'une info : **quel est le nom du disque dur ou de la partition** que tu veux dédier à ce stockage chiffré ? (par exemple `/dev/sdb`, `/dev/vdb`, ou une partition LVM existante).
+- `/var/lib/docker`, `lv_home` et `lv_docker_opt` : Logical Volumes
+- `/dev/vg_prod/lv_docker_lib`, `/dev/vg_prod/lv_docker_opt` et `/dev/vg_prod/lv_home` : Chemins des Logical Volumes
 
 Une fois que tu me donnes ça, je te déroule le script étape par étape avec :
 
@@ -47,3 +45,93 @@ Une fois que tu me donnes ça, je te déroule le script étape par étape avec :
 3. Le transfert de tes données existantes (`/var/lib/docker`, etc.) pour ne rien perdre.
 4. La configuration du montage automatique.
 
+On liste les partitions avec `lsblk`
+
+Dans l'exemple il retourne
+
+```bash
+$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda       8:0    0   75G  0 disk
+├─sda1    8:1    0 74.9G  0 part /
+├─sda14   8:14   0    3M  0 part
+└─sda15   8:15   0  124M  0 part /boot/efi
+```
+
+Donc on va créer un fichier conteneur de 60Go (laissant 14.9 Go pour debian)
+
+### Création et association du fichier conteneur au Loop Device /dev/loop0
+
+```bash
+sudo fallocate -l 60G /luks.img
+sudo chmod 600 /luks.img
+sudo losetup /dev/loop0 /luks.img
+```
+
+On vérifie l'association avec
+
+```bash
+sudo /sbin/losetup -a
+```
+
+Il doit retourner `/dev/loop0: [2049]:8032 (/luks.img)`
+
+Ainsi que sa taille
+
+```bash
+ls -lh /luks.img
+```
+
+Il doit retourner `-rw------- 1 root root 60G Jul 15 15:35 /luks.img`
+
+### Création du fichier clef
+
+```bash
+sudo dd if=/dev/urandom of=/boot/keyfile.bin bs=1024 count=4 && sudo chmod 600 /boot/keyfile.bin
+```
+
+### Chiffrement du fichier via Loop Device
+
+On installe `crypsetup`
+
+```bash
+sudo nala install -y cryptsetup
+```
+
+On lance le chiffrement
+
+```bash
+sudo cryptsetup luksFormat --key-file /boot/keyfile.bin /dev/loop0
+```
+
+On tape `YES` en majuscules pour confirmer la recréation du fichier (ce qui efface son contenu s'il y avait eu quelque chose dessus)
+
+On ouvre le volume chiffré avec la clef
+
+```bash
+sudo cryptsetup luksOpen --key-file /boot/keyfile.bin /dev/loop0 crypt_prod
+```
+
+Le warning `Warning: keyslot operation could fail as it requires more than available memory.` n'est pas bloquant.
+
+On peut vérifier que tout va bien avec
+
+```bash
+ls /dev/mapper/crypt_prod
+```
+
+Il doit retourner `/dev/mapper/crypt_prod`
+
+### Déclaration du volume pour LVM
+
+On installe `lvm2`
+
+```bash
+sudo nala install -y lvm2
+```
+
+Et on fait la déclaration du volume
+
+```bash
+sudo pvcreate /dev/mapper/crypt_prod
+```
