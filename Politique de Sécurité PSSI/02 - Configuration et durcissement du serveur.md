@@ -28,7 +28,7 @@ Voici les 4 piliers de sécurité à respecter
 - [x] gestion des logs docker
 - [x] mise en place de reverse proxy avec caddy (avec CloudFlare) + paramétrage de CrowdSec WAF/AppSec sur caddy compilé avec CrowdSec Caddy Bouncer
 - [x] déploiements via conteneurs docker (c'est caddy qui prend en charge la redirection des connexion entrantes vers les localhost des différents conteneurs)
-- [x] TOTP ou 2FA sur mes comptes OVH et Contabo et CloudFlare
+- [x] TOTP ou 2FA sur mes comptes OVH VPS, Contabo VPS et CloudFlare
 - [x] gérer un système d'alerte de crowdsec si un gros volume d'ip bannies
 - [x] passer un SHA256 dans mes compose.yml au lieu de juste le numéro de version
 
