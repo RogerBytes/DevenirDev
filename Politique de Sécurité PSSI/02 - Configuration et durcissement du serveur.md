@@ -6,28 +6,43 @@ Voici les 4 piliers de sécurité à respecter
 
 1. **Le Moindre Privilège** - Gestion des utilisateurs avancée : sudo impératif, retrait de connexion à l'user `debian`, root verrouillé.
 2. **Le Security by Design** - Conception sécurisée de l'architecture en amont : [Cloudflare -> Caddy -> Docker] avant même de coder quoi que ce soit.
-3. **La Défense en Profondeur** - Empilement de couches : Cloudflare + Pare-feu + Fail2ban + Clés SSH + Rkhunter.
+3. **La Défense en Profondeur** - Empilement de couches : Cloudflare + Pare-feu + CrowdSec Firewall bouncer + Clés SSH + Rkhunter.
 4. **Le Zero Trust** - Cloisonnement : chaque service est un conteneur isolé passant par son `localhost`.
 
 ## La Checklist de sécurité
 
-- [x] connexion uniquement par clef ssh (avec mdp)
+- [x] connexion uniquement par clef ssh (avec passphrase)
 - [x] rkhunter pour détecter rootkit et backdoor
 - [x] changement du port ssh par défaut
 - [x] ajout d'un user supplémentaire (moi) avec accès sudo
-- [x] pare-feu fermé par défaut pour les entrées sauf http, https, port ssh et localhost
-- [x] fail2ban pour protéger mon port SSH
+- [x] pare-feu fermé par défaut pour tout sauf port SSH (et liste blanche d'ip CloudFlare pour http et https)
+- [x] CrowdSec Firewall bouncer pour protéger mon port SSH
 - [x] lock de l'user initial de la debian
 - [x] verrouillage de la connexion ssh à root
 - [x] gestion des logs
 - [x] màj auto avec unattended-upgrades
 - [x] la pare-feu bloque tous les ports, sauf le local host et le port ssh
 - [x] le pare-feu a une liste blanche d'ip de CloudFlare, seules ces ip peuvent acceder à http et https
-- [x] fail2ban contrôle le pare-feu de CloudFlare via API, bloquant automatiquement les IP malveillantes
+- [x] CrowdSec Firewall bouncer contrôle le pare-feu de CloudFlare via API, bloquant automatiquement les IP malveillantes
 - [x] docker installé en mode standard, nécessitant sudo (pour éviter un hack depuis un conteneur)
 - [x] gestion des logs docker
-- [x] mise en place de reverse proxy avec caddy (avec CloudFlare) + paramétrage de fail2ban sur caddy
+- [x] mise en place de reverse proxy avec caddy (avec CloudFlare) + paramétrage de CrowdSec WAF/AppSec sur caddy compilé avec CrowdSec Caddy Bouncer
 - [x] déploiements via conteneurs docker (c'est caddy qui prend en charge la redirection des connexion entrantes vers les localhost des différents conteneurs)
+- [x] TOTP ou 2FA sur mes comptes OVH et Contabo et CloudFlare
+- [x] gérer un système d'alerte de crowdsec si un gros volume d'ip bannies
+- [x] passer un SHA256 dans mes compose.yml au lieu de juste le numéro de version
+
+## Gel forensique
+
+Avoir un script pour récupérer, par priorité (pour le backup R2) :
+
+1. **`/var/log/auth.log`** — connexions SSH, tentatives d'authentification, sudo
+2. **`/opt/docker/caddy/logs/access.log`** — toutes les requêtes web qui arrivent sur ton VPS
+3. **Logs CrowdSec** (`sudo docker compose -f /opt/docker/crowdsec/compose.yml logs`) — les décisions de ban, alertes WAF
+4. **Logs de chaque container Docker actif** (`sudo docker compose logs` dans chaque dossier, ex: Penpot, Vaultwarden) — erreurs applicatives, activité suspecte
+5. **`journalctl`** (logs système généraux) — un export avec `journalctl > journalctl_export.log`
+
+En gros lancer manuellement le backup juste avant d'executer le Kill Switch.
 
 ## Représentation du flux entrant
 
