@@ -57,6 +57,12 @@ On va installer `nala` (surcouche visuelle d'apt), `kitty-terminfo` (support pou
 sudo apt install -y nala kitty-terminfo fastfetch
 ```
 
+Et on met la bonne timezone
+
+```bash
+sudo timedatectl set-timezone Europe/Paris
+```
+
 </div></details>
 
 ## Mise à jour du système
