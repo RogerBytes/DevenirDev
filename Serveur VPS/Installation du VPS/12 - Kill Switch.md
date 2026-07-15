@@ -135,3 +135,352 @@ Et on fait la déclaration du volume
 ```bash
 sudo pvcreate /dev/mapper/crypt_prod
 ```
+
+## Création des volumes logiques
+
+Vu qu'on a 60 GO, on va laisser 2Go au home, et 8 au repertoire opt, tout le reste ira sur les vrais fichier docker
+
+Au besoin relancer la déclaration si `Volume group "vg_prod" not found`
+
+```bash
+sudo lvcreate -L 50G -n lv_docker_lib vg_prod
+```
+
+```bash
+sudo lvcreate -L 8G -n lv_docker_opt vg_prod
+```
+
+```bash
+sudo lvcreate -l 100%FREE -n lv_home vg_prod
+```
+
+## Formatage en ext4
+
+```bash
+sudo mkfs.ext4 /dev/vg_prod/lv_docker_lib
+```
+
+```bash
+sudo mkfs.ext4 /dev/vg_prod/lv_docker_opt
+```
+
+```bash
+sudo mkfs.ext4 /dev/vg_prod/lv_home
+```
+
+On vérifie que les répertoires sources existent
+
+```bash
+ls -ld /home /opt/docker /var/lib/docker 2>/dev/null
+```
+
+Ca retourne
+
+```bash
+drwxr-xr-x  4 root root 4096 Jul 14 00:34 /home
+drwxr-xr-x  7 root root 4096 Jul 14 02:47 /opt/docker
+drwx--x--- 12 root root 4096 Jul 14 00:50 /var/lib/docker
+```
+
+### Copie
+
+On crée les dossier temp de transfert
+
+```bash
+sudo mkdir -p /mnt/temp_home /mnt/temp_lib /mnt/temp_opt
+```
+
+On connecte les partitions sur les repertoires temporaires
+
+```bash
+sudo mount /dev/vg_prod/lv_home /mnt/temp_home
+sudo mount /dev/vg_prod/lv_docker_lib /mnt/temp_lib
+sudo mount /dev/vg_prod/lv_docker_opt /mnt/temp_opt
+```
+
+On arrête Docker
+
+```bash
+sudo systemctl stop docker docker.socket
+```
+
+On copie les données vers le stockage chiffré
+
+```bash
+sudo cp -a /home/. /mnt/temp_home/
+sudo cp -a /var/lib/docker/. /mnt/temp_lib/
+sudo cp -a /opt/docker/. /mnt/temp_opt/
+```
+
+Et on démonte les répertoire temporaires
+
+```bash
+sudo umount /mnt/temp_home
+sudo umount /mnt/temp_lib
+sudo umount /mnt/temp_opt
+```
+
+On vide les repertoires d'origine
+
+```bash
+sudo find /home -mindepth 1 -delete
+sudo find /opt/docker -mindepth 1 -delete
+sudo find /var/lib/docker -mindepth 1 -delete
+```
+
+On ignore les `permission denied` de starship
+
+```bash
+Unable to create log dir "/home/harry/.cache/starship": Os { code: 13, kind: PermissionDenied, message: "Permission denied" }!
+Unable to create log dir "/home/harry/.cache/starship": Os { code: 13, kind: PermissionDenied, message: "Permission denied" }!
+```
+
+et on lance le montage
+
+```bash
+sudo mount /dev/vg_prod/lv_home /home
+sudo mount /dev/vg_prod/lv_docker_lib /var/lib/docker
+sudo mount /dev/vg_prod/lv_docker_opt /opt/docker
+```
+
+Et on démarre Docker
+
+```bash
+sudo systemctl start docker
+```
+
+Les partitions sont montées en mémoire vive et ça fonctionne (on voir le prompt starship de nouveau comme avant)
+
+## Montage automatique
+
+On commence par faire un backup du fstab
+
+```bash
+sudo cp /etc/fstab /etc/fstab.bak
+```
+
+Et on ajoute nos montage au fstab
+
+```bash
+sudo tee -a /etc/fstab <<EOF
+
+# Partitions chiffrées LVM de production
+/dev/mapper/vg_prod-lv_home        /home            ext4    defaults,noatime,nofail    0    2
+/dev/mapper/vg_prod-lv_docker_lib  /var/lib/docker  ext4    defaults,noatime,nofail    0    2
+/dev/mapper/vg_prod-lv_docker_opt  /opt/docker      ext4    defaults,noatime,nofail    0    2
+EOF
+```
+
+Normalement c'est bon, les montages devraient être effectifs après reboot.
+
+### Vérification du setup
+
+Pour être sûr que cela fonctionne, on va faire manuellement le bouzin
+
+```bash
+# 1. On coupe Docker (indispensable pour libérer les dossiers)
+sudo systemctl stop docker docker.socket
+
+# 2. On démonte nos partitions
+sudo umount /home /var/lib/docker /opt/docker
+
+# 3. On recharge la configuration de systemd (pour qu'il lise le nouveau fstab)
+sudo systemctl daemon-reload
+
+# 4. On demande à fstab de tout remonter automatiquement
+sudo mount -a
+
+# 5. On relance Docker
+sudo systemctl start docker
+```
+
+On peut vérifier que le socket de docker est actif avec
+
+```bash
+sudo systemctl status docker.socket
+```
+
+### On vérifie que les repertoire d'origine sont vides
+
+On crée un point d'accès temp
+
+```bash
+sudo mkdir -p /mnt/verif_racine
+sudo mount --bind / /mnt/verif_racine
+```
+
+On inspecte les anciens dossiers
+
+```bash
+sudo ls -la /mnt/verif_racine/home
+sudo ls -la /mnt/verif_racine/var/lib/docker
+sudo ls -la /mnt/verif_racine/opt/docker
+```
+
+Si c'est vide, il est censé retourner
+
+```bash
+$ sudo ls -la /mnt/verif_racine/opt/docker
+total 8
+drwxr-xr-x  2 root root 4096 Jul 15 20:54 .
+drwxr-xr-x 18 root root 4096 Jul 15 15:35 ..
+total 8
+drwx--x---  2 root root 4096 Jul 15 20:54 .
+drwxr-xr-x 29 root root 4096 Jul 14 00:49 ..
+total 8
+drwxr-xr-x 2 root root 4096 Jul 15 20:54 .
+drwxr-xr-x 4 root root 4096 Jul 14 00:51 ..
+```
+
+Et on néttoie le point de Vérification
+
+```bash
+sudo umount /mnt/verif_racine
+sudo rmdir /mnt/verif_racine
+```
+
+### On paramètre le déverrouillage automatique
+
+On récupère l'UUID de `loop0` avec
+
+```bash
+lsblk -o NAME,FSTYPE,SIZE,UUID
+```
+
+Il retourne
+
+```bash
+NAME                      FSTYPE       SIZE UUID
+loop0                     crypto_LUKS   60G f14812e0-4784-4ce4-85c2-577c57e31356
+└─crypt_prod              LVM2_member   60G vk4IAx-bN5m-4RUh-Ewd4-npsM-LPHf-g68eL3
+  ├─vg_prod-lv_docker_lib ext4          50G fdcbd72d-60dd-4c3d-9688-22fcd94b07e2
+  ├─vg_prod-lv_docker_opt ext4           8G 5bbf0a88-7a9f-485f-a262-1aea2f5fee48
+  └─vg_prod-lv_home       ext4           2G a3855954-65c5-4b15-8362-6737881738a2
+sda                                     75G
+├─sda1                    ext4        74.9G 9b085fa0-4a45-4ee4-8528-4ed80730760d
+├─sda14                                  3M
+└─sda15                   vfat         124M 362E-13F0
+```
+
+Donc l'UUID est `f14812e0-4784-4ce4-85c2-577c57e31356`.
+
+Notre clef se trouve `/boot/keyfile.bin`
+
+On édite `cryttab`
+
+```bash
+sudo nano /etc/crypttab
+```
+
+A la fin, on ajoute
+
+```bash
+crypt_prod    UUID=f14812e0-4784-4ce4-85c2-577c57e31356    /boot/keyfile.bin    luks
+```
+
+Maintenant on régénère l'initamfs
+
+```bash
+sudo update-initramfs -u -k all
+```
+
+Et on lance
+
+```bash
+cd ~
+sudo systemctl daemon-reload
+```
+
+Et on refait
+
+```bash
+sudo update-initramfs -u -k all
+```
+
+Ce coup-ci, il n'y aura plus d'erreurs.
+
+### Redonner les droits SSH
+
+```bash
+# On donne la propriété à harry
+sudo chown -R harry:harry /home/harry/.ssh
+
+# Droits ultra-restreints sur le dossier (uniquement lecture/écriture pour harry)
+chmod 700 /home/harry/.ssh
+
+# Droits ultra-restreints sur le fichier de clés
+chmod 600 /home/harry/.ssh/authorized_keys
+```
+
+
+### Test final
+
+on fait
+
+```bash
+df -h | grep -E "docker|home"
+```
+
+il retourne
+
+```bash
+$ $df -h | grep -E "docker|home"
+/dev/mapper/vg_prod-lv_home        2.0G  632K  1.8G   1% /home
+/dev/mapper/vg_prod-lv_docker_lib   49G  242M   47G   1% /var/lib/docker
+/dev/mapper/vg_prod-lv_docker_opt  7.8G   18M  7.4G   1% /opt/docker
+```
+
+Montrant qu'ils sont bien montés.
+
+On relance la machine
+
+```bash
+sudo reboot now
+```
+
+## Cassé KVM et réparation
+
+Pour KVM, avant tout on vire les messages toutes les 5 secondes et on passe en azerty
+
+```bash
+logout
+
+sudo dmesg -n 1
+sudo apt install kbd
+# et choisir France/France Azerty
+```
+
+Ensuite on tape
+
+```bash
+sudo losetup /dev/loop0 /luks.img
+sudo cryptsetup luksOpen --key-file /boot/keyfile.bin /dev/loop0 crypt_prod
+sudo vgchange -ay vg_prod
+sudo mount -a
+```
+
+Là on peut fermer kvm se co en SSH à nouveau
+
+On relance Docker
+
+```bash
+sudo systemctl restart docker
+```
+
+Maintenant on va tenter de corriger cette merde
+
+```bash
+sudo nano /etc/crypttab
+```
+
+on vire l'existant avec l'UUID par
+
+```bash
+crypt_prod    /luks.img    /boot/keyfile.bin    luks,loop
+```
+
+et on relance l'unitrtamfs
+
+```bash
+sudo update-initramfs -u -k all
+```
