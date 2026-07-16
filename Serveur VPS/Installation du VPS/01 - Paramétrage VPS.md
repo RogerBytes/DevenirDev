@@ -89,7 +89,7 @@ nala list --upgradable
 
 Il explique que `linux-image-amd64 6.12.86-1` (c'est le kernel) peut être mis à jour vers `linux-image-amd64 6.12.90-2`
 
-On lance l'upgrade en précisant simplement le nom du paquets
+On lance l'upgrade en précisant simplement le nom du paquets, à faire dans tous les cas.
 
 ```bash
 sudo nala install -y linux-image-amd64
@@ -172,6 +172,8 @@ et on test mailtutils
 ```bash
 echo "Mailing système prêt !" | sudo mail -s "Le mailing système est actif" mon-adresse@mondomaine.com
 ```
+
+Si erreur, modifier `sudo nano /etc/mail.rc` pour retirer le `-t`, ça dépends de la version du paquet installé, puis retenter.
 
 ### Configuration initiale
 

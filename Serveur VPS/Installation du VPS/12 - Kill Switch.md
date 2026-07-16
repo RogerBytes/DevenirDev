@@ -436,3 +436,162 @@ sudo cryptsetup luksAddKey /luks.img --key-file /boot/keyfile.bin
 
 Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira en cas de panne !
 
+### VPS serveur mandos
+
+On prend `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/).
+
+On commence par réinstaller en mettant sa clef SSH, et dans les options, bloquer la connexion root.
+
+#### Rediriger sur CloudFlare
+
+On récupère l'adresse ipv4 et ipv6 sur le VPS
+169.58.29.160
+2a02:c207:2344:5597:0000:0000:0000:0001
+
+Et sur CloudFlare, on va sur notre domaine, et `DNS/Enregistrements` et on clique sur `+ Ajouter un enregistrement`
+
+pour ipv4
+Type A
+nom : mandos
+mettre l'adresse ipv4
+décocher état du proxy
+
+pour ipv6
+Type AAAA
+nom : mandos
+mettre l'adresse ipv6
+décocher état du proxy
+
+On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/01 - Paramétrage VPS.md) pour faire
+
+- Première connexion
+- Mise à jour du système
+- RKHunter
+- Gestion de clefs SSH
+- Changer le port par défaut de SSH
+- Créer un utilisateur non privilégié
+- Ajouter la clef de récupération au nouveau user
+- Le Pare-feu
+- Retirer la connexion par mot de passe
+- Verrouillage de l'user initial debian
+- Verrouillage de la connexion SSH de root
+- Gestion des logs (Logrotate)
+- Monitoring basique BTOP
+- Réglage du shell
+- Mises à jour de sécurité auto unattended-upgrades
+- Dernier scan RKHunter
+
+Attention pour le pare-feu, on autorise pas les ip cloudflare (on ouvre seulement le port SSH), les port http et https doivent rester complètement fermés.
+
+On ajoutera le port mandos plus tard, mais notre base serveur est propre.
+
+### Logs SSH avec rsyslog
+
+```bash
+sudo nala install -y rsyslog
+```
+
+On refait le fichier (docker l'a créé comme un répertoire, c'est normal)
+
+```bash
+sudo rm -rf /var/log/auth.log
+sudo systemctl restart rsyslog
+sleep 5
+ls -la /var/log/auth.log
+```
+
+### Installer CrowdSec
+
+Depuis [la page dédiée de la doc](https://doc.crowdsec.net/u/getting_started/installation/linux/)
+
+On installe le repo
+
+```bash
+curl -s https://install.crowdsec.net | sudo sh
+```
+
+On fait une màj
+
+```bash
+sudo nala update && sudo nala upgrade -y
+```
+
+Et on installe avec
+
+```bash
+sudo nala install -y crowdsec
+```
+
+On regarde les metrics
+
+```bash
+sudo cscli metrics
+```
+
+Si on voit `file:/var/log/auth.log` dans le tableau `Acquisition Metrics`, c'est parfait.
+
+Puis on installe le bouncer firewall (c'est qui s'occupera des règles iptables)
+
+```bash
+sudo nala install -y crowdsec-firewall-bouncer-iptables
+```
+
+On lance
+
+```bash
+sudo cscli bouncers list
+```
+
+On doit voir `crowdsec-firewall-bouncer`
+
+et on fait
+
+```bash
+sudo iptables -L -n -v | grep -i crowdsec
+```
+
+S'il est bien actif, ça retourne
+
+```bash
+$ sudo iptables -L -n -v | grep -i crowdsec
+ 1281  103K CROWDSEC_CHAIN  all  --  *      *       0.0.0.0/0            0.0.0.0/0
+Chain CROWDSEC_CHAIN (1 references)
+```
+
+Cela prouve qu'il est bien actif dans iptables.
+
+Pour déban une ip
+
+```bash
+sudo cscli decisions delete --ip <L_IP_A_DEBANNIR>
+```
+
+Pour ban une ip
+
+```bash
+sudo cscli decisions add --ip <L_IP_A_BANNIR> --duration 4h --reason "Test perso"
+```
+
+On peut tester avec une ip de test `192.0.2.1`
+
+```bash
+sudo cscli decisions add --ip 192.0.2.1 --duration 4h --reason "Test perso"
+```
+
+On regarde les décision pour voir l'ip est bannie
+
+```bash
+sudo cscli decisions list
+```
+
+On la déban avec
+
+```bash
+sudo cscli decisions delete --ip 192.0.2.1
+```
+
+#### Ouvrir le port mantos dans UFW
+
+```bash
+sudo ufw allow 53168/tcp
+```
