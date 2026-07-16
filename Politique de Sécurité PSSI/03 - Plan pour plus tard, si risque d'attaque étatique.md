@@ -18,8 +18,8 @@ Si jamais je deviens un acteur vraiment important, avec des informations de mill
 
 Le principe général à retenir : chaque point augmente le coût/temps nécessaire pour me compromettre, sans garantir l'impossibilité absolue — seul l'air-gap (point 1) est une vraie limite dure.
 
-## Faut il mettre ça en place
+## Faut-il mettre cela en place ?
 
-Pour l'instant tout cet investissement est inutile, car mon archi ne peut être corrompue totalement uniquement via une faille 0-day, ou via ingénierie sociale particulièrement avancée (étant particulièrement méfiant de base).
+**Non, pas pour l'instant.** Actuellement, le niveau de menace sur mon infrastructure ne justifie pas un tel investissement humain, technique et financier.
 
-Je n'ai rien qui mériterait un tel investissement pour compromettre ma machine.
+L'architecture actuelle est déjà protégée contre les attaques opportunistes et automatisées. Mettre en œuvre ces mesures étatiques aujourd'hui introduirait une complexité opérationnelle disproportionnée par rapport aux risques réels. Ce plan sera activé uniquement si la valeur des données hébergées augmente significativement.
