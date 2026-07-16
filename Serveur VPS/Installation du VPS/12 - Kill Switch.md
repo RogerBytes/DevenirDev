@@ -2,7 +2,7 @@
 
 Pour plus de sécurité, nous allons mettre en place un système de Kill Switch, permettant ainsi d'avoir une politique de la terre brûlée en cas de compromission.
 
-Nous allons ici faire deux étapes, la première étant un kill switch faible, avec un volume chiffré LUKS découpé en volumes logiques (LVM) montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/`, utilisant une clef de déchiffrement locale. Cette approche sans *bind mount* garantit de manière passive que Docker ne pourra jamais démarrer si le déverrouillage échoue.
+Nous allons ici faire deux étapes, la première étant un kill switch faible, avec un volume chiffré LUKS découpé en volumes logiques (LVM) montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/`, utilisant une clef de déchiffrement locale. Cette approche sans _bind mount_ garantit de manière passive que Docker ne pourra jamais démarrer si le déverrouillage échoue.
 
 Et dans un deuxième temps, avoir un serveur dédié avec [Mandos](https://www.recompile.se/mandos), permettant de virer la clef de déchiffrement locale pour la gérer lui-même, ainsi c'est le serveur tiers qui est appelé pour décrypter le volume LUKS et qui permet de révoquer de manière autonome telle ou telle machine.
 
@@ -14,7 +14,7 @@ Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de 
 
 - Volume physique chiffré avec LUKS.
 - Configuration de LVM **par-dessus** le conteneur LUKS ouvert (les "tiroirs dans le coffre").
-- Création de volumes logiques dédiés montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/` (pas de *bind mounts*).
+- Création de volumes logiques dédiés montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/` (pas de _bind mounts_).
 - Clé de déchiffrement stockée localement sur le serveur (slot 0).
 - **Sécurité passive :** Si la clé locale n'est pas saisie au boot, les volumes logiques n'existent pas, empêchant physiquement Docker d'écrire des données en clair sur la racine.
 - Kill switch faible mais fonctionnel : utile contre un vol de disque à froid (machine éteinte), pas contre une machine compromise pendant qu'elle tourne.
@@ -412,10 +412,27 @@ Voilà, le KillSwitch faible est paramétré !
 
 ## KillSwitch Mandos
 
-Maintenat qu'on a les bases, on va passer à la suite.
+Maintenant qu'on a les bases, on va passer à la suite.
 
-On commence par voir si avant le démmarage de mon vps, il peut ou pas se co au boot
+### Compatibilité avec Mandos
+
+On commence par voir si avant le démarrage complet de mon vps, il peut ou pas accéder au réseau au boot.
 
 ```bash
-cat /etc/network/interfaces.d/50-cloud-init 2>/dev/null || cat /etc/netplan/50-cloud-init.yaml 2>/dev/null
+ip route
 ```
+
+Le fait que l'on lise `proto dhcp` à la première ligne `default` est la certitude que ça ne bloquera pas, ainsi on peut se lancer dans l'aventure !
+
+### Ajout d'un fallback
+
+Vu que l'on va se débarrasser de la clef locale, il faut une méthode alternative pour nous y connecter
+
+On ajoute un slot, mais avec un mdp.
+
+```bash
+sudo cryptsetup luksAddKey /luks.img --key-file /boot/keyfile.bin
+```
+
+Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira en cas de panne !
+

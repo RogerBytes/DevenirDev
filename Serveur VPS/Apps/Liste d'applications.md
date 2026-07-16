@@ -47,3 +47,12 @@ Ne pas se prendre la tête avec garage S3 ou autre, j'ai l'abo pro `Cloudflare R
 - 1 VPS pour mon entreprise et ses services requis
 - n\* VPS de prod (avec le déploiement de conteneurs y compris postgres symfo etc)
 - 1 VPS de preprod (pour tester avant de déployer sur la prod)
+
+## Remplacer Mandos par Clevis/Tang
+
+Quand on aura de très nombreux serveurs, on mettra en place **Clevis/Tang** au lieu de Mandos.
+
+### Pourquoi ce choix pour le futur ?
+
+- **Clevis/Tang** est le standard industriel pour les parcs de serveurs importants (très utilisé dans les environnements Red Hat, Rocky, AlmaLinux).
+- Il permet de gérer des règles de déchiffrement plus complexes (par exemple : "le serveur démarre si le serveur Tang *OU* la puce TPM physique du serveur est d'accord").
