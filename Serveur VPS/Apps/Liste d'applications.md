@@ -4,9 +4,14 @@
 - OpenProject
 - [Penpot](https://help.penpot.app/technical-guide/getting-started/docker/)
 
-Et éventuellement Loki (sur le central) + grafana (sur le central) + promtail (sur le central et satellites), si j'en chie pas.
+## Ce qui manque à la stack
 
-**Grafana + Loki (+ Promtail) sert à centraliser, stocker et afficher graphiquement tous les logs de tous tes serveurs au même endroit pour te permettre de trouver instantanément la cause d'une panne.**
+- Installation de Lynis (audit de défense comment faire un pentesting en attaque)
+- chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
+- Rajouter le SHA aux compose de services docker
+- Une méthode pour avoir une alerte en cas d'une attaque sur un conteneur avec RCE (Remote Code Execution), pour AppSec (le WAF) ajouter la collection crowdsecurity/appsec-virtual-patching.
+- Prendre un abonnement CloudFlare Spectrum, afin d'ajouter le tunnel sur d'autre ports que http et https (pour port SSH et port Mantos) à étudier (pas sûr 100% si ça permettra le tunnel)
+- Sécuriser les compartiments R2 de CloudFlare, retirer le droit de suppression, et activer Bucket Lock (rétention sur 30 jours) pour qu'aucun attaquant puisse effacer les backups distants.
 
 ## A faire en premier
 
@@ -17,6 +22,7 @@ J'ai pas le temps, c'est la bourre, mais à faire en urgence quand j'aurais ratt
 ## À faire quand mon applications sera déployée
 
 - Umami pour analyser les visites, tracking des redirections ou des événements vers API (les requêtes passant par https)
+- Grafana Loki, pour suivi centralisé de tous les logs, sur les satellites il y aura Promtail (Promtail est aussi sur le central, pas seulement sur satellite)
 
 ## À faire quand je commence à prospecter
 
@@ -45,7 +51,7 @@ Ne pas se prendre la tête avec garage S3 ou autre, j'ai l'abo pro `Cloudflare R
 ## Combien de VPS
 
 - 1 VPS pour mon entreprise et ses services requis
-- n\* VPS de prod (avec le déploiement de conteneurs y compris postgres symfo etc)
+- n\* VPS de prod (avec le déploiement de conteneurs y compris postgres symfony etc)
 - 1 VPS de preprod (pour tester avant de déployer sur la prod)
 
 ## Remplacer Mandos par Clevis/Tang
