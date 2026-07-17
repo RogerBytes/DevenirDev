@@ -806,6 +806,22 @@ systemctl show docker.service -p After -p Requires
 
 Voilà ça c'est bon.
 
+Et on ajoute un accès
+
+```bash
+sudo visudo -f /etc/sudoers.d/mandos-ctl
+```
+
+```bash
+%sudo ALL=(ALL) NOPASSWD: /usr/sbin/mandos-ctl
+```
+
+et
+
+```bash
+sudo chmod 0440 /etc/sudoers.d/mandos-ctl
+```
+
 ## Activer le killswitch
 
 ```bash
@@ -815,6 +831,39 @@ sudo mandos-ctl
 
 Et lancer un reboot soit depuis SSH, soit depuis le dashboard du VPS.
 Tout est vérouillé.
+
+## Création d'une clef SSH dédiée au killswitch
+
+Script pour déclencher le KillSwitch
+
+```bash
+MANDOS=(ssh -p xxxx1 harry@xxx.xx.xx.xx1)
+PROD=(ssh -p xxxx2 harry@xxx.xx.xx.xx2)
+CLIENT_NAME="xxx-xxxxxxxx.xxx.xxx.xxx"
+
+echo -n "Mot de passe sudo (serveur Mandos) : "
+read -s SUDO_PASS
+echo
+
+"${MANDOS[@]}" "sudo -S mandos-ctl --disable $CLIENT_NAME" <<< "$SUDO_PASS" && \
+STATUS=$("${MANDOS[@]}" "sudo -S mandos-ctl" <<< "$SUDO_PASS" | grep "$CLIENT_NAME" | awk '{print $2}') && \
+if [ "$STATUS" = "No" ]; then
+  echo ""
+  echo "Client bien désactivé, lancement du reboot..."
+  "${PROD[@]}" -t "sudo reboot"
+else
+  echo "ERREUR: le client n'est pas désactivé (statut: $STATUS), reboot annulé"
+fi
+```
+
+## Réactiver après KillSwitch
+
+```bash
+ssh -p 53168 harry@169.58.29.160 -t "sudo mandos-ctl --enable xxx-xxxxxxxx.xxx.xxx.xxx"
+ssh -p 53168 harry@169.58.29.160 -t "sudo mandos-ctl"
+```
+
+Regarder qu'il apparaisse bien en `enabled` et rapidement demander le reboot sur le fournisseur du VPS vérouillé.
 
 ## Si je me retrouve coincé dehors
 
