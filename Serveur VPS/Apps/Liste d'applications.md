@@ -9,7 +9,7 @@
 - Installation de Lynis (audit de défense comment faire un pentesting en attaque)
 - chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
 - Rajouter le SHA aux compose de services docker
-- Une méthode pour avoir une alerte en cas d'une attaque sur un conteneur avec RCE (Remote Code Execution), pour AppSec (le WAF) ajouter la collection crowdsecurity/appsec-virtual-patching.
+- Sur AppSec (le WAF) ajouter la collection crowdsecurity/appsec-virtual-patching, réglé en détection (mode simulation), afin que je sois alerté si le WAF voit une request qui tente un RCE (Remote Code Execution) et me laisse bloquer moi-même ou non.
 - Prendre un abonnement CloudFlare Spectrum, afin d'ajouter le tunnel sur d'autre ports que http et https (pour port SSH et port Mantos) à étudier (pas sûr 100% si ça permettra le tunnel)
 - Sécuriser les compartiments R2 de CloudFlare, retirer le droit de suppression, et activer Bucket Lock (rétention sur 30 jours) pour qu'aucun attaquant puisse effacer les backups distants.
 
@@ -54,11 +54,10 @@ Ne pas se prendre la tête avec garage S3 ou autre, j'ai l'abo pro `Cloudflare R
 - n\* VPS de prod (avec le déploiement de conteneurs y compris postgres symfony etc)
 - 1 VPS de preprod (pour tester avant de déployer sur la prod)
 
-## Remplacer Mandos par Clevis/Tang
+## Garder ou pas Mandos ?
 
-Quand on aura de très nombreux serveurs, on mettra en place **Clevis/Tang** au lieu de Mandos.
+Mandos fait très bien son travail, et depuis que j'ai fais ma doc, ce sera très simple d'ajouter et gérer de nouveaux clients.
 
-### Pourquoi ce choix pour le futur ?
+Sur **Clevis/Tang**, il me faudra programmer un système de KillSwitch par client, ce qu'il n'y a pas par défaut, donc si je peux, je reste sur Mandos.
 
-- **Clevis/Tang** est le standard industriel pour les parcs de serveurs importants (très utilisé dans les environnements Red Hat, Rocky, AlmaLinux).
-- Il permet de gérer des règles de déchiffrement plus complexes (par exemple : "le serveur démarre si le serveur Tang *OU* la puce TPM physique du serveur est d'accord").
+Après **Clevis/Tang** a peut-être d'autres usages (je ne sais pas), mais il y a surtout le fait qu'administrativement il peut-être obligatoire (je crois que c'est le RHEL).
