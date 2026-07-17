@@ -56,7 +56,7 @@ Ne pas se prendre la tête avec garage S3 ou autre, j'ai l'abo pro `Cloudflare R
 
 ## Garder ou pas Mandos ?
 
-Mandos fait très bien son travail, et depuis que j'ai fais ma doc, ce sera très simple d'ajouter et gérer de nouveaux clients.
+Mandos fait très bien son travail, et depuis que j'ai fais ma doc, ce sera très simple d'ajouter et gérer de nouveaux clients/serveurs.
 
 Sur **Clevis/Tang**, il me faudra programmer un système de KillSwitch par client, ce qu'il n'y a pas par défaut, donc si je peux, je reste sur Mandos.
 
