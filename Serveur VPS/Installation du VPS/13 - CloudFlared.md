@@ -1,14 +1,16 @@
-# 12 - Kill Switch
+# 13 - CloudFlared
 
-Pour plus de sécurité, nous allons mettre en place un système de Kill Switch, permettant ainsi d'avoir une politique de la terre brûlée en cas de compromission.
+Pour masquer totalement l'infrastructure sans modifier notre configuration web existante, nous allons mettre en place un **Cloudflare Tunnel (`cloudflared`)** dédié exclusivement aux flux non-HTTP.
 
-Nous allons ici faire deux étapes, la première étant un kill switch faible, avec un volume chiffré LUKS découpé en volumes logiques (LVM) montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/`, utilisant une clef de déchiffrement locale. Cette approche sans _bind mount_ garantit de manière passive que Docker ne pourra jamais démarrer si le déverrouillage échoue.
+Cette solution crée une connexion sortante sécurisée de nos serveurs vers le réseau de Cloudflare pour les protocoles spécifiques comme SSH et Mandos. Cela nous permet de fermer complètement ces ports entrants au niveau du pare-feu local (UFW), tout en conservant intacte notre configuration HTTP/HTTPS actuelle (filtrée par les IP proxy de Cloudflare).
 
-Et dans un deuxième temps, avoir un serveur dédié avec [Mandos](https://www.recompile.se/mandos), permettant de virer la clef de déchiffrement locale pour la gérer lui-même, ainsi c'est le serveur tiers qui est appelé pour décrypter le volume LUKS et qui permet de révoquer de manière autonome telle ou telle machine.
+Le filtrage des accès et la restriction par IP blanche pour l'administration et les serveurs clients sont alors centralisés et gérés directement en amont sur le dashboard Cloudflare Zero Trust.
 
-Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de Mandos, je conseille `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/) par exemple.
+## Installation de CloudFlared sur VPS
 
-## Kill switch simple
+On se base sur [la documentation pour debian](https://pkg.cloudflare.com/index.html#debian-any)
+
+```
 
 Informations principales
 
@@ -342,7 +344,7 @@ sudo rmdir /mnt/verif_racine
 
 ### Test final
 
-Normalement on peut faire le reboot, si on ne peut plus se co en SSH, c'est que ça ne décrypte pas ou ne monte pas les volumes.
+Normalement on peut faire le reboot, si on ne peut plus se co en SSH, c'est que ça ne decrypte pas ou ne monte pas les volumesq
 
 ```bash
 df -h | grep -E "docker|home"
@@ -414,7 +416,7 @@ On ajoute un slot, mais avec un mdp.
 sudo cryptsetup luksAddKey /luks.img --key-file /boot/keyfile.bin
 ```
 
-Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira pour Mandos comme en cas de panne !
+Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira pour mandos comme en cas de panne !
 
 ### VPS serveur Mandos
 
@@ -695,11 +697,11 @@ On ajoute cette entrée, sur le serveur mandos, tout à la fin de `/etc/mandos/c
 sudo nano /etc/mandos/clients.conf
 ```
 
-Et dans le fichier, on dé-commente tous les réglages du haut
+Et dans le fichier, on décommente tous les réglages du haut
 
 On ajoute dans notre partie client, on ajoute
 
-- `checker = fping -q -- %(host)s || nc -z -w 5 %(host)s 22` en remplaçant 22 par le port SSH du VPS client
+- `checker = fping -q -- %(host)s || nc -z -w 5 %(host)s 22` en remplçant 22 par le port SSH du VPS client
 
 Et on enregistre.
 
@@ -781,7 +783,7 @@ on met
 crypt_prod    /dev/loop0    none    luks,noauto
 ```
 
-### Prioriser notre service systemd pour Mantos devant Docker
+### Proriser notre service systemd pour Mantos devant Docker
 
 On doit dire à docker de se lancer après notre service systemd
 
@@ -830,7 +832,7 @@ sudo mandos-ctl
 ```
 
 Et lancer un reboot soit depuis SSH, soit depuis le dashboard du VPS.
-Tout est verrouillé.
+Tout est vérouillé.
 
 ## Création d'une clef SSH dédiée au killswitch
 
@@ -863,7 +865,7 @@ ssh -p 53168 harry@169.58.29.160 -t "sudo mandos-ctl --enable xxx-xxxxxxxx.xxx.x
 ssh -p 53168 harry@169.58.29.160 -t "sudo mandos-ctl"
 ```
 
-Regarder qu'il apparaisse bien en `enabled` et rapidement demander le reboot sur le fournisseur du VPS verrouillé.
+Regarder qu'il apparaisse bien en `enabled` et rapidement demander le reboot sur le fournisseur du VPS vérouillé.
 
 ## Si je me retrouve coincé dehors
 
@@ -872,13 +874,13 @@ On va sur kvm
 ```bash
 logout
 # se co
-# Une fois co, écrasage des touches de clavier, il faut du temps avant que kvm donne le retour, et il va sûrement redemander de login
+# Une fois co, ecrasage des touches de clavier, il faut du temps avant que kvm donne le retour, et il va surement redemander de login
 
 # Ensuite on fait
 sudo dmesg -n 1
 ```
 
-Et ensuite, dans notre kvl logué
+Et ensuite, dans notre kvl loggé
 
 ```bash
 sudo cryptsetup luksOpen /dev/loop0 crypt_prod
@@ -887,4 +889,4 @@ sudo vgchange -ay vg_prod
 sudo mount -a
 ```
 
-Voilà, l'accès ssh est disponible (et les volumes sont décryptés surtout).
+Voilà, l'accès ssh est dispo (et les volumes sont décryptés surtout)

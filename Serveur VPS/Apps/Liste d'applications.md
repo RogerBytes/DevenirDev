@@ -10,7 +10,7 @@
 - chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
 - Rajouter le SHA aux compose de services docker
 - Sur AppSec (le WAF) ajouter la collection crowdsecurity/appsec-virtual-patching, réglé en détection (mode simulation), afin que je sois alerté si le WAF voit une request qui tente un RCE (Remote Code Execution) et me laisse bloquer moi-même ou non.
-- Prendre un abonnement CloudFlare Spectrum, afin d'ajouter le tunnel sur d'autre ports que http et https (pour port SSH et port Mantos) à étudier (pas sûr 100% si ça permettra le tunnel)
+- Installation cloudflared sur mon pc, comme sur vps de prod et serveur mendos
 - Sécuriser les compartiments R2 de CloudFlare, retirer le droit de suppression, et activer Bucket Lock (rétention sur 30 jours) pour qu'aucun attaquant puisse effacer les backups distants.
 
 ## A faire en premier
