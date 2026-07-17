@@ -8,26 +8,6 @@ Et dans un deuxième temps, avoir un serveur dédié avec [Mandos](https://www.r
 
 Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de Mandos, je conseille `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/) par exemple.
 
-## TOPO TODO
-
-### Étape 1 — Kill switch simple (maintenant)
-
-- Volume physique chiffré avec LUKS.
-- Configuration de LVM **par-dessus** le conteneur LUKS ouvert (les "tiroirs dans le coffre").
-- Création de volumes logiques dédiés montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/` (pas de _bind mounts_).
-- Clé de déchiffrement stockée localement sur le serveur (slot 0).
-- **Sécurité passive :** Si la clé locale n'est pas saisie au boot, les volumes logiques n'existent pas, empêchant physiquement Docker d'écrire des données en clair sur la racine.
-- Kill switch faible mais fonctionnel : utile contre un vol de disque à froid (machine éteinte), pas contre une machine compromise pendant qu'elle tourne.
-
-### Étape 2 — Migration vers Mandos (plus tard)
-
-- Montage d'un serveur Mandos séparé.
-- Ajout de la clé Mandos comme nouveau slot LUKS, en parallèle de la clé locale.
-- Test d'un reboot pour valider que Mandos déverrouille correctement.
-- Suppression du slot de clé locale (slot 0) une fois Mandos confirmé fonctionnel.
-- **Garder le SLOT 1 avec une passphrase robuste de secours** (hors du VPS, stockée de manière sécurisée dans notre gestionnaire de mots de passe) pour pouvoir déverrouiller manuellement via la console KVM si le serveur Mandos est en panne.
-- Kill switch fort : révocation à distance possible, même disque volé physiquement.
-
 ## Kill switch simple
 
 Informations principales
