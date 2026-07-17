@@ -859,8 +859,8 @@ fi
 ## Réactiver après KillSwitch
 
 ```bash
-ssh -p 53168 harry@169.58.29.160 -t "sudo mandos-ctl --enable xxx-xxxxxxxx.xxx.xxx.xxx"
-ssh -p 53168 harry@169.58.29.160 -t "sudo mandos-ctl"
+ssh -p 53168 harry@xxx.xx.xx.xx2 -t "sudo mandos-ctl --enable xxx-xxxxxxxx.xxx.xxx.xxx"
+ssh -p 53168 harry@xxx.xx.xx.xx2 -t "sudo mandos-ctl"
 ```
 
 Regarder qu'il apparaisse bien en `enabled` et rapidement demander le reboot sur le fournisseur du VPS verrouillé.
