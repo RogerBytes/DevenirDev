@@ -434,19 +434,15 @@ On ajoute un slot, mais avec un mdp.
 sudo cryptsetup luksAddKey /luks.img --key-file /boot/keyfile.bin
 ```
 
-Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira en cas de panne !
+Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira pour mandos comme en cas de panne !
 
-### VPS serveur mandos
+### VPS serveur Mandos
 
 On prend `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/).
 
 On commence par réinstaller en mettant sa clef SSH, et dans les options, bloquer la connexion root.
 
 #### Rediriger sur CloudFlare
-
-On récupère l'adresse ipv4 et ipv6 sur le VPS
-169.58.29.160
-2a02:c207:2344:5597:0000:0000:0000:0001
 
 Et sur CloudFlare, on va sur notre domaine, et `DNS/Enregistrements` et on clique sur `+ Ajouter un enregistrement`
 
@@ -456,11 +452,7 @@ nom : mandos
 mettre l'adresse ipv4
 décocher état du proxy
 
-pour ipv6
-Type AAAA
-nom : mandos
-mettre l'adresse ipv6
-décocher état du proxy
+### Paramétrage serveur VPS Mandos
 
 On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/01 - Paramétrage VPS.md) pour faire
 
@@ -485,7 +477,7 @@ Attention pour le pare-feu, on autorise pas les ip cloudflare (on ouvre seulemen
 
 On ajoutera le port mandos plus tard, mais notre base serveur est propre.
 
-### Logs SSH avec rsyslog
+#### Logs SSH avec rsyslog
 
 ```bash
 sudo nala install -y rsyslog
@@ -500,7 +492,7 @@ sleep 5
 ls -la /var/log/auth.log
 ```
 
-### Installer CrowdSec
+#### Installer CrowdSec
 
 Depuis [la page dédiée de la doc](https://doc.crowdsec.net/u/getting_started/installation/linux/)
 
@@ -590,8 +582,279 @@ On la déban avec
 sudo cscli decisions delete --ip 192.0.2.1
 ```
 
-#### Ouvrir le port mantos dans UFW
+### Installation de Mandos (sur le vps dédié)
 
 ```bash
-sudo ufw allow 53168/tcp
+sudo nala install -y mandos
 ```
+
+et on vérifie son état
+
+```bash
+sudo systemctl status mandos
+```
+
+S'il y a `Active: active (running)`, c'est bon.
+
+On modifie le port par défaut
+
+```bash
+sudo nano /etc/mandos/mandos.conf
+```
+
+On cherche `;port =`, on dé-commente et on met `13721`
+
+Et on relance mandos
+
+```bash
+sudo systemctl restart mandos
+```
+
+On cherche quel port est utilisé par mandos
+
+```bash
+sudo ss -tlnp | grep -E "mandos|python"
+```
+
+Si on voit `*:13721`, c'est bon, le changement est effectif.
+
+#### Récupérer adresse IPv4 sur le client
+
+```bash
+# IPV4
+curl https://api.ipify.org
+```
+
+#### Autoriser une IP pour acceder au port de mantos dans UFW et pour ping
+
+Ici, avec pour exemple l'IPv4 `192.0.2.1`, il faudra le faire pour chaque client que l'on ajoutera
+
+```bash
+sudo ufw allow from 192.0.2.1 to any port 13721 proto tcp comment 'Serveur Mandos depuis VPS Prod'
+```
+
+On active ufw avec
+
+```bash
+sudo ufw enable
+```
+
+On vérifie qu'il est bien activé avec
+
+```bash
+sudo ufw status verbose
+```
+
+On doit voir nos règles.
+
+### Installation du client mandos sur le VPS client
+
+On fait une màj
+
+```bash
+sudo nala update && sudo nala upgrade -y
+```
+
+Puis on installe le client
+
+```bash
+sudo nala install -y mandos-client
+```
+
+### Récupérer l'entrée de co sur le client
+
+Sur le client on fait
+
+```bash
+sudo /usr/sbin/mandos-keygen --password --dir /etc/keys/mandos
+```
+
+On met le mdp de déchiffrement luks du client, et ça retourne
+
+```conf
+[xxx-xxxxxxxx.xxx.xxx.xxx]
+host = xxx-xxxxxxxx.xxx.xxx.xxx
+key_id = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+fingerprint = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+secret =
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+On garde ça au chaud.
+
+### Ajouter un client au serveur Mandos
+
+On ajoute cette entrée, sur le serveur mandos, tout à la fin de `/etc/mandos/clients.conf`
+
+```bash
+sudo nano /etc/mandos/clients.conf
+```
+
+Et dans le fichier, on décommente tous les réglages du haut
+
+On ajoute dans notre partie client, on ajoute
+
+- `checker = fping -q -- %(host)s || nc -z -w 5 %(host)s 22` en remplçant 22 par le port SSH du VPS client
+
+Et on enregistre.
+
+puis
+
+```bash
+sudo systemctl restart mandos
+```
+
+## Activer un client dans mandos
+
+On liste les client avec
+
+```bash
+sudo mandos-ctl
+```
+
+```bash
+sudo mandos-ctl --enable vps-xxxxxxxx.xxx.xxx.xxx
+```
+
+Et depuis le client
+
+```bash
+sudo /usr/lib/x86_64-linux-gnu/mandos/plugins.d/mandos-client \
+  --pubkey=/etc/keys/mandos/pubkey.txt \
+  --seckey=/etc/keys/mandos/seckey.txt \
+  --tls-pubkey=/etc/keys/mandos/tls-pubkey.pem \
+  --tls-privkey=/etc/keys/mandos/tls-privkey.pem \
+  --connect=192.0.2.1:13721
+```
+
+S'il retourne la clef, normalement c'est bon
+
+## Service systemd
+
+On créé un service systemd
+
+```bash
+sudo nano /etc/systemd/system/mandos-unlock.service
+```
+
+```bash
+[Unit]
+Description=Unlock crypt_prod via Mandos
+DefaultDependencies=no
+Requires=setup-loop-prod.service network-online.target
+After=setup-loop-prod.service network-online.target
+Before=cryptsetup.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c '/usr/lib/x86_64-linux-gnu/mandos/plugins.d/mandos-client --pubkey=/etc/keys/mandos/pubkey.txt --seckey=/etc/keys/mandos/seckey.txt --tls-pubkey=/etc/keys/mandos/tls-pubkey.pem --tls-privkey=/etc/keys/mandos/tls-privkey.pem --connect=192.0.2.1:13721 | /sbin/cryptsetup luksOpen /dev/loop0 crypt_prod --key-file=-'
+
+[Install]
+WantedBy=cryptsetup.target
+```
+
+On prend note qu'il faut modifier `--connect=192.0.2.1:13721` avec l'ip du client à déverrouiller.
+
+et on fait
+
+```bash
+sudo systemctl daemon-reload
+```
+
+## Changement dans crypttab
+
+Sur le client
+
+```bash
+sudo nano /etc/crypttab
+```
+
+on met
+
+```bash
+crypt_prod    /dev/loop0    none    luks,noauto
+```
+
+### Proriser notre service systemd pour Mantos devant Docker
+
+On doit dire à docker de se lancer après notre service systemd
+
+```bash
+sudo mkdir -p /etc/systemd/system/docker.service.d/
+sudo nano /etc/systemd/system/docker.service.d/override.conf
+```
+
+y coller à la fin
+
+```bash
+[Unit]
+After=cryptsetup.target local-fs.target mandos-unlock.service
+Requires=mandos-unlock.service
+```
+
+Et on vérifie que les lignes apparaissent avec
+
+```bash
+systemctl show docker.service -p After -p Requires
+```
+
+Voilà ça c'est bon.
+
+## Activer le killswitch
+
+```bash
+sudo mandos-ctl --disable vps-xxxxxxxx.xxx.xxx.xxx
+sudo mandos-ctl
+```
+
+Et lancer un reboot soit depuis SSH, soit depuis le dashboard du VPS.
+
+## Si je me retrouve coincé dehors
+
+On va sur kvm
+
+```bash
+logout
+# se co
+# Une fois co, ecrasage des touches de clavier, il faut du temps avant que kvm donne le retour, et il va surement redemander de login
+
+# Ensuite on fait
+sudo dmesg -n 1
+```
+
+Et ensuite, dans notre kvl loggé
+
+```bash
+sudo cryptsetup luksOpen /dev/loop0 crypt_prod
+# On tape passphrase à la main
+sudo vgchange -ay vg_prod
+sudo mount -a
+```
+
+Voilà, l'accès ssh est dispo (et les volumes sont décryptés surtout)
