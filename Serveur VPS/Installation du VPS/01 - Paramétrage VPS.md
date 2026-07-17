@@ -1002,6 +1002,18 @@ ssh-keygen -f $HOME/.ssh/known_hosts -R 192.0.2.1
 
 </div></details>
 
+## Changement du Mot D'Accueil
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+```bash
+sudo nano /etc/motd
+```
+
+Et récupérer l'ascii sur [cette page](https://patorjk.com/software/taag/#p=display&f=miniwi&t=Test&x=none&v=4&h=4&w=80&we=false).
+
+</div></details>
+
 ## Auteur
 
 [<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes)  

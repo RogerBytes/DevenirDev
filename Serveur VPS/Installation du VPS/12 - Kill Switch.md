@@ -834,6 +834,7 @@ sudo mandos-ctl
 ```
 
 Et lancer un reboot soit depuis SSH, soit depuis le dashboard du VPS.
+Tout est vérouillé.
 
 ## Si je me retrouve coincé dehors
 
