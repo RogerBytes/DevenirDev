@@ -48,10 +48,6 @@ En gros lancer manuellement le backup juste avant d'executer le Kill Switch.
 
 Seules les connexions entrantes sont filtrées, toutes les connexions sortantes sont traitées par les conteneurs Docker (qui gèrent nativement iptables sur Debian).
 
-Non, je ne l'avais pas pris en compte explicitement dans le diagramme. C'est une info importante car ça change la nature de la menace SSH : un attaquant qui tente un bruteforce de mot de passe va générer des échecs dans `auth.log` (tentatives de connexion avec mdp refusées par le serveur SSH lui-même), et CrowdSec va les détecter et bannir l'IP via le bouncer firewall.
-
-Voici la version corrigée avec cette précision :
-
 ```mermaid
 graph TD
   %% Définition des styles
@@ -63,28 +59,28 @@ graph TD
   classDef docker fill:#1e88e5,stroke:#0d47a1,stroke-width:2px,color:#fff;
   classDef blocked fill:#b71c1c,stroke:#7f0000,stroke-width:2px,color:#fff;
   classDef ssh fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#fff;
+  classDef tunnel fill:#f6821f,stroke:#9a4d00,stroke-width:2px,color:#fff;
+  classDef attacker fill:#4e342e,stroke:#1b0000,stroke-width:2px,color:#fff;
 
   %% ─── Flux Web Légitime ───
   A([🌐 Visiteur Web Légitime]) -->|1. Requête domaine.com| B{☁️ Cloudflare Worker Bouncer}
   B -->|2. ALLOW: IP non bannie| C{🛡️ Pare-feu UFW}
-  C -->|3. ALLOW: Ports 80/443 IPs Cloudflare| D{🔒 CrowdSec Bouncer Firewall}
+  C -->|3. ALLOW: Ports 80/443 IPs Cloudflare uniquement| D{🔒 CrowdSec Bouncer Firewall}
   D -->|4. ALLOW: IP non bannie| E[🔀 Caddy + CrowdSec WAF Bouncer]
   E -->|5. ALLOW: Requête saine| F[🐳 Conteneurs Docker Applications]
 
-  %% ─── Flux SSH Légitime ───
-  ADM([🧑‍💻 Admin clef SSH uniquement]) -->|Connexion port custom + clef SSH| C
-  D -->|ALLOW: IP non bannie| SSH[🔑 Serveur SSH Mot de passe désactivé]
+  %% ─── Flux SSH via Cloudflare Tunnel (aucun port entrant) ───
+  ADM([🧑‍💻 Admin]) -->|cloudflared user@sub.domain.com| CFEDGE{☁️ Cloudflare Edge / Zero Trust}
+  CFEDGE -->|Tunnel sortant chiffré déjà établi| TUN[🚇 cloudflared daemon]
+  TUN -->|Connexion locale interne| SSH[🔑 Serveur SSH clef uniquement]
+  TUN -.->|Aucun port SSH ouvert sur UFW| NOTE(("🚫 Port SSH fermé"))
 
-  %% ─── Flux SSH Malveillant ───
-  BOT([🥷 Bruteforce SSH]) -->|Tentative mdp port SSH| C
-  C -->|ALLOW: Port SSH ouvert| D
-  SSH -.->|DENY: Authentification mdp refusée - Échecs loggés dans auth.log| X5((❌ Connexion refusée))
-  SSH -.->|auth.log: accumulation d'échecs| H
-  H -.->|Scénario ssh-bf déclenché Décision de ban| D
+  %% ─── Flux SSH Malveillant : impossible désormais ───
+  BOT([🥷 Bruteforce SSH]) -.->|Tentative connexion directe IP:port| C
+  C -.->|DENY: seuls 80/443 IPs Cloudflare autorisés, SSH fermé| X5((❌ Timeout))
 
   %% ─── Flux Malveillant Web ───
   G([🥷 Attaquant / Robot Scan]) -.->|Tentative IP directe| C
-  C -.->|DENY: Pas une IP Cloudflare| X1((❌ Timeout))
   B -.->|DENY: IP dans blocklist CrowdSec| X2((❌ Bloqué CDN))
   D -.->|DENY: IP bannie iptables| X3((❌ Bloqué réseau))
   E -.->|DENY: Injection SQL / CVE / fichier sensible| X4((❌ 403 WAF))
@@ -99,74 +95,17 @@ graph TD
   F -.->|Scan antivirus fichiers| I[🦠 ClamAV]
 
   %% ─── Application des styles ───
-  class A,G,BOT internet;
+  class A internet;
+  class G,BOT attacker;
   class ADM ssh;
-  class B cloudflare;
+  class B,CFEDGE cloudflare;
   class C ufw;
   class D,H crowdsec;
   class E caddy;
   class SSH ssh;
+  class TUN tunnel;
   class F,I docker;
-  class X1,X2,X3,X4,X5,X6 blocked;
-```
-
-```mermaid
-graph TD
-  %% Définition des styles
-  classDef internet fill:#eceff1,stroke:#37474f,stroke-width:2px,color:#000;
-  classDef cloudflare fill:#f57c00,stroke:#e65100,stroke-width:2px,color:#fff;
-  classDef crowdsec fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:#fff;
-  classDef ufw fill:#d32f2f,stroke:#c62828,stroke-width:2px,color:#fff;
-  classDef caddy fill:#00acc1,stroke:#006064,stroke-width:2px,color:#fff;
-  classDef docker fill:#1e88e5,stroke:#0d47a1,stroke-width:2px,color:#fff;
-  classDef blocked fill:#b71c1c,stroke:#7f0000,stroke-width:2px,color:#fff;
-  classDef ssh fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#fff;
-
-  %% ─── Entrées Extérieures ───
-  WEB([🌐 Visiteur Web Légitime]) -->|1. Requête domaine.com| CF{☁️ Cloudflare Edge / WAF}
-  ADM([🧑‍💻 Admin via cloudflared]) -->|1. SSH via Cloudflare Access| CF
-  MANDOS_S([🛡️ Serveur Mandos Checker]) -->|1. cloudflared access ssh| CF
-
-  %% ─── Le Filtrage Cloudflare ───
-  CF -->|2. ALLOW: Trafic légitime| TUNNEL[🚇 Cloudflare Tunnel cloudflared]
-
-  %% ─── Le Serveur VPS (TOUT est dedans ici) ───
-  subgraph VPS [🛡️ Serveur VPS - Zero Trust]
-    TUNNEL -->|3. Route Trafic Web| C{🔒 CrowdSec Bouncer Firewall}
-    TUNNEL -->|3. Route SSH local| SSH[🔑 Serveur SSH Écoute sur Localhost]
-    
-    C -->|4. ALLOW: IP non bannie| E[🔀 Caddy + CrowdSec WAF Bouncer]
-    E -->|5. ALLOW: Requête saine| F[🐳 Conteneurs Docker Applications]
-    
-    %% CrowdSec Engine et Logs (BIEN DEDANS)
-    H[🧠 CrowdSec Engine Docker] -.->|Décisions locales| C
-    H -.->|Règles WAF inband| E
-    F -.->|Logs Caddy access.log| H
-    
-    %% ClamAV (BIEN DEDANS)
-    F -.->|Scan antivirus fichiers| I[🦠 ClamAV]
-    
-    %% Pare-feu UFW
-    UFW{🚫 Pare-feu UFW} -->|BLOCK ALL INBOUND| X1((❌ Rejet immédiat IP Directe))
-  end
-
-  %% ─── Flux Malveillants Bloqués ───
-  BOT([🥷 Robot / Attaquant Scanneur]) -.->|Tentative scan IP directe| UFW
-  CF -.->|DENY: IP bannie ou attaque| X2((❌ Bloqué au CDN))
-  E -.->|DENY: Injection SQL / CVE| X4((❌ 403 WAF))
-
-  %% ─── Retour de CrowdSec vers le Cloud ───
-  H -.->|Décisions de ban Cloudflare| CF
-
-  %% ─── Application des styles ───
-  class WEB,BOT internet;
-  class ADM,MANDOS_S,SSH ssh;
-  class CF,TUNNEL cloudflare;
-  class UFW ufw;
-  class C,H crowdsec;
-  class E caddy;
-  class F,I docker;
-  class X1,X2,X4 blocked;
+  class X1,X2,X3,X4,X5 blocked;
 ```
 
 ## Perspectives : Sécurité Applicative (Symfony & Docker)
