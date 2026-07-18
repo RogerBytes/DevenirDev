@@ -27,7 +27,7 @@ ssh-keygen -f $HOME/.ssh/known_hosts -R 192.0.2.1
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-Avant tout, privilégiez l'ajout d'une clef SSH lors de du déploiement du système d'exploitation.
+Avant tout, ajouter une clef SSH lors de du déploiement du système d'exploitation (sinon faire une réinstallation avec la clef, ça prends quelques secondes).
 
 Pour se connecter sur ma machine vierge, on récupère l'`IPv4` de la machine sur son tableau de bord OVH dans `Bare Metal Cloud/Serveurs Privés Virtuels` et on clique sur le nom du VPS, l'`IPv4` se trouve dans l'encadré `IP` sur la droite.
 
@@ -39,8 +39,6 @@ ssh debian@192.0.2.1
 
 `Are you sure you want to continue connecting (yes/no/[fingerprint])?` confirmer avec `yes`
 
-Entrer le "secret" généré via le mail pour se connecter. Suivre ce qui est demandé pour changer le mdp, mettre son mot de passe habituel (pas besoin d'entropie, on retirera la connexion par mdp). Quand le mdp est changé, on est déconnecté.
-
 ## Prérequis
 
 On se connecte via
@@ -48,8 +46,6 @@ On se connecte via
 ```bash
 ssh debian@192.0.2.1
 ```
-
-On donne le nouveau mdp que l'on vient de régler pour se connecter.
 
 On va installer `nala` (surcouche visuelle d'apt), `kitty-terminfo` (support pour mon émulateur de terminal) et `fastfetch` (affiche les infos de la machine)
 
@@ -70,32 +66,27 @@ sudo timedatectl set-timezone Europe/Paris
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
-sudo nala update && sudo nala upgrade -y
+sudo apt update && sudo apt upgrade -y
 ```
 
 Un prompt `Configuring openssh-server`, choisir `keep the local version currently installed` (il faut garder le réglage, il permet de rester connecté).
 
-On refait un update
-
-```bash
-sudo nala update
-```
-
-il dit `1 packages can be upgraded. Run 'nala list --upgradable' to see them.`, on va faire les upgrades.
-
-```bash
-nala list --upgradable
-```
-
-Il explique que `linux-image-amd64 6.12.86-1` (c'est le kernel) peut être mis à jour vers `linux-image-amd64 6.12.90-2`
-
-On lance l'upgrade en précisant simplement le nom du paquets, à faire dans tous les cas.
+On vérifie maintenant s'il y a une upgrade du kernel
 
 ```bash
 sudo nala install -y linux-image-amd64
 ```
 
-Vu que c'est le kernel (le noyau), il demande `Notice: The following packages require a reboot.`, ce que l'on fait.
+S'il ne fait pas de màj, mais qu'il retourne
+
+```bash
+linux-image-amd64 is already at the latest version 6.12.95-1
+Nothing for Nala to do.
+```
+
+C'est qu'il est bien à jour.
+
+Dans le cas contraire, si la màj se fait, vu que c'est le kernel (le noyau), il demande `Notice: The following packages require a reboot.`, ce que l'on fait.
 
 ```bash
 sudo reboot
@@ -125,9 +116,13 @@ Si demandé, activer AppArmor
 
 ### Configurer mailutils pour permettre l'envoi de mail depuis la machine
 
+On fait une adresse `noreply@mondomaine.com`, puis.
+
 ```bash
 sudo nano /etc/msmtprc
 ```
+
+On met et modifie
 
 ```conf
 # Configuration globale
@@ -142,8 +137,8 @@ tls_trust_file   /etc/ssl/certs/ca-certificates.crt
 account          default
 host             smtp.ton-fournisseur.com
 port             587
-from             ton-adresse-d-envoi@domaine.com
-user             ton-adresse-d-envoi@domaine.com
+from             noreply@domaine.com
+user             noreply@domaine.com
 password         ton_mot_de_passe_de-mail
 ```
 
@@ -161,7 +156,7 @@ On paramètre `Maiutils`
 sudo nano /etc/mail.rc
 ```
 
-On ajoute à la fin
+On ajoute à la fin (le document est vide)
 
 ```bash
 set sendmail="/usr/bin/msmtp -t"
@@ -218,7 +213,7 @@ MAIL-ON-WARNING="moncompte@mondomaine.com"
 # ALLOWHIDDENFILE=/etc/.updated
 ```
 
-**ATTENTION :** on fait aussi la recherche `CTRL + W` pour trouver `MAIL-ON-WARNING=root` et dé-commente et on y met son mail (on vérifie `MAIL-ON-WARNING_LEVEL=2` est bien présent)
+**ATTENTION :** Modifier la valeur de `MAIL-ON-WARNING`
 
 On enregistre et on ferme nano.
 
@@ -236,6 +231,8 @@ Maintenant que nos réglages initiaux sont faits, on lance la mise à jour
 sudo rkhunter --update
 ```
 
+Les `Skipped` en jaune n'ont aucune importance.
+
 ### Premier scan
 
 On lance le premier scan avec
@@ -246,7 +243,7 @@ sudo rkhunter --check --sk
 
 ### Vérifier les warnings de RKHunter
 
-Les `Skipped` en jaune n'ont aucune importance, maintenant ou va étudier les logs pour voir quels sont les `Warnings`
+Maintenant ou va étudier les logs pour voir quels sont les `Warnings`.
 
 ```bash
 sudo grep -i "warning" /var/log/rkhunter.log
@@ -277,7 +274,7 @@ Maintenant on édite `/etc/rkhunter.conf`, on va autoriser ces deux fichiers cac
 sudo nano /etc/rkhunter.conf
 ```
 
-On va à la fin du fichier (`ALT + /`, en passant le `M` signifie `ALT` et `^` signifie `CTRL`) et on colle
+On va à la fin du fichier (`ALT + /`, en passant le `M` signifie `ALT` et `^` signifie `CTRL`) et on décommente
 
 ```conf
 # Autoriser les fichiers cachés créés par le système et systemd
@@ -362,88 +359,7 @@ ssh-keygen -t ed25519 -f ~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-ke
 
 Attention, mettez un mot de passe avec une très forte entropie (100 bits d'entropie minimum) et enregistrer le fichier précieusement. Étant une clef de récupération, il faut en protéger l'accès.
 
-Il faudra absolument garder ces clefs.
-
-### Générer une clef locale
-
-Si l'on a pas déjà une clef locale, on en crée une avec
-
-```bash
-ssh-keygen -t ed25519 -C "your_email@example.com your_machine"
-```
-
-Si ce n'est pas fait (au déploiement de debian) on l'ajoute la clef publique normale au VPS avec
-
-```bash
-ssh-copy-id -i ~/.ssh/id_ed25519.pub debian@192.0.2.1
-```
-
-Et on tape le mot de passe de l'user `debian`
-
 Il faut absolument conserver la clef de récupération !
-
-</div></details>
-
-## Changer le port par défaut de SSH
-
-<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
-
-On se connecte maintenant au serveur
-
-```bash
-ssh debian@192.0.2.1
-```
-
-Les tentatives de hack visent le port SSH par défaut, c'est à dire le port 22. Donc on le remplace.
-
-On génère d'abord un numéro de port aléatoirement (en piochant dans une plage sûre entre 49152 et 65535).
-
-```bash
-RANDOM_PORT=$((RANDOM % (65535 - 49152 + 1) + 49152))
-echo "Port SSH 100% tranquille : $RANDOM_PORT"
-```
-
-Gardez ce port de côté et servez vous en pour le reste de la documentation, ici j'utilise le port `49152` dans cette documentation (vous devez le remplacer par le votre).
-
-Puis on utilise
-
-```bash
-sudo nano /etc/ssh/sshd_config
-```
-
-On remplace
-
-```bash
-#Port 22
-```
-
-par
-
-```bash
-Port 49152
-```
-
-Sauvegardez, puis on va mettre le protocole à jour avec
-
-```bash
-sudo systemctl restart sshd
-```
-
-On vérifie le changement de port avec
-
-```bash
-sudo ss -tlnp | grep ssh
-```
-
-On ne se déconnecte pas de la session, on teste dans un autre shell de se connecter, en précisant le port.
-
-```bash
-ssh -p 49152 debian@192.0.2.1
-```
-
-Voilà, on va fini de régler le port !
-
-Pour Ubuntu 24.04 et ultérieures (**pas Debian, attention**), il faut voir [cette doc](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/virtual-private-servers/secure-your-vps#modifier-le-port-d%C3%A9coute-ssh-par-d%C3%A9faut), il y a eu des changements dans le fonctionnement de SSH.
 
 </div></details>
 
@@ -465,12 +381,6 @@ et on lui donne l'accès sudo, étant le vrai compte du VPS
 sudo usermod -aG sudo username
 ```
 
-On peut maintenant se déconnecter
-
-```bash
-exit
-```
-
 </div></details>
 
 ## Ajouter la clef de récupération au nouveau user
@@ -484,7 +394,7 @@ username=paul
 vps_user=debian
 public_key_path=~/Documents/Sécurité/Clefs/la-recovery-key.pub
 recovery_path=~/.ssh/id_ed25519.pub
-port=49152
+port=22
 ip=192.0.2.1
 
 public_key=$(cat $public_key_path)
@@ -494,27 +404,31 @@ ssh -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh
 
 `$public_key_path` et `$recovery_path` sont les chemins de la clef publique et de la clef de récupération, il faut faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera verrouillé par la suite).
 
-## Script de sysadmin pour ajouter des clefs publiques
+On le fait aussi la même chose, mais avec `id_ed25519.pub` en plus de la clef de récupération.
+
+Puis on se déconnecte avec `exit` et on se reconnecte avec l'user que l'on vient de faire.
+
+```bash
+ssh paul@192.0.2.1
+```
+
+## Script de sysadmin pour ajouter des clefs publiques avec CloudFlared
 
 Voici l'outil final d'admin pour l'user, ici c'est pour un user `robert`, mais on peut s'en servir pour ajouter la clef locale au compte que l'on vient de créer (en remplaçant `robert` par `paul` et en changeant le chemin de la clef publique par `~/.ssh/id_ed25519.pub`).
+Ce script fonctionnera une fois que CloudFlared sera activé.
 
 ```bash
 username=robert
 vps_user=paul
 public_key_path=~/id_ed25519.pub
 recovery_path=~/Documents/Sécurité/Clefs/la-recovery-key
-port=49152
-ip=192.0.2.1
+vps_domain="sousdomaine.domaine.com"
 
-public_key=$(cat $public_key_path)
-
-ssh -t -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
-```
-
-Maintenant l'on ne se connecte plus avec l'user `debian`, mais avec cet utilisateur fraîchement créé.
-
-```bash
-ssh -p VOTRE_RANDOM_PORT NOUVEL_USER@192.0.2.1
+public_key=$(cat "$public_key_path")
+ssh -t -i "$recovery_path" \
+    -o "ProxyCommand=cloudflared access ssh --hostname %h" \
+    "$vps_user@$vps_domain" \
+    "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
 ```
 
 Gardez précieusement votre commande de connexion, c'est celle-ci que vous utiliserez.
@@ -529,14 +443,132 @@ Pour être sûr qu'il a bien la clef de récupération dans ses connexions SSH.
 
 </div></details>
 
+## CloudFlared
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Avant de fermer tous les ports du serveur, on va créer un tunnel avec CloudFlare, qui permettra de se connecter à la machine, malgré les ports fermés.
+
+### Installation de CloudFlared sur VPS
+
+On se base sur [la documentation pour debian](https://pkg.cloudflare.com/index.html#debian-any)
+
+```bash
+sudo mkdir -p --mode=0755 /usr/share/keyrings && \
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null && \
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list && \
+sudo nala update && sudo nala upgrade -y && \
+sudo nala install -y cloudflared
+```
+
+### Lier le serveur au compte CloudFlare
+
+Se connecter à son dashboard, puis
+
+```bash
+cloudflared tunnel login
+```
+
+Ouvrir le lien dans le navigateur, et choisir le domaine à associer.
+
+### Création du tunnel sur le serveur
+
+On crée le tunnel avec (on peut remplacer `tunnel-truc` parce que l'on souhaite)
+
+```bash
+cloudflared tunnel create tunnel-truc
+```
+
+On récupère l'id suivant le `Created tunnel tunnel-prod with id`, c'est l'id du tunnel. Le tunnel sera visible via `cloudflared tunnel list`, et retirable via `cloudflared tunnel delete tunnel-prod`
+
+On crée le fichier `~/.cloudflared/config.yml`
+
+```bash
+nano ~/.cloudflared/config.yml
+```
+
+et on lui met
+
+```bash
+tunnel: ID-DU-TUNNEL
+credentials-file: /home/paul/.cloudflared/ID-DU-TUNNEL.json
+
+ingress:
+  - hostname: sousdomaine.mondomaine.com
+    service: ssh://localhost:22
+  - service: http_status:404
+```
+
+On remplace le nom de domaine et le port par ce qu'il faut (pareil pour l'user), et pareil pour l'id (avec les xxxx)
+
+Puis on crée l'entrée DNS automatiquement
+
+```bash
+cloudflared tunnel route dns --overwrite-dns tunnel-prod sousdomaine.mondomaine.com
+```
+
+Puis on crée un service system
+
+```bash
+sudo cloudflared --config ~/.cloudflared/config.yml service install
+```
+
+Et on le lance
+
+```bash
+sudo systemctl start cloudflared
+```
+
+Voilà, le serveur est prêt (enfin il reste à fermer le port ssh dans UFW, mais on va d'abord tester le tunnel)
+
+### Installed CloudFlared sur un ordinateur
+
+Ici pour Ubuntu/LinuxMint
+
+On identifie sa version de Ubuntu avec
+
+```bash
+cat /etc/os-release | grep UBUNTU_CODENAME
+```
+
+On se base dans notre exemple sur [la documentation pour u-noble](https://pkg.cloudflare.com/index.html#ubuntu-noble)
+
+```bash
+sudo mkdir -p --mode=0755 /usr/share/keyrings && \
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null && \
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared noble main' | sudo tee /etc/apt/sources.list.d/cloudflared.list && \
+sudo nala update && sudo nala upgrade -y && \
+sudo nala install -y cloudflared
+```
+
+On règle notre ssh (il prendra tous les sous domaine avec le *.mondomaine.com, pas besoin d'y retoucher si on ajoute d'autre sous domaine sur d'autres serveurs)
+
+```bash
+nano ~/.ssh/config
+```
+
+```bash
+Host *.mondomaine.com
+    ProxyCommand cloudflared access ssh --hostname %h
+```
+
+et on peut maintenant se connecter via
+
+```bash
+ssh paul@soudomaine.mondomaine.com
+```
+
+</div></details>
+
 ## Le Pare-feu
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Les ports étant ouverts par défaut sur toute machines linux, on va les régler dans le pare-feu `iptables`, pour se simplifier la vie on installe UFW (qui va créer les règles iptables pour nous)
 
-- Pour information, la règle de sécurité est de laisser le flux sortant ouvert, et de verrouiller par défaut le flux entrant (en laissant ouvert seulement le port SSH).
+- Pour information, la règle de sécurité est de laisser le flux sortant ouvert, et de verrouiller par défaut le flux entrant, verrouillant ainsi tous les ports de la machine.
 - C'est `Caddy` qui gérera le flux entrant en réceptionnant les requêtes du web pour les rediriger vers les conteneurs Docker.
+- C'est CloudFlared qui permettra la connexion SSH, protégeant ainsi le port SSH qui reste fermé.
 
 ```bash
 sudo nala install -y ufw
@@ -555,14 +587,6 @@ Maintenant, on autorise par défaut tout ce qui souhaite sortir, et on bloque pa
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-```
-
-ET ATTENTION A FAIRE CE QUI SUIT DANS LA FOULÉE (sinon on ne pourra plus se connecter en SSH)
-
-Modifiez la commande suivante pour y mettre votre port **ATTENTION A BIEN FAIRE LA MODIFICATION DU PORT**
-
-```bash
-sudo ufw allow 49152/tcp
 ```
 
 On ajoute aussi le localhost (totalement indispensable, tout le fonctionnement interne du système repose sur les communications internes du localhost)
@@ -612,7 +636,6 @@ New profiles: skip
 
 To                         Action      From
 --                         ------      ----
-61869/tcp                  ALLOW IN    Anywhere
 Anywhere on lo             ALLOW IN    Anywhere
 80,443/tcp                 ALLOW IN    173.245.48.0/20
 80,443/tcp                 ALLOW IN    103.21.244.0/22
@@ -629,7 +652,6 @@ Anywhere on lo             ALLOW IN    Anywhere
 80,443/tcp                 ALLOW IN    104.24.0.0/14
 80,443/tcp                 ALLOW IN    172.64.0.0/13
 80,443/tcp                 ALLOW IN    131.0.72.0/22
-61869/tcp (v6)             ALLOW IN    Anywhere (v6)
 Anywhere (v6) on lo        ALLOW IN    Anywhere (v6)
 80,443/tcp                 ALLOW IN    2400:cb00::/32
 80,443/tcp                 ALLOW IN    2606:4700::/32
@@ -666,6 +688,92 @@ Et on retire via l'id avec
 
 ```bash
 grep -v 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxx' ~/.ssh/authorized_keys > ~/.ssh/tmp && mv ~/.ssh/tmp ~/.ssh/authorized_keys
+```
+
+</div></details>
+
+## TOTP pour connexion SSH locale sur le VPS
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Pour maximiser la sécurité de l'accès SSH, on ajoute une couche d'authentification double facteur (2FA / TOTP) gérée directement par le serveur. Le code à 6 chiffres sera demandé **après** la validation de la clé SSH et de sa passphrase.
+
+### Installer le module TOTP sur le VPS
+
+On installe le module officiel de double authentification :
+
+```bash
+sudo nala install -y libpam-google-authenticator
+```
+
+*(Note : Malgré son nom, cet outil est 100 % open-source et local, il n'a aucun lien avec un compte Google).*
+
+### Initialiser le TOTP pour ton utilisateur
+
+Lancer la configuration
+
+```bash
+google-authenticator
+```
+
+L'outil va poser plusieurs questions dans le terminal.
+
+- `Do you want authentication tokens to be time-based (y/n)` Taper `y`, on récupère le secret et on le met dans KeePassXC ou Bitwarden en TOTP, on lui passe me mdp à 6 chiffres du TOTP, et garder les codes recovery
+- `Do you want me to update your "/home/paul/.google_authenticator" file? (y/n)` Taper `y`
+- `Do you want to disallow multiple uses of the same authentication... (y/n)` Taper `y`
+- `By default, a new token is generated every 30 seconds by the mobile app ... (y/n)` Taper `y`
+- `If the computer that you are logging into isn't hardened ... (y/n)` Taper `y`
+
+### Configurer le système d'authentification (PAM)
+
+Dire au système d'exiger ce code lors d'une connexion SSH.
+
+```bash
+sudo nano /etc/pam.d/sshd
+```
+
+Et en bas, ajouter
+
+```text
+auth required pam_google_authenticator.so nullok
+```
+
+*(L'option `nullok` évite de se faire enfermer dehors si le TOTP n'est pas encore configuré, on la laissera au début par sécurité).*
+
+### Activer le 2FA dans la configuration SSH
+
+Modifier les réglages de sshd.
+
+```bash
+sudo nano /etc/ssh/sshd_config
+```
+
+Chercher (avec `CTRL + W`) `KbdInteractiveAuthentication no` et remplacer `no` par `yes`
+
+Et en bas du fichier (`ALT + /`), ajouter
+
+```text
+AuthenticationMethods publickey,keyboard-interactive:pam
+```
+
+Sauver/fermer le fichier.
+
+Redémarrer le service SSH pour appliquer les changements
+
+```bash
+sudo systemctl restart ssh
+```
+
+On teste de se connecter avec un autre shell, il demandera le mdp de l'user et ensuite le TOTP, si tout fonctionne on enlève le `nullok`
+
+```bash
+sudo nano /etc/pam.d/sshd
+```
+
+Et en bas, enlever `nullok`
+
+```text
+auth required pam_google_authenticator.so
 ```
 
 </div></details>
@@ -982,6 +1090,18 @@ sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 
 </div></details>
 
+## Changement du Mot D'Accueil
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+```bash
+sudo nano /etc/motd
+```
+
+Et récupérer l'ascii sur [cette page](https://patorjk.com/software/taag/#p=display&f=Tmplr&t=Test&x=none&v=4&h=4&w=80&we=false).
+
+</div></details>
+
 ## Le reset de mon VPS
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
@@ -999,18 +1119,6 @@ Attention à virer le host (sinon votre système va bugger lors de la connexion 
 ```bash
 ssh-keygen -f $HOME/.ssh/known_hosts -R 192.0.2.1
 ```
-
-</div></details>
-
-## Changement du Mot D'Accueil
-
-<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
-
-```bash
-sudo nano /etc/motd
-```
-
-Et récupérer l'ascii sur [cette page](https://patorjk.com/software/taag/#p=display&f=miniwi&t=Test&x=none&v=4&h=4&w=80&we=false).
 
 </div></details>
 
