@@ -7,7 +7,7 @@ Il est important d'avoir de bonnes pratiques dans la gestion des mots de passe.
 
 Il y a 4 mots différents de passe à créer et à apprendre pour être bien protégé.
 
-- Mot de passe : sudo user local (sur ordinateur) / sudo user distant (type vps/serveur) / local ssh key passphrase [+40 bits d'entropie]
+- Mot de passe : sudo user local (sur ordinateur) / sudo user distant (type vps/serveur) / local ssh key passphrase [+40 bits d'entropie] !!!!!!!!!!!!!!!! A CORRIGER, la clef SSH doit avoir un passphrase différent
 - Mot de passe : KeePass [+100 bits d'entropie]
 - Mot de passe : VaultWarden [+100 bits d'entropie]
 - Mot de passe : Service Cloud [+100 bits d'entropie]
@@ -150,3 +150,7 @@ Voici les comportements à **bannir absolument**
 - Ne pas mettre de mot de passe sur une session
 - Se connecter en SSH avec mot de passe (il faut désactiver l'option)
 - Ne jamais vérifier les logs de RKHunter
+
+## Communications sécurisées
+
+Le plus pratique c'est un conteneur self hosté de matrix, sinon utiliser Simplex mais il n'est pas fédéralisé, donc mon serveur self hoste ne parle qu'avec lui-même.
