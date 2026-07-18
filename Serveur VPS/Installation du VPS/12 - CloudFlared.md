@@ -1,4 +1,4 @@
-# 13 - CloudFlared
+# 12 - CloudFlared
 
 Pour masquer totalement l'infrastructure sans modifier notre configuration web existante, nous allons mettre en place un **Cloudflare Tunnel (`cloudflared`)** dédié exclusivement aux flux non-HTTP.
 
@@ -230,10 +230,10 @@ sudo ufw delete allow 53168/tcp
 sudo nano /etc/mandos/clients.conf
 ```
 
-Et à la fin on remplace le checker par
+Et, pour notre serveur `ssh.mondomaine.com`, à la fin on remplace le checker par
 
 ```bash
-checker = cloudflared access ssh --hostname mandos.mondomaine.com --timeout 5s
+checker = cloudflared access ssh --hostname ssh.mondomaine.com --timeout 5s
 ```
 
 On relance Mandos avec

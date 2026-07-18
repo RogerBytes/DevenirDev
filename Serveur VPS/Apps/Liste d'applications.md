@@ -8,9 +8,8 @@
 
 1. Sécuriser les compartiments R2 de CloudFlare, retirer le droit de suppression, et activer Bucket Lock (rétention sur 30 jours) pour qu'aucun attaquant puisse effacer les backups distants.
 2. Rajouter le SHA aux compose de services docker
-3. Sur AppSec (le WAF) ajouter la collection crowdsecurity/appsec-virtual-patching, réglé en détection (mode simulation), afin que je sois alerté si le WAF voit une request qui tente un RCE (Remote Code Execution) et me laisse bloquer moi-même ou non.
-4. Installation de Lynis (audit de défense comment faire un pentesting en attaque)
-5. chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
+3. Installation de Lynis (audit de défense comment faire un pentesting en attaque)
+4. chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
 
 ## A faire en premier
 

@@ -1,6 +1,6 @@
 # 08 - Installation WatchTower
 
-C'est à installer sur un VPS de **PreProd**, ne **pas l'installer en prod**.
+C'est à installer sur un VPS de **PreProd**, ne **pas l'installer en prod**, et en pre prod ne pas vérifier les compose avec SHA pinning, sinon il ne fera pas.
 
 - Depuis [Page docker hub](https://hub.docker.com/r/containrrr/watchtower)
 

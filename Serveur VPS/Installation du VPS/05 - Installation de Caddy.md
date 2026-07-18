@@ -107,6 +107,12 @@ On y colle
 
 On enregistre.
 
+Pour récupérer les adresses IP de CloudFlare
+
+```bash
+echo $(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)
+```
+
 ### Création du `compose.yml`
 
 Maintenant on fait le `compose.yml`
