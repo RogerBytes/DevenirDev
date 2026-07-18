@@ -210,6 +210,12 @@ sudo nano /opt/docker/caddy/Caddyfile
 
 ```
 
+On protège l'accès
+
+```bash
+sudo chmod 600 /opt/docker/caddy/Caddyfile
+```
+
 Pour récupérer les adresses IP de CloudFlare
 
 ```bash
@@ -278,7 +284,7 @@ curl -I --resolve mondomaine.com:80:127.0.0.1 http://mondomaine.com/
 
 ```bash
 # Détecté en erreur 403 (c'est normal)
-curl -kI --resolve rogerbytes.com:443:127.0.0.1 "https://rogerbytes.com/.env"
+curl -kI --resolve mondomaine:443:127.0.0.1 "https://rogerbytes.com/.env"
 
-curl -s -D - -k --resolve rogerbytes.com:443:127.0.0.1 "https://rogerbytes.com/?id=1%20UNION%20SELECT%20username,%20password%20FROM%20users"
+curl -s -D - -k --resolve mondomaine:443:127.0.0.1 "https://rogerbytes.com/?id=1%20UNION%20SELECT%20username,%20password%20FROM%20users"
 ```
