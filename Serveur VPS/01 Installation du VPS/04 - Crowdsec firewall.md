@@ -62,6 +62,12 @@ services:
       - "127.0.0.1:8080:8080"
 ```
 
+Et on protège les accès
+
+```bash
+sudo chmod 600 /opt/docker/crowdsec/compose.yml
+```
+
 ## Création du conteneur
 
 ```bash
@@ -99,7 +105,13 @@ sudo nano /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
 
 Dans `/etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml`, dans la partie `iptables_chains:` il faut dé- commenter `#  - DOCKER-USER`
 
-On enregistre et on relance
+On enregistre, et on met les droits
+
+```bash
+sudo chmod 600 /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
+```
+
+et on relance
 
 ```bash
 sudo systemctl restart crowdsec-firewall-bouncer
@@ -117,7 +129,7 @@ Il doit retourner
 ● crowdsec-firewall-bouncer.service - The firewall bouncer for CrowdSec
      Loaded: loaded (/etc/systemd/system/crowdsec-firewall-bouncer.service; enabled; preset: enabled)
      Active: active (running) since Tue 2026-06-30 10:11:50 UTC; 3s ago
- Invocation: c40788b2c1784dcb94dcd81000cdf04c
+ Invocation: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     Process: 962008 ExecStartPre=/usr/bin/crowdsec-firewall-bouncer -c /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml -t (code=exited, status=0/SUCCESS)
     Process: 962060 ExecStartPost=/bin/sleep 0.1 (code=exited, status=0/SUCCESS)
    Main PID: 962036 (crowdsec-firewa)
