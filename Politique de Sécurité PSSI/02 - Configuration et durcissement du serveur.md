@@ -110,6 +110,65 @@ graph TD
   class X1,X2,X3,X4,X5,X6 blocked;
 ```
 
+```mermaid
+graph TD
+  %% Définition des styles
+  classDef internet fill:#eceff1,stroke:#37474f,stroke-width:2px,color:#000;
+  classDef cloudflare fill:#f57c00,stroke:#e65100,stroke-width:2px,color:#fff;
+  classDef crowdsec fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:#fff;
+  classDef ufw fill:#d32f2f,stroke:#c62828,stroke-width:2px,color:#fff;
+  classDef caddy fill:#00acc1,stroke:#006064,stroke-width:2px,color:#fff;
+  classDef docker fill:#1e88e5,stroke:#0d47a1,stroke-width:2px,color:#fff;
+  classDef blocked fill:#b71c1c,stroke:#7f0000,stroke-width:2px,color:#fff;
+  classDef ssh fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#fff;
+
+  %% ─── Entrées Extérieures ───
+  WEB([🌐 Visiteur Web Légitime]) -->|1. Requête domaine.com| CF{☁️ Cloudflare Edge / WAF}
+  ADM([🧑‍💻 Admin via cloudflared]) -->|1. SSH via Cloudflare Access| CF
+  MANDOS_S([🛡️ Serveur Mandos Checker]) -->|1. cloudflared access ssh| CF
+
+  %% ─── Le Filtrage Cloudflare ───
+  CF -->|2. ALLOW: Trafic légitime| TUNNEL[🚇 Cloudflare Tunnel cloudflared]
+
+  %% ─── Le Serveur VPS (TOUT est dedans ici) ───
+  subgraph VPS [🛡️ Serveur VPS - Zero Trust]
+    TUNNEL -->|3. Route Trafic Web| C{🔒 CrowdSec Bouncer Firewall}
+    TUNNEL -->|3. Route SSH local| SSH[🔑 Serveur SSH Écoute sur Localhost]
+    
+    C -->|4. ALLOW: IP non bannie| E[🔀 Caddy + CrowdSec WAF Bouncer]
+    E -->|5. ALLOW: Requête saine| F[🐳 Conteneurs Docker Applications]
+    
+    %% CrowdSec Engine et Logs (BIEN DEDANS)
+    H[🧠 CrowdSec Engine Docker] -.->|Décisions locales| C
+    H -.->|Règles WAF inband| E
+    F -.->|Logs Caddy access.log| H
+    
+    %% ClamAV (BIEN DEDANS)
+    F -.->|Scan antivirus fichiers| I[🦠 ClamAV]
+    
+    %% Pare-feu UFW
+    UFW{🚫 Pare-feu UFW} -->|BLOCK ALL INBOUND| X1((❌ Rejet immédiat IP Directe))
+  end
+
+  %% ─── Flux Malveillants Bloqués ───
+  BOT([🥷 Robot / Attaquant Scanneur]) -.->|Tentative scan IP directe| UFW
+  CF -.->|DENY: IP bannie ou attaque| X2((❌ Bloqué au CDN))
+  E -.->|DENY: Injection SQL / CVE| X4((❌ 403 WAF))
+
+  %% ─── Retour de CrowdSec vers le Cloud ───
+  H -.->|Décisions de ban Cloudflare| CF
+
+  %% ─── Application des styles ───
+  class WEB,BOT internet;
+  class ADM,MANDOS_S,SSH ssh;
+  class CF,TUNNEL cloudflare;
+  class UFW ufw;
+  class C,H crowdsec;
+  class E caddy;
+  class F,I docker;
+  class X1,X2,X4 blocked;
+```
+
 ## Perspectives : Sécurité Applicative (Symfony & Docker)
 
 Pour compléter ce plan de durcissement, la sécurité du code et des conteneurs sera validée via trois piliers indispensables :

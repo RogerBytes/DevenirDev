@@ -832,7 +832,7 @@ sudo mandos-ctl
 Et lancer un reboot soit depuis SSH, soit depuis le dashboard du VPS.
 Tout est verrouillé.
 
-## Création d'une clef SSH dédiée au killswitch
+## Script activation de KillSwitch
 
 Script pour déclencher le KillSwitch
 
