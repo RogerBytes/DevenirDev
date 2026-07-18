@@ -381,6 +381,8 @@ et on lui donne l'accès sudo, étant le vrai compte du VPS
 sudo usermod -aG sudo username
 ```
 
+Pour les comptes non admin, ne donnez pas d'accès sudo !
+
 </div></details>
 
 ## Ajouter la clef de récupération au nouveau user
@@ -432,8 +434,6 @@ ssh -t -i "$recovery_path" \
 ```
 
 Gardez précieusement votre commande de connexion, c'est celle-ci que vous utiliserez.
-
-Pour les comptes non admin, ne donnez pas d'accès sudo !
 
 ```bash
 cat ~/.ssh/authorized_keys
@@ -500,6 +500,12 @@ ingress:
 ```
 
 On remplace le nom de domaine et le port par ce qu'il faut (pareil pour l'user), et pareil pour l'id (avec les xxxx)
+
+On lui règle les droit d'accès pour éviter la lecture en dehors de root
+
+```bash
+chmod 600 ~/.cloudflared/config.yml
+```
 
 Puis on crée l'entrée DNS automatiquement
 

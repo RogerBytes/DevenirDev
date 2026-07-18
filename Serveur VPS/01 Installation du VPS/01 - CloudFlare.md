@@ -1,4 +1,4 @@
-# 01 - Cloudlfare
+# 01 - CloudFlare
 
 Cloudflare gère le DNS et sert de proxy entre les visiteurs et le serveur.
 
