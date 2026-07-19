@@ -36,7 +36,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - data:/data
     command:
-      - "--trusted-origins=docker.rogerbytes.com"
+      - "--trusted-origins=dash.mondomaine.com"
     networks:
       - caddy_network
 
@@ -48,7 +48,15 @@ networks:
     external: true
 ```
 
+Penser à mettre le bon domaine.
+
 Et enregistrer le fichier.
+
+On règle l'accès
+
+```bash
+sudo chmod 600 /opt/docker/utils/portainer/compose.yml
+```
 
 ## Création du conteneur
 
@@ -96,6 +104,12 @@ et on relance caddy
 
 ```bash
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
+
+et, si on a du faire une modification sur le compose entre deux
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml restart
 ```
 
 ## Inscription sur site
