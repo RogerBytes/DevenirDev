@@ -398,7 +398,7 @@ Maintenant qu'on a les bases, on va passer à la suite.
 
 ### Compatibilité avec Mandos
 
-On commence par voir si avant le démarrage complet de mon vps, il peut ou pas accéder au réseau au boot.
+On commence par voir si notre serveur actuel est compatible (avant le démarrage complet de mon vps), il peut ou pas accéder au réseau au boot.
 
 ```bash
 ip route
@@ -424,6 +424,8 @@ On prend `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/).
 
 On commence par réinstaller en mettant sa clef SSH, et dans les options, bloquer la connexion root.
 
+[Accès au Dashboard Contabo](https://new.contabo.com/servers/vps)
+
 #### Rediriger sur CloudFlare
 
 Et sur CloudFlare, on va sur notre domaine, et `DNS/Enregistrements` et on clique sur `+ Ajouter un enregistrement`
@@ -445,6 +447,7 @@ On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/01 - Paramétrage 
 - Changer le port par défaut de SSH
 - Créer un utilisateur non privilégié
 - Ajouter la clef de récupération au nouveau user
+- CloudFlared
 - Le Pare-feu
 - Retirer la connexion par mot de passe
 - Verrouillage de l'user initial debian
