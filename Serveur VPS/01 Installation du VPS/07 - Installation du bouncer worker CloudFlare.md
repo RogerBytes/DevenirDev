@@ -41,6 +41,12 @@ sudo docker run crowdsecurity/cloudflare-worker-bouncer \
   -g LE_TOKEN_CLOUDFLARE | sudo tee /opt/docker/cf-bouncer/cfg.yaml
 ```
 
+On protège l'accès
+
+```bash
+sudo chmod 600 /opt/docker/cf-bouncer/cfg.yaml
+```
+
 ### Fichier de configuration du bouncer worker
 
 ```bash
@@ -100,6 +106,36 @@ puis on lance
 ```bash
 sudo docker compose up -d
 ```
+
+On attend un peu, et on le restart
+
+```bash
+sudo docker compose -f /opt/docker/cf-bouncer/compose.yml restart
+```
+
+### Vérifier depuis le serveur
+
+La liste communautaire peut prendre [2 heures](https://discourse.crowdsec.net/t/default-pull-interval/606) avant d'être chargée
+
+On vérifie si elle a été téléchargée
+
+```bash
+sudo docker exec crowdsec cscli decisions list --origin community-blocklist
+```
+
+Et pour vérifier ses logs
+
+```bash
+sudo docker compose -f /opt/docker/cf-bouncer/compose.yml logs --tail=50
+```
+
+Et on nettoie les anciens conteneurs
+
+```bash
+sudo docker container prune -f
+```
+
+Si on liste les conteneurs avec `sudo docker ps -a`, on doit avoir `caddy-caddy`, `crowdsecurity/cloudflare-worker-bouncer` et `crowdsecurity/crowdsec:latest` en up/actifs.
 
 ### Vérifier dans le Dashboard de CloudFlare
 
