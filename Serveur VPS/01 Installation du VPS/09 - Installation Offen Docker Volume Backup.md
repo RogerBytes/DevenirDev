@@ -102,6 +102,12 @@ Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il fais
 
 Et enregistrer le fichier.
 
+On règle l'accès
+
+```bash
+sudo chmod 600 /opt/docker/utils/docker-volume-backup/compose.yml
+```
+
 ## Création du conteneur
 
 Et on lance le `compose up`
