@@ -130,7 +130,7 @@ sudo docker logs portainer 2>&1 | grep "setup_token=" | awk -F "setup_token=" '{
 
 ## Réglage sur site
 
-Choisir `Gest Started` et voilà
+Choisir `Get Started` et voilà
 
 Ca y est toutes les étapes d'installation de l'infrastructure du serveur sont terminées, on peut installer des applications depuis `Serveur VPS/Apps`.
 
