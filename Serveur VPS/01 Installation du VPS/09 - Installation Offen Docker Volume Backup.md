@@ -96,7 +96,7 @@ volumes:
     external: true
 ```
 
-**ATTENTION** Il faut impérativement retirer le `https://` du endpoint, sinon ça ne marchera pas, et pour le nom du compartiment, il faut prendre celui sans espace dans `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`.
+**ATTENTION** Il faut impérativement retirer le `https://` du endpoint (c'est le seul qui fait ça, normalement on le met), sinon ça ne marchera pas, et pour le nom du compartiment, il faut prendre celui sans espace dans `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`.
 
 Le bloc `volumes` du bas est une espèce d'import (en gros c'est comme s'il faisait `sudo docker volume ls` pour lister les volumes), qui permet au node `backup` de comprendre ce qu'est `caddy_config` et `caddy_data`.
 
