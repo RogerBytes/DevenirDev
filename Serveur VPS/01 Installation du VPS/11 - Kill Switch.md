@@ -706,6 +706,12 @@ On ajoute dans notre partie client, on ajoute
 
 - `checker = fping -q -- %(host)s || nc -z -w 5 %(host)s 22` en remplaçant 22 par le port SSH du VPS client
 
+OU Normalement
+
+```bash
+checker = ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname %h" %(host)s exit
+```
+
 Et on enregistre.
 
 puis
@@ -739,7 +745,7 @@ sudo /usr/lib/x86_64-linux-gnu/mandos/plugins.d/mandos-client \
 
 S'il retourne la clef, normalement c'est bon
 
-## Service systemd
+## Service systemd sur le client
 
 On créé un service systemd
 
@@ -764,7 +770,7 @@ ExecStart=/bin/sh -c '/usr/lib/x86_64-linux-gnu/mandos/plugins.d/mandos-client -
 WantedBy=cryptsetup.target
 ```
 
-On prend note qu'il faut modifier `--connect=192.0.2.1:13721` avec l'ip du client à déverrouiller.
+On prend note qu'il faut modifier `--connect=192.0.2.1:13721` avec l'ip du serveur Mandos.
 
 et on fait
 
@@ -786,9 +792,9 @@ on met
 crypt_prod    /dev/loop0    none    luks,noauto
 ```
 
-### Prioriser notre service systemd pour Mantos devant Docker
+### Prioriser notre service systemd pour Mantos devant Docker (sur le client)
 
-On doit dire à docker de se lancer après notre service systemd
+On doit dire à docker de se lancer après notre service systemd sur le client
 
 ```bash
 sudo mkdir -p /etc/systemd/system/docker.service.d/
@@ -801,6 +807,10 @@ y coller à la fin
 [Unit]
 After=cryptsetup.target local-fs.target mandos-unlock.service
 Requires=mandos-unlock.service
+```
+
+```bash
+sudo systemctl daemon-reload
 ```
 
 Et on vérifie que les lignes apparaissent avec
@@ -817,17 +827,34 @@ Et on ajoute un accès
 sudo visudo -f /etc/sudoers.d/mandos-ctl
 ```
 
+On colle
+
 ```bash
 %sudo ALL=(ALL) NOPASSWD: /usr/sbin/mandos-ctl
 ```
 
-et
+et on gère l'accès
 
 ```bash
 sudo chmod 0440 /etc/sudoers.d/mandos-ctl
 ```
 
-## Activer le killswitch
+## paramétrer
+
+## Tester le checker sur le serveur Mandos
+
+```bash
+sudo mandos-ctl --check vps-59944032.vps.ovh.net
+
+sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+
+et
+
+
+/usr/bin/cloudflared access ssh --hostname vps-59944032.vps.ovh.net
+```
+
+## Activer le killswitch sur serveur mandos
 
 ```bash
 sudo mandos-ctl --disable vps-xxxxxxxx.xxx.xxx.xxx
