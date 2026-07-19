@@ -722,6 +722,10 @@ Lancer la configuration
 google-authenticator
 ```
 
+```bash
+chmod 600 /home/harry/.google_authenticator
+```
+
 L'outil va poser plusieurs questions dans le terminal.
 
 - `Do you want authentication tokens to be time-based (y/n)` Taper `y`, on récupère le secret et on le met dans KeePassXC ou Bitwarden en TOTP, on lui passe me mdp à 6 chiffres du TOTP, et garder les codes recovery
