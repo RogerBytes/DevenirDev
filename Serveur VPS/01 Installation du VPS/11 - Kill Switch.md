@@ -1,6 +1,6 @@
 # 11 - Kill Switch
 
-Pour plus de sécurité, nous allons mettre en place un système de Kill Switch, permettant ainsi d'avoir une politique de la terre brûlée en cas de compromission.
+Pour plus de sécurité, nous allons mettre en place un système de Kill Switch, permettant ainsi d'avoir une politique de la terre brûlée en cas de compromission (qui se lancera automatiquement).
 
 Nous allons ici faire deux étapes, la première étant un kill switch faible, avec un volume chiffré LUKS découpé en volumes logiques (LVM) montés directement sur `/var/lib/docker`, `/opt/docker` et `/home/`, utilisant une clef de déchiffrement locale. Cette approche sans _bind mount_ garantit de manière passive que Docker ne pourra jamais démarrer si le déverrouillage échoue.
 
@@ -78,13 +78,15 @@ On installe `crypsetup`
 sudo nala install -y cryptsetup cryptsetup-initramfs systemd-cryptsetup
 ```
 
+Si demandé, on choisit `OK` pour le réglage `Guess optimal character set` par défaut, puis `Other/French/French - French (AZERTY)`.
+
 On lance le chiffrement
 
 ```bash
 sudo cryptsetup luksFormat --key-file /boot/keyfile.bin /dev/loop0
 ```
 
-On tape `YES` en majuscules pour confirmer la recréation du fichier (ce qui efface son contenu s'il y avait eu quelque chose dessus)
+On tape `YES` en majuscules pour confirmer la recréation du fichier (qui aurait effacé son contenu s'il y avait eu quelque chose dessus)
 
 On ouvre le volume chiffré avec la clef
 
@@ -116,11 +118,15 @@ Et on fait la déclaration du volume
 sudo pvcreate /dev/mapper/crypt_prod
 ```
 
+### Créer le Volume Group
+
+```bash
+sudo vgcreate vg_prod /dev/mapper/crypt_prod
+```
+
 ## Création des volumes logiques
 
 Vu qu'on a 60 GO, on va laisser 50Go au lib docker, et 8Go au repertoire opt, tout le reste ira sur home
-
-Au besoin relancer la déclaration si `Volume group "vg_prod" not found`
 
 ```bash
 sudo lvcreate -L 50G -n lv_docker_lib vg_prod
@@ -138,13 +144,7 @@ sudo lvcreate -l 100%FREE -n lv_home vg_prod
 
 ```bash
 sudo mkfs.ext4 /dev/vg_prod/lv_docker_lib
-```
-
-```bash
 sudo mkfs.ext4 /dev/vg_prod/lv_docker_opt
-```
-
-```bash
 sudo mkfs.ext4 /dev/vg_prod/lv_home
 ```
 
@@ -294,6 +294,8 @@ sudo systemctl daemon-reload
 sudo update-initramfs -u -k all
 sudo systemctl daemon-reload
 ```
+
+Les erreurs lors de l'update initramfs sont sans importance.
 
 Et activer le service
 
