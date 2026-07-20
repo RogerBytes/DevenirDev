@@ -7,6 +7,96 @@ Depuis [Page GitHub](https://github.com/dani-garcia/vaultwarden)
 
 ## Prérequis
 
+### Filtrage WAF
+
+Voici les 3 blocs de filtres positifs à ajouter (pour éviter des faux positifs), il faut changer le domaine dans `draw.mondomaine.com`.
+On lui dit d'ignorer `"native_rule:911100"`, `"native_rule:932125"`, `"native_rule:932235"` et  `"native_rule:932230"`.
+
+```yml
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:911100")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:932125")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:932235")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:932230")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+```
+
+On va l'ajouter en liste blanche à custom-config.yaml, dans la partie `on_match`
+
+```bash
+sudo nano /opt/docker/crowdsec/config/appsec-configs/custom-config.yaml
+```
+
+```yml
+name: custom/custom-config
+inband_rules:
+  - crowdsecurity/base-config
+  - crowdsecurity/vpatch-*
+  - crowdsecurity/generic-*
+  - crowdsecurity/crs
+outofband_rules:
+  - crowdsecurity/appsec-generic-test
+default_remediation: ban
+blocked_http_code: 403
+on_match:
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:911100")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:932125")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:932235")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "vw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:932230")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+```
+
+On enregistre et on relance crowdsec
+
+```bash
+sudo docker exec crowdsec cscli hub update && sudo docker restart crowdsec
+```
+
 ### Création du répertoire
 
 On prépare un répertoire dans `opt/docker`
