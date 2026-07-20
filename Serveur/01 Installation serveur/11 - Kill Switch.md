@@ -966,6 +966,30 @@ On verra `2026-07-20T13:34:05.285460` dans la colonne `Last Successful Check`.
 
 </div></details>
 
+### Suppression du keyfile et reboot
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+```bash
+sudo rm -rf /boot/keyfile.bin
+```
+
+Et on peut faire le grand saut et reboot
+
+```bash
+sudo reboot
+```
+
+On patiente un peu avant de se reconnecter en SSH (genre une minute), une fois reconnecté, on vérifie les logs du service de déverrouillage
+
+```bash
+sudo journalctl -u mandos-unlock.service --no-pager
+```
+
+On peut y voir toutes les interactions avec le serveur Mandos, mission accomplie !
+
+</div></details>
+
 </div></details>
 
 ## Script activation de KillSwitch
