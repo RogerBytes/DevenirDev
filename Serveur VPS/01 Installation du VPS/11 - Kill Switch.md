@@ -243,8 +243,8 @@ sudo find /var/lib/docker -mindepth 1 -delete
 On ignore les `permission denied` de starship
 
 ```bash
-Unable to create log dir "/home/harry/.cache/starship": Os { code: 13, kind: PermissionDenied, message: "Permission denied" }!
-Unable to create log dir "/home/harry/.cache/starship": Os { code: 13, kind: PermissionDenied, message: "Permission denied" }!
+Unable to create log dir "/home/paul/.cache/starship": Os { code: 13, kind: PermissionDenied, message: "Permission denied" }!
+Unable to create log dir "/home/paul/.cache/starship": Os { code: 13, kind: PermissionDenied, message: "Permission denied" }!
 ```
 
 et on lance le montage

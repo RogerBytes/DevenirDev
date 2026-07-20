@@ -154,6 +154,6 @@ Aller sur [le dashboard de CloudFlare](https://dash.cloudflare.com), puis aller 
 
 **Pour voir les routes protégées :**
 
-- Clique sur ton domaine `rogerbytes.com`
+- Clique sur ton domaine `mondomaine.com`
 - Dans le menu gauche → **"Routes Workers"**
-- Tu devrais voir la route `*rogerbytes.com/*` liée au worker CrowdSec
+- Tu devrais voir la route `*mondomaine.com/*` liée au worker CrowdSec

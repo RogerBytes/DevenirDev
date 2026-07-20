@@ -93,7 +93,7 @@ sudo docker exec -it clamav egrep "FOUND|SUMMARY|Infected" /var/lib/clamav/rappo
 Si virus, il retourne quelque chose du genre
 
 ```text
-/vps/home/harry/un_fichier_suspect.exe: Eicar-Signature FOUND
+/vps/home/paul/un_fichier_suspect.exe: Eicar-Signature FOUND
 
 ----------- SCAN SUMMARY -----------
 Infected files: 1

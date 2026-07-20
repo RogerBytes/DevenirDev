@@ -258,7 +258,7 @@ sudo nano /opt/docker/caddy/Caddyfile
 Ajoutez cette redirection à la fin, dans la partie `Redirection de domaines`
 
 ```text
-rogerbytes.com, www.rogerbytes.com {
+mondomaine.com, www.mondomaine.com {
     import crowdsec_bouncer
     respond "Caddy fonctionne avec Cloudflare !"
 }
@@ -286,7 +286,7 @@ curl -I --resolve mondomaine.com:80:127.0.0.1 http://mondomaine.com/
 
 ```bash
 # Détecté en erreur 403 (c'est normal)
-curl -kI --resolve mondomaine:443:127.0.0.1 "https://rogerbytes.com/.env"
+curl -kI --resolve mondomaine:443:127.0.0.1 "https://mondomaine.com/.env"
 
-curl -s -D - -k --resolve mondomaine:443:127.0.0.1 "https://rogerbytes.com/?id=1%20UNION%20SELECT%20username,%20password%20FROM%20users"
+curl -s -D - -k --resolve mondomaine:443:127.0.0.1 "https://mondomaine.com/?id=1%20UNION%20SELECT%20username,%20password%20FROM%20users"
 ```
