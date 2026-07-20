@@ -24,7 +24,7 @@ On va sur [dashboard de CloudFlare](dash.cloudflare.com)
 - puis `DNS / Enregistrements`
 - cliquer sur le bouton `+ Ajouter un enregistrement`
 - Type `A`
-- Nom `sous.domaine.com`
+- Nom `vw.domaine.com`
 - Adresse IPv4 `192.0.2.1`
 - cliquer sur `Enregistrer`
 
@@ -51,7 +51,7 @@ sudo nano /opt/docker/caddy/Caddyfile
 A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
 
 ```text
-op.mondomaine.com {
+vw.mondomaine.com {
         import crowdsec_bouncer
         reverse_proxy openproject:80
 }
