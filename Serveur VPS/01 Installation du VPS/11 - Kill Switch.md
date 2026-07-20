@@ -408,7 +408,7 @@ Le fait que l'on lise `proto dhcp` à la première ligne `default` est la certit
 
 ### Ajout d'un fallback
 
-Vu que l'on va se débarrasser de la clef locale, il faut une méthode alternative pour nous y connecter
+Vu que l'on va se débarrasser de la clef locale, il faut une méthode alternative pour nous y connecter (sur le serveur du client)
 
 On ajoute un slot, mais avec un mdp.
 
