@@ -12,11 +12,11 @@ Depuis [Page GitHub](https://github.com/dani-garcia/vaultwarden)
 On prépare un répertoire dans `opt/docker`
 
 ```bash
-sudo mkdir -p /opt/docker/apps/openproject
-cd /opt/docker/apps/openproject
+sudo mkdir -p /opt/docker/apps/vaultwarden
+cd /opt/docker/apps/vaultwarden
 ```
 
-### Gestion  domaine / sous domaine CloudFlare
+### Gestion domaine / sous domaine CloudFlare
 
 On va sur [dashboard de CloudFlare](dash.cloudflare.com)
 
@@ -30,9 +30,7 @@ On va sur [dashboard de CloudFlare](dash.cloudflare.com)
 
 Remplacer `192.0.2.1` par l'ipv4 du VPS.
 
-### Générer une clé secrète hexadécimale (Secret Key Base)
-
-OpenProject nécessite une clé secrète à forte entropie pour chiffrer les sessions utilisateurs. Générez une chaîne unique de 64 caractères directement depuis votre terminal :
+### Générer une clef secrète pour VaultWarden
 
 ```bash
 openssl rand -hex 32
@@ -40,39 +38,28 @@ openssl rand -hex 32
 
 Gardez précieusement la chaîne générée de côté, elle va servir dans le fichier de configuration juste après.
 
-Rappel de sécurité **IMPORTANT** : Veillez à ce que vos mots de passe de base de données ou votre clé secrète ne contiennent aucun caractère $. Docker interprète ce symbole comme une variable et tronquera vos identifiants, provoquant des erreurs de connexion (Erreur 502)
-
-### Caddyfile
+puis on génère le hash
 
 ```bash
-sudo nano /opt/docker/caddy/Caddyfile
+sudo docker exec -it vaultwarden /vaultwarden hash
 ```
 
-A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` coller (en mettant votre nom de domaine)
+et récupérer la ligne
 
-```text
-vw.mondomaine.com {
-        import crowdsec_bouncer
-        reverse_proxy openproject:80
-}
+```yml
+ADMIN_TOKEN='$argon2id$v=19$m=65540,t=3,p=4$ysIF9qGecYGRkS9Fr1UhzqhnCBi1Tl4axpbc4u5ytE8$S2n7CVZKYv8vRYuL8VYKukqb6J1/oXPDyAdpHFuyNfU'
 ```
 
-Au cas où, pour voir les port internes à docker, faire
+### Mettre le token dans un .env
 
 ```bash
-sudo docker ps --format "table {{.Names}}\t{{.Ports}}"
+sudo nano .env
 ```
 
-on utilise le formateur intégré avec
+Et on copie toute la ligne hashée (y compris "ADMIN_TOKEN=(...)")
 
 ```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-et on relance caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+sudo chmod 600 /opt/docker/apps/vaultwarden/.env
 ```
 
 ### Création du `compose.yml`
@@ -87,48 +74,39 @@ et on colle
 
 ```yaml
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: openproject-db
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
     restart: unless-stopped
     environment:
-      POSTGRES_DB: openproject
-      POSTGRES_USER: openproject
-      POSTGRES_PASSWORD: UnMotDePasseRobusteEtSansDollar
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=true
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - SMTP_HOST=SMTP.MAIL.COM
+      - SMTP_FROM=noreply@domaine.com
+      - SMTP_PORT=465
+      - SMTP_SECURITY=force_tls
+      - SMTP_USERNAME=noreply@domaine.com
+      - SMTP_PASSWORD=MdpCompteMail
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./vw-data:/data
     networks:
-      - openproject_internal
-
-  openproject:
-    image: openproject/openproject:17-rc
-    container_name: openproject
-    restart: unless-stopped
-    environment:
-      OPENPROJECT_DB_BACKEND: postgres
-      OPENPROJECT_DB_HOST: db
-      OPENPROJECT_DB_PORT: 5432
-      OPENPROJECT_DB_NAME: openproject
-      OPENPROJECT_DB_USER: openproject
-      OPENPROJECT_DB_PASSWORD: UnMotDePasseRobusteEtSansDollar # Must match the DB password above
-      SECRET_KEY_BASE: CollerIciLaCleHexadécimaleGénérée
-      OPENPROJECT_HOST__NAME: op.mondomaine.com # <-- Votre sous-domaine complet
-      OPENPROJECT_HTTPS: "true"
-    volumes:
-      - ./assets:/var/openproject/assets
-    networks:
-      - openproject_internal
       - caddy_network
-    depends_on:
-      - db
 
 networks:
-  openproject_internal: # Réseau privé isolé pour la base de données
   caddy_network:
     external: true
 ```
 
+Penser à modifier `SMTP_HOST`, `SMTP_FROM`, `SMTP_USERNAME` et `SMTP_PASSWORD`.
+
 Et enregistrer le fichier.
+
+On règle l'accès
+
+```bash
+sudo chmod 600 /opt/docker/apps/vaultwarden/compose.yml
+```
 
 ## Création du conteneur
 
@@ -138,12 +116,61 @@ Et on lance le `compose up`
 sudo docker compose up -d
 ```
 
-## La patience
-
-Il faut du temps pour que tout s'initialise
+On vérifie le statut du conteneur (permet aussi de voir le port interne qu'utilisera le reverse proxy de Caddy)
 
 ```bash
-sudo docker logs -f openproject
+sudo docker compose ps
 ```
 
-Voilà, notre **VaultWarden** est correctement déployé et paramétré !
+Et on vérifie s'il a bien crée le dossier de stockage
+
+```bash
+ls -l
+```
+
+il retourne
+
+```bash
+total 8
+-rw-r--r-- 1 root root  196 Jun 20 19:05 compose.yml
+drwxr-xr-x 3 root root 4096 Jun 20 19:06 vw-data
+```
+
+## Configurer un reverse proxy avec Caddy
+
+Il suffit de modifier le `Caddyfile` comme on l'a déjà fait.
+
+```bash
+sudo nano /opt/docker/caddy/Caddyfile
+```
+
+On y ajoute
+
+```plaintext
+vw.mondomaine.com {
+        import crowdsec_bouncer
+        reverse_proxy vaultwarden:80
+}
+```
+
+On enregistre le fichier puis on vérifie la mise en forme
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
+```
+
+on actualise la configuration de Caddy
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
+```
+
+Si cela avait été le premier, nous aurions fait
+
+```bash
+sudo docker compose -f /opt/docker/caddy/compose.yml restart caddy
+```
+
+Voilà, l'installation est finie.
+
+Garder le token secret, et passer à la partie 2.
