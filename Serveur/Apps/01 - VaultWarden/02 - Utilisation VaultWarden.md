@@ -30,21 +30,11 @@ L'usage de VaultWarden est assez simple
 
 - Ouvrir `KeePassXC`, aller dans `Base de données/Exporter` et `Fichier .CSV...`
   - Mettre le nom du fichier genre `import-temp.csv` et valider, le fichier est créé.
-
 - Ouvrir le client `BitWarden`, aller dans `Import`
   - Dans `Données / Format de fichier` choisir `KeePassX (csv)`
   - Cliquer sur `Choisir le fichier` et pointer le fichier `import-temp.csv`
   - Cliquer sur `Importer`
-
   - Laisser les options par défaut et cliquer sur `Terminer`
-- Stocker le fichier `*.kdbx` sur la clef USB dédiée et sur votre Cloud personnel
-- Supprimer le fichier `*.json` de BitWarden, et vider la corbeille immédiatement (**indispensable, le fichier est en clair**)
-
-## Merde import
-
-```bash
-pipx install kp2bw
-```
 
 ## Backup
 
