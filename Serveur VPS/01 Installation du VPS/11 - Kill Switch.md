@@ -449,6 +449,7 @@ On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/02 - Paramétrage 
 - Ajouter la clef de récupération au nouveau user
 - CloudFlared
 - Le Pare-feu
+- TOTP pour connexion SSH locale sur le VPS
 - Retirer la connexion par mot de passe
 - Verrouillage de l'user initial debian
 - Verrouillage de la connexion SSH de root
