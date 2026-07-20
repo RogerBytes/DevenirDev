@@ -438,7 +438,7 @@ décocher état du proxy
 
 ### Paramétrage serveur VPS Mandos
 
-On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/01 - Paramétrage VPS.md) pour faire
+On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/02 - Paramétrage VPS.md) pour faire
 
 - Première connexion
 - Mise à jour du système
