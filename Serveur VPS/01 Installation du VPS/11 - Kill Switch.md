@@ -8,7 +8,9 @@ Et dans un deuxième temps, avoir un serveur dédié avec [Mandos](https://www.r
 
 Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de Mandos, je conseille `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/) par exemple.
 
-## Kill switch simple
+## Encryption LUKS
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Informations principales
 
@@ -42,6 +44,8 @@ Donc on va créer un fichier conteneur de 60Go (laissant 14.9 Go pour debian)
 
 ### Création et association du fichier conteneur au Loop Device /dev/loop0
 
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
 ```bash
 sudo fallocate -l 60G /luks.img
 sudo chmod 600 /luks.img
@@ -64,13 +68,21 @@ ls -lh /luks.img
 
 Il doit retourner `-rw------- 1 root root 60G Jul 15 15:35 /luks.img`
 
+</div></details>
+
 ### Création du fichier clef
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo dd if=/dev/urandom of=/boot/keyfile.bin bs=1024 count=4 && sudo chmod 600 /boot/keyfile.bin
 ```
 
+</div></details>
+
 ### Chiffrement du fichier via Loop Device
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On installe `crypsetup`
 
@@ -104,7 +116,11 @@ ls /dev/mapper/crypt_prod
 
 Il doit retourner `/dev/mapper/crypt_prod`
 
+</div></details>
+
 ### Déclaration du volume pour LVM
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On installe `lvm2`
 
@@ -118,13 +134,21 @@ Et on fait la déclaration du volume
 sudo pvcreate /dev/mapper/crypt_prod
 ```
 
+</div></details>
+
 ### Créer le Volume Group
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo vgcreate vg_prod /dev/mapper/crypt_prod
 ```
 
-## Création des volumes logiques
+</div></details>
+
+### Création des volumes logiques
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Vu qu'on a 60 GO, on va laisser 50Go au lib docker, et 8Go au repertoire opt, tout le reste ira sur home
 
@@ -140,7 +164,11 @@ sudo lvcreate -L 8G -n lv_docker_opt vg_prod
 sudo lvcreate -l 100%FREE -n lv_home vg_prod
 ```
 
-## Formatage en ext4
+</div></details>
+
+### Formatage en ext4
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo mkfs.ext4 /dev/vg_prod/lv_docker_lib
@@ -162,7 +190,11 @@ drwxr-xr-x  7 root root 4096 Jul 14 02:47 /opt/docker
 drwx--x--- 12 root root 4096 Jul 14 00:50 /var/lib/docker
 ```
 
+</div></details>
+
 ### Copie
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On crée les dossier temp de transfert
 
@@ -231,7 +263,11 @@ sudo systemctl start docker
 
 Les partitions sont montées en mémoire vive et ça fonctionne (on voir le prompt starship de nouveau comme avant)
 
-## Montage automatique
+</div></details>
+
+### Montage automatique
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On commence par faire un backup du fstab
 
@@ -251,7 +287,11 @@ sudo tee -a /etc/fstab <<EOF
 EOF
 ```
 
+</div></details>
+
 ### Créer un service systemd pour le loop Device
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo nano /etc/systemd/system/setup-loop-prod.service
@@ -303,7 +343,11 @@ Et activer le service
 sudo systemctl enable setup-loop-prod.service
 ```
 
+</div></details>
+
 ### On vérifie que les repertoire d'origine sont vides
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On crée un point d'accès temp
 
@@ -342,7 +386,11 @@ sudo umount /mnt/verif_racine
 sudo rmdir /mnt/verif_racine
 ```
 
+</div></details>
+
 ### Test final
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Normalement on peut faire le reboot, si on ne peut plus se co en SSH, c'est que ça ne décrypte pas ou ne monte pas les volumes.
 
@@ -367,7 +415,11 @@ On relance la machine
 sudo reboot now
 ```
 
-## Cassé KVM et réparation
+</div></details>
+
+### Cassé KVM et réparation
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Je laisse ici pour info, normalement la doc est bonne, mais la partie est utile en cas de souci
 
@@ -392,11 +444,19 @@ sudo mount -a
 
 Voilà, le KillSwitch faible est paramétré !
 
+</div></details>
+
+</div></details>
+
 ## KillSwitch Mandos
 
-Maintenant qu'on a les bases, on va passer à la suite.
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Maintenant qu'on a les bases, on va passer à la suite et utiliser un autre serveur qui va pouvoir automatiquement encrypter le serveur client (le serveur de prod par exemple).
 
 ### Compatibilité avec Mandos
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On commence par voir si notre serveur actuel est compatible (avant le démarrage complet de mon vps), il peut ou pas accéder au réseau au boot.
 
@@ -406,7 +466,11 @@ ip route
 
 Le fait que l'on lise `proto dhcp` à la première ligne `default` est la certitude que ça ne bloquera pas, ainsi on peut se lancer dans l'aventure !
 
+</div></details>
+
 ### Ajout d'un fallback
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Vu que l'on va se débarrasser de la clef locale, il faut une méthode alternative pour nous y connecter (sur le serveur du client)
 
@@ -418,7 +482,11 @@ sudo cryptsetup luksAddKey /luks.img --key-file /boot/keyfile.bin
 
 Voilà, on a un mdp pour décrypter, le garder précieusement, cet accès servira pour Mandos comme en cas de panne !
 
+</div></details>
+
 ### VPS serveur Mandos
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On prend `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/).
 
@@ -436,7 +504,11 @@ nom : mandos
 mettre l'adresse ipv4
 décocher état du proxy
 
+</div></details>
+
 ### Paramétrage serveur VPS Mandos
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On suit le [Paramétrage VPS](Serveur VPS/Installation du VPS/02 - Paramétrage VPS.md) pour faire
 
@@ -538,37 +610,11 @@ Chain CROWDSEC_CHAIN (1 references)
 
 Cela prouve qu'il est bien actif dans iptables.
 
-Pour déban une ip
-
-```bash
-sudo cscli decisions delete --ip <L_IP_A_DEBANNIR>
-```
-
-Pour ban une ip
-
-```bash
-sudo cscli decisions add --ip <L_IP_A_BANNIR> --duration 4h --reason "Test perso"
-```
-
-On peut tester avec une ip de test `192.0.2.1`
-
-```bash
-sudo cscli decisions add --ip 192.0.2.1 --duration 4h --reason "Test perso"
-```
-
-On regarde les décision pour voir l'ip est bannie
-
-```bash
-sudo cscli decisions list
-```
-
-On la déban avec
-
-```bash
-sudo cscli decisions delete --ip 192.0.2.1
-```
+</div></details>
 
 ### Installation de Mandos (sur le vps dédié)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
 sudo nala install -y mandos
@@ -633,7 +679,11 @@ sudo ufw status verbose
 
 On doit voir nos règles.
 
+</div></details>
+
 ### Installation du client mandos sur le VPS client
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On fait une màj
 
@@ -647,7 +697,11 @@ Puis on installe le client
 sudo nala install -y mandos-client
 ```
 
+</div></details>
+
 ### Récupérer l'entrée de co sur le client
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Sur le client on fait
 
@@ -689,13 +743,19 @@ secret =
     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+checker = ssh-keyscan -q -t ecdsa-sha2-nistp256 %%(host)s 2>/dev/null | grep --fixed-strings --line-regexp --quiet --regexp=%%(host)s" %(ssh_fingerprint)s"
+ssh_fingerprint = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 On garde ça au chaud.
 
+</div></details>
+
 ### Ajouter un client au serveur Mandos
 
-On ajoute cette entrée, sur le serveur mandos, tout à la fin de `/etc/mandos/clients.conf`
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+On ajoute cette `entrée de co`, sur le serveur mandos, tout à la fin de `/etc/mandos/clients.conf`
 
 ```bash
 sudo nano /etc/mandos/clients.conf
@@ -703,14 +763,18 @@ sudo nano /etc/mandos/clients.conf
 
 Et dans le fichier, on dé-commente tous les réglages du haut
 
-On ajoute dans notre partie client, on ajoute
+On ajoute notre `entrée de co` dans notre partie client à la fin, mais on retire `checker = ssh-keyscan -q -t ecdsa-sha2-nistp256 %%(host)s 2>/dev/null | grep --fixed-strings --line-regexp --quiet --regexp=%%(host)s" %(ssh_fingerprint)s"`
 
-- `checker = check-ping -4 -H %(host)s` en remplaçant 22 par le port SSH du VPS client
-
-OU Normalement
+On corrige le host de l'`entrée de co` (en utilisant le nom de domaine utilisé par le tunnel CloudFlared)
 
 ```bash
-checker = ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname %h" %(host)s exit
+host = truc.mondomaine.com
+```
+
+et on vire le checker en bas et on remplace le checker du haut (le `DEFAULT`) par
+
+```bash
+checker = sh -c 'ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname %%(host)s" %(host)s exit 2>&1 | grep -q "Permission denied" && exit 0 || exit 1'
 ```
 
 Et on enregistre.
@@ -721,32 +785,11 @@ puis
 sudo systemctl restart mandos
 ```
 
-## Activer un client dans mandos
+</div></details>
 
-On liste les client avec
+### Service systemd sur le client
 
-```bash
-sudo mandos-ctl
-```
-
-```bash
-sudo mandos-ctl --enable vps-xxxxxxxx.xxx.xxx.xxx
-```
-
-Et depuis le client
-
-```bash
-sudo /usr/lib/x86_64-linux-gnu/mandos/plugins.d/mandos-client \
-  --pubkey=/etc/keys/mandos/pubkey.txt \
-  --seckey=/etc/keys/mandos/seckey.txt \
-  --tls-pubkey=/etc/keys/mandos/tls-pubkey.pem \
-  --tls-privkey=/etc/keys/mandos/tls-privkey.pem \
-  --connect=192.0.2.1:13721
-```
-
-S'il retourne la clef, normalement c'est bon
-
-## Service systemd sur le client
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On créé un service systemd
 
@@ -779,7 +822,11 @@ et on fait
 sudo systemctl daemon-reload
 ```
 
-## Changement dans crypttab
+</div></details>
+
+### Changement dans crypttab (sur le client)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Sur le client
 
@@ -793,7 +840,11 @@ on met
 crypt_prod    /dev/loop0    none    luks,noauto
 ```
 
+</div></details>
+
 ### Prioriser notre service systemd pour Mantos devant Docker (sur le client)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On doit dire à docker de se lancer après notre service systemd sur le client
 
@@ -840,63 +891,154 @@ et on gère l'accès
 sudo chmod 0440 /etc/sudoers.d/mandos-ctl
 ```
 
-## Tester le checker sur le serveur Mandos
+</div></details>
+
+### Activer un client dans Mandos
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+On liste les client avec
 
 ```bash
-sudo mandos-ctl --check vps-59944032.vps.ovh.net
-
-sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
-
-et
-
-
-/usr/bin/cloudflared access ssh --hostname vps-59944032.vps.ovh.net
-```
-
-## Activer le killswitch sur serveur mandos
-
-```bash
-sudo mandos-ctl --disable vps-xxxxxxxx.xxx.xxx.xxx
 sudo mandos-ctl
 ```
 
-Et lancer un reboot soit depuis SSH, soit depuis le dashboard du VPS.
-Tout est verrouillé.
+```bash
+sudo mandos-ctl --enable vps-xxxxxxxx.xxx.xxx.xxx
+```
+
+</div></details>
+
+### Désactiver un client dans Mandos
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+On liste les client avec
+
+```bash
+sudo mandos-ctl
+```
+
+```bash
+sudo mandos-ctl --disable vps-xxxxxxxx.xxx.xxx.xxx
+```
+
+</div></details>
+
+### Tester le client (sur le serveur du client)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Pour être sûr que le client se connecte bien à au serveur Mandos, on fait
+
+```bash
+sudo /usr/lib/x86_64-linux-gnu/mandos/plugins.d/mandos-client \
+  --pubkey=/etc/keys/mandos/pubkey.txt \
+  --seckey=/etc/keys/mandos/seckey.txt \
+  --tls-pubkey=/etc/keys/mandos/tls-pubkey.pem \
+  --tls-privkey=/etc/keys/mandos/tls-privkey.pem \
+  --connect=192.0.2.1:13721
+```
+
+Il faut bien remplacer `192.0.2.1` par l'ip du du serveur Mandos.
+
+S'il retourne la clef, cela confirme qu'il est bien authentifié et activé par Mandos.
+
+</div></details>
+
+### Tester le checker (sur le serveur Mandos)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+On lance un check avec
+
+```bash
+sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+```
+
+On peut vérifier ensuite
+
+```bash
+sudo mandos-ctl
+```
+
+On verra `2026-07-20T13:34:05.285460` dans la colonne `Last Successful Check`.
+
+</div></details>
+
+</div></details>
 
 ## Script activation de KillSwitch
 
-Script pour déclencher le KillSwitch
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Sur le serveur Mandos, on récupère le nom du client
 
 ```bash
-MANDOS=(ssh -p xxxx1 harry@xxx.xx.xx.xx1)
-PROD=(ssh -p xxxx2 harry@xxx.xx.xx.xx2)
-CLIENT_NAME="xxx-xxxxxxxx.xxx.xxx.xxx"
+sudo mandos-ctl
+```
 
+Et depuis son ordi, on utilise ceci (en modifiant les valeurs des 3 premières variables)
+
+```bash
+MANDOS_HOST="mandos.mondomaine.com"
+PROD_HOST="hub.mondomaine.com"
+CLIENT_NAME="nom du client"
+
+CONTROL_PATH="$HOME/.ssh/cm-killswitch"
+echo "Connexion au serveur Mandos (clé + TOTP, une seule fois)..."
+ssh -MNf -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST"
 echo -n "Mot de passe sudo (serveur Mandos) : "
 read -s SUDO_PASS
 echo
-
-"${MANDOS[@]}" "sudo -S mandos-ctl --disable $CLIENT_NAME" <<< "$SUDO_PASS" && \
-STATUS=$("${MANDOS[@]}" "sudo -S mandos-ctl" <<< "$SUDO_PASS" | grep "$CLIENT_NAME" | awk '{print $2}') && \
+ssh -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST" "sudo -S mandos-ctl --disable $CLIENT_NAME" <<< "$SUDO_PASS" && \
+STATUS=$(ssh -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST" "sudo -S mandos-ctl" <<< "$SUDO_PASS" | grep "$CLIENT_NAME" | awk '{print $2}') && \
 if [ "$STATUS" = "No" ]; then
   echo ""
   echo "Client bien désactivé, lancement du reboot..."
-  "${PROD[@]}" -t "sudo reboot"
+  ssh "$PROD_HOST" -t "sudo reboot"
 else
   echo "ERREUR: le client n'est pas désactivé (statut: $STATUS), reboot annulé"
 fi
+ssh -O exit -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST" 2>/dev/null
+echo ""
+echo "⚠️  $PROD_HOST est encryptée."
 ```
 
-## Réactiver après KillSwitch
+</div></details>
+
+## Réactivation après encryption
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Sur le serveur Mandos, on récupère le nom du client
 
 ```bash
-ssh -p 53168 harry@xxx.xx.xx.xx2 -t "sudo mandos-ctl --enable xxx-xxxxxxxx.xxx.xxx.xxx"
-ssh -p 53168 harry@xxx.xx.xx.xx2 -t "sudo mandos-ctl"
+sudo mandos-ctl
+```
+
+Et depuis son ordi, on utilise ceci (en modifiant les valeurs des 3 premières variables)
+
+```bash
+MANDOS_HOST="mandos.mondomaine.com"
+CLIENT_NAME="nom du client"
+
+CONTROL_PATH="$HOME/.ssh/cm-killswitch"
+echo "Connexion au serveur Mandos (clé + TOTP, une seule fois)..."
+ssh -MNf -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST"
+ssh -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST" -t "sudo mandos-ctl --enable $CLIENT_NAME"
+ssh -O exit -o ControlPath="$CONTROL_PATH" "$MANDOS_HOST" 2>/dev/null
+echo ""
+echo "⚠️  4 minutes restantes pour se connecter au Dashboard du fournisseur du VPS pour reboot $CLIENT_NAME."
 ```
 
 Regarder qu'il apparaisse bien en `enabled` et rapidement demander le reboot sur le fournisseur du VPS verrouillé.
 
-## Si je me retrouve coincé dehors
+</div></details>
+
+## Si coincé dehors (utilisation KVM)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 On va sur kvm
 
@@ -920,85 +1062,16 @@ sudo mount -a
 
 Voilà, l'accès ssh est disponible (et les volumes sont décryptés surtout).
 
-### Correction Claude pour le cloudflared avec Mandos
+</div></details>
 
-```bash
-sudo nano /etc/mandos/clients.conf
-```
+## Auteur
 
-On corrige le host
+[<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes)
+[**RogerBytes (Harry Richmond)**](https://github.com/RogerBytes)
 
-```bash
-host = hub.rogerbytes.com
-```
+<span hidden>
+<details><summary></summary>
+<style>.spoiler{border-left:4px solid #1abc9c;border-bottom-left-radius:3px;padding-left:10px;padding-top:15px;margin-top:-10px;margin-bottom:15px}.button{cursor:pointer;padding:5px 10px;background-color:#3498db;color:white;border-radius:3px;margin-bottom:5px;display:inline-block;transition:background-color 0.2s}.button:hover{background-color:#217dbb}details[open] .button{background-color:#1abc9c}</style>
+</details></span>
 
-et on vire le checker en bas et on remplace le checker du haut par
-
-```bash
-checker = sh -c 'ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname %%(host)s" %(host)s exit 2>&1 | grep -q "Permission denied" && exit 0 || exit 1'
-```
-
-On relance le service
-
-```bash
-sudo systemctl restart mandos
-```
-
-Et on lance
-
-```bash
-sudo mandos-ctl
-```
-
-On s'en sert pour tester le checker par défaut
-
-```bash
-sudo mandos-ctl --start-checker vps-xxxxxxxxxxxx.vps.ovh.net
-
-sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
-
-
-sudo mandos-ctl --enable vps-59944032.vps.ovh.net
-
-
-sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
-```
-
-Pour débuguer le merdier
-
-```bash
-sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
-sleep 8
-sudo journalctl -u mandos -n 30 --no-pager
-
-
-et ensuite
-
-
-ssh -v -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname hub.rogerbytes.com" hub.rogerbytes.com exit
-echo "Code retour : $?"
-
-
-et le dernier test
-
-ssh -v -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname hub.rogerbytes.com" hub.rogerbytes.com exit
-echo "Code retour : $?"
-
-
-
-
-
-
-sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
-sleep 8
-sudo mandos-ctl
-
-```
-
-
-Pour tester le checker
-
-```bash
-HOSTNAME="hub.rogerbytes.com"
-ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname $HOSTNAME" "$HOSTNAME" exit 2>&1 | grep -q "Permission denied" && echo "Code retour : 0 (succès)" || echo "Code retour : 1 (échec)"
-```
+<p align="right"><a href="#">🔝 Retour en haut</a></p>
