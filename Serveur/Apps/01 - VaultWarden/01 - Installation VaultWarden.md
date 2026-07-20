@@ -79,6 +79,7 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     environment:
+      - DOMAIN=https://vw.mondomaine.com
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=true
       - ADMIN_TOKEN=${ADMIN_TOKEN}
@@ -98,7 +99,7 @@ networks:
     external: true
 ```
 
-Penser à modifier `SMTP_HOST`, `SMTP_FROM`, `SMTP_USERNAME` et `SMTP_PASSWORD`.
+Penser à modifier `DOMAIN`, `SMTP_HOST`, `SMTP_FROM`, `SMTP_USERNAME` et `SMTP_PASSWORD`.
 
 Et enregistrer le fichier.
 

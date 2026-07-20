@@ -26,6 +26,26 @@ L'usage de VaultWarden est assez simple
 - Générer des mots de passe différents pour chaque site ou service
 - Quand c'est possible sur un site ou service, utiliser la fonction TOTP comme méthode de vérification à double facteur, VaultWarden le prend parfaitement en charge
 
+## Import depuis coffre KeePass
+
+- Ouvrir `KeePassXC`, aller dans `Base de données/Exporter` et `Fichier .CSV...`
+  - Mettre le nom du fichier genre `import-temp.csv` et valider, le fichier est créé.
+
+- Ouvrir le client `BitWarden`, aller dans `Import`
+  - Dans `Données / Format de fichier` choisir `KeePassX (csv)`
+  - Cliquer sur `Choisir le fichier` et pointer le fichier `import-temp.csv`
+  - Cliquer sur `Importer`
+
+  - Laisser les options par défaut et cliquer sur `Terminer`
+- Stocker le fichier `*.kdbx` sur la clef USB dédiée et sur votre Cloud personnel
+- Supprimer le fichier `*.json` de BitWarden, et vider la corbeille immédiatement (**indispensable, le fichier est en clair**)
+
+## Merde import
+
+```bash
+pipx install kp2bw
+```
+
 ## Backup
 
 Tous les trimestre il faut faire un backup de VaultWarden, il faut lui faire générer un fichier `.json`.
