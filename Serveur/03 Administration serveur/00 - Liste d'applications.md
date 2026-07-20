@@ -6,10 +6,9 @@
 
 ## Ce qui manque à la stack
 
-1. Sécuriser les compartiments R2 de CloudFlare, retirer le droit de suppression, et activer Bucket Lock (rétention sur 30 jours) pour qu'aucun attaquant puisse effacer les backups distants.
-2. Rajouter le SHA aux compose de services docker
-3. Installation de Lynis (audit de défense comment faire un pentesting en attaque)
-4. chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
+1. Rajouter le SHA aux compose de services docker
+2. Installation de Lynis (audit de défense comment faire un pentesting en attaque)
+3. chkrootkit pour compléter RKHunter, penser à mettre son chron à une heure différente du chron de RKH
 
 ## A faire en premier
 
