@@ -256,12 +256,6 @@ on actualise la configuration de Caddy
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
 ```
 
-Si cela avait été le premier, nous aurions fait
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml restart caddy
-```
-
 Voilà, l'installation est finie.
 
 Garder le token secret, et passer à la partie 2.
