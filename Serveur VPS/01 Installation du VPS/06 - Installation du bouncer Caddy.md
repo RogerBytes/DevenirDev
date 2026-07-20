@@ -210,6 +210,8 @@ sudo nano /opt/docker/caddy/Caddyfile
 
 ```
 
+Attention à bien modifier la ligne `api_key <REMPLACER PAR CLEF API>`
+
 On protège l'accès
 
 ```bash
