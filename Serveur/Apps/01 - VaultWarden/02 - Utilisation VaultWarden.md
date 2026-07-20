@@ -26,7 +26,7 @@ L'usage de VaultWarden est assez simple
 - Générer des mots de passe différents pour chaque site ou service
 - Quand c'est possible sur un site ou service, utiliser la fonction TOTP comme méthode de vérification à double facteur, VaultWarden le prend parfaitement en charge
 
-## Import depuis coffre KeePass
+## Exporter un coffre depuis KeePass
 
 - Ouvrir `KeePassXC`, aller dans `Base de données/Exporter` et `Fichier .CSV...`
   - Mettre le nom du fichier genre `import-temp.csv` et valider, le fichier est créé.
@@ -36,19 +36,12 @@ L'usage de VaultWarden est assez simple
   - Cliquer sur `Importer`
   - Laisser les options par défaut et cliquer sur `Terminer`
 
-## Backup
+## Exporter depuis le client BitWarden
 
-Tous les trimestre il faut faire un backup de VaultWarden, il faut lui faire générer un fichier `.json`.
+- Ouvrir le client `BitWarden`, aller dans `Fichier/Export` choisir `.json (Encrypted)` et `Protégé par mot de passe`, mettre son mdp KeePassXC.
+- Enregistrer le fichier au format `.json`, il est encrypté, donc pas besoin de le transformer en fichier KeePass (et il est compatible avec KeePassXC)
 
-- Ouvrir `KeePassXC`, aller dans `Base de données/Importer...` et dans `Choix du fichier à importer` choisir `Bitwarden (.json)`
-  - À côté de `Fichier à importer`, cliquer sur `Parcourir...` et pointez vers le fichier `*.json`
-  - Mettre le mot de passe KeePassXC habituel (faites attention)
-  - Laisser l'option `Nouvelle base de données`
-  - Cliquer sur `Continuer`
-  - Dans la nouvelle fenêtre nommez votre base de données et ajouter au nom la date
-  - Cliquer sur `Continuer`
-  - Laisser les options par défaut et cliquer sur `Terminer`
-- Stocker le fichier `*.kdbx` sur la clef USB dédiée et sur votre Cloud personnel
-- Supprimer le fichier `*.json` de BitWarden, et vider la corbeille immédiatement (**indispensable, le fichier est en clair**)
+### Où stocker le backup
 
-Nous avons ainsi 2 endroits différents pour notre backup.
+- Garder un fichier `*json` de backup sur Cloud personnel
+- Garder un fichier `*json` sur une clef USB
