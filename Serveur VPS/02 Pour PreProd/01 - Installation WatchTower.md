@@ -1,4 +1,4 @@
-# 08 - Installation WatchTower
+# 01 - Installation WatchTower
 
 C'est à installer sur un VPS de **PreProd**, ne **pas l'installer en prod**, et en pre prod ne pas vérifier les compose avec SHA pinning, sinon il ne fera pas.
 
