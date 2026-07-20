@@ -704,7 +704,7 @@ Et dans le fichier, on dé-commente tous les réglages du haut
 
 On ajoute dans notre partie client, on ajoute
 
-- `checker = fping -q -- %(host)s || nc -z -w 5 %(host)s 22` en remplaçant 22 par le port SSH du VPS client
+- `checker = check-ping -4 -H %(host)s` en remplaçant 22 par le port SSH du VPS client
 
 OU Normalement
 
@@ -839,8 +839,6 @@ et on gère l'accès
 sudo chmod 0440 /etc/sudoers.d/mandos-ctl
 ```
 
-## paramétrer
-
 ## Tester le checker sur le serveur Mandos
 
 ```bash
@@ -920,3 +918,86 @@ sudo mount -a
 ```
 
 Voilà, l'accès ssh est disponible (et les volumes sont décryptés surtout).
+
+### Correction Claude pour le cloudflared avec Mandos
+
+```bash
+sudo nano /etc/mandos/clients.conf
+```
+
+On corrige le host
+
+```bash
+host = hub.rogerbytes.com
+```
+
+et on vire le checker en bas et on remplace le checker du haut par
+
+```bash
+checker = sh -c 'ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname %%(host)s" %(host)s exit 2>&1 | grep -q "Permission denied" && exit 0 || exit 1'
+```
+
+On relance le service
+
+```bash
+sudo systemctl restart mandos
+```
+
+Et on lance
+
+```bash
+sudo mandos-ctl
+```
+
+On s'en sert pour tester le checker par défaut
+
+```bash
+sudo mandos-ctl --start-checker vps-xxxxxxxxxxxx.vps.ovh.net
+
+sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+
+
+sudo mandos-ctl --enable vps-59944032.vps.ovh.net
+
+
+sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+```
+
+Pour débuguer le merdier
+
+```bash
+sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+sleep 8
+sudo journalctl -u mandos -n 30 --no-pager
+
+
+et ensuite
+
+
+ssh -v -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname hub.rogerbytes.com" hub.rogerbytes.com exit
+echo "Code retour : $?"
+
+
+et le dernier test
+
+ssh -v -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname hub.rogerbytes.com" hub.rogerbytes.com exit
+echo "Code retour : $?"
+
+
+
+
+
+
+sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+sleep 8
+sudo mandos-ctl
+
+```
+
+
+Pour tester le checker
+
+```bash
+HOSTNAME="hub.rogerbytes.com"
+ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 -o ProxyCommand="/usr/bin/cloudflared access ssh --hostname $HOSTNAME" "$HOSTNAME" exit 2>&1 | grep -q "Permission denied" && echo "Code retour : 0 (succès)" || echo "Code retour : 1 (échec)"
+```

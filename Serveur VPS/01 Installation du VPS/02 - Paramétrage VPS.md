@@ -479,19 +479,29 @@ On crée le tunnel avec (on peut remplacer `tunnel-truc` parce que l'on souhaite
 cloudflared tunnel create tunnel-truc
 ```
 
-On récupère l'id suivant le `Created tunnel tunnel-prod with id`, c'est l'id du tunnel. Le tunnel sera visible via `cloudflared tunnel list`, et retirable via `cloudflared tunnel delete tunnel-prod`
+On récupère l'id suivant le `Created tunnel tunnel-prod with id`, c'est l'id du tunnel. Le tunnel sera visible via `cloudflared tunnel list`, et retirable via `cloudflared tunnel delete tunnel-truc`
 
-On crée le fichier `~/.cloudflared/config.yml`
+On créé la migration de la configuration (par la suite on encryptera le répertoire `/home`, bloquant ainsi l'accès si l'on ne change pas de répertoire), et penser à remplacer `paul`, par le nom de l'user
 
 ```bash
-nano ~/.cloudflared/config.yml
+TUNNEL_ID="ID-DU-TUNNEL"
+sudo mkdir -p /etc/cloudflared
+sudo mv /home/paul/.cloudflared/${TUNNEL_ID}.json /etc/cloudflared/
+sudo chown root:root /etc/cloudflared/${TUNNEL_ID}.json
+sudo chmod 600 /etc/cloudflared/${TUNNEL_ID}.json
+```
+
+On crée le fichier `/etc/cloudflared/config.yml`
+
+```bash
+sudo nano /etc/cloudflared/config.yml
 ```
 
 et on lui met
 
 ```bash
 tunnel: ID-DU-TUNNEL
-credentials-file: /home/paul/.cloudflared/ID-DU-TUNNEL.json
+credentials-file: /etc/cloudflared/ID-DU-TUNNEL.json
 
 ingress:
   - hostname: sousdomaine.mondomaine.com
@@ -504,19 +514,19 @@ On remplace le nom de domaine et le port par ce qu'il faut (pareil pour l'user),
 On lui règle les droit d'accès pour éviter la lecture en dehors de root
 
 ```bash
-chmod 600 ~/.cloudflared/config.yml
+sudo chmod 600 /etc/cloudflared/config.yml
 ```
 
 Puis on crée l'entrée DNS automatiquement
 
 ```bash
-cloudflared tunnel route dns --overwrite-dns tunnel-prod sousdomaine.mondomaine.com
+cloudflared tunnel route dns --overwrite-dns tunnel-truc sousdomaine.mondomaine.com
 ```
 
 Puis on crée un service system
 
 ```bash
-sudo cloudflared --config ~/.cloudflared/config.yml service install
+sudo cloudflared --config /etc/cloudflared/config.yml service install
 ```
 
 Et on le lance
@@ -674,7 +684,7 @@ On relance UFW pour activer les réglages.
 sudo ufw reload
 ```
 
-On limite ainsi grandement la surface d'attaque. Il n'y a qu'un port totalement ouvert (le SSH) depuis l'extérieur, et les ports http et https fonctionnent sur le principe d'une liste blanche (empêchant même quelqu'un ayant l'ip de tenter de se connecter sans passer par CloudFlare).
+On limite ainsi grandement la surface d'attaque. Il n'y a aucun port totalement ouvert depuis l'extérieur, et les ports http et https fonctionnent sur le principe d'une liste blanche (empêchant même quelqu'un ayant l'ip de tenter de se connecter sans passer par CloudFlare).
 
 </div></details>
 
@@ -722,10 +732,6 @@ Lancer la configuration
 google-authenticator
 ```
 
-```bash
-chmod 600 /home/harry/.google_authenticator
-```
-
 L'outil va poser plusieurs questions dans le terminal.
 
 - `Do you want authentication tokens to be time-based (y/n)` Taper `y`, on récupère le secret et on le met dans KeePassXC ou Bitwarden en TOTP, on lui passe me mdp à 6 chiffres du TOTP, et garder les codes recovery
@@ -733,6 +739,14 @@ L'outil va poser plusieurs questions dans le terminal.
 - `Do you want to disallow multiple uses of the same authentication... (y/n)` Taper `y`
 - `By default, a new token is generated every 30 seconds by the mobile app ... (y/n)` Taper `y`
 - `If the computer that you are logging into isn't hardened ... (y/n)` Taper `y`
+
+On protège l'accès
+
+```bash
+chmod 600 /home/paul/.google_authenticator
+```
+
+Penser à remplacer `paul` par le nom de l'user.
 
 ### Configurer le système d'authentification (PAM)
 
@@ -936,7 +950,7 @@ C'est un outil léger et moderne pour monitorer le serveur, il suffit de taper `
 On peut afficher l'état de la machine avec cette commande (pensez à modifier `49152`, `192.0.2.1` et `paul`)
 
 ```bash
-ssh -t -p 49152 paul@192.0.2.1 "btop"
+ssh -t paul@soudomaine.mondomaine.com "btop"
 ```
 
 </div></details>
@@ -1037,8 +1051,6 @@ On peut faire une recherche avec `Ctrl + W` pour dé-commenter/modifier ces lign
 //Unattended-Upgrade::Automatic-Reboot "false";
 ```
 
-et Pour
-
 `//Unattended-Upgrade::Mail "";` dé-commenter et mettre le mail sur lequel on veut l'alerte d'erreur de màj.
 
 On a activé et configuré les **mises à jour de sécurité automatiques** pour que le VPS se protège tout seul des failles (en installant les màj) en arrière-plan, tout en nettoyant ses fichiers inutiles et en lui interdisant de redémarrer sans ton autorisation.
@@ -1080,10 +1092,16 @@ C'est qu'aucun reboot n'est requis.
 sudo rkhunter --check -sk
 ```
 
-On valide nos changements (la création de l'user, les changements des users root et debian)
+On valide nos changements (la création de l'user, les changements des users root et debian qui provoquent des warning)
 
 ```bash
 sudo rkhunter --propupd
+```
+
+on refait le scan
+
+```bash
+sudo rkhunter --check -sk
 ```
 
 Pour lire le résultat
