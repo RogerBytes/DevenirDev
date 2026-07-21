@@ -77,6 +77,14 @@ sudo nala update
 sudo nala install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
+S'il y a un message `Notice: The following packages require a reboot.`
+
+On fait le reboot
+
+```bash
+sudo reboot
+```
+
 On vérifie ensuite que Docker tourne
 
 ```bash
