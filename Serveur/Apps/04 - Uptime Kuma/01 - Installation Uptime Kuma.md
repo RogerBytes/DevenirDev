@@ -85,7 +85,7 @@ A la fin du document (`ALT + /`), dans la partie `Redirection de domaines` colle
 
 ```text
 uptime.mondomaine.com {
-    import fail2ban_logs
+    import crowdsec_bouncer
     reverse_proxy uptime-kuma:3001
 }
 ```
