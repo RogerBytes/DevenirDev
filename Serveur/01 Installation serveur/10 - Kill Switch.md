@@ -470,7 +470,7 @@ Le fait que l'on lise `proto dhcp` à la première ligne `default` est la certit
 
 </div></details>
 
-### Ajout d'un fallback
+### Ajout d'un fallback sur le client
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
