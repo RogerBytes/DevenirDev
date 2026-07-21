@@ -555,7 +555,7 @@ Voilà, le KillSwitch faible est paramétré !
 
 Maintenant qu'on a les bases, on va passer à la suite et utiliser un autre serveur qui va pouvoir automatiquement encrypter le serveur client (le serveur de prod par exemple).
 
-### Compatibilité avec Mandos
+### Compatibilité avec Mandos (sur le client)
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
