@@ -331,11 +331,13 @@ On recharge initramfs
 
 ```bash
 sudo systemctl daemon-reload
+cd ~
+pwd
 sudo update-initramfs -u -k all
 sudo systemctl daemon-reload
 ```
 
-Les erreurs lors de l'update initramfs sont sans importance.
+Les éventuelles erreurs `sh: 0: getcwd() failed: No such file or directory` lors de l'update initramfs sont sans importance.
 
 Et activer le service
 
