@@ -459,6 +459,65 @@ sudo reboot now
 
 </div></details>
 
+### Voir espace utilisé sur le serveur
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+#### Voir espace disque et points de montage
+
+```bash
+df -h -x tmpfs -x devtmpfs
+```
+
+Il retourne
+
+```bash
+$ df -h -x tmpfs -x devtmpfs
+Filesystem                             Size  Used Avail Use% Mounted on
+/dev/sda1                               74G   63G  8.5G  88% /
+/dev/sda15                             124M  8.9M  115M   8% /boot/efi
+/dev/mapper/vg_prod-lv_docker_opt      974M  2.0M  905M   1% /opt/docker
+/dev/mapper/vg_prod-lv_containerd_lib   19G  1.5G   17G   9% /var/lib/containerd
+/dev/mapper/vg_prod-lv_docker_lib       15G  172M   14G   2% /var/lib/docker
+/dev/mapper/vg_prod-lv_home            974M  384K  906M   1% /home
+```
+
+C'est impeccable, un peu plus de 8 Go pour le système est un excellent compromis, sans non plus avoir une perte d'espace sur le support de stockage.
+
+#### Voir espace disque des volumes chiffrés
+
+```bash
+df -h | grep -E "docker|home|containerd"
+```
+
+Il retourne
+
+```bash
+$ df -h | grep -E "docker|home|containerd"
+/dev/mapper/vg_prod-lv_docker_opt      974M  2.0M  905M   1% /opt/docker
+/dev/mapper/vg_prod-lv_containerd_lib   19G  1.5G   17G   9% /var/lib/containerd
+/dev/mapper/vg_prod-lv_docker_lib       15G  172M   14G   2% /var/lib/docker
+/dev/mapper/vg_prod-lv_home            974M  384K  906M   1% /home
+```
+
+#### Afficher la mémoire non allouée avec
+
+```bash
+sudo vgs vg_prod
+```
+
+Il retourne
+
+```bash
+$ sudo vgs vg_prod
+  VG      #PV #LV #SN Attr   VSize  VFree
+  vg_prod   1   4   0 wz--n- 59.98g 23.98g
+```
+
+Si jamais les volumes chiffrés se remplissent trop, on a 24 Go en reserve.
+
+</div></details>
+
 ### Cassé KVM et réparation
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
