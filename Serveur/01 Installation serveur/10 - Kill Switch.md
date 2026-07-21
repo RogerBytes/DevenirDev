@@ -855,7 +855,7 @@ sudo mkdir -p /etc/systemd/system/docker.service.d/
 sudo nano /etc/systemd/system/docker.service.d/override.conf
 ```
 
-y coller à la fin
+y coller
 
 ```bash
 [Unit]
@@ -955,7 +955,7 @@ S'il retourne la clef, cela confirme qu'il est bien authentifié et activé par 
 On lance un check avec
 
 ```bash
-sudo mandos-ctl --start-checker vps-59944032.vps.ovh.net
+sudo mandos-ctl --start-checker nom-du-client
 ```
 
 On peut vérifier ensuite
