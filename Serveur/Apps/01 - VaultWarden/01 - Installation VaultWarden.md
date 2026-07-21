@@ -167,6 +167,14 @@ On règle l'accès
 sudo chmod 600 /opt/docker/apps/vaultwarden/compose.yml
 ```
 
+### Création du conteneur
+
+Et on lance le `compose up`
+
+```bash
+sudo docker compose up -d
+```
+
 ### Générer une clef secrète pour VaultWarden
 
 ```bash
@@ -184,7 +192,7 @@ sudo docker exec -it vaultwarden /vaultwarden hash
 et récupérer la ligne
 
 ```yml
-ADMIN_TOKEN='$argon2id$v=19$m=65540,t=3,p=4$ysIF9qGecYGRkS9Fr1UhzqhnCBi1Tl4axpbc4u5ytE8$S2n7CVZKYv8vRYuL8VYKukqb6J1/oXPDyAdpHFuyNfU'
+ADMIN_TOKEN='$argon2id$v=19$m=65540,t=3,p=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 ```
 
 ### Mettre le token dans un .env
@@ -199,12 +207,10 @@ Et on copie toute la ligne hashée (y compris "ADMIN_TOKEN=(...)")
 sudo chmod 600 /opt/docker/apps/vaultwarden/.env
 ```
 
-## Création du conteneur
-
-Et on lance le `compose up`
+## Recréation du conteneur
 
 ```bash
-sudo docker compose up -d
+sudo docker compose up -d --force-recreate
 ```
 
 On vérifie le statut du conteneur (permet aussi de voir le port interne qu'utilisera le reverse proxy de Caddy)
