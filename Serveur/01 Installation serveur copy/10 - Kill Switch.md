@@ -14,7 +14,7 @@ Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de 
 
 Informations principales
 
-- `/var/lib/docker`, `/var/lib/containerd`, `/opt/docker` et `/home/` : Chemins des répertoires que l'on va encrypter
+- `/var/lib/docker`, `/var/lib/docker`, `/opt/docker` et `/home/` : Chemins des répertoires que l'on va encrypter
 - `/dev/mapper/crypt_prod` : Conteneur LUKS
 - `vg_prod` : Volume Group LVM
 - `/var/lib/docker`, `lv_home` et `lv_docker_opt` : Logical Volumes
@@ -40,14 +40,14 @@ sda       8:0    0   75G  0 disk
 └─sda15   8:15   0  124M  0 part /boot/efi
 ```
 
-Donc on va créer un fichier conteneur de 60Go (laissant 14.9 Go pour debian, ce qui est amplement suffisant)
+Donc on va créer un fichier conteneur de 50Go (laissant 24.9 Go pour debian)
 
 ### Création et association du fichier conteneur au Loop Device /dev/loop0
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
-sudo fallocate -l 60G /luks.img
+sudo fallocate -l 50G /luks.img
 sudo chmod 600 /luks.img
 sudo losetup /dev/loop0 /luks.img
 ```
@@ -66,7 +66,7 @@ Ainsi que sa taille
 ls -lh /luks.img
 ```
 
-Il doit retourner `-rw------- 1 root root 60G Jul 15 15:35 /luks.img`
+Il doit retourner `-rw------- 1 root root 50G Jul 15 15:35 /luks.img`
 
 </div></details>
 
@@ -150,47 +150,18 @@ sudo vgcreate vg_prod /dev/mapper/crypt_prod
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-Vu qu'on a 60 GO, on met 19Go à containerd, 15Go aux lib docker, 1Go au repertoire opt, et 1Go au repertoire home
+Vu qu'on a 50 GO, on va laisser 40Go au lib docker, et 8Go au repertoire opt, tout le reste ira sur home
 
 ```bash
-sudo lvcreate -L 19G -n lv_containerd_lib vg_prod
-sudo lvcreate -L 15G -n lv_docker_lib vg_prod
-sudo lvcreate -L 1G -n lv_docker_opt vg_prod
-sudo lvcreate -L 1G -n lv_home vg_prod
+sudo lvcreate -L 40G -n lv_docker_lib vg_prod
 ```
 
-Il nous reste encore 24 Go de libre sur le volume `luks.img`
-
-#### Agrandir un volume (à chaud, sans coupure)
-
-Par exemple, on pourrait en ajouter sur `lv_docker_lib` avec (on peut le faire à chaud, ça ne pose aucun souci)
-
 ```bash
-sudo lvextend -L +5G -r /dev/vg_prod/lv_docker_lib
+sudo lvcreate -L 8G -n lv_docker_opt vg_prod
 ```
 
-#### Diminuer un volume (À froid, avec arrêt du service)
-
-Pour réduire un volume (ex: -5 Go sur Docker `/var/lib/docker` qui contient les DB et les volumes nommés)
-
 ```bash
-# 1. Arrêter Docker et son socket pour libérer le volume
-sudo systemctl stop docker.socket docker
-
-# 2. Démonter le volume
-sudo umount /var/lib/docker
-
-# 3. Vérifier l'intégrité du système de fichiers (obligatoire avant de réduire)
-sudo e2fsck -f /dev/vg_prod/lv_docker_lib
-
-# 4. Réduire le système de fichiers ET le volume LVM ensemble (-r)
-sudo lvreduce -L -5G -r /dev/vg_prod/lv_docker_lib
-
-# 5. Remonter le volume
-sudo mount /dev/vg_prod/lv_docker_lib /var/lib/docker
-
-# 6. Relancer Docker
-sudo systemctl start docker
+sudo lvcreate -l 100%FREE -n lv_home vg_prod
 ```
 
 </div></details>
@@ -203,7 +174,6 @@ sudo systemctl start docker
 sudo mkfs.ext4 /dev/vg_prod/lv_docker_lib
 sudo mkfs.ext4 /dev/vg_prod/lv_docker_opt
 sudo mkfs.ext4 /dev/vg_prod/lv_home
-sudo mkfs.ext4 /dev/vg_prod/lv_containerd_lib
 ```
 
 On vérifie que les répertoires sources existent
@@ -212,7 +182,7 @@ On vérifie que les répertoires sources existent
 ls -ld /home /opt/docker /var/lib/docker 2>/dev/null
 ```
 
-Ca retourne (A EDITER POUR AJOUTER CELUI MANQUANT)
+Ca retourne
 
 ```bash
 drwxr-xr-x  4 root root 4096 Jul 14 00:34 /home
@@ -229,7 +199,7 @@ drwx--x--- 12 root root 4096 Jul 14 00:50 /var/lib/docker
 On crée les dossier temp de transfert
 
 ```bash
-sudo mkdir -p /mnt/temp_home /mnt/temp_lib /mnt/temp_opt /mnt/temp_containerd_lib
+sudo mkdir -p /mnt/temp_home /mnt/temp_lib /mnt/temp_opt
 ```
 
 On connecte les partitions sur les repertoires temporaires
@@ -238,22 +208,20 @@ On connecte les partitions sur les repertoires temporaires
 sudo mount /dev/vg_prod/lv_home /mnt/temp_home
 sudo mount /dev/vg_prod/lv_docker_lib /mnt/temp_lib
 sudo mount /dev/vg_prod/lv_docker_opt /mnt/temp_opt
-sudo mount /dev/vg_prod/lv_containerd_lib /mnt/temp_containerd_lib
 ```
 
 On arrête Docker
 
 ```bash
-sudo systemctl stop docker docker.socket containerd
+sudo systemctl stop docker docker.socket
 ```
 
-On copie les données vers le stockage chiffré (en passant par les montages temporaires)
+On copie les données vers le stockage chiffré
 
 ```bash
 sudo cp -a /home/. /mnt/temp_home/
 sudo cp -a /var/lib/docker/. /mnt/temp_lib/
 sudo cp -a /opt/docker/. /mnt/temp_opt/
-sudo cp -a /var/lib/containerd/. /mnt/temp_containerd_lib/
 ```
 
 Et on démonte les répertoire temporaires
@@ -262,7 +230,6 @@ Et on démonte les répertoire temporaires
 sudo umount /mnt/temp_home
 sudo umount /mnt/temp_lib
 sudo umount /mnt/temp_opt
-sudo umount /mnt/temp_containerd_lib
 ```
 
 On vide les repertoires d'origine
@@ -271,7 +238,6 @@ On vide les repertoires d'origine
 sudo find /home -mindepth 1 -delete
 sudo find /opt/docker -mindepth 1 -delete
 sudo find /var/lib/docker -mindepth 1 -delete
-sudo find /var/lib/containerd -mindepth 1 -delete
 ```
 
 On ignore les `permission denied` de starship
@@ -287,13 +253,12 @@ et on lance le montage
 sudo mount /dev/vg_prod/lv_home /home
 sudo mount /dev/vg_prod/lv_docker_lib /var/lib/docker
 sudo mount /dev/vg_prod/lv_docker_opt /opt/docker
-sudo mount /dev/vg_prod/lv_containerd_lib /var/lib/containerd
 ```
 
 Et on démarre Docker
 
 ```bash
-sudo systemctl start containerd docker
+sudo systemctl start docker
 ```
 
 Les partitions sont montées en mémoire vive et ça fonctionne (on voir le prompt starship de nouveau comme avant)
@@ -316,10 +281,9 @@ Et on ajoute nos montage au fstab
 sudo tee -a /etc/fstab <<EOF
 
 # Partitions chiffrées LVM de production
-/dev/mapper/vg_prod-lv_home             /home                 ext4    defaults,noatime,nofail    0    2
-/dev/mapper/vg_prod-lv_docker_lib       /var/lib/docker       ext4    defaults,noatime,nofail    0    2
-/dev/mapper/vg_prod-lv_docker_opt       /opt/docker           ext4    defaults,noatime,nofail    0    2
-/dev/mapper/vg_prod-lv_containerd_lib   /var/lib/containerd   ext4    defaults,noatime,nofail    0    2
+/dev/mapper/vg_prod-lv_home        /home            ext4    defaults,noatime,nofail    0    2
+/dev/mapper/vg_prod-lv_docker_lib  /var/lib/docker  ext4    defaults,noatime,nofail    0    2
+/dev/mapper/vg_prod-lv_docker_opt  /opt/docker      ext4    defaults,noatime,nofail    0    2
 EOF
 ```
 
@@ -400,10 +364,9 @@ On inspecte les anciens dossiers
 sudo ls -la /mnt/verif_racine/home
 sudo ls -la /mnt/verif_racine/var/lib/docker
 sudo ls -la /mnt/verif_racine/opt/docker
-sudo ls -la /mnt/verif_racine/var/lib/containerd
 ```
 
-Si c'est vide, il est censé retourner (E EDITER POUR AJOUTER LE RETOURE POUR CONTENERD)
+Si c'est vide, il est censé retourner
 
 ```bash
 $ sudo ls -la /mnt/verif_racine/opt/docker
@@ -434,10 +397,10 @@ sudo rmdir /mnt/verif_racine
 Normalement on peut faire le reboot, si on ne peut plus se co en SSH, c'est que ça ne décrypte pas ou ne monte pas les volumes.
 
 ```bash
-df -h | grep -E "docker|home|containerd"
+df -h | grep -E "docker|home"
 ```
 
-il retourne (E EDITER POUR AJOUTER LE RETOURE POUR CONTENERD)
+il retourne
 
 ```bash
 $ $df -h | grep -E "docker|home"
