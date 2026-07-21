@@ -390,7 +390,6 @@ Pour les comptes non admin, ne donnez pas d'accès sudo !
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 Modifiez les variables au besoin, ce script permet d'ajouter la clef de récupération au nouvel utilisateur (il ne faudra jamais la retirer sous peine de perdre tout accès), la connexion par mot de passe étant à bannir.
-Le script doit être lancé **depuis votre ordinateur** !
 
 ```bash
 username=paul
@@ -419,7 +418,6 @@ ssh paul@192.0.2.1
 
 Voici l'outil final d'admin pour l'user, ici c'est pour un user `robert`, mais on peut s'en servir pour ajouter la clef locale au compte que l'on vient de créer (en remplaçant `robert` par `paul` et en changeant le chemin de la clef publique par `~/.ssh/id_ed25519.pub`).
 Ce script fonctionnera une fois que CloudFlared sera activé.
-Le script doit être lancé **depuis votre ordinateur** !
 
 ```bash
 username=robert
@@ -473,12 +471,6 @@ cloudflared tunnel login
 
 Ouvrir le lien dans le navigateur, et choisir le domaine à associer.
 
-On gère les accès au fichier
-
-```bash
-chmod 600 ~/.cloudflared/cert.pem
-```
-
 ### Création du tunnel sur le serveur
 
 On crée le tunnel avec (on peut remplacer `tunnel-truc` parce que l'on souhaite)
@@ -489,12 +481,12 @@ cloudflared tunnel create tunnel-truc
 
 On récupère l'id suivant le `Created tunnel tunnel-prod with id`, c'est l'id du tunnel. Le tunnel sera visible via `cloudflared tunnel list`, et retirable via `cloudflared tunnel delete tunnel-truc`
 
-On créé la migration de la configuration (par la suite on encryptera le répertoire `/home`, bloquant ainsi l'accès si l'on ne change pas de répertoire)
+On créé la migration de la configuration (par la suite on encryptera le répertoire `/home`, bloquant ainsi l'accès si l'on ne change pas de répertoire), et penser à remplacer `paul`, par le nom de l'user
 
 ```bash
 TUNNEL_ID="ID-DU-TUNNEL"
 sudo mkdir -p /etc/cloudflared
-sudo mv ~/.cloudflared/${TUNNEL_ID}.json /etc/cloudflared/
+sudo mv /home/paul/.cloudflared/${TUNNEL_ID}.json /etc/cloudflared/
 sudo chown root:root /etc/cloudflared/${TUNNEL_ID}.json
 sudo chmod 600 /etc/cloudflared/${TUNNEL_ID}.json
 ```
@@ -751,8 +743,10 @@ L'outil va poser plusieurs questions dans le terminal.
 On protège l'accès
 
 ```bash
-chmod 600 ~/.google_authenticator
+chmod 600 /home/paul/.google_authenticator
 ```
+
+Penser à remplacer `paul` par le nom de l'user.
 
 ### Configurer le système d'authentification (PAM)
 
@@ -878,6 +872,10 @@ sudo truncate -s 0 /home/debian/.ssh/authorized_keys
 ```
 
 On valide les changements de mdp du côté de RKHunter avec
+
+```bash
+sudo rkhunter --propupd
+```
 
 Voilà, l'utilisateur `debian` est proprement verrouillé.
 
@@ -1051,10 +1049,9 @@ On peut faire une recherche avec `Ctrl + W` pour dé-commenter/modifier ces lign
 ```text
 //Unattended-Upgrade::Remove-Unused-Dependencies "false";
 //Unattended-Upgrade::Automatic-Reboot "false";
-//Unattended-Upgrade::Mail ""
 ```
 
-Dé-commenter et mettre le mail sur lequel on veut l'alerte d'erreur de màj.
+`//Unattended-Upgrade::Mail "";` dé-commenter et mettre le mail sur lequel on veut l'alerte d'erreur de màj.
 
 On a activé et configuré les **mises à jour de sécurité automatiques** pour que le VPS se protège tout seul des failles (en installant les màj) en arrière-plan, tout en nettoyant ses fichiers inutiles et en lui interdisant de redémarrer sans ton autorisation.
 
@@ -1082,18 +1079,6 @@ ls: cannot access '/var/run/reboot-required': No such file or directory
 ```
 
 C'est qu'aucun reboot n'est requis.
-
-</div></details>
-
-## Changement du Mot D'Accueil
-
-<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
-
-```bash
-sudo nano /etc/motd
-```
-
-Et récupérer l'ascii sur [cette page](https://patorjk.com/software/taag/#p=display&f=Tmplr&t=Test&x=none&v=4&h=4&w=80&we=false).
 
 </div></details>
 
@@ -1130,6 +1115,18 @@ Il faut aussi vérifier les `Warnings` (je conseille grandement de les corriger 
 ```bash
 sudo tail -n 100 /var/log/rkhunter.log | grep -i "warning"
 ```
+
+</div></details>
+
+## Changement du Mot D'Accueil
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+```bash
+sudo nano /etc/motd
+```
+
+Et récupérer l'ascii sur [cette page](https://patorjk.com/software/taag/#p=display&f=Tmplr&t=Test&x=none&v=4&h=4&w=80&we=false).
 
 </div></details>
 

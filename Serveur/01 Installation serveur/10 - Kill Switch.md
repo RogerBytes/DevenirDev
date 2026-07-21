@@ -1,4 +1,4 @@
-# 11 - Kill Switch
+# 10 - Kill Switch
 
 Pour plus de sécurité, nous allons mettre en place un système de Kill Switch, permettant ainsi d'avoir une politique de la terre brûlée en cas de compromission (qui se lancera automatiquement).
 
@@ -40,14 +40,14 @@ sda       8:0    0   75G  0 disk
 └─sda15   8:15   0  124M  0 part /boot/efi
 ```
 
-Donc on va créer un fichier conteneur de 60Go (laissant 14.9 Go pour debian)
+Donc on va créer un fichier conteneur de 50Go (laissant 24.9 Go pour debian)
 
 ### Création et association du fichier conteneur au Loop Device /dev/loop0
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
-sudo fallocate -l 60G /luks.img
+sudo fallocate -l 50G /luks.img
 sudo chmod 600 /luks.img
 sudo losetup /dev/loop0 /luks.img
 ```
@@ -66,7 +66,7 @@ Ainsi que sa taille
 ls -lh /luks.img
 ```
 
-Il doit retourner `-rw------- 1 root root 60G Jul 15 15:35 /luks.img`
+Il doit retourner `-rw------- 1 root root 50G Jul 15 15:35 /luks.img`
 
 </div></details>
 
@@ -150,10 +150,10 @@ sudo vgcreate vg_prod /dev/mapper/crypt_prod
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
-Vu qu'on a 60 GO, on va laisser 50Go au lib docker, et 8Go au repertoire opt, tout le reste ira sur home
+Vu qu'on a 50 GO, on va laisser 40Go au lib docker, et 8Go au repertoire opt, tout le reste ira sur home
 
 ```bash
-sudo lvcreate -L 50G -n lv_docker_lib vg_prod
+sudo lvcreate -L 40G -n lv_docker_lib vg_prod
 ```
 
 ```bash

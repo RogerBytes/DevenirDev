@@ -7,49 +7,126 @@
 
 ## Prérequis
 
-### Création de l'image personnalisée de Caddy
+### Fichier de logs de Caddy
+
+```bash
+sudo mkdir -p /opt/docker/caddy/logs/
+sudo touch /opt/docker/caddy/logs/access.log
+```
+
+### Paramétrage du bouncer de pare-feu de Crowdsec
+
+On va ajouter le fichier de log de caddy
+
+```bash
+sudo nano /opt/docker/crowdsec/config/acquis.yaml
+```
+
+Pour que ça ressemble à
+
+```yml
+filenames:
+  - /var/log/auth.log
+labels:
+  type: syslog
+---
+filenames:
+  - /opt/docker/caddy/logs/access.log
+labels:
+  type: caddy
+```
+
+### Ajout du fichier de log au conteneur crowdsec
+
+```bash
+sudo rm -f /opt/docker/crowdsec/compose.yml
+sudo nano /opt/docker/crowdsec/compose.yml
+```
+
+Il faut lui ajouter `- /opt/docker/caddy/logs:/opt/docker/caddy/logs:ro` comme volume, et `crowdsecurity/caddy` dans la collection
+
+```yml
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: "crowdsecurity/sshd crowdsecurity/linux crowdsecurity/caddy"
+    volumes:
+      - /opt/docker/crowdsec/config/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - /opt/docker/crowdsec/data:/var/lib/crowdsec/data
+      - /var/log/auth.log:/var/log/auth.log:ro
+      - /opt/docker/caddy/logs:/opt/docker/caddy/logs:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+```
+
+Et on redémarre le conteneur Crowdsec
+
+```bash
+cd /opt/docker/crowdsec
+sudo docker compose up -d --force-recreate
+```
+
+### Préparation du répertoire et Caddyfile
+
+On se rend dans `opt/docker`, **ATTENTION À NE PAS RESTER DANS LE REPERTOIRE DE CROWDSEC**
 
 ```bash
 cd /opt/docker/caddy
 ```
 
-et on fait le fichier Dockerfile (depuis [cette page github](https://github.com/hslatman/caddy-crowdsec-bouncer/blob/main/README.md))
+On créé le `Caddyfile`
 
 ```bash
-sudo nano Dockerfile
+sudo nano Caddyfile
 ```
 
-```dockerfile
-ARG CADDY_VERSION=2
+On y colle
 
-FROM caddy:${CADDY_VERSION}-builder-alpine AS builder
+```text
+# --------------- Réglages globaux --------------- #
+{
+        servers {
+                # Permet à Caddy de reconnaître la vraie IP du visiteur derrière Cloudflare.
+                trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+        }
+}
 
-RUN xcaddy build \
-    --with github.com/mholt/caddy-l4 \
-    --with github.com/caddyserver/transform-encoder \
-    --with github.com/hslatman/caddy-crowdsec-bouncer/http@main \
-    --with github.com/hslatman/caddy-crowdsec-bouncer/appsec@main \
-    --with github.com/hslatman/caddy-crowdsec-bouncer/layer4@main
+(crowdsec_logs) {
+        log {
+                output file /var/log/caddy/access.log
+                format json
+        }
+}
 
-FROM caddy:${CADDY_VERSION}
+# ----------- Redirection de domaines ------------ #
 
-COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 ```
 
-### On met à jour le conteneur Caddy
+On enregistre.
+
+Pour récupérer les adresses IP de CloudFlare
 
 ```bash
-sudo rm -f /opt/docker/caddy/compose.yml
-sudo nano /opt/docker/caddy/compose.yml
+echo $(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)
 ```
 
-```yml
+### Création du `compose.yml`
+
+Maintenant on fait le `compose.yml`
+
+```bash
+sudo nano compose.yml
+```
+
+et on colle
+
+```yaml
 services:
   caddy:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: caddy
+    image: caddy:2.11.4-alpine
     restart: unless-stopped
     environment:
       - TZ=Europe/Paris
@@ -71,96 +148,6 @@ volumes:
 networks:
   caddy_network:
     external: true
-```
-
-On lance la création de l'image et du conteneur
-
-```bash
-cd /opt/docker/caddy
-sudo docker compose up -d --build
-```
-
-## Paramétrage du Caddyfile
-
-### Générer la clef LAPI de CrowdSec
-
-La commande
-
-```bash
-sudo docker compose -f /opt/docker/crowdsec/compose.yml exec crowdsec cscli bouncers add caddy-bouncer
-```
-
-Bien noter la clef, on va la mettre dans notre Caddyfile
-
-### Configuration Caddyfile
-
-```bash
-sudo rm -f /opt/docker/caddy/Caddyfile
-sudo nano /opt/docker/caddy/Caddyfile
-```
-
-```text
-{
-        servers {
-                trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
-        }
-        crowdsec {
-                api_url http://crowdsec:8080
-                api_key <REMPLACER PAR CLEF API>
-                ticker_interval 15s
-                appsec_url http://crowdsec:7422
-                appsec_timeout 15s
-        }
-}
-(crowdsec_bouncer) {
-        log {
-                output file /var/log/caddy/access.log
-                format json
-        }
-        route {
-                crowdsec
-                appsec
-        }
-}
-# ----------- Redirection de domaines ------------ #
-
-```
-
-Attention à bien modifier la ligne `api_key <REMPLACER PAR CLEF API>`
-
-On protège l'accès
-
-```bash
-sudo chmod 600 /opt/docker/caddy/Caddyfile
-```
-
-Pour récupérer les adresses IP de CloudFlare
-
-```bash
-echo $(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)
-```
-
-Exemples pour les conteneurs/services
-
-```text
-mondomaine.com, www.mondomaine.com {
-        import crowdsec_bouncer
-        respond "Caddy fonctionne avec Cloudflare !"
-}
-```
-
-et on utilise (pour notre fichier Caddyfile de toute à l'heure) le formateur intégré avec
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-et on relance caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-cd /opt/docker/caddy
-sudo docker compose restart caddy
 ```
 
 #### Explication du Mappage de volumes
@@ -387,49 +374,5 @@ sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy ca
 ```
 
 Tester une dernière fois votre domaine avec `curl https://mondomaine.com`. Le message de test ne doit plus apparaître.
-
-## Tests
-
-En premier on crée une redirection de test, ça nous servira pour les autres tests aussi
-
-```bash
-sudo nano /opt/docker/caddy/Caddyfile
-```
-
-Ajoutez cette redirection à la fin, dans la partie `Redirection de domaines`
-
-```text
-mondomaine.com, www.mondomaine.com {
-    import crowdsec_bouncer
-    respond "Caddy fonctionne avec Cloudflare !"
-}
-```
-
-on utilise le formateur intégré avec
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-et on relance caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-```
-
-### On fait les essais
-
-A voir, pas indispensable, si le reste de la doc marche, c'est pas important.
-
-```bash
-curl -I --resolve mondomaine.com:80:127.0.0.1 http://mondomaine.com/
-```
-
-```bash
-# Détecté en erreur 403 (c'est normal)
-curl -kI --resolve mondomaine:443:127.0.0.1 "https://mondomaine.com/.env"
-
-curl -s -D - -k --resolve mondomaine:443:127.0.0.1 "https://mondomaine.com/?id=1%20UNION%20SELECT%20username,%20password%20FROM%20users"
-```
 
 Voilà, votre Caddy est officiellement prêt pour la production !

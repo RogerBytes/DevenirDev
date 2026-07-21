@@ -1,15 +1,6 @@
 # 04 - Crowdsec firewall
 
-On installera Caddy ensuite, mais pour éviter des allers retours, on met en place tout de suite son système de logs ici.
-
 ## Prérequis
-
-### Fichier de logs de Caddy
-
-```bash
-sudo mkdir -p /opt/docker/caddy/logs/
-sudo touch /opt/docker/caddy/logs/access.log
-```
 
 ### Logs SSH avec rsyslog
 
@@ -32,62 +23,19 @@ ls -la /var/log/auth.log
 sudo mkdir -p /opt/docker/crowdsec/config /opt/docker/crowdsec/data
 ```
 
-### Fichier de configuration appsec
-
-```bash
-sudo mkdir -p /opt/docker/crowdsec/config/appsec-configs
-sudo nano /opt/docker/crowdsec/config/appsec-configs/custom-config.yaml
-```
-
-```bash
-name: custom/custom-config
-inband_rules:
-  - crowdsecurity/base-config
-  - crowdsecurity/vpatch-*
-  - crowdsecurity/generic-*
-  - crowdsecurity/crs
-outofband_rules:
-  - crowdsecurity/appsec-generic-test
-default_remediation: ban
-blocked_http_code: 403
-```
-
-### Configuration de appsec
-
-```bash
-sudo mkdir -p /opt/docker/crowdsec/config/acquis.d
-sudo nano /opt/docker/crowdsec/config/acquis.d/appsec.yaml
-```
-
-On lui met
-
-```bash
-source: appsec
-listen_addr: 0.0.0.0:7422
-appsec_configs:
-  - custom/custom-config
-labels:
-  type: appsec
-```
-
-### Paramétrage du bouncer de pare-feu de Crowdsec
+### Réglage de surveillance via acquis.yaml
 
 ```bash
 sudo nano /opt/docker/crowdsec/config/acquis.yaml
 ```
 
-Mettre
+On y met
 
 ```yml
 filenames:
   - /var/log/auth.log
 labels:
   type: syslog
----
-filenames:
-  - /opt/docker/caddy/logs/access.log
-labels:
-  type: caddy
 ```
 
 ### Le compose
@@ -105,36 +53,19 @@ services:
     container_name: crowdsec
     restart: unless-stopped
     environment:
-      COLLECTIONS: "crowdsecurity/sshd crowdsecurity/linux crowdsecurity/caddy crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs"
+      COLLECTIONS: "crowdsecurity/sshd crowdsecurity/linux"
     volumes:
-      - /opt/docker/crowdsec/config/appsec-configs:/etc/crowdsec/appsec-configs/custom:ro
       - /opt/docker/crowdsec/config/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
-      - /opt/docker/crowdsec/config/acquis.d:/etc/crowdsec/acquis.d:ro
       - /opt/docker/crowdsec/data:/var/lib/crowdsec/data
       - /var/log/auth.log:/var/log/auth.log:ro
-      - /opt/docker/caddy/logs:/opt/docker/caddy/logs:ro
     ports:
       - "127.0.0.1:8080:8080"
-    networks:
-      - caddy_network
-
-networks:
-  caddy_network:
-    external: true
 ```
 
 Et on protège les accès
 
 ```bash
 sudo chmod 600 /opt/docker/crowdsec/compose.yml
-```
-
-## Création du réseau
-
-C'est un réseau dédié et protégé que Caddy va utiliser.
-
-```bash
-sudo docker network create caddy_network
 ```
 
 ## Création du conteneur
