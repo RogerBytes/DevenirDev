@@ -1107,7 +1107,7 @@ Et récupérer l'ascii sur [cette page](https://patorjk.com/software/taag/#p=dis
 sudo rkhunter --check -sk
 ```
 
-On valide nos changements (la création de l'user, les changements des users root et debian qui provoquent des warning)
+On valide nos changements (la création de l'user, les changements des users root et debian qui provoquent des warning et envoie un faux positif via alerte par mail)
 
 ```bash
 sudo rkhunter --propupd
