@@ -7,6 +7,54 @@ Le mode [All-In-One](https://www.openproject.org/docs/installation-and-operation
 
 ## Prérequis
 
+### Filtrage WAF
+
+Voici le bloc de filtre positif à ajouter (pour éviter des faux positifs), il faut changer le domaine dans `op.mondomaine.com`.
+On lui dit d'ignorer `"native_rule:911100"`.
+
+```yml
+  - filter: |
+      req.Host == "op.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:911100")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+```
+
+On va l'ajouter en liste blanche à custom-config.yaml, dans la partie `on_match`
+
+```bash
+sudo nano /opt/docker/crowdsec/config/appsec-configs/custom-config.yaml
+```
+
+```yml
+name: custom/custom-config
+inband_rules:
+  - crowdsecurity/base-config
+  - crowdsecurity/vpatch-*
+  - crowdsecurity/generic-*
+  - crowdsecurity/crs
+outofband_rules:
+  - crowdsecurity/appsec-generic-test
+default_remediation: ban
+blocked_http_code: 403
+on_match:
+  - filter: |
+      req.Host == "op.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:911100")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+```
+
+On enregistre et on relance crowdsec
+
+```bash
+sudo docker exec crowdsec cscli hub update && sudo docker restart crowdsec
+```
+
 ### Création du répertoire
 
 On prépare un répertoire dans `opt/docker`
@@ -113,6 +161,14 @@ networks:
     external: true
 ```
 
+On modifie tous les domaines `mondomaine.com` et on ajoute nos clefs, avant de sauver.
+
+Et on protège l'accès
+
+```bash
+sudo chmod 600 /opt/docker/apps/openproject/compose.yml
+```
+
 ### Redirection avec Caddyfile
 
 ```python
@@ -170,17 +226,14 @@ mot de passe: admin: admin
 
 et on change le mdp par un mdp lourd
 
-ET dans
-
-Va dans l'Administration globale (via l'icône d'engrenage en haut à droite ou le menu utilisateur).
-
-Dans le menu latéral gauche, clique sur Emails et notifications (ou Emails and notifications).
-
-Adresse expéditeur
-mettre le bon expéditeur `noreply@mondomaine.com`
-
 Changer la timezone dans les options du compte, et mettre paris (sinon l'heure est en retard sur GMT0)
 
 Reste sur le premier onglet principal. Descends tout en bas de cette page.
 
 Dire aux utilisateurs de vérifier le fuseau horaire pour éviter le quiproquo.
+
+## Régler SMTP depuis le menu
+
+Administration → Emails and notifications
+
+Cliquer sur mon avatar -> Administration -> E-mails et notifications -> Notifications par e-mail
