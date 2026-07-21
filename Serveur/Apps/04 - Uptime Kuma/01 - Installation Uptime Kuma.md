@@ -44,6 +44,12 @@ networks:
 
 Et enregistrer le fichier.
 
+Et on protège l'accès.
+
+```bash
+sudo chmod 600 /opt/docker/apps/uptime-kuma/compose.yml
+```
+
 ## Création du conteneur
 
 Et on lance le `compose up`
