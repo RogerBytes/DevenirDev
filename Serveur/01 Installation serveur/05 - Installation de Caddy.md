@@ -36,10 +36,9 @@ FROM caddy:${CADDY_VERSION}
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 ```
 
-### On met à jour le conteneur Caddy
+### Compose du conteneur Caddy
 
 ```bash
-sudo rm -f /opt/docker/caddy/compose.yml
 sudo nano /opt/docker/caddy/compose.yml
 ```
 
@@ -76,7 +75,6 @@ networks:
 On lance la création de l'image et du conteneur
 
 ```bash
-cd /opt/docker/caddy
 sudo docker compose up -d --build
 ```
 
