@@ -139,8 +139,8 @@ Ca y est toutes les étapes d'installation de l'infrastructure du serveur sont t
 On vire les conteneurs et images inutiles
 
 ```bash
-sudo docker system prune -f
 sudo docker image prune -a
+sudo docker system prune -f
 ```
 
 On vérifie que tout est actif
