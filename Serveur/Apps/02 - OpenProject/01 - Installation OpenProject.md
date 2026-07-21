@@ -127,24 +127,24 @@ services:
     container_name: openproject
     restart: unless-stopped
     extra_hosts:
-      - "op.mondomaine.com:127.0.0.1"
+      - "op.mondomaine.com:127.0.0.1" # A mettre à jour "mondomaine"
     environment:
-      - OPENPROJECT_URL=http://op.mondomaine.com
+      - OPENPROJECT_URL=http://op.mondomaine.com # A mettre à jour "mondomaine"
       - TZ=Europe/Paris
-      - SECRET_KEY_BASE=CLEF_SECRETE_OPENPROJECT
-      - OPENPROJECT_HOST__NAME=op.mondomaine.com
+      - SECRET_KEY_BASE=CLEF_SECRETE_OPENPROJECT # A mettre à jour clef
+      - OPENPROJECT_HOST__NAME=op.mondomaine.com # A mettre à jour "mondomaine"
       - OPENPROJECT_HTTPS=true
       - OPENPROJECT_DEFAULT__LANGUAGE=fr
       # --- CONFIGURATION HOCUSPOCUS ---
-      - OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL=wss://op.mondomaine.com/hocuspocus
-      - OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET=CLEF_SECRETE_HOCUSPOCUS
+      - OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL=wss://op.mondomaine.com/hocuspocus # A mettre à jour "mondomaine"
+      - OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET=CLEF_SECRETE_HOCUSPOCUS # A mettre à jour clef
       # --- CONFIGURATION EMAIL SMTP (MXROUTE) ---
-      - OPENPROJECT_SMTP__ADDRESS=NOM_SERVEUR.mxrouting.net
+      - OPENPROJECT_SMTP__ADDRESS=NOM_SERVEUR.mxrouting.net # A mettre à jour serveur
       - OPENPROJECT_SMTP__PORT=587
-      - OPENPROJECT_SMTP__DOMAIN=mondomaine.com
+      - OPENPROJECT_SMTP__DOMAIN=mondomaine.com # A mettre à jour "mondomaine"
       - OPENPROJECT_SMTP__AUTHENTICATION=login
-      - OPENPROJECT_SMTP__USER__NAME=noreply@mondomaine.com
-      - OPENPROJECT_SMTP__PASSWORD=MOT_DE_PASSE_DU_MAIL
+      - OPENPROJECT_SMTP__USER__NAME=noreply@mondomaine.com # A mettre à jour "mondomaine"
+      - OPENPROJECT_SMTP__PASSWORD=MOT_DE_PASSE_DU_MAIL # A mettre à jour mdp
       - OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO=true
     volumes:
       - openproject_pgdata:/var/openproject/pgdata
@@ -182,6 +182,7 @@ op.mondomaine.com {
         import crowdsec_bouncer
         reverse_proxy openproject:80
 }
+
 ```
 
 Sauvegarder et fermer.
