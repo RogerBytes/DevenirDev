@@ -224,6 +224,12 @@ services:
       - VALKEY_EXTRA_FLAGS=--maxmemory 128mb --maxmemory-policy volatile-lfu
 ```
 
+On enregistre et on protège le fichier
+
+```bash
+sudo chmod 600 /opt/docker/apps/penpot/compose.yml
+```
+
 ### Gestion domaine / sous domaine CloudFlare
 
 On va sur [dashboard de CloudFlare](https://dash.cloudflare.com)
@@ -404,14 +410,14 @@ default_remediation: ban
 blocked_http_code: 403
 on_match:
   - filter: |
-      req.Host == "draw.rogerbytes.com" &&
+      req.Host == "draw.mondomaine.com" &&
       any(evt.Appsec.MatchedRules, #.name == "native_rule:920420")
     apply:
       - SetRemediation("allow")
       - CancelAlert()
       - CancelEvent()
   - filter: |
-      req.Host == "draw.rogerbytes.com" &&
+      req.Host == "draw.mondomaine.com" &&
       any(evt.Appsec.MatchedRules, #.name == "native_rule:943120")
     apply:
       - SetRemediation("allow")
