@@ -18,7 +18,7 @@ Informations principales
 - `/dev/mapper/crypt_prod` : Conteneur LUKS
 - `vg_prod` : Volume Group LVM
 - `/var/lib/docker`, `lv_home` et `lv_docker_opt` : Logical Volumes
-- `/dev/vg_prod/lv_docker_lib`, `/dev/vg_prod/lv_docker_opt` et `/dev/vg_prod/lv_home` : Chemins des Logical Volumes
+- `/dev/vg_prod/lv_docker_lib`, `/dev/vg_prod/lv_containerd_lib`, `/dev/vg_prod/lv_docker_opt` et `/dev/vg_prod/lv_home` : Chemins des Logical Volumes
 
 Une fois que tu me donnes ça, je te déroule le script étape par étape avec :
 
@@ -209,15 +209,16 @@ sudo mkfs.ext4 /dev/vg_prod/lv_containerd_lib
 On vérifie que les répertoires sources existent
 
 ```bash
-ls -ld /home /opt/docker /var/lib/docker 2>/dev/null
+ls -ld /home /opt/docker /var/lib/containerd /var/lib/docker 2>/dev/null
 ```
 
-Ca retourne (A EDITER POUR AJOUTER CELUI MANQUANT)
+Ca retourne
 
 ```bash
-drwxr-xr-x  4 root root 4096 Jul 14 00:34 /home
-drwxr-xr-x  7 root root 4096 Jul 14 02:47 /opt/docker
-drwx--x--- 12 root root 4096 Jul 14 00:50 /var/lib/docker
+drwxr-xr-x  4 root root 4096 Jul 21 20:26 /home
+drwxr-xr-x  6 root root 4096 Jul 21 21:09 /opt/docker
+drwx------ 13 root root 4096 Jul 21 20:55 /var/lib/containerd
+drwx--x--- 12 root root 4096 Jul 21 20:56 /var/lib/docker
 ```
 
 </div></details>
@@ -373,8 +374,6 @@ sudo update-initramfs -u -k all
 sudo systemctl daemon-reload
 ```
 
-Les éventuelles erreurs `sh: 0: getcwd() failed: No such file or directory` lors de l'update initramfs sont sans importance.
-
 Et activer le service
 
 ```bash
@@ -403,19 +402,22 @@ sudo ls -la /mnt/verif_racine/opt/docker
 sudo ls -la /mnt/verif_racine/var/lib/containerd
 ```
 
-Si c'est vide, il est censé retourner (E EDITER POUR AJOUTER LE RETOURE POUR CONTENERD)
+Si c'est vide, il est censé retourner
 
 ```bash
-$ sudo ls -la /mnt/verif_racine/opt/docker
+$ (...)
 total 8
-drwxr-xr-x  2 root root 4096 Jul 15 20:54 .
-drwxr-xr-x 18 root root 4096 Jul 15 15:35 ..
+drwxr-xr-x  2 root root 4096 Jul 21 21:23 .
+drwxr-xr-x 18 root root 4096 Jul 21 21:17 ..
 total 8
-drwx--x---  2 root root 4096 Jul 15 20:54 .
-drwxr-xr-x 29 root root 4096 Jul 14 00:49 ..
+drwx--x---  2 root root 4096 Jul 21 21:23 .
+drwxr-xr-x 29 root root 4096 Jul 21 20:54 ..
 total 8
-drwxr-xr-x 2 root root 4096 Jul 15 20:54 .
-drwxr-xr-x 4 root root 4096 Jul 14 00:51 ..
+drwxr-xr-x 2 root root 4096 Jul 21 21:23 .
+drwxr-xr-x 4 root root 4096 Jul 21 20:56 ..
+total 8
+drwx------  2 root root 4096 Jul 21 21:23 .
+drwxr-xr-x 29 root root 4096 Jul 21 20:54 ..
 ```
 
 Et on nettoie le point de Vérification
@@ -440,10 +442,11 @@ df -h | grep -E "docker|home|containerd"
 il retourne (E EDITER POUR AJOUTER LE RETOURE POUR CONTENERD)
 
 ```bash
-$ $df -h | grep -E "docker|home"
-/dev/mapper/vg_prod-lv_home        2.0G  632K  1.8G   1% /home
-/dev/mapper/vg_prod-lv_docker_lib   49G  242M   47G   1% /var/lib/docker
-/dev/mapper/vg_prod-lv_docker_opt  7.8G   18M  7.4G   1% /opt/docker
+$ $df -h | grep -E "docker|home|containerd"
+/dev/mapper/vg_prod-lv_home            974M  384K  906M   1% /home
+/dev/mapper/vg_prod-lv_docker_lib       15G  171M   14G   2% /var/lib/docker
+/dev/mapper/vg_prod-lv_docker_opt      974M  1.8M  905M   1% /opt/docker
+/dev/mapper/vg_prod-lv_containerd_lib   19G  1.5G   17G   9% /var/lib/containerd
 ```
 
 Montrant qu'ils sont bien montés.
