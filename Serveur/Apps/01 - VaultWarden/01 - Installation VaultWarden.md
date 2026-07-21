@@ -120,38 +120,6 @@ On va sur [dashboard de CloudFlare](dash.cloudflare.com)
 
 Remplacer `192.0.2.1` par l'ipv4 du VPS.
 
-### Générer une clef secrète pour VaultWarden
-
-```bash
-openssl rand -hex 32
-```
-
-Gardez précieusement la chaîne générée de côté, elle va servir dans le fichier de configuration juste après.
-
-puis on génère le hash
-
-```bash
-sudo docker exec -it vaultwarden /vaultwarden hash
-```
-
-et récupérer la ligne
-
-```yml
-ADMIN_TOKEN='$argon2id$v=19$m=65540,t=3,p=4$ysIF9qGecYGRkS9Fr1UhzqhnCBi1Tl4axpbc4u5ytE8$S2n7CVZKYv8vRYuL8VYKukqb6J1/oXPDyAdpHFuyNfU'
-```
-
-### Mettre le token dans un .env
-
-```bash
-sudo nano .env
-```
-
-Et on copie toute la ligne hashée (y compris "ADMIN_TOKEN=(...)")
-
-```bash
-sudo chmod 600 /opt/docker/apps/vaultwarden/.env
-```
-
 ### Création du `compose.yml`
 
 On créé le `compose.yml`
@@ -197,6 +165,38 @@ On règle l'accès
 
 ```bash
 sudo chmod 600 /opt/docker/apps/vaultwarden/compose.yml
+```
+
+### Générer une clef secrète pour VaultWarden
+
+```bash
+openssl rand -hex 32
+```
+
+Gardez précieusement la chaîne générée de côté, elle va servir dans le fichier de configuration juste après.
+
+puis on génère le hash
+
+```bash
+sudo docker exec -it vaultwarden /vaultwarden hash
+```
+
+et récupérer la ligne
+
+```yml
+ADMIN_TOKEN='$argon2id$v=19$m=65540,t=3,p=4$ysIF9qGecYGRkS9Fr1UhzqhnCBi1Tl4axpbc4u5ytE8$S2n7CVZKYv8vRYuL8VYKukqb6J1/oXPDyAdpHFuyNfU'
+```
+
+### Mettre le token dans un .env
+
+```bash
+sudo nano .env
+```
+
+Et on copie toute la ligne hashée (y compris "ADMIN_TOKEN=(...)")
+
+```bash
+sudo chmod 600 /opt/docker/apps/vaultwarden/.env
 ```
 
 ## Création du conteneur
