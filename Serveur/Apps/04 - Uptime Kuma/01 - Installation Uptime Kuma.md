@@ -6,6 +6,30 @@ Ce document détaille l'installation et la configuration d'Uptime Kuma pour surv
 
 ## Prérequis
 
+### Filtre Appsec
+
+```yml
+  - filter: |
+      req.Host == "uptime.rogerbytes.com" &&
+      req.URL.Path startsWith "/socket.io/"
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+```
+
+On va l'ajouter en liste blanche à custom-config.yaml, dans la partie `on_match`
+
+```bash
+sudo nano /opt/docker/crowdsec/config/appsec-configs/custom-config.yaml
+```
+
+On enregistre et on relance crowdsec
+
+```bash
+sudo docker exec crowdsec cscli hub update && sudo docker restart crowdsec
+```
+
 ### Création du répertoire
 
 On prépare un répertoire dans `opt/docker`
