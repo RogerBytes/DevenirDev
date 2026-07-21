@@ -93,7 +93,7 @@ Bien noter la clef, on va la mettre dans notre Caddyfile
 ### Configuration Caddyfile
 
 ```bash
-sudo rm -f /opt/docker/caddy/Caddyfile
+sudo rm -rf /opt/docker/caddy/Caddyfile
 sudo nano /opt/docker/caddy/Caddyfile
 ```
 
@@ -150,6 +150,7 @@ mondomaine.com, www.mondomaine.com {
 et on utilise (pour notre fichier Caddyfile de toute à l'heure) le formateur intégré avec
 
 ```bash
+sudo docker compose restart caddy
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
 ```
 
@@ -157,9 +158,31 @@ et on relance caddy
 
 ```bash
 sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-cd /opt/docker/caddy
-sudo docker compose restart caddy
 ```
+
+On wipe les logs (vu que c'est notre installation, on peut le faire)
+
+```bash
+sudo truncate -s 0 $(sudo docker inspect --format='{{.LogPath}}' $(sudo docker compose ps -q caddy))
+```
+
+On vérifie le statut du conteneur
+
+```bash
+sudo docker compose logs -f
+```
+
+Retourne
+
+```text
+caddy-1  | {"level":"info","ts":1783967327.517215,"logger":"admin.api","msg":"received request","method":"POST","host":"localhost:2019","uri":"/load","remote_ip":"127.0.0.1","remote_port":"50298","headers":{"Content-Length":["2"],"Caddy-Config-Source-Adapter":["caddyfile"],"Caddy-Config-Source-File":["Caddyfile"],"Content-Type":["application/json"],"Origin":["http://localhost:2019"],"Accept-Encoding":["gzip"],"User-Agent":["Go-http-client/1.1"]}}
+caddy-1  | {"level":"info","ts":1783967327.517482,"msg":"config is unchanged"}
+caddy-1  | {"level":"info","ts":1783967327.5175986,"logger":"admin.api","msg":"load complete"}
+```
+
+Voilà, tout est prêt, il faudra à chaque fois ajouter les nouveaux réglages (pour chaque domaine) dans le `Caddyfile`, à la fin du fichier dans la partie `Redirection de domaines`.
+
+Maintenant que `Caddy` est correctement installé, on va terminer la section par un dernier réglage de pare-feu.
 
 #### Explication du Mappage de volumes
 
@@ -210,58 +233,6 @@ C'est pour ça qu'il est mis dans les volumes du service
   - `data` (de gauche) est le nom du volume déclaré en bas.
   - `data` (de droite) est le chemin présent sur l'image.
   - Quand le linux du conteneur pensera interagir avec `/data` il sera en fait en train d’interagir avec le volume `data`.
-
-## Création du réseau
-
-C'est un réseau dédié et protégé que Caddy va utiliser.
-
-```bash
-sudo docker network create caddy_network
-```
-
-## Création du conteneur
-
-Et on lance le `compose up`
-
-```bash
-sudo docker compose up -d
-```
-
-On wipe les logs (vu que c'est notre installation, on peut le faire)
-
-```bash
-sudo truncate -s 0 $(sudo docker inspect --format='{{.LogPath}}' $(sudo docker compose ps -q caddy))
-```
-
-et on utilise (pour notre fichier Caddyfile de toute à l'heure) le formateur intégré avec
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-et on relance caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-```
-
-On vérifie le statut du conteneur
-
-```bash
-sudo docker compose logs -f
-```
-
-Retourne
-
-```text
-caddy-1  | {"level":"info","ts":1783967327.517215,"logger":"admin.api","msg":"received request","method":"POST","host":"localhost:2019","uri":"/load","remote_ip":"127.0.0.1","remote_port":"50298","headers":{"Content-Length":["2"],"Caddy-Config-Source-Adapter":["caddyfile"],"Caddy-Config-Source-File":["Caddyfile"],"Content-Type":["application/json"],"Origin":["http://localhost:2019"],"Accept-Encoding":["gzip"],"User-Agent":["Go-http-client/1.1"]}}
-caddy-1  | {"level":"info","ts":1783967327.517482,"msg":"config is unchanged"}
-caddy-1  | {"level":"info","ts":1783967327.5175986,"logger":"admin.api","msg":"load complete"}
-```
-
-Voilà, tout est prêt, il faudra à chaque fois ajouter les nouveaux réglages (pour chaque domaine) dans le `Caddyfile`, à la fin du fichier dans la partie `Redirection de domaines`.
-
-Maintenant que `Caddy` est correctement installé, on va terminer la section par un dernier réglage de pare-feu.
 
 ## Réglage CloudFlare SSL/TLS
 
@@ -385,49 +356,5 @@ sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy ca
 ```
 
 Tester une dernière fois votre domaine avec `curl https://mondomaine.com`. Le message de test ne doit plus apparaître.
-
-## Tests
-
-En premier on crée une redirection de test, ça nous servira pour les autres tests aussi
-
-```bash
-sudo nano /opt/docker/caddy/Caddyfile
-```
-
-Ajoutez cette redirection à la fin, dans la partie `Redirection de domaines`
-
-```text
-mondomaine.com, www.mondomaine.com {
-    import crowdsec_bouncer
-    respond "Caddy fonctionne avec Cloudflare !"
-}
-```
-
-on utilise le formateur intégré avec
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy fmt --overwrite
-```
-
-et on relance caddy
-
-```bash
-sudo docker compose -f /opt/docker/caddy/compose.yml exec -w /etc/caddy caddy caddy reload
-```
-
-### On fait les essais
-
-A voir, pas indispensable, si le reste de la doc marche, c'est pas important.
-
-```bash
-curl -I --resolve mondomaine.com:80:127.0.0.1 http://mondomaine.com/
-```
-
-```bash
-# Détecté en erreur 403 (c'est normal)
-curl -kI --resolve mondomaine:443:127.0.0.1 "https://mondomaine.com/.env"
-
-curl -s -D - -k --resolve mondomaine:443:127.0.0.1 "https://mondomaine.com/?id=1%20UNION%20SELECT%20username,%20password%20FROM%20users"
-```
 
 Voilà, votre Caddy est officiellement prêt pour la production !
