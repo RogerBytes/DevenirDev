@@ -176,7 +176,7 @@ curl -4 ifconfig.me
 curl -6 ifconfig.me
 ```
 
-### Liste blanche CloudFlare
+### Liste blanche CloudFlare [PAS SUR DE LE GARDER]
 
 On va sur [dashboard de CloudFlare](https://dash.cloudflare.com)
 
