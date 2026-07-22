@@ -14,6 +14,41 @@ sudo mkdir -p /opt/docker/apps/penpot
 cd /opt/docker/apps/penpot
 ```
 
+### Filtrage AppSec
+
+Il faut désactiver les règles `920420` et `943120`.
+
+On va les ajouter en liste blanche à `custom-config.yaml`
+
+```bash
+sudo nano /opt/docker/crowdsec/config/appsec-configs/custom-config.yaml
+```
+
+Et on ajoute ce qui suit dans la partie `on_match`
+
+```yml
+  - filter: |
+      req.Host == "draw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:920420")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+  - filter: |
+      req.Host == "draw.mondomaine.com" &&
+      any(evt.Appsec.MatchedRules, #.name == "native_rule:943120")
+    apply:
+      - SetRemediation("allow")
+      - CancelAlert()
+      - CancelEvent()
+```
+
+On enregistre et on relance crowdsec
+
+```bash
+sudo docker exec crowdsec cscli hub update && sudo docker restart crowdsec
+```
+
 ### Récupérer le serveur MX de MXROUTE
 
 On a déjà notre adresse mail `noreply@mondomaine.com`, pas besoin d'en refaire une autre.
