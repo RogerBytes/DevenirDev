@@ -168,7 +168,7 @@ Maintenant on va sur Uptime Kuma
 
 Voilà, si un site est hors ligne, une notification est envoyée dans la minute
 
-## Ajouter une IP en liste blanche
+## Ajouter une IP en liste blanche  [PAS SUR DE LE GARDER]
 
 ### Récupérer son ip
 
@@ -178,7 +178,7 @@ curl -4 ifconfig.me
 curl -6 ifconfig.me
 ```
 
-### Liste blanche CloudFlare [PAS SUR DE LE GARDER]
+#### Liste blanche CloudFlare
 
 On va sur [dashboard de CloudFlare](https://dash.cloudflare.com)
 
