@@ -162,6 +162,8 @@ Maintenant on va sur Uptime Kuma
 - Cliquer sur le bouton `+ Ajouter une nouvelle sonde`
 - Type de sonde `HTTP(s)`
 - Nom d'affichage `mondomaine.com`
+- Tentatives `2`
+- Intervalle entre chaque nouvelle tentative `20`
 - Cliquer sur `Enregistrer`
 
 Voilà, si un site est hors ligne, une notification est envoyée dans la minute
