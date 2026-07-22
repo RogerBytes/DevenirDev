@@ -15,7 +15,7 @@ Voici les 4 piliers de sécurité à respecter
 - [x] rkhunter pour détecter rootkit et backdoor
 - [x] changement du port ssh par défaut
 - [x] ajout d'un user supplémentaire (moi) avec accès sudo
-- [x] pare-feu fermé par défaut pour tout sauf port SSH (et liste blanche d'ip CloudFlare pour http et https)
+- [x] pare-feu fermé par défaut pour tout et tunnel CloudFlared pour SSH (et liste blanche d'ip CloudFlare pour http et https)
 - [x] CrowdSec Firewall bouncer pour protéger mon port SSH
 - [x] lock de l'user initial de la debian
 - [x] verrouillage de la connexion ssh à root
@@ -70,7 +70,7 @@ graph TD
   E -->|5. ALLOW: Requête saine| F[🐳 Conteneurs Docker Applications]
 
   %% ─── Flux SSH via Cloudflare Tunnel (aucun port entrant) ───
-  ADM([🧑‍💻 Admin]) -->|cloudflared user@sub.domain.com| CFEDGE{☁️ Cloudflare Edge / Zero Trust}
+  ADM([🧑‍💻 Admin]) -->|cloudflared user@sub.domain.com| CFEDGE{☁️ Cloudflare Edge / CloudFlared}
   CFEDGE -->|Tunnel sortant chiffré déjà établi| TUN[🚇 cloudflared daemon]
   TUN -->|Connexion locale interne| SSH[🔑 Serveur SSH clef uniquement]
   TUN -.->|Aucun port SSH ouvert sur UFW| NOTE(("🚫 Port SSH fermé"))
@@ -120,12 +120,6 @@ Pour compléter ce plan de durcissement, la sécurité du code et des conteneurs
 ## Reste à faire (Perspectives de production)
 
 Pour finaliser la mise en production du serveur et garantir une sécurité maximale lors du déploiement, les points suivants devront être configurés et respectés :
-
-### 1. Règle de pare-feu UFW spécifique à Cloudflare
-
-Lors de la configuration finale du pare-feu de la machine (UFW/iptables), restreindre le trafic entrant sur les ports HTTP (80) et HTTPS (443) pour n'accepter **que** les requêtes provenant des adresses IP officielles de Cloudflare.
-
-- *Objectif :* Empêcher qu'un attaquant puisse contourner le proxy et le bouclier Cloudflare en attaquant directement l'adresse IP publique (et théoriquement cachée) du VPS.
 
 ### 2. Politique de sauvegarde applicative (Backup)
 

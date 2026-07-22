@@ -7,7 +7,7 @@ Il est important d'avoir de bonnes pratiques dans la gestion des mots de passe.
 
 Il y a 4 mots différents de passe à créer et à apprendre pour être bien protégé.
 
-- Mot de passe : sudo user local (sur ordinateur) / sudo user distant (type vps/serveur) / local ssh key passphrase [+40 bits d'entropie] !!!!!!!!!!!!!!!! A CORRIGER, la clef SSH doit avoir un passphrase différent
+- Mot de passe : sudo user local/distant (sur ordinateur) / TOTP sur SSH / local ssh key passphrase [+40 bits d'entropie]
 - Mot de passe : KeePass [+100 bits d'entropie]
 - Mot de passe : VaultWarden [+100 bits d'entropie]
 - Mot de passe : Service Cloud [+100 bits d'entropie]
