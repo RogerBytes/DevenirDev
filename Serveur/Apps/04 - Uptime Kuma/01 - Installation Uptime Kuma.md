@@ -1,6 +1,7 @@
 # 07 - Installation Uptime Kuma
 
 - Depuis [Page docker hub](https://hub.docker.com/hardened-images/catalog/dhi/uptime-kuma)
+- Et [page de réglage en reverse-proxy](https://github.com/louislam/uptime-kuma/wiki/Reverse-Proxy)
 
 Ce document détaille l'installation et la configuration d'Uptime Kuma pour surveiller la disponibilité des sites et applications.
 
@@ -175,30 +176,7 @@ curl -4 ifconfig.me
 curl -6 ifconfig.me
 ```
 
-### Liste blanche Fail2Ban
-
-```bash
-sudo nano /etc/fail2ban/jail.local
-```
-
-Et on fait ainsi, en espaçant les ip avec un espace, on le met en dessous de `[DEFAULT]` (`CTRL + W` pour faire la recherche)
-
-```text
-[DEFAULT]
-ignoreip = 127.0.0.1/8 ::1 2001:861:34c0:1330:e67f:72fd:9f4e:664b 128.78.58.115
-```
-
-On y met l'IPv4 locale et l'IPv6 locale en premier,
-
-et on relance fail2ban
-
-```bash
-sudo systemctl restart fail2ban
-```
-
 ### Liste blanche CloudFlare
-
-Fail2Ban ne peut pas donner ses listes blanches à CloudFlare, on va voir comment faire ici.
 
 On va sur [dashboard de CloudFlare](https://dash.cloudflare.com)
 
