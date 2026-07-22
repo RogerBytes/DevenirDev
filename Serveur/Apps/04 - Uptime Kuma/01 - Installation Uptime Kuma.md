@@ -10,7 +10,7 @@ Ce document détaille l'installation et la configuration d'Uptime Kuma pour surv
 
 ```yml
   - filter: |
-      req.Host == "uptime.rogerbytes.com" &&
+      req.Host == "uptime.mondomaine.com" &&
       req.URL.Path startsWith "/socket.io/"
     apply:
       - SetRemediation("allow")
