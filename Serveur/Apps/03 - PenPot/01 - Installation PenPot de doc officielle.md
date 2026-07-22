@@ -109,7 +109,7 @@ Et on met
 
 ```yml
 x-flags: &penpot-flags
-  PENPOT_FLAGS: enable-smtp enable-prepl-server enable-mcp
+  PENPOT_FLAGS: enable-smtp enable-prepl-server enable-mcp disable-registration
 
 x-uri: &penpot-public-uri
   PENPOT_PUBLIC_URI: https://draw.mondomaine.com # modifier domaine
