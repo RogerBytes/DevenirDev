@@ -153,7 +153,7 @@ services:
 
       PENPOT_SMTP_DEFAULT_FROM: noreply@mondomaine.com # modifier domaine
       PENPOT_SMTP_DEFAULT_REPLY_TO: noreply@mondomaine.com # modifier domaine
-      PENPOT_SMTP_HOST: mymxserver.mxrouting.net
+      PENPOT_SMTP_HOST: mymxserver.mxrouting.net # mettre serveur mail
       PENPOT_SMTP_PORT: 465
       PENPOT_SMTP_USERNAME: noreply@mondomaine.com # modifier domaine
       PENPOT_SMTP_PASSWORD: MDP-BOITE-MAIL # mettre mdp
