@@ -77,14 +77,14 @@ x-flags: &penpot-flags
   PENPOT_FLAGS: enable-smtp enable-prepl-server enable-mcp
 
 x-uri: &penpot-public-uri
-  PENPOT_PUBLIC_URI: https://draw.mondomaine.com
+  PENPOT_PUBLIC_URI: https://draw.mondomaine.com # modifier domaine
 
 x-body-size: &penpot-http-body-size
   PENPOT_HTTP_SERVER_MAX_BODY_SIZE: 367001600
   PENPOT_HTTP_SERVER_MAX_MULTIPART_BODY_SIZE: 367001600
 
 x-secret-key: &penpot-secret-key
-  PENPOT_SECRET_KEY: CLEF-SECRÈTE-PENPOT
+  PENPOT_SECRET_KEY: CLEF-SECRÈTE-PENPOT # mettre clef secrète hex 64
 
 networks:
   penpot:
@@ -141,22 +141,22 @@ services:
 
       PENPOT_REDIS_URI: redis://penpot-valkey/0
 
-      AWS_ACCESS_KEY_ID: ID-R2-CLEF-ACCÈS
-      AWS_SECRET_ACCESS_KEY: ID-R2-CLEF-ACCÈS-SECRÈTE
+      AWS_ACCESS_KEY_ID: ID-R2-CLEF-ACCÈS # mettre clef
+      AWS_SECRET_ACCESS_KEY: ID-R2-CLEF-ACCÈS-SECRÈTE # mettre clef
       PENPOT_OBJECTS_STORAGE_BACKEND: s3
-      PENPOT_OBJECTS_STORAGE_S3_ENDPOINT: https://ADRESSE-ENDPOINT.r2.cloudflarestorage.com
+      PENPOT_OBJECTS_STORAGE_S3_ENDPOINT: https://ADRESSE-ENDPOINT.r2.cloudflarestorage.com # mettre endpoint
       PENPOT_OBJECTS_STORAGE_S3_BUCKET: penpot-assets
       PENPOT_OBJECTS_STORAGE_S3_REGION: auto
 
       PENPOT_TELEMETRY_ENABLED: "false"
       PENPOT_TELEMETRY_REFERER: compose
 
-      PENPOT_SMTP_DEFAULT_FROM: noreply@mondomaine.com
-      PENPOT_SMTP_DEFAULT_REPLY_TO: noreply@mondomaine.com
+      PENPOT_SMTP_DEFAULT_FROM: noreply@mondomaine.com # modifier domaine
+      PENPOT_SMTP_DEFAULT_REPLY_TO: noreply@mondomaine.com # modifier domaine
       PENPOT_SMTP_HOST: mymxserver.mxrouting.net
       PENPOT_SMTP_PORT: 465
-      PENPOT_SMTP_USERNAME: noreply@mondomaine.com
-      PENPOT_SMTP_PASSWORD: MDP-BOITE-MAIL
+      PENPOT_SMTP_USERNAME: noreply@mondomaine.com # modifier domaine
+      PENPOT_SMTP_PASSWORD: MDP-BOITE-MAIL # mettre mdp
       PENPOT_SMTP_TLS: "true"
       PENPOT_SMTP_SSL: "true"
 
