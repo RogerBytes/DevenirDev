@@ -8,6 +8,14 @@ Quand on a une erreur non identifiée, il faut vérifier que le WAF n'est pas re
 sudo docker logs --tail 20 caddy
 ```
 
+Pour voir en direct les logs d'un service, ici pour `penpot-backend`
+
+```bash
+sudo docker compose logs -f penpot-backend
+```
+
+Si rien ne s'affiche lorsque l'erreur se produit sur le site, c'est très probablement l'AppSec de CrowdSec le responsable et non le conteneur.
+
 ## Voir les blocages AppSec en temps réel
 
 So on veut afficher les mesures AppSec prises en temps réel, à partir de l'instant T.
