@@ -97,6 +97,12 @@ On enregistre et on relance crowdsec
 sudo docker exec crowdsec cscli hub update && sudo docker restart crowdsec
 ```
 
+On en profite aussi pour faire des màj
+
+```bash
+sudo docker exec crowdsec cscli hub upgrade && sudo docker restart crowdsec
+```
+
 ### Création du répertoire
 
 On prépare un répertoire dans `opt/docker`
@@ -174,6 +180,8 @@ Et on lance le `compose up`
 ```bash
 sudo docker compose up -d
 ```
+
+Le `WARN[0000] The "ADMIN_TOKEN" variable is not set. Defaulting to a blank string.` est normal, on s'en occupe juste après.
 
 ### Générer une clef secrète pour VaultWarden
 
