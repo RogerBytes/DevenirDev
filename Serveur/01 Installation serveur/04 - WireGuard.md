@@ -130,6 +130,21 @@ sudo wg show
 
 `Active: active (running)` et une interface `wg0` avec la bonne `public key` confirment que le hub est prêt.
 
+Et on regarde si l'adressage est bonne
+
+```bash
+ip addr show wg0
+```
+
+Il doit retourner
+
+```bash
+8: wg0: <POINTOPOINT,NOARP,UP,LOWER_UP> mtu 1420 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/none
+    inet 10.10.0.1/16 scope global wg0
+       valid_lft forever preferred_lft forever
+```
+
 </div></details>
 
 ## Ajout d'un premier VPS produit (peer)
