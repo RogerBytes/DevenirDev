@@ -1090,6 +1090,7 @@ C'est qu'aucun reboot n'est requis.
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
 ```bash
+sudo rm -f /etc/motd
 sudo nano /etc/motd
 ```
 
