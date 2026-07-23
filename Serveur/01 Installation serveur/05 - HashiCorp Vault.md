@@ -65,7 +65,7 @@ Le TLS est désactivé volontairement ici : le trafic transite déjà dans le tu
 On protège l'accès
 
 ```bash
-sudo chmod 600 /opt/docker/vault/config/vault.hcl
+sudo chmod 644 /opt/docker/vault/config/vault.hcl
 ```
 
 ### Le compose
@@ -82,13 +82,19 @@ services:
     restart: unless-stopped
     cap_add:
       - IPC_LOCK
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
     volumes:
       - ./config/vault.hcl:/vault/config/vault.hcl:ro
       - data:/vault/data
       - logs:/vault/logs
     ports:
       - "10.10.0.1:8200:8200"
-    command: server -config=/vault/config/vault.hcl
+    command: server
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
 volumes:
   data:
@@ -105,13 +111,30 @@ volumes:
 sudo docker compose up -d
 ```
 
+### Correction des permissions du volume de données
+
+L'image officielle de Vault tourne avec un utilisateur non-root à l'intérieur du conteneur (UID 100, GID 1000), alors que Docker crée le volume `vault_data` appartenant à `root` par défaut. Il faut corriger ça une seule fois :
+
+```bash
+sudo docker run --rm -v vault_data:/vault/data alpine chown -R 100:1000 /vault/data
+sudo docker compose up -d --force-recreate
+```
+
 On vérifie
 
 ```bash
 sudo docker compose logs -f
 ```
 
-Il doit afficher que Vault a démarré et se trouve à l'état `sealed` (scellé), c'est normal, c'est l'étape suivante.
+Si on voit `==> Vault server started! Log data will stream in below:`. Si elle apparaît sans message d'erreur juste avant (type `Error parsing listener configuration` ou `bind: address already in use`), Vault a démarré correctement.
+
+et
+
+```bash
+sudo docker exec -it vault vault status
+```
+
+Il doit afficher `Initialized: false` et `Sealed: true`, c'est normal, c'est l'étape suivante.
 
 </div></details>
 
@@ -130,8 +153,8 @@ Cette commande ne se lance **qu'une seule fois**. Elle retourne :
 
 **Ces informations n'apparaissent qu'une seule fois et ne sont jamais réaffichables.** Il faut les répartir immédiatement comme vos autres secrets critiques :
 
-- Les 5 parts de clef doivent être séparées sur des supports différents (par exemple : 2 dans KeePassXC, 1 sur la clef USB dédiée, 1 sur papier dans le coffre physique, 1 sur le Cloud personnel) — jamais toutes au même endroit, sinon le principe du seuil (3 sur 5) ne protège plus rien.
-- Le Root Token est à stocker dans VaultWarden/KeePassXC comme un mot de passe classique, et ne doit servir qu'à la configuration initiale (créer les policies et AppRoles), jamais à l'usage quotidien.
+- Les 5 parts de clef doivent être séparées sur des supports différents (par exemple : 2 dans VaultWarden, 1 sur la clef USB dédiée, 1 sur papier dans le coffre physique, 1 sur le Cloud personnel) — jamais toutes au même endroit, sinon le principe du seuil (3 sur 5) ne protège plus rien.
+- Le Root Token est à stocker dans VaultWarden comme un mot de passe classique, et ne doit servir qu'à la configuration initiale (créer les policies et AppRoles), jamais à l'usage quotidien.
 
 </div></details>
 
