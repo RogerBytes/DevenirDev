@@ -34,17 +34,18 @@ sudo nala install -y wireguard
 ### Génération des clefs du hub
 
 ```bash
-sudo mkdir -p /etc/wireguard/keys
+sudo bash -c '
 cd /etc/wireguard/keys
 umask 077
-wg genkey | sudo tee hub-private.key | wg pubkey | sudo tee hub-public.key
-sudo chmod 600 hub-private.key
+wg genkey | tee hub-private.key | wg pubkey | tee hub-public.key
+chmod 600 hub-private.key
+'
 ```
 
 On note précieusement le contenu de `hub-public.key`, il servira à chaque futur peer.
 
 ```bash
-cat /etc/wireguard/keys/hub-public.key
+sudo cat /etc/wireguard/keys/hub-public.key
 ```
 
 ### Activation du routage IP (nécessaire pour que le hub fasse transiter le trafic)
@@ -64,6 +65,14 @@ sudo sysctl --system
 ```
 
 ### Création du fichier de configuration `wg0.conf`
+
+On récupère notre clef privé
+
+```bash
+sudo cat /etc/wireguard/keys/hub-private.key
+```
+
+On note précieusement la clef pour ce qui suit.
 
 ```bash
 sudo nano /etc/wireguard/wg0.conf
@@ -88,8 +97,16 @@ sudo chmod 600 /etc/wireguard/wg0.conf
 
 Le port doit être ouvert, mais en liste blanche des IP publiques de vos futurs VPS produits uniquement (à ajouter au fur et à mesure que vous en créez).
 
+Remplacer `192.0.2.1` par l'ip de la machine (jamais celle du hub lui-même — cette règle sert uniquement à autoriser une machine distante à se connecter, pas à ce que le hub s'autorise lui-même).
+
 ```bash
 sudo ufw allow from 192.0.2.1 to any port 51820 proto udp comment 'WireGuard - VPS Produit 1'
+```
+
+On autorise aussi tout le trafic déjà déchiffré arrivant depuis l'interface WireGuard elle-même (indispensable même sur le hub, sinon le pare-feu bloquera le trafic même une fois le tunnel établi) :
+
+```bash
+sudo ufw allow in on wg0
 ```
 
 On recharge UFW
