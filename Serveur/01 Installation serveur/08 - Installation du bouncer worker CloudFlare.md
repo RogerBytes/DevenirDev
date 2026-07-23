@@ -1,8 +1,13 @@
 # 08 - Installation du bouncer worker CloudFlare
 
-Il faut prendre `Cloudflare Workers plan` à 5$ par mois, [depuis le dashboard CloudFlare](https://dash.cloudflare.com/), il faut aller dans `Calcul / Offres Workers` et prendre l'offre payante à 5$ par mois..
+Il faut prendre `Cloudflare Workers plan` à 5$ par mois, [depuis le dashboard CloudFlare](https://dash.cloudflare.com/), il faut aller dans `Calcul / Offres Workers` et prendre l'offre payante à 5$ par mois.
+
+Le token Cloudflare et la clef LAPI CrowdSec de cette doc sont stockés dans HashiCorp Vault (doc 05), et non plus tapés en clair dans un fichier. Ce sont des secrets qui parlent à un service externe (Cloudflare) avec un scope large, donc ils méritent d'être centralisés dans Vault comme les autres secrets d'infra.
 
 ## Prérequis
+
+- WireGuard (doc 04) et Vault (doc 05) doivent déjà être installés, Vault initialisé et **déverrouillé** (`sudo docker exec -it vault vault status` doit retourner `Sealed: false`).
+- Vous devez être connecté à Vault sur le hub (`sudo docker exec -it vault vault login` déjà fait une fois, voir doc 05).
 
 ### Créer le token API CloudFlare
 
@@ -24,7 +29,23 @@ Pour le scope :
 
 Puis cliquer en bas sur `Continuer vers le résumé`, puis `Créer un jeton`.
 
-Une fois créé, il faut bien conserver le token.
+Une fois créé, il faut bien conserver le token pour le mettre dans le vault.
+
+### Stockage du token Cloudflare dans Vault
+
+Au lieu de le noter quelque part en attendant de vous en servir, on le stocke directement dans Vault :
+
+```bash
+sudo docker exec -it vault vault kv put secret/cloudflare/api-token value="LE_TOKEN_CLOUDFLARE"
+```
+
+Remplacer `LE_TOKEN_CLOUDFLARE` par le jeton généré à l'étape précédente. Une fois cette commande passée, vous pouvez fermer l'onglet CloudFlare qui affichait le token, il ne réapparaîtra plus jamais et n'a plus besoin d'être conservé ailleurs.
+
+On vérifie qu'il est bien stocké
+
+```bash
+sudo docker exec -it vault vault kv get secret/cloudflare/api-token
+```
 
 ### Lancer la configuration du bouncer worker avec le token de CloudFlare
 
