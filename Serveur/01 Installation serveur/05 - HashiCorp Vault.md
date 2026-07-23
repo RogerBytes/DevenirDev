@@ -8,7 +8,7 @@ Vault tourne en conteneur Docker, mais **n'écoute que sur l'IP privée WireGuar
 
 ## Prérequis
 
-WireGuard (doc 04) doit déjà être installé et actif, `wg show` doit afficher l'interface `wg0` avec l'adresse `10.10.0.1`.
+WireGuard (doc 04) doit déjà être installé et actif, `sudo wg show` doit afficher l'interface `wg0` active, et `ip addr show wg0` doit confirmer l'adresse `10.10.0.1`.
 
 ## Convention de nommage des secrets
 
