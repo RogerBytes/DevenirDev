@@ -1,0 +1,295 @@
+# 05 - HashiCorp Vault
+
+Vault va centraliser tous les secrets de l'infrastructure (clefs API CrowdSec, token Cloudflare, clefs R2, etc.), pour ne plus jamais avoir de secret stocké en clair dans un fichier `.yaml`/`.conf` sur le disque.
+
+Vault tourne en conteneur Docker, mais **n'écoute que sur l'IP privée WireGuard** (`10.10.0.1`, voir doc 04), jamais sur l'IP publique du VPS. Seuls les VPS déjà connectés au réseau WireGuard peuvent l'atteindre.
+
+- A plusieurs moments l'ip `10.10.0.1` correspond au VPS entreprise sur le réseau WireGuard, prenez garde à bien reprendre la votre si elle diffère.
+
+## Prérequis
+
+WireGuard (doc 04) doit déjà être installé et actif, `wg show` doit afficher l'interface `wg0` avec l'adresse `10.10.0.1`.
+
+## Convention de nommage des secrets
+
+Tous les secrets suivent cette arborescence dans le moteur KV de Vault, pour ne jamais avoir à improviser un chemin :
+
+```text
+secret/crowdsec/firewall-bouncer-api-key
+secret/crowdsec/caddy-lapi-key
+secret/cloudflare/api-token
+secret/cloudflare/r2-access-key-id
+secret/cloudflare/r2-secret-access-key
+secret/<nom-du-saas>/<nom-du-secret>
+```
+
+Chaque futur SaaS reçoit son propre préfixe (`secret/produit-a/...`), ce qui permettra de restreindre l'accès de chaque VPS produit à son seul préfixe via une policy dédiée.
+
+## Installation
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+### Création des répertoires
+
+```bash
+sudo mkdir -p /opt/docker/vault/config
+cd /opt/docker/vault
+```
+
+### Fichier de configuration Vault
+
+```bash
+sudo nano /opt/docker/vault/config/vault.hcl
+```
+
+```hcl
+storage "raft" {
+  path    = "/vault/data"
+  node_id = "vps-entreprise"
+}
+
+listener "tcp" {
+  address     = "0.0.0.0:8200"
+  tls_disable = "true"
+}
+
+api_addr     = "http://10.10.0.1:8200"
+cluster_addr = "http://10.10.0.1:8201"
+
+disable_mlock = false
+ui = true
+```
+
+Le TLS est désactivé volontairement ici : le trafic transite déjà dans le tunnel chiffré WireGuard, la connexion n'est jamais en clair sur le réseau. Le listener écoute sur `0.0.0.0:8200` **à l'intérieur** du conteneur, mais Docker ne publiera ce port que sur l'IP WireGuard côté hôte (voir le `compose.yml` ci-dessous), donc rien n'est jamais accessible depuis l'IP publique.
+
+On protège l'accès
+
+```bash
+sudo chmod 600 /opt/docker/vault/config/vault.hcl
+```
+
+### Le compose
+
+```bash
+sudo nano /opt/docker/vault/compose.yml
+```
+
+```yaml
+services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./config/vault.hcl:/vault/config/vault.hcl:ro
+      - data:/vault/data
+      - logs:/vault/logs
+    ports:
+      - "10.10.0.1:8200:8200"
+    command: server -config=/vault/config/vault.hcl
+
+volumes:
+  data:
+  logs:
+```
+
+`cap_add: IPC_LOCK` est nécessaire pour empêcher le système d'exploitation d'écrire la mémoire de Vault dans le swap (les secrets déchiffrés en mémoire ne doivent jamais atterrir sur le disque, même temporairement).
+
+`ports: "10.10.0.1:8200:8200"` restreint la publication du port à cette seule IP hôte — c'est ce qui garantit qu'aucune tentative de connexion depuis l'IP publique n'aboutira, sans même avoir besoin d'une règle UFW dédiée.
+
+### Création du conteneur
+
+```bash
+sudo docker compose up -d
+```
+
+On vérifie
+
+```bash
+sudo docker compose logs -f
+```
+
+Il doit afficher que Vault a démarré et se trouve à l'état `sealed` (scellé), c'est normal, c'est l'étape suivante.
+
+</div></details>
+
+## Initialisation (à ne faire qu'une seule fois dans la vie de ce Vault)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+```bash
+sudo docker exec -it vault vault operator init -key-shares=5 -key-threshold=3
+```
+
+Cette commande ne se lance **qu'une seule fois**. Elle retourne :
+
+- **5 Unseal Keys** (parts de la clef de déverrouillage, il en faudra 3 sur 5 à chaque redémarrage de Vault)
+- **1 Initial Root Token** (le jeton d'administration complet de Vault)
+
+**Ces informations n'apparaissent qu'une seule fois et ne sont jamais réaffichables.** Il faut les répartir immédiatement comme vos autres secrets critiques :
+
+- Les 5 parts de clef doivent être séparées sur des supports différents (par exemple : 2 dans KeePassXC, 1 sur la clef USB dédiée, 1 sur papier dans le coffre physique, 1 sur le Cloud personnel) — jamais toutes au même endroit, sinon le principe du seuil (3 sur 5) ne protège plus rien.
+- Le Root Token est à stocker dans VaultWarden/KeePassXC comme un mot de passe classique, et ne doit servir qu'à la configuration initiale (créer les policies et AppRoles), jamais à l'usage quotidien.
+
+</div></details>
+
+## Déverrouillage (unseal)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+À chaque démarrage ou redémarrage du conteneur Vault, celui-ci démarre scellé (sealed) et ne répond à aucune requête tant qu'il n'est pas déverrouillé. Il faut fournir 3 des 5 parts de clef générées à l'initialisation :
+
+```bash
+sudo docker exec -it vault vault operator unseal
+```
+
+La commande demande une part de clef, on la colle, on valide. On répète l'opération 3 fois (avec 3 parts différentes parmi les 5).
+
+On vérifie l'état
+
+```bash
+sudo docker exec -it vault vault status
+```
+
+`Sealed: false` confirme que Vault est déverrouillé et opérationnel.
+
+**Ce n'est pas automatisable par un script stocké sur le serveur** (ça reviendrait à stocker les clefs de unseal sur la machine qu'elles protègent, ce qui annule toute la protection). L'opération reste volontairement manuelle et humaine à chaque redémarrage du conteneur ou reboot du VPS.
+
+</div></details>
+
+## Premier login et configuration du moteur de secrets
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Depuis le VPS entreprise (qui a accès à `10.10.0.1` directement, sans passer par le tunnel puisqu'il en est l'extrémité) :
+
+```bash
+export VAULT_ADDR="http://10.10.0.1:8200"
+sudo docker exec -it vault vault login
+```
+
+On colle le Root Token généré à l'initialisation.
+
+### Activation du moteur KV version 2
+
+```bash
+sudo docker exec -it vault vault secrets enable -path=secret -version=2 kv
+```
+
+### Test d'écriture et de lecture d'un secret
+
+```bash
+sudo docker exec -it vault vault kv put secret/cloudflare/api-token value="mon_token_de_test"
+sudo docker exec -it vault vault kv get secret/cloudflare/api-token
+```
+
+Si la valeur s'affiche correctement, le moteur de secrets est opérationnel.
+
+</div></details>
+
+## Migration des secrets existants
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+On migre progressivement les secrets aujourd'hui en clair sur le VPS entreprise, selon la convention de nommage définie plus haut :
+
+```bash
+sudo docker exec -it vault vault kv put secret/cloudflare/api-token value="<TOKEN CLOUDFLARE>"
+sudo docker exec -it vault vault kv put secret/cloudflare/r2-access-key-id value="<ID CLE R2>"
+sudo docker exec -it vault vault kv put secret/cloudflare/r2-secret-access-key value="<CLE SECRETE R2>"
+sudo docker exec -it vault vault kv put secret/crowdsec/firewall-bouncer-api-key value="<CLE API BOUNCER>"
+sudo docker exec -it vault vault kv put secret/crowdsec/caddy-lapi-key value="<CLE LAPI CADDY>"
+```
+
+Une fois un secret migré et vérifié dans Vault, on supprime sa version en clair du fichier `.yaml`/`.conf` d'origine sur le disque, et on adapte le `compose.yml` du service concerné pour qu'il aille chercher la valeur dans Vault au démarrage (via un script de déploiement ou `vault agent`, à détailler dans une doc dédiée le moment venu).
+
+</div></details>
+
+## AppRole : accès dédié pour chaque futur VPS produit
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Chaque VPS produit doit avoir un accès limité à son seul préfixe de secrets, jamais un accès complet à Vault. On utilise l'authentification AppRole pour ça.
+
+### Activation de la méthode AppRole (une seule fois)
+
+```bash
+sudo docker exec -it vault vault auth enable approle
+```
+
+### Création d'une policy dédiée à un SaaS (exemple : `produit-a`)
+
+```bash
+sudo docker exec -it vault sh -c 'cat <<EOF | vault policy write produit-a-policy -
+path "secret/data/produit-a/*" {
+  capabilities = ["read", "list"]
+}
+EOF'
+```
+
+Cette policy ne donne accès qu'en lecture au préfixe `secret/produit-a/*`, jamais aux autres SaaS ni aux secrets d'infrastructure (`crowdsec/`, `cloudflare/`).
+
+### Création du rôle AppRole lié à cette policy
+
+```bash
+sudo docker exec -it vault vault write auth/approle/role/produit-a \
+    token_policies="produit-a-policy" \
+    token_ttl=1h \
+    token_max_ttl=4h
+```
+
+### Récupération du `role_id` (fixe, à donner au VPS produit)
+
+```bash
+sudo docker exec -it vault vault read auth/approle/role/produit-a/role-id
+```
+
+### Génération du `secret_id` (à usage unique/temporaire, ne pas le laisser stocké en clair longtemps)
+
+```bash
+sudo docker exec -it vault vault write -f auth/approle/role/produit-a/secret-id
+```
+
+Ces deux valeurs (`role_id` + `secret_id`) sont transmises une seule fois au VPS produit (via une connexion déjà sécurisée, par exemple le tunnel WireGuard ou CloudFlared), qui s'en sert pour obtenir un token temporaire :
+
+```bash
+vault write auth/approle/login role_id="<ROLE_ID>" secret_id="<SECRET_ID>"
+```
+
+Ce token temporaire (durée de vie 1h, renouvelable jusqu'à 4h) est ensuite utilisé par le VPS produit pour lire ses propres secrets, jamais ceux des autres SaaS.
+
+</div></details>
+
+## Sauvegarde du Vault
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Le stockage `raft` se sauvegarde en un seul snapshot, à ajouter à votre routine de backup (voir doc 10 - Offen Docker Volume Backup, à étendre pour inclure ce fichier) :
+
+```bash
+sudo docker exec -it vault vault operator raft snapshot save /vault/data/backup.snap
+```
+
+Ce fichier reste chiffré (il ne peut être restauré et lu qu'avec le même Vault déverrouillé par les mêmes parts de clef), il peut donc être envoyé vers R2 comme les autres sauvegardes sans risque de fuite en clair.
+
+Pour restaurer sur une nouvelle machine (par exemple, un jour où vous décidez d'héberger Vault sur un serveur dédié) :
+
+```bash
+sudo docker exec -it vault vault operator raft snapshot restore /vault/data/backup.snap
+```
+
+</div></details>
+
+## Auteur
+
+[<img src="https://github.com/RogerBytes.png" width="40" height="40" style="border-radius:50%;" alt="RogerBytes' avatar">](https://github.com/RogerBytes)
+[**RogerBytes (Harry Richmond)**](https://github.com/RogerBytes)
+
+<span hidden>
+<details><summary></summary>
+<style>.spoiler{border-left:4px solid #1abc9c;border-bottom-left-radius:3px;padding-left:10px;padding-top:15px;margin-top:-10px;margin-bottom:15px}.button{cursor:pointer;padding:5px 10px;background-color:#3498db;color:white;border-radius:3px;margin-bottom:5px;display:inline-block;transition:background-color 0.2s}.button:hover{background-color:#217dbb}details[open] .button{background-color:#1abc9c}</style>
+</details></span>
+
+<p align="right"><a href="#">🔝 Retour en haut</a></p>
