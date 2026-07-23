@@ -151,7 +151,7 @@ Cette commande ne se lance **qu'une seule fois**. Elle retourne :
 - **5 Unseal Keys** (parts de la clef de déverrouillage, il en faudra 3 sur 5 à chaque redémarrage de Vault)
 - **1 Initial Root Token** (le jeton d'administration complet de Vault)
 
-**Ces informations n'apparaissent qu'une seule fois et ne sont jamais réaffichables.** Il faut les répartir immédiatement comme vos autres secrets critiques :
+**Ces informations n'apparaissent qu'une seule fois et ne sont jamais ré-affichables.** Il faut les répartir immédiatement comme vos autres secrets critiques :
 
 - Les 5 parts de clef doivent être séparées sur des supports différents (par exemple : 2 dans VaultWarden, 1 sur la clef USB dédiée, 1 sur papier dans le coffre physique, 1 sur le Cloud personnel) — jamais toutes au même endroit, sinon le principe du seuil (3 sur 5) ne protège plus rien.
 - Le Root Token est à stocker dans VaultWarden comme un mot de passe classique, et ne doit servir qu'à la configuration initiale (créer les policies et AppRoles), jamais à l'usage quotidien.
@@ -243,8 +243,6 @@ On migre progressivement les secrets aujourd'hui en clair sur le VPS entreprise,
 sudo docker exec -it vault vault kv put secret/cloudflare/api-token value="<TOKEN CLOUDFLARE>"
 sudo docker exec -it vault vault kv put secret/cloudflare/r2-access-key-id value="<ID CLE R2>"
 sudo docker exec -it vault vault kv put secret/cloudflare/r2-secret-access-key value="<CLE SECRETE R2>"
-sudo docker exec -it vault vault kv put secret/crowdsec/firewall-bouncer-api-key value="<CLE API BOUNCER>"
-sudo docker exec -it vault vault kv put secret/crowdsec/caddy-lapi-key value="<CLE LAPI CADDY>"
 ```
 
 Une fois un secret migré et vérifié dans Vault, on supprime sa version en clair du fichier `.yaml`/`.conf` d'origine sur le disque, et on adapte le `compose.yml` du service concerné pour qu'il aille chercher la valeur dans Vault au démarrage (via un script de déploiement ou `vault agent`, à détailler dans une doc dédiée le moment venu).
