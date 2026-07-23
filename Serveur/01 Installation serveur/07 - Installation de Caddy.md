@@ -1,4 +1,4 @@
-# 05 - Installation de Caddy
+# 07 - Installation de Caddy
 
 - Depuis [Page docker hub](https://hub.docker.com/_/caddy)
 - Depuis [Page GitHub](https://github.com/caddyserver/caddy)

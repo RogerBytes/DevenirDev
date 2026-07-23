@@ -1,4 +1,4 @@
-# 06 - Installation du bouncer worker CloudFlare
+# 08 - Installation du bouncer worker CloudFlare
 
 Il faut prendre `Cloudflare Workers plan` à 5$ par mois, [depuis le dashboard CloudFlare](https://dash.cloudflare.com/), il faut aller dans `Calcul / Offres Workers` et prendre l'offre payante à 5$ par mois..
 

@@ -1,4 +1,4 @@
-# 04 - Crowdsec firewall
+# 06 - Crowdsec firewall
 
 On installera Caddy ensuite, mais pour éviter des allers retours, on met en place tout de suite son système de logs ici.
 

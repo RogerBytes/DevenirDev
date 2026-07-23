@@ -1,4 +1,4 @@
-# 10 - Kill Switch
+# 12 - Kill Switch
 
 Pour plus de sécurité, nous allons mettre en place un système de Kill Switch, permettant ainsi d'avoir une politique de la terre brûlée en cas de compromission (qui se lancera automatiquement).
 
