@@ -95,6 +95,8 @@ services:
       memlock:
         soft: -1
         hard: -1
+    networks:
+      - caddy_network
 
 volumes:
   data:

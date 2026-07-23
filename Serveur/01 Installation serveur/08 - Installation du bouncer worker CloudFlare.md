@@ -4,6 +4,14 @@ Il faut prendre `Cloudflare Workers plan` à 5$ par mois, [depuis le dashboard C
 
 ## Prérequis
 
+Le conteneur `vault` (doc 05) doit être connecté au réseau `caddy_network`, sinon ce service ne pourra pas le résoudre par son nom. Vérifier avec :
+
+```bash
+sudo docker network inspect caddy_network --format '{{range .Containers}}{{.Name}} {{end}}'
+```
+
+`vault` doit apparaître dans la liste. Si absent, voir doc 05 pour l'ajout du réseau dans son `compose.yml`.
+
 ### Créer le token API CloudFlare
 
 Aller sur [page](https://dash.cloudflare.com/profile/api-tokens), ne pas utiliser le jeton créé automatiquement, il ne sert pas à ça.
@@ -34,98 +42,220 @@ Plutôt que de le garder en clair dans un fichier, on l'enregistre directement d
 sudo docker exec -it vault vault kv put secret/cloudflare/api-token value="<TON_TOKEN_CLOUDFLARE>"
 ```
 
-### Lancer la configuration du bouncer worker avec le token de CloudFlare
-
-On créé le repertoire pour le conteneur
-
-```bash
-sudo mkdir -p /opt/docker/cf-bouncer
-```
-
-Puis on lance cette commande pour générer la configuration (bien penser à mettre son token worker de CloudFlare)
-
-```bash
-sudo docker run crowdsecurity/cloudflare-worker-bouncer \
-  -g LE_TOKEN_CLOUDFLARE | sudo tee /opt/docker/cf-bouncer/cfg.yaml
-```
-
-On protège l'accès
-
-```bash
-sudo chmod 600 /opt/docker/cf-bouncer/cfg.yaml
-```
-
-### Fichier de configuration du bouncer worker
+### Récupération de la clé LAPI CrowdSec, et stockage dans Vault
 
 ```bash
 sudo docker exec crowdsec cscli bouncers add cloudflare-bouncer
 ```
 
-On note précieusement la clef, on va s'en servir juste après.
-
-On édite le fichier
-
 ```bash
-sudo nano /opt/docker/cf-bouncer/cfg.yaml
+sudo docker exec -it vault vault kv put secret/crowdsec/caddy-lapi-key value="<CLE_LAPI_GENEREE>"
 ```
 
-Pour `lapi_url:` et `lapi_key`, on met
+### Génération ponctuelle du template de base
+
+Le token doit d'abord servir une fois pour générer la structure de `cfg.yaml` (le worker CrowdSec l'exige à la création). On le fait une seule fois, en récupérant le token depuis Vault sans jamais le taper à la main :
 
 ```bash
+TOKEN=$(sudo docker exec vault vault kv get -field=value secret/cloudflare/api-token)
+sudo docker run crowdsecurity/cloudflare-worker-bouncer \
+  -g "$TOKEN" | sudo tee /opt/docker/cf-bouncer/config/cfg-base.yaml
+unset TOKEN
+```
+
+Ce fichier `cfg-base.yaml` sert uniquement de référence pour connaître la structure attendue (namespace KV, ID du worker, etc.) — il ne sera pas celui utilisé en production, garde-le juste pour t'y référer si besoin, avec `chmod 600` :
+
+```bash
+sudo chmod 600 /opt/docker/cf-bouncer/config/cfg-base.yaml
+```
+
+### Policy Vault dédiée à ce service
+
+```bash
+sudo docker exec -it vault sh -c 'cat <<EOF | vault policy write cf-bouncer-policy -
+path "secret/data/cloudflare/api-token" {
+  capabilities = ["read"]
+}
+path "secret/data/crowdsec/caddy-lapi-key" {
+  capabilities = ["read"]
+}
+EOF'
+```
+
+Un token classique lié à cette policy suffit ici — pas besoin d'AppRole puisque ce service tourne sur le hub, à côté de Vault :
+
+```bash
+sudo docker exec -it vault vault token create -policy=cf-bouncer-policy -ttl=768h -field=token
+```
+
+Garde ce token précieusement (dans VaultWarden), on l'utilise juste après.
+
+### Répertoire et template de rendu
+
+```bash
+sudo mkdir -p /opt/docker/cf-bouncer/agent-config
+sudo nano /opt/docker/cf-bouncer/agent-config/cfg.ctmpl
+```
+
+```text
+cloudflare_config:
+    worker:
+        script_name: ""
+        logpush: null
+        tags: []
+        compatibility_date: ""
+        compatibility_flags: []
+        log_only: false
+    decisions_sync_worker:
+        cron: '*/5 * * * *'
+    accounts:
+        - id: <TON_ACCOUNT_ID>
+          ban_template: ""
+          zones:
+            - zone_id: <TON_ZONE_ID>
+              actions:
+                - captcha
+              default_action: captcha
+              routes_to_protect:
+                - '*rogerbytes.com/*'
+              turnstile:
+                enabled: true
+                rotate_secret_key: true
+                rotate_secret_key_every: 168h0m0s
+                mode: managed
+          token: {{ with secret "secret/data/cloudflare/api-token" }}{{ .Data.data.value }}{{ end }}
+          account_name: Harry.richmond@rogerbytes.com
+
 crowdsec_config:
     lapi_url: http://crowdsec:8080
-    lapi_key: COLLER_LA_CLÉ_ICI
+    lapi_key: {{ with secret "secret/data/crowdsec/caddy-lapi-key" }}{{ .Data.data.value }}{{ end }}
+    update_frequency: 10s
+    include_scenarios_containing: []
+    exclude_scenarios_containing: []
+    only_include_decisions_from: []
+    key_path: ""
+    cert_path: ""
+    ca_cert_path: ""
+
+daemon: true
+log_level: info
+log_mode: stdout
+log_dir: ""
+prometheus:
+    enabled: false
+    listen_addr: 0.0.0.0
+    listen_port: "2112"
 ```
 
-Et remplacer `daemon: false` par `daemon: true`.
+Remplace <TON_ACCOUNT_ID> et <TON_ZONE_ID> par les vraies valeurs que tu as vues dans ton cfg-base.yaml (celles en xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx), ce ne sont pas des secrets, juste des identifiants de compte/zone.
 
-### Création du compose.yml
+Pour afficher
+
+```bash
+sudo cat /opt/docker/cf-bouncer/config/cfg-base.yaml
+```
+
+*(Ajuster la structure exacte selon ce que retourne réellement `cfg-base.yaml` généré plus haut — les clés `account_token`/`kv_namespace_id`/etc. peuvent varier selon la version du bouncer.)*
+
+### Configuration de l'agent Vault dédié
+
+```bash
+sudo nano /opt/docker/cf-bouncer/agent-config/agent.hcl
+```
+
+```hcl
+vault {
+  address = "http://vault:8200"
+}
+
+auto_auth {
+  method "token_file" {
+    config = {
+      token_file_path = "/vault/secrets/token"
+    }
+  }
+}
+
+template {
+  source      = "/vault/config/cfg.ctmpl"
+  destination = "/vault/output/crowdsec-cloudflare-worker-bouncer.yaml"
+  perms       = "0600"
+}
+```
+
+On dépose le token généré plus haut dans un fichier lu au démarrage :
+
+```bash
+echo "<TOKEN_GENERE_PLUS_HAUT>" | sudo tee /opt/docker/cf-bouncer/agent-config/token > /dev/null
+sudo chmod 644 /opt/docker/cf-bouncer/agent-config/token
+```
+
+### Création du `compose.yml`
 
 ```bash
 sudo nano /opt/docker/cf-bouncer/compose.yml
 ```
 
-```yml
+```yaml
 services:
+  cf-bouncer-agent:
+    image: hashicorp/vault:latest
+    container_name: cf-bouncer-agent
+    restart: unless-stopped
+    volumes:
+      - ./agent-config:/vault/config:ro
+      - ./agent-config/token:/vault/secrets/token:ro
+      - cfg-output:/vault/output
+    command: agent -config=/vault/config/agent.hcl
+    networks:
+      - caddy_network
+
   cf-bouncer:
     image: crowdsecurity/cloudflare-worker-bouncer
     container_name: cf-bouncer
     restart: unless-stopped
+    depends_on:
+      - cf-bouncer-agent
     volumes:
-      - ./cfg.yaml:/etc/crowdsec/bouncers/crowdsec-cloudflare-worker-bouncer.yaml
+      - cfg-output:/etc/crowdsec/bouncers
     networks:
       - caddy_network
+
+volumes:
+  cfg-output:
 
 networks:
   caddy_network:
     external: true
 ```
 
-## Création du conteneur
+Le fichier `cfg.yaml` généré par l'agent est monté dans le conteneur `cf-bouncer` via un volume partagé (`cfg-output`) — le token/la clé LAPI ne transitent jamais par un `compose.yml` en clair, ni par une saisie manuelle une fois cette mise en place terminée.
 
-On va dans le répertoire
+### Préparation du volume de sortie
+
+On crée le volume à l'avance et on corrige ses permissions, pour que l'utilisateur non-root de l'agent Vault puisse y écrire :
+
+```bash
+sudo docker volume create cf-bouncer_cfg-output
+sudo docker run --rm -v cf-bouncer_cfg-output:/vault/output alpine chown -R 100:1000 /vault/output
+```
+
+## Création des conteneurs
 
 ```bash
 cd /opt/docker/cf-bouncer
-```
-
-puis on lance
-
-```bash
 sudo docker compose up -d
 ```
 
-On attend un peu, et on le restart
+On vérifie que l'agent a bien généré le fichier :
 
 ```bash
-sudo docker compose -f /opt/docker/cf-bouncer/compose.yml restart
+sudo docker compose logs cf-bouncer-agent --tail=30
 ```
 
-### Vérifier depuis le serveur
+## Vérification (inchangé)
 
 La liste communautaire peut prendre [2 heures](https://discourse.crowdsec.net/t/default-pull-interval/606) avant d'être chargée
-
-On vérifie si elle a été téléchargée
 
 ```bash
 sudo docker exec crowdsec cscli decisions list --origin community-blocklist
@@ -134,34 +264,15 @@ sudo docker exec crowdsec cscli decisions list --origin community-blocklist
 Et pour vérifier ses logs
 
 ```bash
-sudo docker compose -f /opt/docker/cf-bouncer/compose.yml logs --tail=50
+sudo docker compose logs cf-bouncer --tail=50
 ```
-
-Et on nettoie les anciens conteneurs
-
-```bash
-sudo docker container prune -f
-```
-
-Si on liste les conteneurs avec `sudo docker ps -a`, on doit avoir `caddy-caddy`, `crowdsecurity/cloudflare-worker-bouncer` et `crowdsecurity/crowdsec:latest` en up/actifs.
 
 ### Vérifier dans le Dashboard de CloudFlare
 
 Aller sur [le dashboard de CloudFlare](https://dash.cloudflare.com), puis aller dans
 
-**Pour voir le Worker :**
+**Pour voir le Worker :** `Calcul / Workers et Pages` → `crowdsec-cloudflare-worker-bouncer`
 
-- Clique sur **"Calcul / Workers et Pages"** dans le menu de gauche
-- Tu devrais voir un worker nommé `crowdsec-cloudflare-worker-bouncer`
+**Pour voir le KV store :** `Stockage et base de données / Workers KV` → `CROWDSECCFBOUNCERNS`
 
-**Pour voir le KV store :**
-
-- Clique sur **"Stockage et base de données / Workers KV"**
-- Tu devrais voir un namespace nommé `CROWDSECCFBOUNCERNS`
-- Clique dessus puis sur **"Paires KV "** pour voir les IPs bannies
-
-**Pour voir les routes protégées :**
-
-- Clique sur ton domaine `mondomaine.com`
-- Dans le menu gauche → **"Routes Workers"**
-- Tu devrais voir la route `*mondomaine.com/*` liée au worker CrowdSec
+**Pour voir les routes protégées :** ton domaine → `Routes Workers` → `*mondomaine.com/*`
