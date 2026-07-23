@@ -72,6 +72,13 @@ networks:
     external: true
 ```
 
+Et on vire le repertoire `caddyfile` pour le remplacer par un fichier
+
+```bash
+sudo rm -rf /opt/docker/caddy/Caddyfile
+sudo touch /opt/docker/caddy/Caddyfile
+```
+
 On lance la création de l'image et du conteneur
 
 ```bash
@@ -93,7 +100,6 @@ Bien noter la clef, on va la mettre dans notre Caddyfile
 ### Configuration Caddyfile
 
 ```bash
-sudo rm -rf /opt/docker/caddy/Caddyfile
 sudo nano /opt/docker/caddy/Caddyfile
 ```
 
