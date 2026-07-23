@@ -168,7 +168,7 @@ Cette commande ne se lance **qu'une seule fois**. Elle retourne :
 sudo docker exec -it vault vault operator unseal
 ```
 
-La commande demande une part de clef, on la colle, on valide. On répète l'opération 3 fois (avec 3 parts différentes parmi les 5).
+La commande demande une part de clef, on la colle, on valide. **On répète l'opération 3 fois (avec 3 parts différentes parmi les 5)**.
 
 On vérifie l'état
 
@@ -189,17 +189,36 @@ sudo docker exec -it vault vault status
 Depuis le VPS entreprise (qui a accès à `10.10.0.1` directement, sans passer par le tunnel puisqu'il en est l'extrémité) :
 
 ```bash
-export VAULT_ADDR="http://10.10.0.1:8200"
 sudo docker exec -it vault vault login
 ```
 
-On colle le Root Token généré à l'initialisation.
+On colle le Root Token généré à l'initialisation. et il retourne
+
+```bash
+$ sudo docker exec -it vault vault login
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                xxxxxxxxxxxxxxxxx
+token_accessor       xxxxxxxxxx
+token_duration       ∞
+token_renewable      falsetoken_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+```
+
+**Ceci ne se fait qu'une seule fois, pour toute la vie du serveur.** Pas besoin de refaire ce login après un reboot ni après un restart du conteneur — contrairement à l'unseal (voir plus haut), qui lui doit être refait à chaque redémarrage.
 
 ### Activation du moteur KV version 2
 
 ```bash
 sudo docker exec -it vault vault secrets enable -path=secret -version=2 kv
 ```
+
+Il dit `Success! Enabled the kv secrets engine at: secret/`.
 
 ### Test d'écriture et de lecture d'un secret
 
@@ -212,9 +231,11 @@ Si la valeur s'affiche correctement, le moteur de secrets est opérationnel.
 
 </div></details>
 
-## Migration des secrets existants
+## Migration des secrets existants (ne pas faire sur un vps vierge)
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+**Attention** ceci est à faire sur un vps déjà existant avec divers services, si le serveur est vierge, pas besoin.
 
 On migre progressivement les secrets aujourd'hui en clair sur le VPS entreprise, selon la convention de nommage définie plus haut :
 
@@ -244,6 +265,8 @@ sudo docker exec -it vault vault auth enable approle
 
 ### Création d'une policy dédiée à un SaaS (exemple : `produit-a`)
 
+Remplacer `produit-a` (dans `vault policy write produit-a-policy` et `path "secret/data/produit-a/*"`) par le nom du Saas, afin de pouvoir bien gérer les accès.
+
 ```bash
 sudo docker exec -it vault sh -c 'cat <<EOF | vault policy write produit-a-policy -
 path "secret/data/produit-a/*" {
@@ -256,6 +279,8 @@ Cette policy ne donne accès qu'en lecture au préfixe `secret/produit-a/*`, jam
 
 ### Création du rôle AppRole lié à cette policy
 
+Remplacer `produit-a` (dans `auth/approle/role/produit-a` et `token_policies="produit-a-policy"`) par le nom du Saas, afin de pouvoir bien gérer les accès.
+
 ```bash
 sudo docker exec -it vault vault write auth/approle/role/produit-a \
     token_policies="produit-a-policy" \
@@ -265,23 +290,27 @@ sudo docker exec -it vault vault write auth/approle/role/produit-a \
 
 ### Récupération du `role_id` (fixe, à donner au VPS produit)
 
+Remplacer `produit-a` (dans `auth/approle/role/produit-a/role-id`) par le nom du Saas, afin de pouvoir bien gérer les accès.
+
 ```bash
 sudo docker exec -it vault vault read auth/approle/role/produit-a/role-id
 ```
 
 ### Génération du `secret_id` (à usage unique/temporaire, ne pas le laisser stocké en clair longtemps)
 
+Remplacer `produit-a` (dans `auth/approle/role/produit-a/role-id`) par le nom du Saas, afin de pouvoir bien gérer les accès.
+
 ```bash
 sudo docker exec -it vault vault write -f auth/approle/role/produit-a/secret-id
 ```
 
-Ces deux valeurs (`role_id` + `secret_id`) sont transmises une seule fois au VPS produit (via une connexion déjà sécurisée, par exemple le tunnel WireGuard ou CloudFlared), qui s'en sert pour obtenir un token temporaire :
+Ces deux valeurs (`role_id` + `secret_id`) sont transmises une seule fois au VPS produit (via une connexion déjà sécurisée, par exemple le tunnel WireGuard), qui s'en sert pour obtenir un token temporaire :
 
 ```bash
 vault write auth/approle/login role_id="<ROLE_ID>" secret_id="<SECRET_ID>"
 ```
 
-Ce token temporaire (durée de vie 1h, renouvelable jusqu'à 4h) est ensuite utilisé par le VPS produit pour lire ses propres secrets, jamais ceux des autres SaaS.
+Ce token temporaire (durée de vie 1h, renouvelable jusqu'à 4h) est ensuite utilisé par le VPS produit pour lire ses propres secrets, jamais ceux des autres SaaS. Pour que le renouvellement se fasse sans intervention manuelle, il faudra installer et configurer `vault agent` sur le VPS produit (étape à faire une fois, détaillée dans une doc dédiée le moment venu) — c'est lui qui redemandera un nouveau token tout seul avant expiration, sans avoir besoin de relancer la commande à la main.
 
 </div></details>
 
@@ -302,6 +331,129 @@ Pour restaurer sur une nouvelle machine (par exemple, un jour où vous décidez 
 ```bash
 sudo docker exec -it vault vault operator raft snapshot restore /vault/data/backup.snap
 ```
+
+</div></details>
+
+## Vault Agent : renouvellement automatique du token (à faire sur chaque VPS produit)
+
+<details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Cette partie se fait sur le **VPS produit** (le "bébé"), pas sur le hub. Elle permet au VPS produit d'obtenir et de renouveler son token tout seul, sans intervention manuelle, puis d'écrire les secrets récupérés dans un fichier `.env` que ses conteneurs peuvent consommer normalement.
+
+### Prérequis de l'agent
+
+Le VPS produit doit être connecté au réseau WireGuard (voir doc 04) et pouvoir joindre `10.10.0.1:8200`. On vérifie avec :
+
+```bash
+curl -s http://10.10.0.1:8200/v1/sys/health
+```
+
+Si ça retourne du JSON (même une erreur type `sealed`), la connexion réseau fonctionne.
+
+### Stockage du `role_id` et du `secret_id`
+
+On crée un répertoire dédié, avec des permissions strictes, pour stocker les deux identifiants reçus du hub :
+
+```bash
+sudo mkdir -p /opt/docker/vault-agent/secrets
+sudo chmod 700 /opt/docker/vault-agent/secrets
+```
+
+```bash
+echo "<ROLE_ID>" | sudo tee /opt/docker/vault-agent/secrets/role_id > /dev/null
+echo "<SECRET_ID>" | sudo tee /opt/docker/vault-agent/secrets/secret_id > /dev/null
+sudo chmod 600 /opt/docker/vault-agent/secrets/role_id /opt/docker/vault-agent/secrets/secret_id
+```
+
+Remplacer `<ROLE_ID>` et `<SECRET_ID>` par les valeurs générées sur le hub. Le `secret_id` étant à usage limité, une fois consommé une première fois par l'agent, il n'est plus nécessaire de le garder — mais on le laisse en place, l'agent peut avoir besoin de s'authentifier à nouveau après un redémarrage du VPS produit.
+
+### Fichier de configuration de l'agent
+
+```bash
+sudo mkdir -p /opt/docker/vault-agent/config
+sudo nano /opt/docker/vault-agent/config/agent.hcl
+```
+
+```hcl
+vault {
+  address = "http://10.10.0.1:8200"
+}
+
+auto_auth {
+  method "approle" {
+    config = {
+      role_id_file_path   = "/vault/secrets/role_id"
+      secret_id_file_path = "/vault/secrets/secret_id"
+    }
+  }
+
+  sink "file" {
+    config = {
+      path = "/vault/secrets/token"
+    }
+  }
+}
+
+template {
+  source      = "/vault/config/secrets.ctmpl"
+  destination = "/vault/output/secrets.env"
+}
+```
+
+### Le template de rendu des secrets
+
+Ce fichier décrit quels secrets récupérer et sous quel nom de variable les écrire dans le `.env` final. Remplacer `<NOM_SAAS>` par le préfixe utilisé sur le hub (celui donné lors de la création de la policy) :
+
+```bash
+sudo nano /opt/docker/vault-agent/config/secrets.ctmpl
+```
+
+```text
+{{- with secret "secret/data/<NOM_SAAS>/exemple-cle" -}}
+EXEMPLE_CLE={{ .Data.data.value }}
+{{- end }}
+```
+
+Un bloc `{{- with secret "..." -}}` par secret à récupérer, à dupliquer pour chaque variable dont tes conteneurs ont besoin.
+
+### Le compose de l'agent
+
+```bash
+sudo nano /opt/docker/vault-agent/compose.yml
+```
+
+```yaml
+services:
+  vault-agent:
+    image: hashicorp/vault:latest
+    container_name: vault-agent
+    restart: unless-stopped
+    volumes:
+      - ./config:/vault/config:ro
+      - ./secrets:/vault/secrets
+      - output:/vault/output
+    command: agent -config=/vault/config/agent.hcl
+
+volumes:
+  output:
+```
+
+### Création du conteneur de l'agent
+
+```bash
+cd /opt/docker/vault-agent
+sudo docker compose up -d
+```
+
+### Vérification
+
+```bash
+sudo docker compose logs -f
+```
+
+On doit voir l'agent s'authentifier avec succès, puis générer le fichier `secrets.env` régulièrement.
+
+Le fichier généré (`/vault/output/secrets.env`, dans le volume `output`) peut ensuite être référencé comme n'importe quel `.env` via `env_file:` dans le `compose.yml` du service applicatif du VPS produit — l'agent le tiendra à jour tout seul en arrière-plan, sans que tu aies à relancer quoi que ce soit manuellement.
 
 </div></details>
 
