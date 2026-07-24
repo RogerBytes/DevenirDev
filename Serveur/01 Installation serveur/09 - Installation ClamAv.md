@@ -32,6 +32,16 @@ services:
     image: clamav/clamav-debian:stable
     container_name: clamav
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+    network_mode: none
     volumes:
       - data:/var/lib/clamav
       - /:/vps:ro
