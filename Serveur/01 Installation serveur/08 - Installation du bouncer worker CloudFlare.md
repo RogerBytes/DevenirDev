@@ -258,8 +258,10 @@ sudo docker compose logs cf-bouncer-agent --tail=30
 La liste communautaire peut prendre [2 heures](https://discourse.crowdsec.net/t/default-pull-interval/606) avant d'être chargée
 
 ```bash
-sudo docker exec crowdsec cscli decisions list --origin community-blocklist
+sudo docker exec crowdsec cscli decisions list --all -o json | grep -c '"id"'
 ```
+
+S'il retourne un nombre supérieur à 10000, c'est que la liste communautaire est bien importée.
 
 Et pour vérifier ses logs
 
@@ -273,6 +275,4 @@ Aller sur [le dashboard de CloudFlare](https://dash.cloudflare.com), puis aller 
 
 **Pour voir le Worker :** `Calcul / Workers et Pages` → `crowdsec-cloudflare-worker-bouncer`
 
-**Pour voir le KV store :** `Stockage et base de données / Workers KV` → `CROWDSECCFBOUNCERNS`
-
-**Pour voir les routes protégées :** ton domaine → `Routes Workers` → `*mondomaine.com/*`
+**Pour voir le KV store (avec les bans ip) :** `Stockage et base de données / Workers KV` → `CROWDSECCFBOUNCERNS`
