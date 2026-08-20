@@ -20,13 +20,6 @@ Informations principales
 - `/var/lib/docker`, `lv_home` et `lv_docker_opt` : Logical Volumes
 - `/dev/vg_prod/lv_docker_lib`, `/dev/vg_prod/lv_containerd_lib`, `/dev/vg_prod/lv_docker_opt` et `/dev/vg_prod/lv_home` : Chemins des Logical Volumes
 
-Une fois que tu me donnes ça, je te déroule le script étape par étape avec :
-
-1. La création du conteneur LUKS.
-2. La création des volumes LVM à l'intérieur.
-3. Le transfert de tes données existantes (`/var/lib/docker`, etc.) pour ne rien perdre.
-4. La configuration du montage automatique.
-
 On liste les partitions avec `lsblk`
 
 Dans l'exemple il retourne
