@@ -5,6 +5,14 @@ Depuis [Page GitHub](https://github.com/dani-garcia/vaultwarden)
 
 - A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` est une IP de test réservée aux exemples, elle ne fonctionnera pas pour votre serveur.
 
+## Architecture réseau
+
+VaultWarden est isolé sur son propre réseau bridge dédié, jamais sur `caddy_network` :
+
+- `vaultwarden-agent` → `vault_network` uniquement (pour joindre `vault:8200`). Il ne parle jamais à `vaultwarden` en réseau, seulement via le fichier `vaultwarden.env` partagé par volume.
+- `vaultwarden` → `vaultwarden_network` uniquement (réseau dédié, invisible pour les autres apps et pour Caddy tant qu'il n'y est pas rattaché).
+- `caddy` doit rejoindre `vaultwarden_network` en plus de `caddy_network`, pour pouvoir faire son `reverse_proxy` vers `vaultwarden`. Voir la section dédiée plus bas dans ce doc.
+
 ## Prérequis
 
 ### Filtrage WAF
@@ -111,6 +119,14 @@ On prépare un répertoire dans `opt/docker`
 sudo mkdir -p /opt/docker/apps/vaultwarden/secrets-runtime
 cd /opt/docker/apps/vaultwarden
 ```
+
+### Création du réseau dédié
+
+```bash
+sudo docker network create vaultwarden_network
+```
+
+Ce réseau isole VaultWarden : aucun autre conteneur (hors Caddy, rattaché juste après) ne pourra le joindre en réseau, même en cas de compromission d'une autre app.
 
 ### Gestion domaine / sous domaine CloudFlare
 
@@ -257,7 +273,7 @@ services:
       - ./secrets-runtime:/vault/output
     command: agent -config=/vault/config/agent.hcl
     networks:
-      - caddy_network
+      - vault_network
 
   vaultwarden:
     image: vaultwarden/server:latest
@@ -279,14 +295,21 @@ services:
     volumes:
       - ./vw-data:/data
     networks:
-      - caddy_network
+      - vaultwarden_network
 
 networks:
-  caddy_network:
+  vault_network:
+    external: true
+  vaultwarden_network:
     external: true
 ```
 
 Penser à modifier `DOMAIN`, `SMTP_HOST`, `SMTP_FROM`, `SMTP_USERNAME`.
+
+**Ce qui change par rapport à une installation classique :**
+
+- `vaultwarden-agent` est sur `vault_network` (pas `caddy_network`) : il n'a besoin que de joindre `vault:8200`, jamais de parler à `vaultwarden` en réseau (ça passe par le volume `secrets-runtime`).
+- `vaultwarden` est sur `vaultwarden_network` (pas `caddy_network`) : il est invisible pour toutes les autres apps et pour Caddy, tant que Caddy n'est pas explicitement rattaché à ce réseau (voir plus bas).
 
 Et enregistrer le fichier.
 
@@ -368,7 +391,40 @@ drwxr-xr-x 3 root root 4096 Jun 20 19:06 agent-config
 
 ## Configurer un reverse proxy avec Caddy
 
-Il suffit de modifier le `Caddyfile` comme on l'a déjà fait.
+Contrairement aux autres apps (qui restent toutes sur `caddy_network`), `vaultwarden` est sur son propre réseau `vaultwarden_network`. Il faut donc d'abord rattacher Caddy à ce réseau avant de pouvoir faire le reverse proxy.
+
+### Rattacher Caddy à `vaultwarden_network`
+
+```bash
+sudo nano /opt/docker/caddy/compose.yml
+```
+
+Dans le service `caddy`, ajouter `vaultwarden_network` à la liste des réseaux :
+
+```yaml
+    networks:
+      - caddy_network
+      - vaultwarden_network
+```
+
+Et dans le bloc `networks:` en bas du fichier, ajouter :
+
+```yaml
+networks:
+  caddy_network:
+    external: true
+  vaultwarden_network:
+    external: true
+```
+
+On applique le changement :
+
+```bash
+cd /opt/docker/caddy
+sudo docker compose up -d --force-recreate
+```
+
+### Ajouter la redirection dans le Caddyfile
 
 ```bash
 sudo nano /opt/docker/caddy/Caddyfile
