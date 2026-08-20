@@ -97,6 +97,8 @@ sudo mkdir -p /opt/docker/cf-bouncer/agent-config
 sudo nano /opt/docker/cf-bouncer/agent-config/cfg.ctmpl
 ```
 
+Penser à modifier `mondomaine.com` et `adressedemoncompteCF@mondomaine.comuy`
+
 ```text
 cloudflare_config:
     worker:
@@ -117,14 +119,14 @@ cloudflare_config:
                 - captcha
               default_action: captcha
               routes_to_protect:
-                - '*rogerbytes.com/*'
+                - '*mondomaine.com/*'
               turnstile:
                 enabled: true
                 rotate_secret_key: true
                 rotate_secret_key_every: 168h0m0s
                 mode: managed
           token: {{ with secret "secret/data/cloudflare/api-token" }}{{ .Data.data.value }}{{ end }}
-          account_name: Harry.richmond@rogerbytes.com
+          account_name: adressedemoncompteCF@mondomaine.com
 
 crowdsec_config:
     lapi_url: http://crowdsec:8080
@@ -187,7 +189,8 @@ On dépose le token généré plus haut dans un fichier lu au démarrage :
 
 ```bash
 echo "<TOKEN_GENERE_PLUS_HAUT>" | sudo tee /opt/docker/cf-bouncer/agent-config/token > /dev/null
-sudo chmod 644 /opt/docker/cf-bouncer/agent-config/token
+sudo chown 100:1000 /opt/docker/cf-bouncer/agent-config/token
+sudo chmod 600 /opt/docker/cf-bouncer/agent-config/token
 ```
 
 ### Création du `compose.yml`
@@ -253,7 +256,7 @@ On vérifie que l'agent a bien généré le fichier :
 sudo docker compose logs cf-bouncer-agent --tail=30
 ```
 
-## Vérification (inchangé)
+## Vérification
 
 La liste communautaire peut prendre [2 heures](https://discourse.crowdsec.net/t/default-pull-interval/606) avant d'être chargée
 

@@ -268,7 +268,7 @@ Ajoutez cette redirection à la fin, dans la partie `Redirection de domaines`
 
 ```text
 mondomaine.com, www.mondomaine.com {
-        import crowdsec_logs
+        import crowdsec_bouncer
         respond "Caddy fonctionne avec Cloudflare !"
 }
 ```
@@ -344,7 +344,7 @@ A la fin du document, dans la partie `Redirection de domaines`, retirer cette re
 
 ```text
 mondomaine.com, www.mondomaine.com {
-        import crowdsec_logs
+        import crowdsec_bouncer
         respond "Caddy fonctionne avec Cloudflare !"
 }
 ```
