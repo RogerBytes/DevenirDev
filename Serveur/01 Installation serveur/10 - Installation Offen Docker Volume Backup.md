@@ -13,7 +13,7 @@ Ce document détaille l'installation et la configuration de Offen Docker Volume 
 
 - On va sur [le dashboard de CloudFlare](https://dash.cloudflare.com/) et dans le menu de gauche `Stockage et base de données / Stockage d'objet R2 / Vue d'ensemble`
 - Le plan gratuit consiste à un disque dur virtuel gratuit de 10 Go.
-  - C'est 0.015$ cent par Go supplémentaire
+  - C'est 0.015$ par Go supplémentaire
   - On a 1 million d'operations classe A (envoi) gratuites et 4.5$ par million en plus
   - On a 10 millions d'operations classe B (lecture) gratuites et 0.36$ par million en plus
 - On valide l'inscription `Ajouter un abonnement R2 à mon compte`
@@ -128,7 +128,7 @@ On liste les backup (ceux sur le stockage d'objet R2) avec
 
 ```bash
 sudo docker run --rm \
-  -e AWS_ENDPOINT="https://points de terminaison" \
+  -e AWS_ENDPOINT="points de terminaison" \
   -e BUCKET_NAME="Nom du compartiment" \
   -e AWS_ACCESS_KEY_ID="ID de clé d’accès" \
   -e AWS_SECRET_ACCESS_KEY="Clé d’accès secrète" \
@@ -140,11 +140,11 @@ sudo docker run --rm \
 
 ## Télécharger un backup
 
-On télécharge le fichier que l'ou souhaite avec :
+On télécharge le fichier que l'on souhaite avec :
 
 ```bash
 sudo docker run --rm -v "$PWD":/data \
-  -e AWS_ENDPOINT="https://points de terminaison" \
+  -e AWS_ENDPOINT="points de terminaison" \
   -e BUCKET_NAME="Nom du compartiment" \
   -e FICHIER="archive.tar.gz" \
   -e AWS_ACCESS_KEY_ID="ID de clé d’accès" \

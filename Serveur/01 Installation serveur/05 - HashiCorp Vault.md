@@ -65,7 +65,8 @@ Le TLS est désactivé volontairement ici : le trafic transite déjà dans le tu
 On protège l'accès
 
 ```bash
-sudo chmod 644 /opt/docker/vault/config/vault.hcl
+sudo chown 100:1000 /opt/docker/vault/config/vault.hcl
+sudo chmod 600 /opt/docker/vault/config/vault.hcl
 ```
 
 ### Le compose
@@ -213,7 +214,8 @@ Key                  Value
 token                xxxxxxxxxxxxxxxxx
 token_accessor       xxxxxxxxxx
 token_duration       ∞
-token_renewable      falsetoken_policies       ["root"]
+token_renewable      false
+token_policies       ["root"]
 identity_policies    []
 policies             ["root"]
 ```

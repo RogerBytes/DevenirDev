@@ -12,7 +12,7 @@ Pour ce qui est du choix de l'OS, j'utilise Debian. Le générateur du mot de pa
 
 La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/dedicated-servers/firewall-network) n'est pas encore abordée, c'est une étape à faire après déploiement.
 
-- A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide, elle est uniquement là à titre d'exemple.
+- A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide (enfin c'est une IP de test), elle est uniquement là à titre d'exemple.
 - Le port SSH reste sur sa valeur par défaut (`22`) : il n'est jamais exposé, l'accès se fait exclusivement via le tunnel CloudFlare Tunnel.
 
 Dans cette documentation, le principe du moindre privilège est rigoureusement appliqué.
@@ -395,7 +395,7 @@ Le script doit être lancé **depuis votre ordinateur** !
 ```bash
 username=paul
 vps_user=debian
-public_key_path=~/Documents/Sécurité/Clefs/la-recovery-key.pub
+public_key_path=~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key.pub
 deploy_key_path=~/.ssh/id_ed25519
 port=22
 ip=192.0.2.1
@@ -427,8 +427,8 @@ Le script doit être lancé **depuis votre ordinateur** !
 username=robert
 vps_user=paul
 public_key_path=~/id_ed25519.pub
-recovery_path=~/Documents/Sécurité/Clefs/la-recovery-key
-vps_domain="sousdomaine.domaine.com"
+recovery_path=~/Documents/Sécurité/Clefs/ovh-nomvps-vps-recovery-key
+vps_domain="sousdomaine.mondomaine.com"
 
 public_key=$(cat "$public_key_path")
 ssh -t -i "$recovery_path" \
