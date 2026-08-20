@@ -8,6 +8,12 @@ Et dans un deuxième temps, avoir un serveur dédié avec [Mandos](https://www.r
 
 Il faut découpler les risques et favoriser un autre fournisseur pour le VPS de Mandos, je conseille `Cloud VPS 4` chez [Contabo](https://contabo.com/en/vps/) par exemple.
 
+Avant de commencer, on fait une update/upgrade
+
+```bash
+sudo nala update && sudo nala upgrade -y
+```
+
 ## Encryption LUKS
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
@@ -709,6 +715,16 @@ Cela prouve qu'il est bien actif dans iptables.
 ### Installation de Mandos (sur le vps dédié)
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
+
+Avant tout, on va configurer les locale du serveur mandos
+
+```bash
+sudo dpkg-reconfigure locales
+```
+
+Et cocher `fr_FR.UTF-8 UTF-8`, voilà, la locale est bonne.
+
+Maintenant on installe mandos.
 
 ```bash
 sudo nala install -y mandos
