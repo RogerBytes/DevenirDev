@@ -184,7 +184,15 @@ Plutôt que de les garder en clair dans un `.env`, on les enregistre directement
 sudo docker exec -it vault vault kv put secret/vaultwarden/smtp-password value="MdpCompteMail"
 ```
 
-_(Le `ADMIN_TOKEN` hashé sera ajouté juste après, une fois généré via le conteneur — voir plus bas.)_
+_(Le `ADMIN_TOKEN` hashé définitif sera ajouté plus bas, une fois généré via le conteneur — mais Vault Agent a besoin que le chemin existe dès maintenant pour pouvoir rendre le template, voir juste en dessous.)_
+
+On crée donc un placeholder temporaire, indispensable pour que l'agent puisse générer le fichier `vaultwarden.env` dès son premier démarrage (sans secret existant à ce chemin, le rendu du template échoue entièrement, y compris pour `SMTP_PASSWORD`) :
+
+```bash
+sudo docker exec -it vault vault kv put secret/vaultwarden/admin-token value="placeholder"
+```
+
+Ce placeholder sera écrasé par la vraie valeur hashée plus loin dans ce document.
 
 ### Policy Vault dédiée à ce service
 
@@ -215,7 +223,7 @@ sudo nano /opt/docker/apps/vaultwarden/agent-config/vw.ctmpl
 ```
 
 ```text
-ADMIN_TOKEN={{ with secret "secret/data/vaultwarden/admin-token" }}{{ .Data.data.value }}{{ end }}
+ADMIN_TOKEN={{ with secret "secret/data/vaultwarden/admin-token" }}{{ .Data.data.value | replaceAll "$" "$$" }}{{ end }}
 SMTP_PASSWORD={{ with secret "secret/data/vaultwarden/smtp-password" }}{{ .Data.data.value }}{{ end }}
 ```
 
@@ -326,12 +334,13 @@ sudo chmod 600 /opt/docker/apps/vaultwarden/compose.yml
 D'abord l'agent seul, pour qu'il génère le fichier de secrets :
 
 ```bash
+sudo chown -R 100:1000 /opt/docker/apps/vaultwarden/secrets-runtime
 sudo docker compose up -d vaultwarden-agent
 sleep 5
-cat /opt/docker/apps/vaultwarden/secrets-runtime/vaultwarden.env
+sudo cat /opt/docker/apps/vaultwarden/secrets-runtime/vaultwarden.env
 ```
 
-Si le fichier contient bien `ADMIN_TOKEN=` (vide pour l'instant, on s'en occupe juste après) et `SMTP_PASSWORD=MdpCompteMail`, l'agent fonctionne. On peut ensuite démarrer le reste :
+Si le fichier contient bien `ADMIN_TOKEN=placeholder` (vide pour l'instant, on s'en occupe juste après) et `SMTP_PASSWORD=MdpCompteMail`, l'agent fonctionne. On peut ensuite démarrer le reste :
 
 ```bash
 sudo docker compose up -d
@@ -402,9 +411,9 @@ sudo nano /opt/docker/caddy/compose.yml
 Dans le service `caddy`, ajouter `vaultwarden_network` à la liste des réseaux :
 
 ```yaml
-    networks:
-      - caddy_network
-      - vaultwarden_network
+networks:
+  - caddy_network
+  - vaultwarden_network
 ```
 
 Et dans le bloc `networks:` en bas du fichier, ajouter :
