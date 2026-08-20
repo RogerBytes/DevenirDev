@@ -432,14 +432,14 @@ Normalement on peut faire le reboot, si on ne peut plus se co en SSH, c'est que 
 df -h | grep -E "docker|home|containerd"
 ```
 
-il retourne (E EDITER POUR AJOUTER LE RETOURE POUR CONTENERD)
+il retourne
 
 ```bash
 $ $df -h | grep -E "docker|home|containerd"
-/dev/mapper/vg_prod-lv_home            974M  384K  906M   1% /home
-/dev/mapper/vg_prod-lv_docker_lib       15G  171M   14G   2% /var/lib/docker
-/dev/mapper/vg_prod-lv_docker_opt      974M  1.8M  905M   1% /opt/docker
-/dev/mapper/vg_prod-lv_containerd_lib   19G  1.5G   17G   9% /var/lib/containerd
+/dev/mapper/vg_prod-lv_home            974M  392K  906M   1% /home
+/dev/mapper/vg_prod-lv_docker_lib       15G  200M   14G   2% /var/lib/docker
+/dev/mapper/vg_prod-lv_docker_opt      974M  9.8M  897M   2% /opt/docker
+/dev/mapper/vg_prod-lv_containerd_lib   19G  4.5G   14G  26% /var/lib/containerd
 ```
 
 Montrant qu'ils sont bien montés.
