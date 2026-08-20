@@ -101,7 +101,13 @@ services:
 volumes:
   data:
   logs:
+
+networks:
+  caddy_network:
+    external: true
 ```
+
+**Correction importante :** le bloc `networks: caddy_network: external: true` en bas est indispensable. Sans lui, Docker Compose crée un **nouveau** réseau nommé `vault_caddy_network` (préfixé par le nom du dossier projet) au lieu de rejoindre le réseau `caddy_network` déjà existant utilisé par Caddy — le conteneur Vault se retrouverait isolé, connecté à un réseau vide.
 
 `cap_add: IPC_LOCK` est nécessaire pour empêcher le système d'exploitation d'écrire la mémoire de Vault dans le swap (les secrets déchiffrés en mémoire ne doivent jamais atterrir sur le disque, même temporairement).
 
@@ -296,7 +302,9 @@ Remplacer `produit-a` (dans `auth/approle/role/produit-a/role-id`) par le nom du
 sudo docker exec -it vault vault read auth/approle/role/produit-a/role-id
 ```
 
-### Génération du `secret_id` (à usage unique/temporaire, ne pas le laisser stocké en clair longtemps)
+### Génération du `secret_id` (temporaire, ne pas le laisser stocké en clair longtemps)
+
+**Note :** par défaut, cette commande ne limite ni le nombre d'usages ni la durée de vie du `secret_id` (il reste valable et réutilisable selon le TTL par défaut du système). Si tu veux un vrai usage unique, ajoute `secret_id_num_uses=1` à la création du rôle plus bas. Ici on le garde réutilisable volontairement, car le Vault Agent (voir plus bas) peut avoir besoin de s'authentifier à nouveau après un redémarrage du VPS produit.
 
 Remplacer `produit-a` (dans `auth/approle/role/produit-a/role-id`) par le nom du Saas, afin de pouvoir bien gérer les accès.
 

@@ -183,3 +183,11 @@ Cette commande crée un conteneur de test éphémère et extrait instantanément
 S'il retourne `{"Type":"json-file","Config":{"compress":"true","max-file":"3","max-size":"10m"}}`, c'est la preuve que les options s'appliquent automatiquement.
 
 Voilà, Docker Engine est correctement installé sur le VPS.
+
+## Création du réseau
+
+C'est un réseau dédié et protégé que Caddy va utiliser.
+
+```bash
+sudo docker network create caddy_network
+```

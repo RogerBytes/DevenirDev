@@ -129,14 +129,6 @@ Et on protège les accès
 sudo chmod 600 /opt/docker/crowdsec/compose.yml
 ```
 
-## Création du réseau
-
-C'est un réseau dédié et protégé que Caddy va utiliser.
-
-```bash
-sudo docker network create caddy_network
-```
-
 ## Création du conteneur
 
 ```bash
