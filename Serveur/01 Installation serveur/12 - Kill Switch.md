@@ -487,10 +487,10 @@ Il retourne
 
 ```bash
 $ df -h | grep -E "docker|home|containerd"
-/dev/mapper/vg_prod-lv_docker_opt      974M  2.0M  905M   1% /opt/docker
-/dev/mapper/vg_prod-lv_containerd_lib   19G  1.5G   17G   9% /var/lib/containerd
-/dev/mapper/vg_prod-lv_docker_lib       15G  172M   14G   2% /var/lib/docker
-/dev/mapper/vg_prod-lv_home            974M  384K  906M   1% /home
+/dev/mapper/vg_prod-lv_home            974M  392K  906M   1% /home
+/dev/mapper/vg_prod-lv_docker_opt      974M  9.8M  897M   2% /opt/docker
+/dev/mapper/vg_prod-lv_containerd_lib   19G  4.5G   14G  26% /var/lib/containerd
+/dev/mapper/vg_prod-lv_docker_lib       15G  200M   14G   2% /var/lib/docker
 ```
 
 #### Afficher la mémoire non allouée avec
@@ -1060,7 +1060,7 @@ On verra `2026-07-20T13:34:05.285460` dans la colonne `Last Successful Check`.
 
 </div></details>
 
-### Suppression du keyfile et reboot
+### Suppression du keyfile et reboot (sur le client)
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
 
