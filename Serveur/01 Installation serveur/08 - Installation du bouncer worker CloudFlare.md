@@ -58,7 +58,7 @@ Le token doit d'abord servir une fois pour générer la structure de `cfg.yaml` 
 
 ```bash
 TOKEN=$(sudo docker exec vault vault kv get -field=value secret/cloudflare/api-token)
-sudo docker run crowdsecurity/cloudflare-worker-bouncer \
+sudo docker run --rm crowdsecurity/cloudflare-worker-bouncer \
   -g "$TOKEN" | sudo tee /opt/docker/cf-bouncer/config/cfg-base.yaml
 unset TOKEN
 ```
@@ -157,7 +157,7 @@ Pour afficher
 sudo cat /opt/docker/cf-bouncer/config/cfg-base.yaml
 ```
 
-*(Ajuster la structure exacte selon ce que retourne réellement `cfg-base.yaml` généré plus haut — les clés `account_token`/`kv_namespace_id`/etc. peuvent varier selon la version du bouncer.)*
+_(Ajuster la structure exacte selon ce que retourne réellement `cfg-base.yaml` généré plus haut — les clés `account_token`/`kv_namespace_id`/etc. peuvent varier selon la version du bouncer.)_
 
 ### Configuration de l'agent Vault dédié
 
