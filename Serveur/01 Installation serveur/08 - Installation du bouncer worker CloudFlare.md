@@ -211,7 +211,7 @@ services:
       - cfg-output:/vault/output
     command: agent -config=/vault/config/agent.hcl
     networks:
-      - caddy_network
+      - vault_network
 
   cf-bouncer:
     image: crowdsecurity/cloudflare-worker-bouncer
@@ -229,6 +229,8 @@ volumes:
 
 networks:
   caddy_network:
+    external: true
+  vault_network:
     external: true
 ```
 

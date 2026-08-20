@@ -10,6 +10,12 @@ Vault tourne en conteneur Docker, mais **n'écoute que sur l'IP privée WireGuar
 
 WireGuard (doc 04) doit déjà être installé et actif, `sudo wg show` doit afficher l'interface `wg0` active, et `ip addr show wg0` doit confirmer l'adresse `10.10.0.1`.
 
+## Création du réseau
+
+```bash
+sudo docker network create vault_network
+```
+
 ## Convention de nommage des secrets
 
 Tous les secrets suivent cette arborescence dans le moteur KV de Vault, pour ne jamais avoir à improviser un chemin :
@@ -97,18 +103,18 @@ services:
         soft: -1
         hard: -1
     networks:
-      - caddy_network
+      - vault_network
 
 volumes:
   data:
   logs:
 
 networks:
-  caddy_network:
+  vault_network:
     external: true
 ```
 
-**Correction importante :** le bloc `networks: caddy_network: external: true` en bas est indispensable. Sans lui, Docker Compose crée un **nouveau** réseau nommé `vault_caddy_network` (préfixé par le nom du dossier projet) au lieu de rejoindre le réseau `caddy_network` déjà existant utilisé par Caddy — le conteneur Vault se retrouverait isolé, connecté à un réseau vide.
+**Correction importante :** le bloc `networks: vault_network: external: true` en bas est indispensable. Sans lui, Docker Compose crée un **nouveau** réseau nommé `vault_vault_network` (préfixé par le nom du dossier projet) au lieu de rejoindre le réseau `vault_network` déjà existant utilisé par Caddy — le conteneur Vault se retrouverait isolé, connecté à un réseau vide.
 
 `cap_add: IPC_LOCK` est nécessaire pour empêcher le système d'exploitation d'écrire la mémoire de Vault dans le swap (les secrets déchiffrés en mémoire ne doivent jamais atterrir sur le disque, même temporairement).
 
