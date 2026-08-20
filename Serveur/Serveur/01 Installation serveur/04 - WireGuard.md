@@ -21,8 +21,6 @@ Le réseau privé utilisé est `10.10.0.0/16`, découpé par groupe pour rester 
 
 Chaque nouveau SaaS reçoit ainsi son propre bloc `/24` (254 adresses possibles), largement suffisant même en cas de forte charge nécessitant plusieurs VPS par produit. Le VPS entreprise (`10.10.0.1`) est le seul point central : c'est une topologie en étoile, les VPS produits ne se parlent jamais entre eux, ils ne parlent qu'au hub.
 
-**Note sur l'isolation :** cette règle n'est pas automatique avec WireGuard seul — chaque peer accepte `AllowedIPs = 10.10.0.0/16`, donc sans intervention le hub routerait volontiers un paquet d'un peer vers un autre. L'isolation stricte est appliquée par une règle `iptables` ajoutée directement dans la configuration du hub ci-dessous (voir `PostUp`/`PostDown`).
-
 ## Installation sur le VPS entreprise (hub)
 
 <details><summary class="button">🔍 Spoiler</summary><div class="spoiler">
@@ -85,14 +83,9 @@ sudo nano /etc/wireguard/wg0.conf
 Address = 10.10.0.1/16
 ListenPort = 51820
 PrivateKey = <CONTENU DE hub-private.key>
-PostUp = iptables -I FORWARD -i wg0 -o wg0 -j DROP
-PostDown = iptables -D FORWARD -i wg0 -o wg0 -j DROP
 
 # ----------- Peers (VPS produits) ------------ #
 ```
-
-- `PostUp` : commande exécutée automatiquement au démarrage de l'interface `wg0`. Elle bloque tout paquet qui entre par `wg0` et ressort par `wg0` — c'est-à-dire le trafic entre deux peers. Le trafic peer → hub (et hub → peer) n'est pas concerné, puisqu'il n'entre et ne ressort pas par la même interface.
-- `PostDown` : commande symétrique qui retire la règle proprement quand l'interface s'arrête, pour ne pas laisser une règle orpheline.
 
 On protège l'accès
 
@@ -152,16 +145,6 @@ Il doit retourner
        valid_lft forever preferred_lft forever
 ```
 
-### Vérification de l'isolation inter-peers
-
-On vérifie que la règle `iptables` est bien active
-
-```bash
-sudo iptables -L FORWARD -v -n
-```
-
-Une ligne `DROP` avec `wg0` en entrée (`in`) et en sortie (`out`) doit apparaître, idéalement tout en haut de la liste (l'ordre compte : les règles sont évaluées de haut en bas, donc elle doit passer avant toute règle `ACCEPT` plus large).
-
 </div></details>
 
 ## Ajout d'un premier VPS produit (peer)
@@ -206,7 +189,7 @@ PersistentKeepalive = 25
 ```
 
 - `Endpoint` : IP publique du VPS entreprise (le hub).
-- `AllowedIPs = 10.10.0.0/16` : le peer ne route que le trafic destiné au réseau privé WireGuard, jamais tout son trafic (pas de tunnel complet, seulement l'accès à Vault et au réseau interne). L'isolation vis-à-vis des autres peers est assurée côté hub par la règle `iptables` (voir section précédente), pas ici.
+- `AllowedIPs = 10.10.0.0/16` : le peer ne route que le trafic destiné au réseau privé WireGuard, jamais tout son trafic (pas de tunnel complet, seulement l'accès à Vault et au réseau interne).
 - `PersistentKeepalive = 25` : indispensable pour que le tunnel reste actif à travers le NAT du fournisseur VPS, sinon la connexion peut se couper silencieusement.
 
 On protège l'accès
@@ -282,16 +265,6 @@ ping 10.10.1.1
 ```
 
 Si les deux pings fonctionnent, le tunnel privé est opérationnel. Vault (doc 05) pourra désormais écouter uniquement sur `10.10.0.1`, injoignable depuis l'IP publique.
-
-### Test d'isolation inter-peers (une fois un 2ème VPS produit ajouté)
-
-Depuis un VPS produit (ex : `10.10.1.1`), vers un autre VPS produit (ex : `10.10.2.1`) :
-
-```bash
-ping 10.10.2.1
-```
-
-Ce ping doit **échouer** (timeout). S'il réussit, la règle `iptables` sur le hub n'est pas active — revérifier `sudo iptables -L FORWARD -v -n` sur le hub.
 
 </div></details>
 

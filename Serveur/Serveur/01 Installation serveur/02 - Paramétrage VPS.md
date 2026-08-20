@@ -12,8 +12,8 @@ Pour ce qui est du choix de l'OS, j'utilise Debian. Le générateur du mot de pa
 
 La partie [Network Firewall d'OVH](https://docs.ovhcloud.com/fr/guides/bare-metal-cloud/dedicated-servers/firewall-network) n'est pas encore abordée, c'est une étape à faire après déploiement.
 
+- A plusieurs moments le port utilisé pour SSH est `49152`, prenez garde à bien le changer par le votre, en passant `49152` n'est pas un bon port, il est uniquement là à titre d'exemple.
 - A plusieurs moments l'ipv4 utilisé pour SSH est `192.0.2.1`, prenez garde à bien le changer par le votre, en passant `192.0.2.1` n'est pas une ip valide, elle est uniquement là à titre d'exemple.
-- Le port SSH reste sur sa valeur par défaut (`22`) : il n'est jamais exposé, l'accès se fait exclusivement via le tunnel CloudFlare Tunnel.
 
 Dans cette documentation, le principe du moindre privilège est rigoureusement appliqué.
 
@@ -137,8 +137,8 @@ tls_trust_file   /etc/ssl/certs/ca-certificates.crt
 account          default
 host             smtp.ton-fournisseur.com
 port             587
-from             noreply@mondomaine.com
-user             noreply@mondomaine.com
+from             noreply@domaine.com
+user             noreply@domaine.com
 password         ton_mot_de_passe_de-mail
 ```
 
@@ -396,18 +396,18 @@ Le script doit être lancé **depuis votre ordinateur** !
 username=paul
 vps_user=debian
 public_key_path=~/Documents/Sécurité/Clefs/la-recovery-key.pub
-deploy_key_path=~/.ssh/id_ed25519
+recovery_path=~/.ssh/id_ed25519.pub
 port=22
 ip=192.0.2.1
 
 public_key=$(cat $public_key_path)
 
-ssh -i $deploy_key_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
+ssh -i $recovery_path -p $port $vps_user@$ip "sudo mkdir -p /home/$username/.ssh && echo '$public_key' | sudo tee -a /home/$username/.ssh/authorized_keys && sudo chown -R $username:$username /home/$username/.ssh && sudo chmod 700 /home/$username/.ssh && sudo chmod 600 /home/$username/.ssh/authorized_keys"
 ```
 
-`$public_key_path` et `$deploy_key_path` sont les chemins de la clef publique et de la clef de déploiement, il faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera verrouillé par la suite).
+`$public_key_path` et `$recovery_path` sont les chemins de la clef publique et de la clef de récupération, il faut faut aussi ajouter la clé de récupération à l'utilisateur principal que l'on vient de créer (l'user debian sera verrouillé par la suite).
 
-On le fait aussi la même chose, mais avec `id_ed25519.pub` en plus de la clef de récupération (si ce n'est pas déjà lors du déploiement de debian sur le vps).
+On le fait aussi la même chose, mais avec `id_ed25519.pub` en plus de la clef de récupération.
 
 Puis on se déconnecte avec `exit` et on se reconnecte avec l'user que l'on vient de faire.
 
@@ -416,8 +416,6 @@ ssh paul@192.0.2.1
 ```
 
 ## Script de sysadmin pour ajouter des clefs publiques avec CloudFlared
-
-⚠️ à utiliser seulement après avoir fait la section CloudFlared plus bas
 
 Voici l'outil final d'admin pour l'user, ici c'est pour un user `robert`, mais on peut s'en servir pour ajouter la clef locale au compte que l'on vient de créer (en remplaçant `robert` par `paul` et en changeant le chemin de la clef publique par `~/.ssh/id_ed25519.pub`).
 Ce script fonctionnera une fois que CloudFlared sera activé.
@@ -545,7 +543,7 @@ Et on le lance
 sudo systemctl start cloudflared
 ```
 
-Voilà, le serveur est prêt (le port SSH ne sera jamais autorisé dans UFW, mais on va d'abord tester le tunnel avant d'activer le pare-feu)
+Voilà, le serveur est prêt (enfin il reste à fermer le port ssh dans UFW, mais on va d'abord tester le tunnel)
 
 ### Installed CloudFlared sur un ordinateur
 
@@ -581,7 +579,7 @@ Host *.mondomaine.com
 et on peut maintenant se connecter via
 
 ```bash
-ssh paul@sousdomaine.mondomaine.com
+ssh paul@soudomaine.mondomaine.com
 ```
 
 </div></details>
@@ -621,39 +619,30 @@ On ajoute aussi le localhost (totalement indispensable, tout le fonctionnement i
 sudo ufw allow in on lo
 ```
 
-Récupération dynamique des plages IP CloudFlare
+On ajouter les ip de cloudflare en liste blanche pour les ports 80 et 443
 
 ```bash
-CF_IPS="$(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)"
-```
-
-Si besoin de mettre à jour les ip, on purge les existantes (cette étape est à ignorer lors du tout premier lancement, elle ne sert que pour un refresh ultérieur).
-
-```bash
-sudo ufw status numbered | grep 'cloudflare' | grep -oP '^\[\s*\K[0-9]+' | sort -rn | while read n; do
-  sudo ufw --force delete $n
+for ip in 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32; do
+  sudo ufw allow from $ip to any port 80,443 proto tcp
 done
 ```
 
-Application en liste blanche sur les ports 80/443
+- Les ipv4 listées proviennent [de la page dédiée aux ipv4 de CloudFlare](https://www.cloudflare.com/ips-v4)
+- Les ipv6 listées proviennent [de la page dédiée aux ipv6 de CloudFlare](https://www.cloudflare.com/ips-v6)
+
+Pour tout récupérer d'un coup
 
 ```bash
-for ip in $CF_IPS; do
-  sudo ufw allow from $ip to any port 80,443 proto tcp comment 'cloudflare'
-done
-
-sudo ufw reload
+echo $(curl -s https://www.cloudflare.com/ips-v4) $(curl -s https://www.cloudflare.com/ips-v6)
 ```
 
-- Les plages IPv4 et IPv6 sont récupérées dynamiquement depuis les pages officielles CloudFlare ([ips-v4](https://www.cloudflare.com/ips-v4), [ips-v6](https://www.cloudflare.com/ips-v6)).
-
-Maintenant que les IP CloudFlare sont en liste blanche, l'on peut activer UFW.
+Maintenant que le port SSH est en liste blanche, l'on peut activer le UFW.
 
 ```bash
 sudo ufw enable
 ```
 
-Valider le message d'alerte (le `Command may disrupt existing ssh connections. Proceed with operation (y|n)?` est bénin).
+Valider le message d'alerte (le `Command may disrupt existing ssh connections. Proceed with operation (y|n)?` est bénin), on a bien ajouté notre port SSH.
 
 Puis on vérifie les règles de UFW
 
@@ -890,10 +879,6 @@ sudo truncate -s 0 /home/debian/.ssh/authorized_keys
 
 On valide les changements de mdp du côté de RKHunter avec
 
-```bash
-sudo rkhunter --propupd
-```
-
 Voilà, l'utilisateur `debian` est proprement verrouillé.
 
 </div></details>
@@ -964,10 +949,10 @@ sudo nala install -y btop
 
 C'est un outil léger et moderne pour monitorer le serveur, il suffit de taper `btop` pour le lancer.
 
-On peut afficher l'état de la machine avec cette commande (pensez à modifier `sousdomaine.mondomaine.com` et `paul`)
+On peut afficher l'état de la machine avec cette commande (pensez à modifier `49152`, `192.0.2.1` et `paul`)
 
 ```bash
-ssh -t paul@sousdomaine.mondomaine.com "btop"
+ssh -t paul@soudomaine.mondomaine.com "btop"
 ```
 
 </div></details>
