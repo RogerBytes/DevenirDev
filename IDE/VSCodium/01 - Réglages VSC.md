@@ -155,7 +155,6 @@ Dans le fichier settings.json, remplacez le contenu :
   "terminal.explorerKind": "external",
   "terminal.external.linuxExec": "tilix",
   "terminal.integrated.inheritEnv": true,
-  "editor.tabSize": 2,
   "cSpell.language": "en,fr,lorem",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
