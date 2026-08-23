@@ -10,9 +10,7 @@ Installer des extensions en ligne de commande
 # Les extensions de VSCodium
 codium --install-extension PKief.material-product-icons
 codium --install-extension aaron-bond.better-comments
-codium --install-extension captain-stack.captain-stack
 codium --install-extension christian-kohler.path-intellisense
-codium --install-extension Codeium.codeium
 codium --install-extension donjayamanne.python-environment-manager
 codium --install-extension eamodio.gitlens
 codium --install-extension ecmel.vscode-html-css
@@ -30,7 +28,6 @@ codium --install-extension magicstack.MagicPython
 codium --install-extension MohammadBaqer.better-folding
 codium --install-extension MS-CEINTL.vscode-language-pack-fr
 codium --install-extension ms-python.python
-codium --install-extension ms-vscode.live-server
 codium --install-extension oderwat.indent-rainbow
 codium --install-extension PKief.material-icon-theme
 codium --install-extension pranaygp.vscode-css-peek
@@ -40,7 +37,6 @@ codium --install-extension shardulm94.trailing-spaces
 codium --install-extension shellscape.shellscape-brackets
 codium --install-extension tomoki1207.pdf
 codium --install-extension yzane.markdown-pdf
-codium --install-extension Angular.ng-template
 codium --install-extension yzhang.markdown-all-in-one
 codium --install-extension anteprimorac.html-end-tag-labels
 codium --install-extension DavidAnson.vscode-markdownlint
@@ -51,29 +47,18 @@ codium --install-extension zobo.php-intellisense
 codium --install-extension MehediDracula.php-namespace-resolver
 codium --install-extension devsense.phptools-vscode
 codium --install-extension mtxr.sqltools
-codium --install-extension syler.sass-indented
 codium --install-extension joelday.docthis
-codium --install-extension johnpapa.Angular2
-codium --install-extension mrmlnc.vscode-apache
 codium --install-extension adpyke.codesnap
 codium --install-extension ms-azuretools.vscode-docker
-codium --install-extension hediet.vscode-drawio
 codium --install-extension usernamehw.errorlens
 codium --install-extension Tobermory.es6-string-html
 codium --install-extension mhutchie.git-graph
-codium --install-extension mtxr.sqltools-driver-mysql
 codium --install-extension rangav.vscode-thunder-client
-codium --install-extension johnbillion.vscode-wordpress-hooks
 codium --install-extension mblode.twig-language-2
 codium --install-extension neilbrayfield.php-docblocker
-codium --install-extension ritwickdey.LiveServer
 codium --install-extension streetsidesoftware.code-spell-checker
 codium --install-extension streetsidesoftware.code-spell-checker-french
-codium --install-extension gitpod.gitpod-theme
 codium --install-extension MS-CEINTL.vscode-language-pack-fr
-codium --install-extension dracula-theme.theme-dracula
-codium --install-extension HansUXdev.bootstrap5-snippets
-codium --install-extension hossaini.bootstrap-intellisense
 codium --install-extension cvergne.vscode-php-getters-setters-cv
 codium --install-extension bmewburn.vscode-intelephense-client
 codium --install-extension nadim-vscode.symfony-code-snippets
@@ -153,7 +138,7 @@ Dans le fichier settings.json, remplacez le contenu :
 
 ```json
 {
-  "workbench.colorTheme": "Dracula Theme",
+  "workbench.colorTheme": "Dark Modern",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.productIconTheme": "material-product-icons",
   "editor.matchBrackets": "never",
@@ -182,9 +167,6 @@ Dans le fichier settings.json, remplacez le contenu :
   "files.autoSave": "afterDelay",
   "workbench.editorAssociations": {
     "*.md": "vscode.markdown.preview.editor"
-  },
-  "markdownlint.config": {
-    "MD033": false
   },
   "[markdown]": {
     "editor.quickSuggestions": {
@@ -253,16 +235,6 @@ vsix-dl WallabyJs.console-ninja
 L'extension sera téléchargée et installée automatiquement, vous pouvez ensuite supprimer le fichier vsix.
 
 Réglage du spell checker, en bas quand il souligne plein de truc cliquer sur "spell" dans la barre d'état et dans le dock "workspace" "user" "ficher" etc cocher "anglais" et "français" ainsi que "lorem"
-
-## Les extensions qui foutent la merde à désinstaller
-
-- spell right - ban.spellright
-
-## Les extensions à remplacer
-
-Rien
-par
-Rien
 
 ## Fichiers Markdown
 
