@@ -36,7 +36,6 @@ codium --install-extension rid9.datetime
 codium --install-extension shardulm94.trailing-spaces
 codium --install-extension shellscape.shellscape-brackets
 codium --install-extension tomoki1207.pdf
-codium --install-extension yzane.markdown-pdf
 codium --install-extension yzhang.markdown-all-in-one
 codium --install-extension anteprimorac.html-end-tag-labels
 codium --install-extension DavidAnson.vscode-markdownlint
@@ -46,7 +45,6 @@ codium --install-extension bmewburn.vscode-intelephense-client
 codium --install-extension zobo.php-intellisense
 codium --install-extension MehediDracula.php-namespace-resolver
 codium --install-extension devsense.phptools-vscode
-codium --install-extension mtxr.sqltools
 codium --install-extension joelday.docthis
 codium --install-extension adpyke.codesnap
 codium --install-extension ms-azuretools.vscode-docker
@@ -54,7 +52,6 @@ codium --install-extension usernamehw.errorlens
 codium --install-extension Tobermory.es6-string-html
 codium --install-extension mhutchie.git-graph
 codium --install-extension rangav.vscode-thunder-client
-codium --install-extension mblode.twig-language-2
 codium --install-extension neilbrayfield.php-docblocker
 codium --install-extension streetsidesoftware.code-spell-checker
 codium --install-extension streetsidesoftware.code-spell-checker-french
@@ -66,7 +63,6 @@ codium --install-extension nadim-vscode.symfony-super-console
 codium --install-extension TheNouillet.symfony-vscodeDotENV
 codium --install-extension mikestead.dotenv
 codium --install-extension redhat.vscode-yaml
-codium --install-extension mblode.twig-language
 codium --install-extension tmrdh.symfony-helper
 codium --install-extension TheNouillet.symfony-vscode
 vsix-dl klesun.deep-assoc-completion-vscode
