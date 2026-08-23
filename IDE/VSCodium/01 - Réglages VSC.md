@@ -195,8 +195,15 @@ Dans le fichier settings.json, remplacez le contenu :
   },
   "files.associations": {
     "*.twig": "twig"
-  }
+  },
+  "markdownlint.configFile": "${userHome}/.markdownlint.json"
 }
+```
+
+On règle les options markdown de suite
+
+```bash
+echo '{ "MD033": false, "MD013": false }' > ~/.markdownlint.json && codium ~/.config/VSCodium/User/settings.json --add '{"markdownlint.configFile": "${userHome}/.markdownlint.json"}'
 ```
 
 Pour changer les raccourcis clavier :
