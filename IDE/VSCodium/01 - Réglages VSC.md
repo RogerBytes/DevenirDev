@@ -78,7 +78,6 @@ codium --install-extension esdete.tailwind-rainbow
 codium --install-extension esbenp.prettier-vscode
 codium --install-extension SonarSource.sonarlint-vscode
 codium --install-extension Gydunhn.vsc-essentials
-codium --install-extension Gydunhn.angular-essentials
 ```
 
 ## Changer le thème
@@ -134,64 +133,64 @@ Dans le fichier settings.json, remplacez le contenu :
 
 ```json
 {
-  "workbench.colorTheme": "Dark Modern",
-  "workbench.iconTheme": "material-icon-theme",
-  "workbench.productIconTheme": "material-product-icons",
-  "editor.matchBrackets": "never",
-  "editor.inlayHints.enabled": "off",
-  "workbench.colorCustomizations": {
-    "editor.lineHighlightBackground": "#1073cf2d",
-    "editor.lineHighlightBorder": "#9fced11f"
-  },
-  "editor.wordWrap": "off",
-  "diffEditor.wordWrap": "off",
-  "editor.guides.indentation": false,
-  "editor.guides.bracketPairs": false,
-  "redhat.telemetry.enabled": true,
-  "security.workspace.trust.untrustedFiles": "newWindow",
-  "terminal.integrated.fontFamily": "'FiraCode Nerd Font', monospace",
-  "terminal.integrated.fontSize": 14,
-  "terminal.integrated.fontWeightBold": "bold",
-  "terminal.explorerKind": "external",
-  "terminal.external.linuxExec": "tilix",
-  "terminal.integrated.inheritEnv": true,
-  "cSpell.language": "en,fr,lorem",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "terminal.integrated.sendKeybindingsToShell": true,
-  "files.autoSave": "afterDelay",
-  "workbench.editorAssociations": {
-    "*.md": "vscode.markdown.preview.editor"
-  },
-  "[markdown]": {
-    "editor.quickSuggestions": {
-      "other": true,
-      "comments": true,
-      "strings": true
+    "workbench.colorTheme": "Dark Modern",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.productIconTheme": "material-product-icons",
+    "editor.matchBrackets": "never",
+    "editor.inlayHints.enabled": "off",
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#1073cf2d",
+        "editor.lineHighlightBorder": "#9fced11f",
     },
-    "editor.snippetSuggestions": "top",
-    "editor.tabCompletion": "on"
-  },
-  "editor.fontFamily": "'Fira Code', monospace",
-  "editor.fontLigatures": true,
-  "php.suggest.basic": false,
-  "php.validate.enable": false,
-  "emmet.excludeLanguages": ["markdown", "php"],
-  "php.executables": {
-    "php": "/usr/bin/php"
-  },
-  "codeium.enableConfig": {
-    "*": false
-  },
-  "terminal.integrated.minimumContrastRatio": 1,
-  "terminal.integrated.fontLigatures.enabled": true,
-  "emmet.includeLanguages": {
-    "twig": "html"
-  },
-  "files.associations": {
-    "*.twig": "twig"
-  },
-  "markdownlint.configFile": "${userHome}/.markdownlint.json"
+    "editor.wordWrap": "off",
+    "diffEditor.wordWrap": "off",
+    "editor.guides.indentation": false,
+    "editor.guides.bracketPairs": false,
+    "redhat.telemetry.enabled": true,
+    "security.workspace.trust.untrustedFiles": "newWindow",
+    "terminal.integrated.fontFamily": "'FiraCode Nerd Font', monospace",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontWeightBold": "bold",
+    "terminal.explorerKind": "external",
+    "terminal.external.linuxExec": "tilix",
+    "terminal.integrated.inheritEnv": true,
+    "cSpell.language": "en,fr,lorem",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "files.autoSave": "afterDelay",
+    "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.preview.editor",
+    },
+    "[markdown]": {
+        "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true,
+        },
+        "editor.snippetSuggestions": "top",
+        "editor.tabCompletion": "on",
+    },
+    "editor.fontFamily": "'Fira Code', monospace",
+    "editor.fontLigatures": true,
+    "php.suggest.basic": false,
+    "php.validate.enable": false,
+    "emmet.excludeLanguages": ["markdown", "php"],
+    "php.executables": {
+        "php": "/usr/bin/php",
+    },
+    "codeium.enableConfig": {
+        "*": false,
+    },
+    "terminal.integrated.minimumContrastRatio": 1,
+    "terminal.integrated.fontLigatures.enabled": true,
+    "emmet.includeLanguages": {
+        "twig": "html",
+    },
+    "files.associations": {
+        "*.twig": "twig",
+    },
+    "markdownlint.configFile": "${userHome}/.markdownlint.json",
 }
 ```
 
