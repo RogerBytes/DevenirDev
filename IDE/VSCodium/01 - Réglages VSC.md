@@ -111,14 +111,6 @@ On peut aussi utiliser `'Fira Mono', monospace` au lieu de `'Fira Code', monospa
 
 ### Icônes
 
-Pour changer le thème des icônes et le theme de l'IDE
-
-Pour le thème principal je conseille : gitpod
-
-`Fichier/Préférences/Thème d'icône de fichier`
-et
-`Fichier/Préférences/Thème de couleur`
-
 Pour un commentaire multilignes `CTRL+SHIFT+A`
 Pour un commentaire monoligne `CTRL+SHIFT+:`
 
