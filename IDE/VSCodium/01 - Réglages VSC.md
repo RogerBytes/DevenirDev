@@ -1,5 +1,11 @@
 # Réglages de VSC
 
+## Prérequis
+
+```bash
+sudo nala install -y ripgrep
+```
+
 ## Les extensions à rajouter
 
 - PHP Awesome Snippets (pas sur le market codium)
@@ -125,71 +131,72 @@ Dans le fichier settings.json, remplacez le contenu :
 
 ```json
 {
-    "workbench.colorTheme": "Dark Modern",
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.productIconTheme": "material-product-icons",
-    "editor.matchBrackets": "never",
-    "editor.inlayHints.enabled": "off",
-    "workbench.colorCustomizations": {
-        "editor.lineHighlightBackground": "#1073cf2d",
-        "editor.lineHighlightBorder": "#9fced11f",
+  "workbench.colorTheme": "Dark Modern",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.productIconTheme": "material-product-icons",
+  "editor.matchBrackets": "never",
+  "editor.inlayHints.enabled": "off",
+  "workbench.colorCustomizations": {
+    "editor.lineHighlightBackground": "#1073cf2d",
+    "editor.lineHighlightBorder": "#9fced11f"
+  },
+  "editor.wordWrap": "off",
+  "diffEditor.wordWrap": "off",
+  "editor.guides.indentation": false,
+  "editor.guides.bracketPairs": false,
+  "redhat.telemetry.enabled": true,
+  "security.workspace.trust.untrustedFiles": "newWindow",
+  "terminal.integrated.fontFamily": "'FiraCode Nerd Font', monospace",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontWeightBold": "bold",
+  "terminal.explorerKind": "external",
+  "terminal.external.linuxExec": "tilix",
+  "terminal.integrated.inheritEnv": true,
+  "cSpell.language": "en,fr,lorem",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "terminal.integrated.sendKeybindingsToShell": true,
+  "files.autoSave": "afterDelay",
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
     },
-    "editor.wordWrap": "off",
-    "diffEditor.wordWrap": "off",
-    "editor.guides.indentation": false,
-    "editor.guides.bracketPairs": false,
-    "redhat.telemetry.enabled": true,
-    "security.workspace.trust.untrustedFiles": "newWindow",
-    "terminal.integrated.fontFamily": "'FiraCode Nerd Font', monospace",
-    "terminal.integrated.fontSize": 14,
-    "terminal.integrated.fontWeightBold": "bold",
-    "terminal.explorerKind": "external",
-    "terminal.external.linuxExec": "tilix",
-    "terminal.integrated.inheritEnv": true,
-    "cSpell.language": "en,fr,lorem",
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "terminal.integrated.sendKeybindingsToShell": true,
-    "files.autoSave": "afterDelay",
-    "workbench.editorAssociations": {
-        "*.md": "vscode.markdown.preview.editor",
-    },
-    "[markdown]": {
-        "editor.quickSuggestions": {
-        "other": true,
-        "comments": true,
-        "strings": true,
-        },
-        "editor.snippetSuggestions": "top",
-        "editor.tabCompletion": "on",
-    },
-    "editor.fontFamily": "'Fira Code', monospace",
-    "editor.fontLigatures": true,
-    "php.suggest.basic": false,
-    "php.validate.enable": false,
-    "emmet.excludeLanguages": ["markdown", "php"],
-    "php.executables": {
-        "php": "/usr/bin/php",
-    },
-    "codeium.enableConfig": {
-        "*": false,
-    },
-    "terminal.integrated.minimumContrastRatio": 1,
-    "terminal.integrated.fontLigatures.enabled": true,
-    "emmet.includeLanguages": {
-        "twig": "html",
-    },
-    "files.associations": {
-        "*.twig": "twig",
-    },
-    "markdownlint.configFile": "${userHome}/.markdownlint.json",
+    "editor.snippetSuggestions": "top",
+    "editor.tabCompletion": "on"
+  },
+  "editor.fontFamily": "'Fira Code', monospace",
+  "editor.fontLigatures": true,
+  "php.suggest.basic": false,
+  "php.validate.enable": false,
+  "emmet.excludeLanguages": ["markdown", "php"],
+  "php.executables": {
+    "php": "/usr/bin/php"
+  },
+  "codeium.enableConfig": {
+    "*": false
+  },
+  "terminal.integrated.minimumContrastRatio": 1,
+  "terminal.integrated.fontLigatures.enabled": true,
+  "emmet.includeLanguages": {
+    "twig": "html"
+  },
+  "files.associations": {
+    "*.twig": "twig"
+  },
+  "markdownlint.configFile": "${userHome}/.markdownlint.json",
+  "todo-tree.ripgrep.ripgrep": "/usr/bin/rg"
 }
 ```
 
 On règle les options markdown de suite
 
 ```bash
-echo '{ "MD033": false, "MD013": false }' > ~/.markdownlint.json && codium ~/.config/VSCodium/User/settings.json --add '{"markdownlint.configFile": "${userHome}/.markdownlint.json"}'
+echo '{ "MD033": false, "MD013": false }' > ~/.markdownlint.json
 ```
 
 Pour changer les raccourcis clavier :

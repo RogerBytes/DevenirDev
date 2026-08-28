@@ -19,6 +19,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
   - Permet de faire un template de script vierge avec des catégories, on appelle le snippet avec `initClass`
 
 ```json
+{
 	"Template javascript":{
 		"prefix": "init",
 		"body":[
@@ -66,6 +67,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
 		"\/\/*-------------  Fin  -------------------------------------//\n\n"
 		]
 	}
+}
 ```
 
 ---
@@ -76,6 +78,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
   - Permet d'ajouter le reset de préformatage, on appelle le snippet avec `reset`
 
 ```json
+{
     "reset CSS":{
         "prefix": "reset",
         "body": [
@@ -85,6 +88,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
         "\tbox-sizing: border-box;\r}"
         ]
     }
+}
 ```
 
 ---
@@ -105,6 +109,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
   - Balise image avec tous ses attributs, on appelle le snippet avec `imgA`
 
 ```json
+{
     "script, defer and module": {
         "prefix": "defer",
         "body": "<script src=\"$1\" defer type=\"module\"></script>",
@@ -145,6 +150,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
         "body": "<img src='$1' alt='$2' loading='lazy' decoding='async'>",
         "description": "Crée une balise img avec les attributs loading et decoding"
     }
+}
 ```
 
 ---
@@ -161,6 +167,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
   - Snippet pour charger ma lib pour ma fonction de chemin path()
 
 ```json
+{
     "PHP form": {
         "prefix": "form",
         "body": "if(\\$_SERVER['REQUEST_METHOD']==='${1:POST}' ${2:&& isset(\\$_${3:POST}['$4'])})\r{$0}",
@@ -186,6 +193,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
         "body": "require_once __DIR__ . DIRECTORY_SEPARATOR . '${1:lib}' . DIRECTORY_SEPARATOR . 'path.php';",
         "description": "Charge path.php depuis un dossier, quand on est à la racine du projet."
     }
+}
 ```
 
 ## Snippet MarkDown
@@ -199,6 +207,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
 - Snipper intro
 
 ```json
+{
     "Spoiler style perso": {
         "prefix": "xstyle",
         "body": [
@@ -242,7 +251,8 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
         "</td></tr></table>"
         ],
         "description": "Insère un bloc d'intro"
-    },
+    }
+}
 ```
 
 ---
