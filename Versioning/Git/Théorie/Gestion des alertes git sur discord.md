@@ -24,15 +24,15 @@ Maintenant, il faut dire à GitHub où envoyer les informations.
 C'est ici que la magie opère. Remplis les champs comme suit :
 
 - **Payload URL :** Colle l'URL que tu as copiée sur Discord.
-    
-    > **⚠️ Astuce cruciale :** Discord utilise un format spécifique. À la fin de ton URL, ajoute `/github`.
-    *Exemple :* `https://discord.com/api/webhooks/.../github`
-    > 
+
+> **⚠️ Astuce cruciale :** Discord utilise un format spécifique. À la fin de ton URL, ajoute `/github`.
+*Exemple :* `https://discord.com/api/webhooks/.../github`
+
 - **Content type :** Sélectionne `application/json`.
 - **Secret :** Tu peux laisser vide (sauf si tu souhaites sécuriser davantage la connexion).
 - **Which events would you like to trigger this webhook?**
-    - Si tu veux tout : coche `Send me everything`.
-    - Si tu veux filtrer : coche `Let me select individual events` et choisis **Pushes**, **Pull Requests**, **Issues**, etc.
+  - Si tu veux tout : coche `Send me everything`.
+  - Si tu veux filtrer : coche `Let me select individual events` et choisis **Pushes**, **Pull Requests**, **Issues**, etc.
 
 Clique sur **Add webhook**.
 
