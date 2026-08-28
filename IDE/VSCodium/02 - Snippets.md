@@ -18,6 +18,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
 - JS - Class Init
   - Permet de faire un template de script vierge avec des catégories, on appelle le snippet avec `initClass`
 
+<!-- markdownlint-disable MD010 -->
 ```json
 {
 	"Template javascript":{
@@ -69,6 +70,7 @@ Vous aurez à copier les blocs de code de cette doc au sein des objets, entre le
 	}
 }
 ```
+<!-- markdownlint-enable MD010 -->
 
 ---
 
