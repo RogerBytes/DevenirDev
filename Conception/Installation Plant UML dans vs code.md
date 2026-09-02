@@ -40,6 +40,12 @@ Pour l'instant je n'ai pas réussie à utiliser le rendu local avec plantuml ins
 2. Allez dans l'onglet **Extensions** (`Ctrl+Shift+X`).
 3. Recherchez **"PlantUML"** (par Jebbs `jebbs.plantuml`) et cliquez sur **Installer**.
 
+Ou via CLI
+
+```bash
+codium --install-extension jebbs.plantuml
+```
+
 ---
 
 ## 3. Utilisation de base
